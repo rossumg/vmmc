@@ -1,0 +1,53 @@
+<resources>
+
+    <string name="GEOLOCATION">Geolocation</string>
+    <string name="UPLOAD">Upload</string>
+    <string name="DOWNLOAD">Download</string>
+
+    <string name="searchTitle">Search Assessments</string>
+    <string name="createPersonTitle">Create Person</string>
+    <string name="createTitle">Create Assessment</string>
+    <string name="recentTitle">Recent Assessments</string>
+    <string name="actionsTitle">Actions</string>
+    <string name="editTitle">Edit Assessment</string>
+    <string name="adminTitle">Administration</string>
+
+
+    <string name="app_name">TrainSMART</string>
+    <string name="drawer_open">Menu opened</string>
+    <string name="drawer_close">Menu closed</string>
+    <string name="action_settings">Settings</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="edit_fragment">Edit Fragment</string>
+    <string name="create_fragment">Create Fragment</string>
+
+<!-- TODO: Remove or change this placeholder text -->
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+
+
+
+    <string name="hello">Hello World, MainActivity!</string>
+    <string name="geoLocation">GeoLocation</string>
+    <string name="title">Person Details</string>
+    <string name="national_id">National ID </string>
+    <string name="name">Name </string>
+    <string name="name_nationalId_facility">Name, National Id, Facility </string>
+    <string name="first_name">First Name </string>
+    <string name="last_name">Last Name </string>
+    <string name="facility_id">Enter Facility Id: </string>
+    <string name="facility_name">Facility Name </string>
+    <string name="assessment_name">Assessment Type </string>
+    <string name="add">Add</string>
+    <string name="delete">Delete</string>
+    <string name="modify">Modify</string>
+    <string name="view">View</string>
+    <string name="view_person">ViewP</string>
+    <string name="view_assessments">ViewA</string>
+    <string name="view_assessments_questions">ViewQ</string>
+    <string name="show_info">Show Info</string>
+    <string name="download">Download</string>
+    <string name="upload">Upload</string>
+    <string name="error">There was an error</string>
+    <string name="test">Test</string>
+</resources>
