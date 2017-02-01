@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 /**
  * Created by rossumg on 9/28/2015.

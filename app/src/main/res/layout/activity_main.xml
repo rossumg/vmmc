@@ -16,18 +16,18 @@
 
     </LinearLayout>
     <!-- android:layout_marginTop="?android:attr/actionBarSize"-->
-    <com.itech.trainsmart.assessments.ScrimInsetsFrameLayout
+    <org.itech.vmmc.ScrimInsetsFrameLayout
         android:id="@+id/scrimInsetsFrameLayout"
         android:layout_width="@dimen/navigation_drawer_width" android:layout_height="wrap_content"
         android:fitsSystemWindows="true" android:layout_gravity="start" app:insetForeground="#4000"
         android:elevation="10dp">
         <fragment android:id="@+id/fragment_drawer"
-            android:name="com.itech.trainsmart.assessments.NavigationDrawerFragment"
+            android:name="org.itech.vmmc.NavigationDrawerFragment"
             android:layout_width="@dimen/navigation_drawer_width"
             android:layout_height="match_parent" android:fitsSystemWindows="true"
             app:layout="@layout/fragment_navigation_drawer"
             tools:layout="@layout/fragment_navigation_drawer" />
-    </com.itech.trainsmart.assessments.ScrimInsetsFrameLayout>
+    </org.itech.vmmc.ScrimInsetsFrameLayout>
 
 
 </android.support.v4.widget.DrawerLayout>

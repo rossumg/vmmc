@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;

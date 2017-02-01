@@ -1,6 +1,6 @@
 
 
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 import android.app.DatePickerDialog;
 import android.content.Context;

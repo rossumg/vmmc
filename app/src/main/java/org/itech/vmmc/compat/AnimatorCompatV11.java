@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments.compat;
+package org.itech.vmmc.compat;
 
 import android.animation.ValueAnimator;
 import android.annotation.TargetApi;

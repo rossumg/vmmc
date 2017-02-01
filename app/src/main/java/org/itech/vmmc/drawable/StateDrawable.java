@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments.drawable;
+package org.itech.vmmc.drawable;
 
 import android.content.res.ColorStateList;
 import android.graphics.Canvas;

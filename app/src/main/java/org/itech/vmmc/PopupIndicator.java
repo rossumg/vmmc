@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 import android.content.Context;
 import android.graphics.PixelFormat;
@@ -14,8 +14,8 @@ import android.view.ViewGroup;
 import android.view.WindowManager;
 import android.widget.FrameLayout;
 
-import com.itech.trainsmart.assessments.compat.SeekBarCompat;
-import com.itech.trainsmart.assessments.drawable.MarkerDrawable;
+import org.itech.vmmc.compat.SeekBarCompat;
+import org.itech.vmmc.drawable.MarkerDrawable;
 
 /**
  * Class to manage the floating bubble thing, similar (but quite worse tested than {@link android.widget.PopupWindow}

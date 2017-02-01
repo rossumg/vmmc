@@ -1,7 +1,7 @@
 <RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context="com.itech.trainsmart.assessments.CreateFragment">
+    tools:context="org.itech.vmmc.CreateFragment">
 
        <TextView
            android:layout_width="wrap_content"
@@ -14,7 +14,7 @@
            />
 
 
-    <com.itech.trainsmart.assessments.ClearableAutoCompleteTextView
+    <org.itech.vmmc.ClearableAutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:id="@+id/name"
@@ -35,7 +35,7 @@
        android:layout_below="@+id/name"
        android:layout_alignStart="@+id/nationalid" />
 
-   <com.itech.trainsmart.assessments.ClearableAutoCompleteTextView
+   <org.itech.vmmc.ClearableAutoCompleteTextView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
        android:id="@+id/nationalid"
@@ -56,7 +56,7 @@
            android:layout_below="@+id/nationalid"
            android:layout_alignStart="@+id/facility" />
 
-    <com.itech.trainsmart.assessments.ClearableAutoCompleteTextView
+    <org.itech.vmmc.ClearableAutoCompleteTextView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
            android:id="@+id/facility"

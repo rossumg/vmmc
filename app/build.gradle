@@ -5,7 +5,7 @@ android {
     buildToolsVersion "22.0.1"
 
     defaultConfig {
-        applicationId "com.itech.trainsmart.assessments"
+        applicationId "org.itech.vmmc"
         minSdkVersion 19
         targetSdkVersion 22
         versionCode 1

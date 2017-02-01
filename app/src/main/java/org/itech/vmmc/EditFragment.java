@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 import android.app.Activity;
 import android.app.DatePickerDialog;
@@ -176,7 +176,7 @@ public class EditFragment extends Fragment {
 
     }
 
-    public static class ViewHolder implements TextWatcher, com.itech.trainsmart.assessments.DiscreteSeekBar.OnProgressChangeListener, Switch.OnCheckedChangeListener, EditText.OnClickListener {
+    public static class ViewHolder implements TextWatcher, org.itech.vmmc.DiscreteSeekBar.OnProgressChangeListener, Switch.OnCheckedChangeListener, EditText.OnClickListener {
 
         public HashMap _saveData = new HashMap();
         public int position;
@@ -189,7 +189,7 @@ public class EditFragment extends Fragment {
         public DatePickerDialog datePickerDialog;
         public SimpleDateFormat dateFormater;
 
-        public com.itech.trainsmart.assessments.DiscreteSeekBar discreteSeekBar;
+        public org.itech.vmmc.DiscreteSeekBar discreteSeekBar;
         public DBHelper dbHelp;
         public PersonToAssessments pToA;
         public List<EditPageObject> pageData;
@@ -254,7 +254,7 @@ public class EditFragment extends Fragment {
         }
 
         @Override
-        public void onProgressChanged(com.itech.trainsmart.assessments.DiscreteSeekBar discreteSeekBar, int progress, boolean fromUser) {
+        public void onProgressChanged(org.itech.vmmc.DiscreteSeekBar discreteSeekBar, int progress, boolean fromUser) {
             Log.d("request!", "onProgressChanged: " + progress);
 
             pageData.get(position).set_answer(convertProgressToStr(progress));
@@ -262,11 +262,11 @@ public class EditFragment extends Fragment {
         }
 
         @Override
-        public void onStartTrackingTouch(com.itech.trainsmart.assessments.DiscreteSeekBar discreteSeekBar) {
+        public void onStartTrackingTouch(org.itech.vmmc.DiscreteSeekBar discreteSeekBar) {
         }
 
         @Override
-        public void onStopTrackingTouch(com.itech.trainsmart.assessments.DiscreteSeekBar discreteSeekBar) {
+        public void onStopTrackingTouch(org.itech.vmmc.DiscreteSeekBar discreteSeekBar) {
         }
 
         @Override

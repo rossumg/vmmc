@@ -22,7 +22,7 @@
         android:layout_marginBottom="8sp" />
 
 
-    <com.itech.trainsmart.assessments.DiscreteSeekBar
+    <org.itech.vmmc.DiscreteSeekBar
         android:layout_width="fill_parent"
         android:layout_height="wrap_content"
         android:id="@+id/discreteSeekBar"

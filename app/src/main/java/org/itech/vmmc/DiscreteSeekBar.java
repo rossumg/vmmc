@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 import android.app.FragmentManager;
 import android.content.Context;
@@ -41,12 +41,12 @@ import android.view.View;
 import android.view.ViewConfiguration;
 import android.view.ViewParent;
 
-import com.itech.trainsmart.assessments.PopupIndicator;
-import com.itech.trainsmart.assessments.compat.AnimatorCompat;
-import com.itech.trainsmart.assessments.compat.SeekBarCompat;
-import com.itech.trainsmart.assessments.drawable.MarkerDrawable;
-import com.itech.trainsmart.assessments.drawable.ThumbDrawable;
-import com.itech.trainsmart.assessments.drawable.TrackRectDrawable;
+import org.itech.vmmc.PopupIndicator;
+import org.itech.vmmc.compat.AnimatorCompat;
+import org.itech.vmmc.compat.SeekBarCompat;
+import org.itech.vmmc.drawable.MarkerDrawable;
+import org.itech.vmmc.drawable.ThumbDrawable;
+import org.itech.vmmc.drawable.TrackRectDrawable;
 
 import java.util.Formatter;
 import java.util.Locale;

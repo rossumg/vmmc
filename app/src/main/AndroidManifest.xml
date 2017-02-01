@@ -1,6 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
-    package="com.itech.trainsmart.assessments" >
+    package="org.itech.vmmc" >
 
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE"></uses-permission>
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE"/>
@@ -21,7 +21,7 @@
         android:largeHeap="true" >
 
         <activity
-            android:name="com.itech.trainsmart.assessments.MainActivity"
+            android:name="org.itech.vmmc.MainActivity"
 
             android:label="@string/app_name"
             android:windowSoftInputMode="adjustPan">

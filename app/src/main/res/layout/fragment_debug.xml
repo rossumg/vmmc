@@ -89,7 +89,7 @@
         android:layout_x="101dp"
         android:layout_y="18dp" />
 
-    <com.itech.trainsmart.assessments.DiscreteSeekBar
+    <org.itech.vmmc.DiscreteSeekBar
         android:id="@+id/discrete1"
         android:layout_x="22dp"
         android:layout_y="400dp"

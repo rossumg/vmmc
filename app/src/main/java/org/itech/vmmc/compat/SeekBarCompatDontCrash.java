@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments.compat;
+package org.itech.vmmc.compat;
 
 import android.annotation.TargetApi;
 import android.content.res.ColorStateList;
@@ -11,7 +11,7 @@ import android.view.ViewOutlineProvider;
 import android.view.ViewParent;
 import android.widget.TextView;
 
-import com.itech.trainsmart.assessments.drawable.MarkerDrawable;
+import org.itech.vmmc.drawable.MarkerDrawable;
 
 /**
  * Wrapper compatibility class to call some API-Specific methods

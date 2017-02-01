@@ -1,4 +1,4 @@
-package com.itech.trainsmart.assessments;
+package org.itech.vmmc;
 
 import android.content.Context;
 import android.content.res.ColorStateList;
@@ -15,9 +15,9 @@ import android.view.ViewGroup;
 import android.widget.FrameLayout;
 import android.widget.TextView;
 
-import com.itech.trainsmart.assessments.compat.SeekBarCompat;
-import com.itech.trainsmart.assessments.drawable.MarkerDrawable;
-import com.itech.trainsmart.assessments.drawable.ThumbDrawable;
+import org.itech.vmmc.compat.SeekBarCompat;
+import org.itech.vmmc.drawable.MarkerDrawable;
+import org.itech.vmmc.drawable.ThumbDrawable;
 
 /**
  * {@link android.view.ViewGroup} to be used as the real indicator.
