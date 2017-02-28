@@ -21,6 +21,7 @@ import java.util.UUID;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
+        LoginFragment.OnFragmentInteractionListener,
         EditFragment.OnFragmentInteractionListener,
         CreateFragment.OnFragmentInteractionListener,
         DebugFragment.OnFragmentInteractionListener,
@@ -34,7 +35,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     public static String currentFragmentId = "";
 
-    public static String COUNTRY = "mobile_demo";
+    public static String COUNTRY = "vmmc";
+//    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
     public static final String BASE_URL = "http://android.trainingdata.org/";
@@ -46,7 +48,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String _user = "rossumg";
     public static String _pass = "";
     public static boolean configChange = false;
-    public static String TAG = "request!";
+    public static String LOG = "gnr";
 
     private static LocationManager locationManager;
     private static String provider;
@@ -84,11 +86,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
         UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
         deviceId = deviceUuid.toString();
-        Log.d("request!", "mainActivity:onCreate:deviceId: " + deviceId);
+        Log.d(LOG, "mainActivity:onCreate:deviceId: " + deviceId);
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
-        // Define the criteria how to select the locatioin provider -> use
+        // Define the criteria how to select the location provider -> use
         // default
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
@@ -99,7 +101,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             System.out.println("Provider " + provider + " has been selected.");
             onLocationChanged(location);
         } else {
-            Log.d(TAG, "location is null");
+            Log.d(LOG, "location is null");
             //latituteField.setText("Location not available");
             //longitudeField.setText("Location not available");
         }
@@ -123,8 +125,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public void onLocationChanged(Location location) {
         lat = (float) (location.getLatitude());
         lng = (float) (location.getLongitude());
-        Log.d(TAG, "mainActivity:lat: " + String.valueOf((lat)));
-        Log.d(TAG, "mainActivity:lng: " + String.valueOf((lng)));
+        Log.d(LOG, "mainActivity:lat: " + String.valueOf((lat)));
+        Log.d(LOG, "mainActivity:lng: " + String.valueOf((lng)));
     }
 
     @Override
@@ -136,10 +138,27 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             return;
         }
 
+        if (!MainActivity.LOGGED_IN) {
+            position = 0;
+        }
+
+        Log.d(LOG, "Main Loop: " + position);
         Fragment fragment;
         switch(position) {
 
             case 0:
+                fragment = getFragmentManager().findFragmentByTag(LoginFragment.LOG);
+                if (fragment == null) {
+                    Log.d("request!", "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    fragment = LoginFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).addToBackStack(currentFragmentId).commit();
+                    Log.d("request!", "after add create to back stack: " + getFragmentManager().getBackStackEntryCount());
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).commit();
+                }
+                currentFragmentId = "Login";
+                break;
+            case 1:
                 fragment = getFragmentManager().findFragmentByTag(CreateFragment.TAG);
                 if (fragment == null) {
                     Log.d("request!", "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
@@ -153,7 +172,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 1:
+            case 2:
                 fragment = getFragmentManager().findFragmentByTag(RecentFragment.TAG);
                 if (fragment == null) {
                     Log.d("request!", "before add recent to back stack: " + getFragmentManager().getBackStackEntryCount());
@@ -167,7 +186,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 2:
+            case 3:
                 fragment = getFragmentManager().findFragmentByTag(SearchFragment.TAG);
                 if (fragment == null) {
                     fragment = SearchFragment.newInstance();
@@ -179,7 +198,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 3:
+            case 4:
                 fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
                 if (fragment == null) {
                     fragment = ActionFragment.newInstance("main", "");
@@ -191,12 +210,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 4:
+            case 5:
                 fragment = getFragmentManager().findFragmentByTag(DebugFragment.TAG);
                 if (fragment == null) {
-                    fragment = DebugFragment.newInstance();
+                    fragment = DebugFragment.newInstance("main", "");
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DebugFragment.TAG).addToBackStack(currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DebugFragment.TAG).commit();
                 }
-                getFragmentManager().beginTransaction().replace(R.id.container, fragment, DebugFragment.TAG).addToBackStack("").commit();
+                currentFragmentId = "Debug";
 
                 break;
 
@@ -209,11 +231,12 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 5:
+            case 6:
                 break;
 
 
         }
+
     }
 
     @Override
@@ -303,8 +326,4 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     @Override
     public void onFragmentInteraction(int position) {
     }
-
-
-
-
 }

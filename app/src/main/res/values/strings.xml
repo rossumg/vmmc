@@ -1,16 +1,37 @@
 <resources>
 
+    <!-- Strings related to login -->
+    <string name="prompt_email">Email</string>
+    <string name="prompt_password">Password</string>
+    <string name="action_sign_in">Sign in or register</string>
+    <string name="action_sign_in_short">Sign in</string>
+    <string name="action_login">Login or register</string>
+    <string name="action_login_short">Login</string>
+    <string name="action_logout">Logout</string>
+    <string name="action_logout_short">Logout</string>
+    <string name="error_invalid_email">This email address is invalid</string>
+    <string name="error_invalid_password">This password is too short</string>
+    <string name="error_incorrect_password">This password is incorrect</string>
+    <string name="error_field_required">This field is required</string>
+    <string name="error_invalid_login">Invalid Login</string>
+    <string name="permission_rationale">Contacts permissions are needed for providing email completions.</string>
+
     <string name="GEOLOCATION">Geolocation</string>
     <string name="UPLOAD">Upload</string>
     <string name="DOWNLOAD">Download</string>
+    <string name="TEST">Test</string>
+    <string name="SYNC">Sync</string>
+
 
     <string name="searchTitle">Search Assessments</string>
+    <string name="loginTitle">Login/Logout</string>
     <string name="createPersonTitle">Create Person</string>
     <string name="createTitle">Create Assessment</string>
     <string name="recentTitle">Recent Assessments</string>
     <string name="actionsTitle">Actions</string>
     <string name="editTitle">Edit Assessment</string>
     <string name="adminTitle">Administration</string>
+    <string name="debugTitle">Debug</string>
 
 
     <string name="app_name">TrainSMART</string>
@@ -50,4 +71,5 @@
     <string name="upload">Upload</string>
     <string name="error">There was an error</string>
     <string name="test">Test</string>
+
 </resources>

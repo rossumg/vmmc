@@ -1,7 +1,12 @@
 package org.itech.vmmc;
 
+import android.animation.Animator;
+import android.animation.AnimatorListenerAdapter;
+import android.annotation.TargetApi;
 import android.app.Activity;
 import android.app.Fragment;
+import android.os.AsyncTask;
+import android.os.Build;
 import android.os.Bundle;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -9,7 +14,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
+import android.widget.AutoCompleteTextView;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.Toast;
 
@@ -29,6 +36,25 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static String TAG = "createTag";
+    public static String LOG = "gnr";
+
+    /**
+     * A dummy authentication store containing known user names and passwords.
+     * TODO: remove after connecting to a real authentication system.
+     */
+    private static final String[] DUMMY_CREDENTIALS = new String[]{
+            "user@itech.org:password", "bar@example.com:world"
+    };
+    /**
+     * Keep track of the login task to ensure we can cancel it if requested.
+     */
+    private UserLoginTask mAuthTask = null;
+
+    // UI references.
+    private AutoCompleteTextView mEmailView;
+    private EditText mPasswordView;
+    private View mProgressView;
+    private View mLoginFormView;
 
     //private static final String ARG_PARAM1 = "param1";
     //private static final String ARG_PARAM2 = "param2";
@@ -72,19 +98,16 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
-        Log.d("request!", "createFragment:onCreate: ");
 
-        dbHelp = new DBHelper(getActivity());
 
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_create, container, false);
-        Log.d("request!", "createFragment:onCreateView: ");
+        Log.d(LOG, "createFragment:onCreateView: ");
 
         getActivity().setTitle(getResources().getString(R.string.createTitle));
-
 
         loadPersonIDDropdown(view);
         loadAssessmentTypeDropdown(view);
@@ -102,8 +125,9 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 java.util.Date utilDate = cal.getTime();
                 java.sql.Date sqlDate = new Date(utilDate.getTime());
-                Log.d("request!", "create button: " + person.get_person_id() + " " + person.get_facility_id() + " " + sqlDate + " " + assessment.get_assessment_id());
-                PersonToAssessments pToANew = new PersonToAssessments(person.get_person_id(), person.get_facility_id(), sqlDate.toString(), assessment.get_assessment_id(), 1);
+                //Log.d("request!", "create button: " + person.get_person_id() + " " + person.get_facility_id() + " " + sqlDate + " " + assessment.get_assessment_id());
+                // PersonToAssessments pToANew = new PersonToAssessments(person.get_person_id(), person.get_facility_id(), sqlDate.toString(), assessment.get_assessment_id(), 1);
+                PersonToAssessments pToANew = new PersonToAssessments(person.get_id(), person.get_id(), sqlDate.toString(), assessment.get_assessment_id(), 1);
                 pToANew.dump();
                 // check for exists
                 PersonToAssessments pToADB  = dbHelp.getPersonToAssessments(pToANew.get_person_id(), pToANew.get_facility_id(), pToANew.get_date_created(), pToANew.get_assessment_id());
@@ -215,8 +239,9 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                 String facility_name = parts[3].trim();
                 Log.d("request!", "facility selected:" + facility_name + ":");
                 Log.d("request!", "person selected:" + first_name + ":" + last_name + ":" + national_id + ":" + facility_name + ":");
-                person = dbHelp.getPerson(first_name, last_name, national_id, facility_name);
-                Log.d("request!", "person_id selected: " + person.get_person_id());
+                // person = dbHelp.getPerson(first_name, last_name, national_id, facility_name);
+
+                // Log.d("request!", "person_id selected: " + person.get_person_id());
 //                Log.d("request!", "first_name selected: " + first_name);
 //                Log.d("request!", "last_name selected: " + last_name);
 //                Log.d("request!", "national_id selected: " + national_id);
@@ -254,6 +279,106 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
         dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
         dropdown.setAdapter(dataAdapter);
 
+    }
+
+    public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {
+
+        private final String mEmail;
+        private final String mPassword;
+
+        UserLoginTask(String email, String password) {
+            mEmail = email;
+            mPassword = password;
+        }
+
+        @Override
+        protected Boolean doInBackground(Void... params) {
+            // TODO: attempt authentication against a network service.
+
+            try {
+                // Simulate network access.
+                Thread.sleep(2000);
+            } catch (InterruptedException e) {
+                return false;
+            }
+
+            for (String credential : DUMMY_CREDENTIALS) {
+                String[] pieces = credential.split(":");
+                if (pieces[0].equals(mEmail)) {
+                    // Account exists, return true if the password matches.
+                    return pieces[1].equals(mPassword);
+                }
+            }
+
+            // TODO: register the new account here.
+            return true;
+        }
+
+        @Override
+        protected void onPostExecute(final Boolean success) {
+            mAuthTask = null;
+            showProgress(false);
+
+            if (success) {
+                Log.d(TAG, "Logged in");
+                // finish();
+                Fragment fragment;
+
+                fragment = getFragmentManager().findFragmentByTag(CreateFragment.TAG);
+                if (fragment == null) {
+                    fragment = CreateFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, CreateFragment.TAG).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, CreateFragment.TAG).commit();
+                }
+
+            } else {
+                mPasswordView.setError(getString(R.string.error_incorrect_password));
+                mPasswordView.requestFocus();
+            }
+        }
+
+        @Override
+        protected void onCancelled() {
+            mAuthTask = null;
+            showProgress(false);
+        }
+    }
+
+    /**
+     * Shows the progress UI and hides the login form.
+     */
+    @TargetApi(Build.VERSION_CODES.HONEYCOMB_MR2)
+    private void showProgress(final boolean show) {
+        // On Honeycomb MR2 we have the ViewPropertyAnimator APIs, which allow
+        // for very easy animations. If available, use these APIs to fade-in
+        // the progress spinner.
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB_MR2) {
+            int shortAnimTime = getResources().getInteger(android.R.integer.config_shortAnimTime);
+
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+            mLoginFormView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 0 : 1).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+                }
+            });
+
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mProgressView.animate().setDuration(shortAnimTime).alpha(
+                    show ? 1 : 0).setListener(new AnimatorListenerAdapter() {
+                @Override
+                public void onAnimationEnd(Animator animation) {
+                    mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+                }
+            });
+        } else {
+            // The ViewPropertyAnimator APIs are not available, so simply show
+            // and hide the relevant UI components.
+            mProgressView.setVisibility(show ? View.VISIBLE : View.GONE);
+            mLoginFormView.setVisibility(show ? View.GONE : View.VISIBLE);
+        }
     }
 
 }

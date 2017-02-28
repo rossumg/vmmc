@@ -15,6 +15,9 @@ import java.util.List;
 import java.util.Random;
 import java.util.Set;
 
+import static java.lang.Float.parseFloat;
+import static java.lang.Integer.parseInt;
+
 
 /**
  * Created by Rayce on 8/21/2015.
@@ -22,17 +25,18 @@ import java.util.Set;
 
 public class DBHelper extends SQLiteOpenHelper{
 
+    public static String LOG = "gnr";
     private static final int DATABASE_VERSION = 1;
     public Context _context;
 
     // Database Name
-    private static final String DATABASE_NAME = "assessments.db";
+    private static final String DATABASE_NAME = "vmmc.db";
 
     // assessments.db table names
     private static final String TABLE_ASSESSMENTS = "assessments";
     private static final String TABLE_ASSESSMENTS_ANSWERS = "assessments_answers";
     private static final String TABLE_ASSESSMENTS_QUESTIONS = "assessments_questions";
-    private static final String TABLE_PERSON = "person";
+    // private static final String TABLE_PERSON = "person";
     private static final String TABLE_PERSON_TO_ASSESSMENTS = "person_to_assessments";
     private static final String TABLE_GEOLOCATIONS = "geolocations";
     private static final String TABLE_QUESTION_DROPDOWN_OPTION = "question_dropdown";
@@ -74,9 +78,9 @@ public class DBHelper extends SQLiteOpenHelper{
     // person table column names
     private static final String PERSON_ROWID = "rowid";
     private static final String PERSON_PERSON_ID = "person_id";
-    private static final String PERSON_FIRST_NAME = "first_name";
-    private static final String PERSON_LAST_NAME = "last_name";
-    private static final String PERSON_NATIONAL_ID = "national_id";
+    //private static final String PERSON_FIRST_NAME = "first_name";
+    //private static final String PERSON_LAST_NAME = "last_name";
+    // private static final String PERSON_NATIONAL_ID = "national_id";
     private static final String PERSON_FACILITY_ID = "facility_id";
     private static final String PERSON_FACILITY_NAME = "facility_name";
 
@@ -103,6 +107,100 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String ANSWER_TYPE_QUESTIONMULTI = "questiontextarea";
     private static final String ANSWER_TYPE_TITLE = "title";
 
+    // vmmc.db table names
+    private static final String TABLE_PERSON      = "person";
+    private static final String TABLE_USER        = "user";
+    private static final String TABLE_CLIENT      = "client";
+    private static final String TABLE_FACILITATOR = "facilitator";
+    private static final String TABLE_LOCATION    = "location";
+    private static final String TABLE_REGION      = "region";
+    private static final String TABLE_CONSTITUENCY = "constituency";
+    private static final String TABLE_BOOKING      = "booking";
+    private static final String TABLE_INTERACTION  = "interaction";
+    private static final String TABLE_GEOLOCATION  = "geolocation";
+    private static final String TABLE_FACILITATOR_TYPE = "facilitator_type";
+    private static final String TABLE_INTERACTION_TYPE = "interaction_type";
+
+    // person table column names
+    private static final String PERSON_ID          = "id";
+    private static final String PERSON_FIRST_NAME  = "first_name";
+    private static final String PERSON_LAST_NAME   = "last_name";
+    private static final String PERSON_NATIONAL_ID = "national_id";
+    private static final String PERSON_ADDRESS     = "address";
+    private static final String PERSON_PHONE       = "phone";
+    private static final String PERSON_DOB         = "dob";
+    private static final String PERSON_GENDER      = "gender";
+    private static final String PERSON_LATITUDE    = "latitude";
+    private static final String PERSON_LONGITUDE   = "longitude";
+    private static final String PERSON_IS_DELETED      = "is_deleted";
+
+    // booking table column names
+    private static final String BOOKING_ID              = "id";
+    private static final String BOOKING_CLIENT_ID       = "client_id";
+    private static final String BOOKING_FACILITATOR_ID  = "facilitator_id";
+    private static final String BOOKING_LOCATION_ID     = "location_id";
+    private static final String BOOKING_PROJECTED_DATE  = "projected_date";
+    private static final String BOOKING_ACTUAL_DATE     = "actual_date";
+
+    // user table column names
+    private static final String USER_ID        = "id";
+    private static final String USER_PERSON_ID = "person_id";
+    private static final String USER_USERNAME  = "username";
+    private static final String USER_PASSWORD  = "password";
+
+    // client table column names
+    private static final String CLIENT_ID        = "id";
+    private static final String CLIENT_PERSON_ID = "person_id";
+    private static final String CLIENT_STATUS    = "status";
+
+    // facilitator table column names
+    private static final String FACILITATOR_ID          = "id";
+    private static final String FACILITATOR_PERSON_ID   = "person_id";
+    private static final String FACILITATOR_TYPE        = "type_id";
+    private static final String FACILITATOR_NOTE        = "note";
+    private static final String FACILITATOR_LOCATION_ID = "location_id";
+    private static final String FACILITATOR_LAT         = "lat";
+    private static final String FACILITATOR_LONG        = "long";
+    private static final String FACILITATOR_INSTITUTION = "institution";
+
+    // location table column names
+    private static final String LOCATION_ID   = "id";
+    private static final String LOCATION_NAME = "name";
+
+    // region table column names
+    private static final String REGION_ID          = "id";
+    private static final String REGION_NAME        = "name";
+    private static final String REGION_LOCATION_ID = "location_id";
+
+    // constituency table column names
+    private static final String CONSTITUENCY_ID        = "id";
+    private static final String CONSTITUENCY_NAME      = "name";
+    private static final String CONSTITUENCY_REGION_ID = "region_id";
+
+    // interaction table column names
+    private static final String INTERACTION_ID          = "id";
+    private static final String INTERACTION_NAME        = "name";
+    private static final String INTERACTION_BOOKING_ID  = "booking_id";
+    private static final String INTERACTION_TYPE        = "type_id";
+    private static final String INTERACTION_NOTE        = "note";
+
+    // interaction_type table column names
+    private static final String INTERACTION_TYPE_ID     = "id";
+    private static final String INTERACTION_TYPE_NAME   = "name";
+
+    // facilitator_type table column names
+    private static final String FACILITATOR_TYPE_ID     = "id";
+    private static final String FACILITATOR_TYPE_NAME   = "name";
+
+    // geolocation table column names
+    private static final String GEOLOCATION_ID        = "id";
+    private static final String GEOLOCATION_LAT       = "lat";
+    private static final String GEOLOCATION_LONG      = "long";
+    private static final String GEOLOCATION_DEVICE_ID = "device_id";
+    private static final String GEOLOCATION_TIMESTAMP = "timestamp";
+    private static final String GEOLOCATION_USERNAME  = "username";
+    private static final String GEOLOCATION_PASSWORD  = "password";
+
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
         this._context = context;
@@ -111,101 +209,239 @@ public class DBHelper extends SQLiteOpenHelper{
     @Override
     public void onCreate(SQLiteDatabase db) {
 
-        Log.d("request!", "DBHelper.onCreate0");
+        Log.d(LOG, "DBHelper.onCreate0");
 
-        //try { db.execSQL("delete from assessments;"); } catch(Exception ex) {Log.d("request!", "DBHelper.onCreate nothing to delete" + ex.toString());}
+        //try { db.execSQL("delete from person;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
         try {
-            String CREATE_ASSESSMENTS_TABLE = "CREATE TABLE IF NOT EXISTS assessments(" +
-                    "assessment_id int, " +
-                    "assessment_type varchar, " +
-                    "status int);";
-            db.execSQL(CREATE_ASSESSMENTS_TABLE);
+            String CREATE_PERSON_TABLE = "CREATE TABLE IF NOT EXISTS person(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "first_name varchar, " +
+                    "last_name varchar, " +
+                    "national_id varchar, " +
+                    "address varchar, " +
+                    "phone varchar, " +
+                    "dob date, " +
+                    "gender varchar, " +
+                    "latitude real, " +
+                    "longitude real, " +
+                    "is_deleted inti, " +
+                    "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
+            db.execSQL(CREATE_PERSON_TABLE);
 
-        //db.execSQL("delete from assessments_answers;");
-        String CREATE_ASSESSMENTS_ANSWERS_TABLE = "CREATE TABLE IF NOT EXISTS assessments_answers(" +
-                "assess_id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, " +
-                        "person INTEGER, " +
-                        "facility INTEGER, " +
-                        "date_created DATETIME, " +
-                        "assessment_id INTEGER, " +
-                        "question VARCHAR, " +
-                        "answer VARCHAR, " +
-                        "active CHAR)";
-        db.execSQL(CREATE_ASSESSMENTS_ANSWERS_TABLE);
+            //try { db.execSQL("delete from booking;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_BOOKING_TABLE = "CREATE TABLE IF NOT EXISTS booking(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "client_id int, " +
+                    "facilitator_id int, " +
+                    "location_id int, " +
+                    "projected_date date, " +
+                    "actual_date date)";
+            db.execSQL(CREATE_BOOKING_TABLE);
 
-        //try { db.execSQL("delete from assessments_questions;"); } catch(Exception ex) {}
+            //try { db.execSQL("delete from user;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS user(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "person_id int, " +
+                    "username varchar, " +
+                    "password varchar)";
+            db.execSQL(CREATE_USER_TABLE);
 
-        String CREATE_ASSESSMENTS_QUESTIONS_TABLE = "CREATE TABLE IF NOT EXISTS assessments_questions(" +
-            "assessments_questions_id int, " +
-                    "assessment_id int, " +
-                    "question varchar, " +
-                    "itemorder int, " +
-                    "itemtype varchar, " +
-                    "status int);";
-            db.execSQL(CREATE_ASSESSMENTS_QUESTIONS_TABLE);
-            //try { db.execSQL("delete from person;"); } catch(Exception ex) {}
+            //try { db.execSQL("delete from client;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_CLIENT_TABLE = "CREATE TABLE IF NOT EXISTS client(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "person_id int, " +
+                    "status varchar)";
+            db.execSQL(CREATE_CLIENT_TABLE);
 
-        String CREATE_GEOLOCATIONS_TABLE = "CREATE TABLE IF NOT EXISTS geolocations(" +
-                "geolocations_id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE, " +
-                "longitude REAL, " +
-                "latitude REAL, " +
-                "device_id varchar, " +
-                "created_at datetime default CURRENT_TIMESTAMP, " +
-                "username varchar, " +
-                "password varchar);";
-            db.execSQL(CREATE_GEOLOCATIONS_TABLE);
-        //try { db.execSQL("delete from person;"); } catch(Exception ex) {}
+            //try { db.execSQL("delete from facilitator;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_FACILITATOR_TABLE = "CREATE TABLE IF NOT EXISTS facilitator(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "person_id int, " +
+                    "type_id int, " +
+                    "note varchar, " +
+                    "location_id int, " +
+                    "lat real, " +
+                    "long real, " +
+                    "institution varchar)";
+            db.execSQL(CREATE_FACILITATOR_TABLE);
 
-        String CREATE_PERSON_TABLE = "CREATE TABLE IF NOT EXISTS person(" +
-                "person_id int, " +
-                "first_name varchar, " +
-                "last_name varchar, " +
-                "national_id varchar, " +
-                "facility_id int, " +
-                "facility_name varchar);";
+            //try { db.execSQL("delete from location;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_LOCATION_TABLE = "CREATE TABLE IF NOT EXISTS location(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "location_name varchar)";
+            db.execSQL(CREATE_LOCATION_TABLE);
 
-        db.execSQL(CREATE_PERSON_TABLE);
+            //try { db.execSQL("delete from region;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_REGION_TABLE = "CREATE TABLE IF NOT EXISTS region(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar, " +
+                    "location_id int)";
+            db.execSQL(CREATE_REGION_TABLE);
 
-        //db.execSQL("delete from person_to_assessments;");
-        String CREATE_PERSON_TO_ASSESSEMNTS_TABLE = "CREATE  TABLE IF NOT EXISTS person_to_assessments(" +
-                "person_to_assessments_id INTEGER PRIMARY KEY  AUTOINCREMENT  NOT NULL  UNIQUE , " +
-                        "person_id INTEGER, " +
-                        "facility_id INTEGER, " +
-                        "date_created DATETIME, " +
-                        "assessment_id INTEGER, " +
-                        "user_id INTEGER, " +
-                        "status INTEGER);";
-        db.execSQL(CREATE_PERSON_TO_ASSESSEMNTS_TABLE);
+            //try { db.execSQL("delete from constituency;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_CONSTITUENCY_TABLE = "CREATE TABLE IF NOT EXISTS constituency(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar, " +
+                    "region_id int)";
+            db.execSQL(CREATE_CONSTITUENCY_TABLE);
 
-        //db.execSQL("delete from question_dropdown_option;");
-        String CREATE_QUESTION_DROPDOWN_OPTION_TABLE = "CREATE  TABLE IF NOT EXISTS question_dropdown_option(" +
-                    "assessment_question_id INTEGER, " +
-                    "dropdown_option VARCHAR, " +
-                    "status INTEGER);";
-        db.execSQL(CREATE_QUESTION_DROPDOWN_OPTION_TABLE);
+            //try { db.execSQL("delete from interaction;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_INTERACTION_TABLE = "CREATE TABLE IF NOT EXISTS interaction(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar, " +
+                    "booking_id int, " +
+                    "type_id int" +
+                    "note varchar)";
+            db.execSQL(CREATE_INTERACTION_TABLE);
+
+            //try { db.execSQL("delete from interaction_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_INTERACTION_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS interaction_type(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar);";
+                    db.execSQL(CREATE_INTERACTION_TYPE_TABLE);
+
+            //try { db.execSQL("delete from facilitator_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_FACILITATOR_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS facilitator_type(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar);";
+                    db.execSQL(CREATE_FACILITATOR_TYPE_TABLE);
+
+            //try { db.execSQL("delete from geolocation;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_GEOLOCATION_TABLE = "CREATE TABLE IF NOT EXISTS geolocation(" +
+                    "geolocations_id integer primary key  autoincrement  not null  unique, " +
+                    "lat real, " +
+                    "long real, " +
+                    "device_id varchar, " +
+                    "created_at datetime default current_timestamp, " +
+                    "username varchar, " +
+                    "password varchar);";
+            db.execSQL(CREATE_GEOLOCATION_TABLE);
+
 
         } catch (Exception ex) {
-            Log.d("request!", "DBHelper.onCreate catch" + ex.toString());
+            Log.d(LOG, "DBHelper.onCreate catch" + ex.toString());
         }
     }
+
+    public void doCreateDB() {
+        Log.d(LOG, "DBHelper.doCreateDB");
+        SQLiteDatabase db = this.getReadableDatabase();
+        onCreate(db);
+//        load_facilitator_type();
+//        load_interaction_type();
+    }
+
+    public void doSyncDB() {
+        Log.d(LOG, "DBHelper.doSyncDB");
+        SQLiteDatabase db = this.getWritableDatabase();
+        onCreate(db);
+//        load_facilitator_type();
+//        load_interaction_type();
+//          load_person();
+          new putMySQLPersonTable(this).execute();
+          new getMySQLPersonTable(this._context, this).execute();
+    }
+
+    public void doTestDB() {
+        Log.d(LOG, "DBHelper.doTestDB");
+        SQLiteDatabase db = this.getReadableDatabase();
+        onCreate(db);
+//        load_facilitator_type();
+//        load_interaction_type();
+        load_person();
+//        new putMySQLPersonTable(this).execute();
+//        new getMySQLPersonTable(this._context, this).execute();
+    }
+
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
         // Drop older tables if exists
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENTS_ANSWERS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_ASSESSMENTS_QUESTIONS);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERSON);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PERSON_TO_ASSESSMENTS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_QUESTION_DROPDOWN_OPTION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USER);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CLIENT);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACILITATOR);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_LOCATION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_REGION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_CONSTITUENCY);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_BOOKING);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACILITATOR_TYPE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERACTION_TYPE);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_GEOLOCATION);
 
         // Create tables again
         onCreate(db);
     }
 
+    protected void load_person() {
+        Log.d(LOG, "debugFragment:load_person");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        // db.execSQL("delete from person ");
+        Person person0 = new Person("A","B", "n","a","p","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person0);
+        Person person1 = new Person("C","D", "n","a","p","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person1);
+        Person person2 = new Person("E","F", "n","a","p","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person2);
+
+        Person person3 = getPerson("A","B", "p");
+        Log.d(LOG, "debugFragment:load_person:personAB: " +
+                person3.get_first_name() + " " +
+                person3.get_last_name() + " " +
+                person3.get_national_id() + " " +
+                person3.get_address() + " " +
+                person3.get_phone() + " " +
+                person3.get_dob() + " " +
+                person3.get_gender() + " " +
+                person3.get_latitude() + " " +
+                person3.get_longitude() + " " +
+                person3.get_is_deleted());
+
+        Person person4 = getPerson(2);
+        if(person4 != null) {
+            Log.d(LOG, "debugFragment:load_person:person2: " +
+                    person4.get_first_name() + " " +
+                    person4.get_last_name() + " " +
+                    person4.get_national_id() + " " +
+                    person4.get_address() + " " +
+                    person4.get_phone() + " " +
+                    person4.get_dob() + " " +
+                    person4.get_gender() + " " +
+                    person4.get_latitude() + " " +
+                    person4.get_longitude() + " " +
+                    person4.get_is_deleted());
+        } else {
+          Log.d(LOG, "person 2 not found");
+        }
+
+
+        //db.execSQL("insert into person values (1,\"A\", \"B\", \"N\", \"A\", \"P\", \"dob\", \"G\", 1.1, 2.2, 0 );");
+        //db.execSQL("insert into person values (2,\"C\", \"D\", \"N\", \"A\", \"P\", \"dob\", \"G\", 1.1, 2.2, 0 );");
+        //db.execSQL("insert into person values (3,\"E\", \"F\", \"N\", \"A\", \"P\", \"dob\", \"G\", 1.1, 2.2, 0 );");
+
+    }
+    protected void load_facilitator_type() {
+        Log.d(LOG, "debugFragment:load_facilitator_type");
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from facilitator_type ");
+        db.execSQL("insert into facilitator_type values (1,\"Mobilizer\");");
+        db.execSQL("insert into facilitator_type values (2,\"User\");");
+        db.execSQL("insert into facilitator_type values (2,\"Activity\");");
+
+    }
+
+    protected void load_interaction_type() {
+        Log.d(LOG, "debugFragment:load_interaction_type");
+        SQLiteDatabase db = this.getWritableDatabase();
+        db.execSQL("delete from interaction_type ");
+        db.execSQL("insert into interaction_type values (1,\"phone call\");");
+        db.execSQL("insert into interaction_type values (2,\"home visit\");");
+        db.execSQL("insert into interaction_type values (2,\"clinic visit\");");
+
+
+    }
+
     public void helperTest(){
 
-        Log.d("request!", "helperTest0 ");
+        Log.d(LOG, "helperTest0 ");
 
         try {
 
@@ -327,12 +563,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 
-            List<String> allPersonID = getAllPersonIDs();
-            String parts[] = {};
-            for (String personID : allPersonID){
-                parts = personID.split("_");
-                Log.d("request!", "person_id: " + parts[0] + " last, first, national, facility: " + parts[1]);
-            }
+//            List<String> allPersonID = getAllPersonIDs();
+//            String parts[] = {};
+//            for (String personID : allPersonID){
+//                parts = personID.split("_");
+//                Log.d("request!", "person_id: " + parts[0] + " last, first, national, facility: " + parts[1]);
+//            }
 
 //            // returns unique sorted facility_names
 //            String[] allFacilityNames = {""};
@@ -371,9 +607,9 @@ public class DBHelper extends SQLiteOpenHelper{
 //                                p.get_facility_name()
 //                );
 //            }
-            int question =  this.getAssessmentsQuestionsQuestion(2, 26);
-            Log.d("request!", "question: " + question);
-            Log.d("request!", "helperTest Done");
+//            int question =  this.getAssessmentsQuestionsQuestion(2, 26);
+//            Log.d(LOG, "question: " + question);
+            Log.d(LOG, "helperTest Done");
 
         } catch (Exception ex) {
             Log.d("request!", "helperTest catch " + ex.toString());
@@ -641,7 +877,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor.getString(0) + " "
 //        );
 
-        int returnQuestion = Integer.parseInt(cursor.getString(0));
+        int returnQuestion = parseInt(cursor.getString(0));
         cursor.close();
         db.close();
         return returnQuestion;
@@ -741,8 +977,8 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 GeoLocations geoLocations = new GeoLocations();
-                geoLocations.set_longitude(Float.parseFloat(cursor.getString(1)));
-                geoLocations.set_latitude(Float.parseFloat(cursor.getString(2)));
+                geoLocations.set_longitude(parseFloat(cursor.getString(1)));
+                geoLocations.set_latitude(parseFloat(cursor.getString(2)));
                 geoLocations.set_device_id(cursor.getString(3));
                 geoLocations.set_created_at(cursor.getString(4));
                 geoLocations.set_username(cursor.getString(5));
@@ -836,7 +1072,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d("request!", "Query: " + query);
 
         Cursor cursor = db.rawQuery(query, null);
-        facility_id = Integer.parseInt(cursor.getString(0));
+        facility_id = parseInt(cursor.getString(0));
 
         cursor.close();
         db.close();
@@ -941,10 +1177,10 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 EditPageObject editPageObject = new EditPageObject();
-                editPageObject.set_assessments_questions_id(Integer.parseInt(cursor.getString(0)));
+                editPageObject.set_assessments_questions_id(parseInt(cursor.getString(0)));
                 editPageObject.set_question(cursor.getString(1));
                 editPageObject.set_itemtype(cursor.getString(2));
-                editPageObject.set_itemorder(Integer.parseInt(cursor.getString(3)));
+                editPageObject.set_itemorder(parseInt(cursor.getString(3)));
                 editPageObject.set_answer(cursor.getString(4));
                 editPageObject.set_dropdown_tablename("");
 
@@ -1059,7 +1295,7 @@ public class DBHelper extends SQLiteOpenHelper{
         );
 
         Assessments assessments = new Assessments(
-                Integer.parseInt(cursor.getString(1)),
+                parseInt(cursor.getString(1)),
                 cursor.getString(2)
 
         );
@@ -1093,7 +1329,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //        );
 
         Assessments assessments = new Assessments(
-                Integer.parseInt(cursor.getString(0)),
+                parseInt(cursor.getString(0)),
                 cursor.getString(1)
 
         );
@@ -1131,12 +1367,12 @@ public class DBHelper extends SQLiteOpenHelper{
 //        );
 
             AssessmentsAnswers assessments_answers = new AssessmentsAnswers(
-                    Integer.parseInt(cursor.getString(0)),
-                    Integer.parseInt(cursor.getString(1)),
-                    Integer.parseInt(cursor.getString(2)),
+                    parseInt(cursor.getString(0)),
+                    parseInt(cursor.getString(1)),
+                    parseInt(cursor.getString(2)),
                     cursor.getString(3),
-                    Integer.parseInt(cursor.getString(4)),
-                    Integer.parseInt(cursor.getString(5)),
+                    parseInt(cursor.getString(4)),
+                    parseInt(cursor.getString(5)),
                     cursor.getString(6)
 
             );
@@ -1184,12 +1420,12 @@ public class DBHelper extends SQLiteOpenHelper{
 //        );
 
             AssessmentsAnswers assessments_answers = new AssessmentsAnswers(
-                    Integer.parseInt(cursor.getString(0)),
-                    Integer.parseInt(cursor.getString(1)),
-                    Integer.parseInt(cursor.getString(2)),
+                    parseInt(cursor.getString(0)),
+                    parseInt(cursor.getString(1)),
+                    parseInt(cursor.getString(2)),
                     cursor.getString(3),
-                    Integer.parseInt(cursor.getString(4)),
-                    Integer.parseInt(cursor.getString(5)),
+                    parseInt(cursor.getString(4)),
+                    parseInt(cursor.getString(5)),
                     cursor.getString(6)
 
             );
@@ -1237,12 +1473,12 @@ public class DBHelper extends SQLiteOpenHelper{
 //        );
 
             AssessmentsAnswers assessments_answers = new AssessmentsAnswers(
-                    Integer.parseInt(cursor.getString(0)),
-                    Integer.parseInt(cursor.getString(1)),
-                    Integer.parseInt(cursor.getString(2)),
+                    parseInt(cursor.getString(0)),
+                    parseInt(cursor.getString(1)),
+                    parseInt(cursor.getString(2)),
                     cursor.getString(3),
-                    Integer.parseInt(cursor.getString(4)),
-                    Integer.parseInt(cursor.getString(5)),
+                    parseInt(cursor.getString(4)),
+                    parseInt(cursor.getString(5)),
                     cursor.getString(6)
 
             );
@@ -1385,12 +1621,12 @@ public class DBHelper extends SQLiteOpenHelper{
                         + cursor.getString(6) + " "
         );
             person_to_assessments = new PersonToAssessments(
-                    Integer.parseInt(cursor.getString(0)),
-                    Integer.parseInt(cursor.getString(1)),
-                    Integer.parseInt(cursor.getString(2)),
+                    parseInt(cursor.getString(0)),
+                    parseInt(cursor.getString(1)),
+                    parseInt(cursor.getString(2)),
                     cursor.getString(3),
-                    Integer.parseInt(cursor.getString(4)),
-                    Integer.parseInt(cursor.getString(5))
+                    parseInt(cursor.getString(4)),
+                    parseInt(cursor.getString(5))
 
             );
             cursor.close();
@@ -1435,12 +1671,12 @@ public class DBHelper extends SQLiteOpenHelper{
 //        );
 
             personToAssessments = new PersonToAssessments(
-                    Integer.parseInt(cursor.getString(0)),
-                    Integer.parseInt(cursor.getString(1)),
-                    Integer.parseInt(cursor.getString(2)),
+                    parseInt(cursor.getString(0)),
+                    parseInt(cursor.getString(1)),
+                    parseInt(cursor.getString(2)),
                     cursor.getString(3),
-                    Integer.parseInt(cursor.getString(4)),
-                    Integer.parseInt(cursor.getString(5))
+                    parseInt(cursor.getString(4)),
+                    parseInt(cursor.getString(5))
 
             );
             cursor.close();
@@ -1479,49 +1715,53 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
 
         ContentValues values = new ContentValues();
-        values.put(PERSON_PERSON_ID, person.get_person_id());
+        //values.put(PERSON_ID, person.get_id());
         values.put(PERSON_FIRST_NAME, person.get_first_name());
         values.put(PERSON_LAST_NAME, person.get_last_name());
         values.put(PERSON_NATIONAL_ID, person.get_national_id());
-        values.put(PERSON_FACILITY_ID, person.get_facility_id());
-        values.put(PERSON_FACILITY_NAME, person.get_facility_name());
+        values.put(PERSON_ADDRESS,  person.get_address());
+        values.put(PERSON_PHONE,  person.get_phone());
+        values.put(PERSON_DOB,  person.get_dob());
+        values.put(PERSON_GENDER,  person.get_gender());
+        values.put(PERSON_LATITUDE,  person.get_latitude());
+        values.put(PERSON_LONGITUDE,  person.get_longitude());
+        values.put(PERSON_IS_DELETED,  person.get_is_deleted());
 
         try {
             db.insert(TABLE_PERSON, null, values);
         } catch (Exception ex) {
             db.close();
-            Log.d("request!", "addPerson catch " + ex.toString());
+            Log.d(LOG, "addPerson catch " + ex.toString());
             return false;
         }
         return true;
     }
 
-    public Person getPerson(String person_first_name, String person_last_name, String person_national_id, String person_facility_name) {
+    public Person getPerson(String person_first_name, String person_last_name, String person_phone ) {
         Person person = null;
         SQLiteDatabase db = this.getReadableDatabase();
-        Log.d("request!", "getPerson: " + person_first_name + " " + person_last_name + " " + person_national_id + " " + person_facility_name);
+        Log.d(LOG, "getPerson: " + person_first_name + " " + person_last_name + " " + person_phone );
 
         String[] tableColumns = new String[] {
-                PERSON_ROWID, PERSON_PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_FACILITY_ID, PERSON_FACILITY_NAME
+                PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
         };
 
         String whereClause = "1=1 and trim(" +
                 PERSON_FIRST_NAME + ") like ? and trim(" +
                 PERSON_LAST_NAME + ") like ? and trim(" +
-                PERSON_NATIONAL_ID + ") like ? and trim(" +
-                PERSON_FACILITY_NAME + ") like ? ";
+                PERSON_PHONE + ") like ? ";
 
         Log.d("request!", "getPerson whereClause: " + whereClause);
 
         String[] whereArgs = new String [] {
-                person_first_name, person_last_name, person_national_id, person_facility_name };
+                person_first_name, person_last_name, person_phone };
 
-        Log.d("request!", "getPerson whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":" + whereArgs[3] + ":");
+        Log.d(LOG, "getPerson whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":");
 
         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
-            Log.d("request!", "getPerson  "
+            Log.d(LOG, "getPerson  "
                             + cursor.getString(0) + " "
                             + cursor.getString(1) + " "
                             + cursor.getString(2) + " "
@@ -1529,16 +1769,24 @@ public class DBHelper extends SQLiteOpenHelper{
                             + cursor.getString(4) + " "
                             + cursor.getString(5) + " "
                             + cursor.getString(6) + " "
+                            + cursor.getString(7) + " "
+                            + cursor.getString(8) + " "
+                            + cursor.getString(9) + " "
+                            + cursor.getString(10) + " "
             );
 
             person = new Person(
-                    Integer.parseInt(cursor.getString(0)),
-                    Integer.parseInt(cursor.getString(1)),
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
                     cursor.getString(4),
-                    Integer.parseInt(cursor.getString(5)),
-                    cursor.getString(6)
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    parseFloat(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseInt(cursor.getString(10))
             );
             cursor.close();
             db.close();
@@ -1550,25 +1798,24 @@ public class DBHelper extends SQLiteOpenHelper{
         }
     }
 
-    public Person getPerson(int person_person_id) {
-
+    public Person getPerson(int person_id) {
+        Person person = null;
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] tableColumns = new String[] {
-                PERSON_ROWID, PERSON_PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_FACILITY_ID, PERSON_FACILITY_NAME
+                PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
         };
 
         String whereClause = "1=1 and " +
-                PERSON_PERSON_ID + " = ?";
+                PERSON_ID + " = ?";
 
         String[] whereArgs = new String[]{
-                Integer.toString(person_person_id) };
+                Integer.toString(person_id) };
 
         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-        Log.d("request!", "getPerson  "
+        Log.d(LOG, "getPerson:where:  " + whereClause + " " + whereArgs);
+        if (cursor.moveToFirst()) {
+        Log.d(LOG, "getPerson  "
                         + cursor.getString(0) + " "
                         + cursor.getString(1) + " "
                         + cursor.getString(2) + " "
@@ -1576,20 +1823,33 @@ public class DBHelper extends SQLiteOpenHelper{
                         + cursor.getString(4) + " "
                         + cursor.getString(5) + " "
                         + cursor.getString(6) + " "
+                        + cursor.getString(7) + " "
+                        + cursor.getString(8) + " "
+                        + cursor.getString(9) + " "
+                        + cursor.getString(10) + " "
         );
 
-        Person person = new Person(
-                Integer.parseInt(cursor.getString(0)),
-                Integer.parseInt(cursor.getString(1)),
+        person = new Person(
+                parseInt(cursor.getString(0)),
+                cursor.getString(1),
                 cursor.getString(2),
                 cursor.getString(3),
                 cursor.getString(4),
-                Integer.parseInt(cursor.getString(5)),
-                cursor.getString(6)
+                cursor.getString(5),
+                cursor.getString(6),
+                cursor.getString(7),
+                parseFloat(cursor.getString(8)),
+                parseFloat(cursor.getString(9)),
+                parseInt(cursor.getString(10))
         );
-        cursor.close();
-        db.close();
-        return person;
+            cursor.close();
+            db.close();
+            return person;
+        } else {
+            cursor.close();
+            db.close();
+            return person;
+        }
     }
 
     public List<Person> getAllPersons() {
@@ -1604,20 +1864,24 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 Person person = new Person();
-                //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                person.set_person_id(Integer.parseInt(cursor.getString(0)));
+                person.set_id(parseInt(cursor.getString(0)));
                 person.set_first_name(cursor.getString(1));
                 person.set_last_name(cursor.getString(2));
                 person.set_national_id(cursor.getString(3));
-                person.set_facility_id(Integer.parseInt(cursor.getString(4)));
-                person.set_facility_name(cursor.getString(5));
+                person.set_address(cursor.getString(4));
+                person.set_phone(cursor.getString(5));
+                person.set_dob(cursor.getString(6));
+                person.set_gender(cursor.getString(7));
+                person.set_latitude(parseFloat(cursor.getString(8)));
+                person.set_longitude(parseFloat(cursor.getString(9)));
+                person.set_is_deleted(parseInt(cursor.getString(10)));
 
                 // Adding person to list
                 personList.add(person);
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        // db.close();
         // return person list
         return personList;
     }
@@ -1635,12 +1899,12 @@ public class DBHelper extends SQLiteOpenHelper{
             do {
                 AssessmentsAnswers assessmentsAnswers = new AssessmentsAnswers();
                 //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                assessmentsAnswers.set_assess_id(Integer.parseInt(cursor.getString(0)));
-                assessmentsAnswers.set_person(Integer.parseInt(cursor.getString(1)));
-                assessmentsAnswers.set_facility(Integer.parseInt(cursor.getString(2)));
+                assessmentsAnswers.set_assess_id(parseInt(cursor.getString(0)));
+                assessmentsAnswers.set_person(parseInt(cursor.getString(1)));
+                assessmentsAnswers.set_facility(parseInt(cursor.getString(2)));
                 assessmentsAnswers.set_date_created(cursor.getString(3));
-                assessmentsAnswers.set_assessment_id(Integer.parseInt(cursor.getString(4)));
-                assessmentsAnswers.set_question(Integer.parseInt(cursor.getString(5)));
+                assessmentsAnswers.set_assessment_id(parseInt(cursor.getString(4)));
+                assessmentsAnswers.set_question(parseInt(cursor.getString(5)));
                 assessmentsAnswers.set_answer(cursor.getString(6));
 
                 // Adding person to list
@@ -1666,12 +1930,12 @@ public class DBHelper extends SQLiteOpenHelper{
             do {
                 PersonToAssessments personToAssessments = new PersonToAssessments();
                 //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                personToAssessments.set_person_to_assessments_id(Integer.parseInt(cursor.getString(0)));
-                personToAssessments.set_person_id(Integer.parseInt(cursor.getString(1)));
-                personToAssessments.set_facility_id(Integer.parseInt(cursor.getString(2)));
+                personToAssessments.set_person_to_assessments_id(parseInt(cursor.getString(0)));
+                personToAssessments.set_person_id(parseInt(cursor.getString(1)));
+                personToAssessments.set_facility_id(parseInt(cursor.getString(2)));
                 personToAssessments.set_date_created(cursor.getString(3));
-                personToAssessments.set_assessment_id(Integer.parseInt(cursor.getString(4)));
-                personToAssessments.set_user_id(Integer.parseInt(cursor.getString(5)));
+                personToAssessments.set_assessment_id(parseInt(cursor.getString(4)));
+                personToAssessments.set_user_id(parseInt(cursor.getString(5)));
 
                 // Adding person to list
                 personToAssessmentsList.add(personToAssessments);

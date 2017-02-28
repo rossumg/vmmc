@@ -113,17 +113,17 @@ public class EditFragment extends Fragment {
         Person person = dbHelp.getPerson(_pToA.get_person_id());
         Assessments assessment = dbHelp.getAssessments(_pToA.get_assessment_id());
 
-        Log.d("request!", "editFrag: " +
-                person.get_last_name() + ", " +
-                person.get_first_name() + " " +
-                person.get_national_id() + " " +
-                person.get_facility_name() + " " +
-                assessment.get_assessment_type());
+//        Log.d("request!", "editFrag: " +
+//                person.get_last_name() + ", " +
+//                person.get_first_name() + " " +
+//                person.get_national_id() + " " +
+//                person.get_facility_name() + " " +
+//                assessment.get_assessment_type());
 
         getActivity().setTitle(person.get_first_name() + ", " +
                 person.get_last_name() + " " +
                 _pToA.get_date_created() + " " +
-                person.get_facility_name());
+                "facility_name");
 
         ListView listView = (ListView) view.findViewById(R.id.editListView);
 

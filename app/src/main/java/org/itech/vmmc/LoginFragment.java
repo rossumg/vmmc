@@ -19,6 +19,7 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 
+
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
@@ -33,7 +34,7 @@ public class LoginFragment extends Fragment {
     //private static final String ARG_PARAM1 = "param1";
     //private static final String ARG_PARAM2 = "param2";
 
-    public static String TAG = "gnr";
+    public static String LOG = "gnr";
 //    public static String deviceId = "";
 
     //public DBHelper dbHelp = new DBHelper(getActivity());
@@ -100,8 +101,12 @@ public class LoginFragment extends Fragment {
             //mParam2 = getArguments().getString(ARG_PARAM2);
         }
 
+        Log.d(LOG, "LoginFragment.onCreate0");
+
         DBHelper dbHelp = new DBHelper(getActivity());
+
         this._dbHelp = dbHelp;
+        Log.d(LOG, "LoginFragment.onCreate1");
 
 
 
@@ -366,18 +371,18 @@ public class LoginFragment extends Fragment {
                 return false;
             }
 
-            Log.d(TAG, "check credentials");
+            Log.d(LOG, "check credentials");
             for (String credential : DUMMY_CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.
-                    Log.d(TAG, "return: " + pieces[1].equals(mPassword));
+                    Log.d(LOG, "return: " + pieces[1].equals(mPassword));
                     return pieces[1].equals(mPassword);
                 }
             }
 
             // TODO: register the new account here.
-            Log.d(TAG, "return: false");
+            Log.d(LOG, "return: false");
             return false;
         }
     }

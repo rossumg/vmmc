@@ -113,7 +113,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
                     Log.d("request!", "Search button name is null: ");
                 } else {
                     Log.d("request!", "Search button name: " + nameDropdown.getText().toString());
-                    int personId = new Integer(person.get_person_id());
+                    int personId = new Integer(person.get_id());
                     paramPersonId = Integer.toString(personId);
                 }
                 if (assessment == null) {
@@ -223,8 +223,8 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
                 String national_id =  parts[2].trim();
                 String facility_name = parts[3].trim();
                 Log.d("request!", "person selected: " + first_name + "." + last_name + "." + national_id + "." + facility_name + ".");
-                person = dbHelp.getPerson(first_name, last_name, national_id, facility_name);
-                Log.d("request!", "person_id selected: " + person.get_person_id());
+                //person = dbHelp.getPerson(first_name, last_name, national_id, facility_name);
+//                Log.d("request!", "person_id selected: " + person.get_person_id());
 //                Log.d("request!", "first_name selected: " + first_name);
 //                Log.d("request!", "last_name selected: " + last_name);
 //                Log.d("request!", "national_id selected: " + national_id);

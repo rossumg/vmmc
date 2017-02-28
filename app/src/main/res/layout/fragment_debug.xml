@@ -1,105 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
-<AbsoluteLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
-    android:id="@+id/myLayout"
-    android:stretchColumns="0"
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content">
-    <!--
-    <Button	  android:id="@+id/btnAdd"
-        android:text="@string/add"
-        android:layout_x="22dp"
-        android:layout_y="38dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button	  android:id="@+id/btnTest"
-        android:text="@string/test"
-        android:layout_x="142dp"
-        android:layout_y="38dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button   android:id="@+id/btnModify"
-        android:text="@string/modify"
-        android:layout_x="22dp"
-        android:layout_y="89dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button   android:id="@+id/btnView"
-        android:text="@string/view"
-        android:layout_x="142dp"
-        android:layout_y="89dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button   android:id="@+id/btnViewPerson"
-        android:text="@string/view_person"
-        android:layout_x="22dp"
-        android:layout_y="137dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button   android:id="@+id/btnShowInfo"
-        android:text="@string/show_info"
-        android:layout_x="142dp"
-        android:layout_y="137dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button   android:id="@+id/btnViewAssessments"
-        android:text="@string/view_assessments"
-        android:layout_x="22dp"
-        android:layout_y="188dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-    <Button   android:id="@+id/btnViewAssessmentsQuestions"
-        android:text="@string/view_assessments_questions"
-        android:layout_x="142dp"
-        android:layout_y="188dp"
-        android:layout_width="100dp"
-        android:layout_height="40dp"/>
-        -->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools" android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    tools:context="org.itech.vmmc.ActionFragment">
 
-    <Button
-        android:id="@+id/btnGeoLocation"
-        android:text="@string/geoLocation"
-        android:layout_x="22dp"
-        android:layout_y="93dp"
-        android:layout_width="150dp"
-        android:layout_height="70dp" />
+    <ListView android:id="@android:id/list" android:layout_width="match_parent"
+        android:layout_height="match_parent" />
 
-    <Button   android:id="@+id/btnDownload"
-        android:text="@string/download"
-        android:layout_x="22dp"
-        android:layout_y="274dp"
-        android:layout_width="150dp"
-        android:layout_height="70dp"/>
+    <TextView android:id="@android:id/empty" android:layout_width="match_parent"
+        android:layout_height="match_parent" android:gravity="center" />
 
-    <Button   android:id="@+id/btnUpload"
-        android:text="@string/upload"
-        android:layout_x="200dp"
-        android:layout_y="274dp"
-        android:layout_width="150dp"
-        android:layout_height="70dp"/>
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:text="@string/adminTitle"
-        android:id="@+id/debugTitle"
-        android:paddingTop="28dp"
-        android:layout_alignParentTop="true"
-        android:layout_alignEnd="@+id/textView2"
-        android:layout_x="101dp"
-        android:layout_y="18dp" />
-
-    <org.itech.vmmc.DiscreteSeekBar
-        android:id="@+id/discrete1"
-        android:layout_x="22dp"
-        android:layout_y="400dp"
-        android:layout_width="500dp"
-        android:layout_height="wrap_content"
-        app:dsb_min="0"
-        app:dsb_max="5"
-        app:dsb_value="0"
-        />
-
-
-
-</AbsoluteLayout>
+</FrameLayout>

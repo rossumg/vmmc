@@ -10,8 +10,16 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Button;
+import android.widget.AbsListView;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
+import android.widget.ListAdapter;
+import android.widget.ListView;
+import android.widget.TextView;
+
+import java.util.ArrayList;
+import java.util.List;
 
 
 /**
@@ -22,22 +30,186 @@ import android.widget.EditText;
  * Use the {@link DebugFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class DebugFragment extends Fragment {
+public class DebugFragment extends Fragment implements AbsListView.OnItemClickListener{
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     //private static final String ARG_PARAM1 = "param1";
     //private static final String ARG_PARAM2 = "param2";
+    public static String LOG = "gnr";
 
-    public static String TAG = "request!";
-//    public static String deviceId = "";
+    @Override
+    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+        if (mListener != null) {
+            // Notify the active callbacks interface (the activity, if the
+            // fragment is attached to one) that an item has been selected.
+            Log.d(LOG, "debugFragment onItemClick: " + mAdapter.getItem(position).toString());
 
-    //public DBHelper dbHelp = new DBHelper(getActivity());
-    // moved to onCreate: http://stackoverflow.com/questions/23449384/getwritabledatabase-throwing-null-pointer-exception-in-my-apps
-    public DBHelper _dbHelp;
+            if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.TEST))) {
+                Log.d(LOG, "TEST btn");
+                dbHelp.doCreateDB();
+                dbHelp.doTestDB();
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
+                Log.d(LOG, "SYNC btn");
+
+                if(MainActivity._pass.equals("")) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Password");
+
+                    final EditText input = new EditText(getActivity());
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    builder.setView(input);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MainActivity._pass = input.getText().toString();
+                            Log.d(TAG, "_pass: " + MainActivity._pass);
+                            dbHelp.doSyncDB();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
+                if(MainActivity._pass.equals("")){
+                    //requires password
+                    //Toast.makeText(v.getContext(), "Valid password required.", Toast.LENGTH_LONG).show();
+                } else {
+                    // try
+//                    dbHelp.uploadDBData();
+                    Log.d(LOG, "debugFragment call sync");
+                    dbHelp.doSyncDB();
+                }
+
+
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.GEOLOCATION))) {
+                dbHelp.addGeoLocation();
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.UPLOAD))) {
+
+                if(MainActivity._pass.equals("")) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Password");
+
+                    final EditText input = new EditText(getActivity());
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    builder.setView(input);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MainActivity._pass = input.getText().toString();
+                            Log.d(LOG, "_pass: " + MainActivity._pass);
+                            dbHelp.uploadDBData();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
+                if(MainActivity._pass.equals("")){
+                    //requires password
+                    //Toast.makeText(v.getContext(), "Valid password required.", Toast.LENGTH_LONG).show();
+                } else {
+                    // try
+                    dbHelp.uploadDBData();
+                }
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.DOWNLOAD))) {
+
+                if(MainActivity._pass.equals("")) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Password");
+
+                    final EditText input = new EditText(getActivity());
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    builder.setView(input);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MainActivity._pass = input.getText().toString();
+                            Log.d(LOG, "_pass: " + MainActivity._pass);
+                            dbHelp.downloadDBData();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
+                if(MainActivity._pass.equals("")){
+                    //requires password
+                    //Toast.makeText(v.getContext(), "Valid password required.", Toast.LENGTH_LONG).show();
+                } else {
+                    // try
+                    dbHelp.downloadDBData();
+                }
+
+            } else {} // do nothing
+
+
+
+//            int pToA_id = Integer.parseInt(mAdapter.getItem(position).toString().substring(0, mAdapter.getItem(position).toString().indexOf(")")));
+//            PersonToAssessments pToADB = dbHelp.getPersonToAssessments( pToA_id);
+
+//            Fragment fragment;
+//            fragment = getFragmentManager().findFragmentByTag(EditFragment.TAG);
+//            if (fragment == null) {
+//                PersonToAssessments pToA = dbHelp.getPersonToAssessments(pToADB.get_person_to_assessments_id());
+//                fragment = EditFragment.newInstance(pToA);
+//            }
+//            getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).addToBackStack("").commit();
+//            Log.d("request!", "Existing Assessment");
+//            Toast.makeText(view.getContext(), "Existing Assessment", Toast.LENGTH_LONG).show();
+        }
+    }
+
+    public void setEmptyText(CharSequence emptyText) {
+        View emptyView = mListView.getEmptyView();
+
+        if (emptyView instanceof TextView) {
+            ((TextView) emptyView).setText(emptyText);
+        }
+    }
+
+    public static String TAG = "debugTag";
+    public DBHelper dbHelp;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
     private String mParam2;
+
+    private AbsListView mListView;
+    private ListAdapter mAdapter;
 
     private OnFragmentInteractionListener mListener;
 
@@ -45,16 +217,16 @@ public class DebugFragment extends Fragment {
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-     * param param1 Parameter 1.
-     * param param2 Parameter 2.
-     * @return A new instance of fragment DebugFragment.
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.
+     * @return A new instance of fragment RecentFragment.
      */
     // TODO: Rename and change types and number of parameters
-    public static DebugFragment newInstance() {
+    public static DebugFragment newInstance(String searchAssessments, String searchParams) {
         DebugFragment fragment = new DebugFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
+        args.putString("searchAssessments", searchAssessments);
+        args.putString("searchParams", searchParams);
         fragment.setArguments(args);
         return fragment;
     }
@@ -67,22 +239,29 @@ public class DebugFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            //mParam1 = getArguments().getString(ARG_PARAM1);
-            //mParam2 = getArguments().getString(ARG_PARAM2);
+            mParam1 = getArguments().getString("searchAssessments");
+            mParam2 = getArguments().getString("searchParams");
+            Log.d(LOG, "recentFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "recentFragment onCreate param2:>" + mParam2.toString() + "<");
         }
-        DBHelper dbHelp = new DBHelper(getActivity());
-        this._dbHelp = dbHelp;
 
-//        final TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
-//
-//        final String tmDevice, tmSerial, androidId;
-//        tmDevice = "" + tm.getDeviceId();
-//        tmSerial = "" + tm.getSimSerialNumber();
-//        androidId = "" + android.provider.Settings.Secure.getString(getActivity().getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
-//
-//        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-//        deviceId = deviceUuid.toString();
-//        Log.d("request!", "debugFragemnt:onCreate:id: " + deviceId);
+        Log.d(LOG, "DebugFragment:onCreate");
+
+        dbHelp = new DBHelper(getActivity());
+
+        List<String> actions = new ArrayList<String>();
+
+        // actions.add(getResources().getString(R.string.GEOLOCATION));
+        // actions.add(getResources().getString(R.string.UPLOAD));
+        // actions.add(getResources().getString(R.string.DOWNLOAD));
+        actions.add(getResources().getString(R.string.TEST));
+        actions.add(getResources().getString(R.string.SYNC));
+
+        String[] _stringArray = new String[ actions.size() ];
+        actions.toArray(_stringArray);
+        mAdapter = new ArrayAdapter<String>(getActivity(),
+                android.R.layout.simple_list_item_1, android.R.id.text1, actions);
+
     }
 
     @Override
@@ -90,122 +269,17 @@ public class DebugFragment extends Fragment {
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_debug, container, false);
 
-        Button btnDownload = (Button) view.findViewById(R.id.btnDownload);
-        btnDownload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Log.d("request!", "download button");
+        getActivity().setTitle(getResources().getString(R.string.debugTitle));
 
-                if(MainActivity._pass.equals("")) {
+        // Set the adapter
+        mListView = (AbsListView) view.findViewById(android.R.id.list);
+        mListView.setChoiceMode(ListView.CHOICE_MODE_SINGLE);
+        ((AdapterView<ListAdapter>) mListView).setAdapter(mAdapter);
 
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Password");
-
-                    final EditText input = new EditText(getActivity());
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    builder.setView(input);
-
-// Set up the buttons
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MainActivity._pass = input.getText().toString();
-                            Log.d(TAG, "_pass: " + MainActivity._pass);
-                            _dbHelp.downloadDBData();
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-                }
-
-                if(MainActivity._pass.equals("")){
-                    //requires password
-                    //Toast.makeText(v.getContext(), "Valid password required.", Toast.LENGTH_LONG).show();
-                } else {
-                    // try
-                    _dbHelp.downloadDBData();
-                }
-
-                Log.d(TAG, "onDownload: " + MainActivity._user + " " + MainActivity._pass);
-            }
-        });
-
-        Button btnGeoLocation = (Button) view.findViewById(R.id.btnGeoLocation);
-        btnGeoLocation.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d("request!", "GeoLocation button");
-                _dbHelp.addGeoLocation();
-
-            }
-        });
-
-        Button btnUpload = (Button) view.findViewById(R.id.btnUpload);
-        btnUpload.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d("request!", "upload button");
-
-                if(MainActivity._pass.equals("")) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Password");
-
-                    final EditText input = new EditText(getActivity());
-// Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    builder.setView(input);
-
-// Set up the buttons
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MainActivity._pass = input.getText().toString();
-                            Log.d(TAG, "_pass: " + MainActivity._pass);
-                            _dbHelp.uploadDBData();
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-                }
-
-                if(MainActivity._pass.equals("")){
-                    //requires password
-                    //Toast.makeText(v.getContext(), "Valid password required.", Toast.LENGTH_LONG).show();
-                } else {
-                    // try
-                    _dbHelp.uploadDBData();
-                }
-
-                Log.d(TAG, "onUpload: " + MainActivity._user + " " + MainActivity._pass);
-
-            }
-        });
-
+        // Set OnItemClickListener so we can be notified on item clicks
+        mListView.setOnItemClickListener(this);
         // Inflate the layout for this fragment
         return view;
-    }
-
-    // TODO: Rename method, update argument and hook method into UI event
-    public void onButtonPressed(int position) {
-        if (mListener != null) {
-            mListener.onFragmentInteraction(position);
-        }
     }
 
     @Override
@@ -247,5 +321,4 @@ public class DebugFragment extends Fragment {
         builder.setMessage(message);
         builder.show();
     }
-
 }

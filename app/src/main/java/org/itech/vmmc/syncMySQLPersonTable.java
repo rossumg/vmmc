@@ -20,22 +20,21 @@ import static org.itech.vmmc.MainActivity.LOG;
 /**
  * Created by rossumg on 8/1/2015.
  */
-class getMySQLPersonTable extends AsyncTask<String, String, String> {
+class syncMySQLPersonTable extends AsyncTask<String, String, String> {
 
     private boolean LOGGED_IN = false;
     public Context _context;
     public SQLiteDatabase _db;
-    DBHelper dbhelp;
 
-    getMySQLPersonTable(Context context, DBHelper dbhelp){
+    syncMySQLPersonTable(Context context, DBHelper dbhelp){
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
-//        this._db.execSQL("delete from person");
+        this._db.execSQL("delete from person");
     }
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d(LOG, "getMySQLPersonTable doInBackground ");
+        Log.d(LOG, "syncMySQLPersonTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -51,13 +50,13 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
-        Log.d(LOG, "getMySQLPersonTable username/password: " + username + " " + password);
-        String datatable = "getPerson";
+        Log.d(LOG, "syncMySQLPersonTable username/password: " + username + " " + password);
+        String datatable = "Person";
         try {
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d(LOG, "getMySQLPersonTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "syncMySQLPersonTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -77,48 +76,32 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
                 NotificationManager mNotifyManager = (NotificationManager) this._context.getSystemService(this._context.NOTIFICATION_SERVICE);
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this._context);
 
-                mBuilder.setContentTitle("Data Download")
-                        .setContentText("Download in progress")
+                mBuilder.setContentTitle("Data Sync")
+                        .setContentText("Sync in progress")
                         .setSmallIcon(R.drawable.download);
 
                 int id = 1;
 
                 for (i = 0; i< person_array.length(); i++) {
                     JSONObject person_rec = person_array.getJSONObject(i);
-                    int person_id = person_rec.getInt("id");
+                    int person_id = person_rec.getInt("person_id");
                     // escape single quotes
                     String first_name = person_rec.getString("first_name");
                     first_name = first_name.replace("'","''");
                     String last_name = person_rec.getString("last_name");
                     last_name = last_name.replace("'","''");
+                    int facility_id = person_rec.getInt("facility_id");
                     String national_id = person_rec.getString("national_id");
-                    String address = person_rec.getString("address");
-                    address = address.replace("'","''");
-                    String phone = person_rec.getString("phone");
-                    phone = phone.replace("'","''");
-                    String dob = person_rec.getString("dob");
-                    dob = dob.replace("'","''");
-                    String gender = person_rec.getString("gender");
-                    gender = gender.replace("'","''");
-                    String latitude = person_rec.getString("latitude");
-                    String longitude = person_rec.getString("longitude");
-                    String is_deleted = person_rec.getString("is_deleted");
-
+                    String facility_name = person_rec.getString("facility_name");
+                    facility_name = facility_name.replace("'","''");
                     String personInsert =
-                            "insert into person "
-                                    + "(first_name, last_name, national_id, address, phone, dob, gender, latitude, longitude, is_deleted) "
-                                    + " values("
-                                    // + person_id + ","
+                            "insert into person values("
+                                    + person_id + ","
                                     + "'" + first_name + "'" + ","
                                     + "'" + last_name + "'" + ","
                                     + "'" + national_id + "'" + ","
-                                    + "'" + address + "'" + ","
-                                    + "'" + phone + "'" + ","
-                                    + "'" + dob + "'" + ","
-                                    + "'" + gender + "'" + ","
-                                    + latitude + ","
-                                    + longitude + ","
-                                    + "'" + is_deleted + "'" + ");";
+                                    + facility_id + ","
+                                    + "'" + facility_name + "'" + ");";
                     try {
                         // no longer used
                         //int progress = (int)((i / (float) num_person_recs) * 100);
@@ -128,16 +111,14 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
                         mBuilder.setProgress(100, incr, false);
                         mNotifyManager.notify(id, mBuilder.build());
 
-                        //Log.d(LOG, "getMySQLPersonTable personInsert " + personInsert.toString() + " " + i);
-                        //Log.d(LOG, "getMySQLPersonTable personInsert " + " " + i);
-
-                       _db.execSQL(personInsert.toString());
-
+                        //Log.d(LOG, "syncMySQLPersonTable personInsert " + personInsert.toString() + " " + i);
+                        //Log.d(LOG, "syncMySQLPersonTable personInsert " + " " + i);
+                        _db.execSQL(personInsert.toString());
                     } catch (Exception ex) {
-                        Log.d(LOG, "getMySQLPersonTable loop exception > " + ex.toString());
+                        Log.d(LOG, "syncMySQLPersonTable loop exception > " + ex.toString());
                     }
                 } // foreach
-                mBuilder.setContentText("Download complete (" + i + " records)").setProgress(0, 0, false);
+                mBuilder.setContentText("Sync complete (" + i + " records)").setProgress(0, 0, false);
                 mNotifyManager.notify(id, mBuilder.build());
             } else {
                 Log.d(LOG, "Login Failed");
@@ -147,9 +128,9 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(LOG, "getMySQLPersonTable exception > " + e.toString());
+            Log.d(LOG, "syncMySQLPersonTable exception > " + e.toString());
         }
-        Log.d(LOG, "getMySQLPersonTable.doInBackground end");
+        Log.d(LOG, "syncMySQLPersonTable.doInBackground end");
         return Integer.toString(i);
     }
 
