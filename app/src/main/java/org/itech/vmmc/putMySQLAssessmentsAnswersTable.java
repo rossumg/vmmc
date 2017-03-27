@@ -19,7 +19,7 @@ import java.util.List;
  * Created by rossumg on 8/1/2015.
  */
 class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> {
-
+    public static String LOG = "gnr";
     private boolean LOGGED_IN = false;
     public Context _context;
     public SQLiteDatabase _db;
@@ -34,7 +34,7 @@ class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> 
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d("request!", "putMySQLAssessmentsAnswerTable doInBackground ");
+        Log.d(LOG, "putMySQLAssessmentsAnswerTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -53,7 +53,7 @@ class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> 
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d("request!", "putMySQLAssessmentsAnswersTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "putMySQLAssessmentsAnswersTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -64,7 +64,7 @@ class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> 
 //            data += "&" + URLEncoder.encode("rec1", "UTF-8") + "=" + URLEncoder.encode(rec1, "UTF-8");
 
             List<AssessmentsAnswers> assessmentsAnswersList = dbhelp.getAllAssessmentsAnswers();
-            Log.d("request!", "putMySQLAssessmentsAnswersTable build rec: " + assessmentsAnswersList.size() );
+            Log.d(LOG, "putMySQLAssessmentsAnswersTable build rec: " + assessmentsAnswersList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(assessmentsAnswersList.size()), "UTF-8");
             i = 0;
             //publishProgress("0");
@@ -91,7 +91,7 @@ class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> 
                         Integer.toString(poa.get_question()) + "|" +
                         poa.get_answer();
 
-                Log.d("request!", "loop: " + recs[i] + "<");
+                Log.d(LOG, "loop: " + recs[i] + "<");
 
                 int incr = (int)((i / (float) num_answer_recs) * 100);
                 mBuilder.setProgress(100, incr, false);
@@ -111,29 +111,29 @@ class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> 
             if (success == 1) {
                 LOGGED_IN = true;
                 //int num_person_recs = json.getInt("number_records");
-                Log.d("request!", "putMySQLAssessmentsAnswersTable Success: ");
+                Log.d(LOG, "putMySQLAssessmentsAnswersTable Success: ");
             } else {
-                Log.d("request!", "putMySQLAssessmentsAnswersTable: Not Successful");
+                Log.d(LOG, "putMySQLAssessmentsAnswersTable: Not Successful");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("request!", "putMySQLAssessmentsAnswersTable exception > " + e.toString());
+            Log.d(LOG, "putMySQLAssessmentsAnswersTable exception > " + e.toString());
         }
-        Log.d("request!", "putMySQLAssessmentsAnswersTable.doInBackground end");
+        Log.d(LOG, "putMySQLAssessmentsAnswersTable.doInBackground end");
         return Integer.toString(i);
     }
 
 // no longer used
 //    protected void onProgressUpdate(String... progress) {
-//        Log.d("request!", "onProgressUpdate: " + progress[0]);
+//        Log.d(LOG, "onProgressUpdate: " + progress[0]);
 //        Toast toast = Toast.makeText(this._context, "Upload Started", Toast.LENGTH_LONG);
 //        toast.show();
 //    }
 
     protected void onPostExecute(String result) {
-        Log.d("request!", "onPostExecute: " + result);
+        Log.d(LOG, "onPostExecute: " + result);
         Toast.makeText(this._context, "Upload Complete", Toast.LENGTH_LONG).show();
     }
 }

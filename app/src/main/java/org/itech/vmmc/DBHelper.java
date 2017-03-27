@@ -378,9 +378,9 @@ public class DBHelper extends SQLiteOpenHelper{
 
         SQLiteDatabase db = this.getWritableDatabase();
         // db.execSQL("delete from person ");
-        Person person0 = new Person("A","B", "n","a","p","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person0);
-        Person person1 = new Person("C","D", "n","a","p","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person1);
-        Person person2 = new Person("E","F", "n","a","p","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person2);
+        Person person0 = new Person("A","B", "n1","a","12","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person0);
+        Person person1 = new Person("C","D", "n2","a","34","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person1);
+        Person person2 = new Person("E","F", "n3","a","56","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person2);
 
         Person person3 = getPerson("A","B", "p");
         Log.d(LOG, "debugFragment:load_person:personAB: " +
@@ -455,8 +455,8 @@ public class DBHelper extends SQLiteOpenHelper{
 //            //db.execSQL("drop table person_to_assessments");
 //            //db.execSQL("drop table assessments_answers");
 //            //db.execSQL("drop table assessments_questions");
-//            Log.d("request!", "helperTest databaseName> " + databaseName );
-//            Log.d("request!", "helperTest person0> "
+//            Log.d(LOG, "helperTest databaseName> " + databaseName );
+//            Log.d(LOG, "helperTest person0> "
 //                            + person0._rowid + " "
 //                            + person0._person_id + " "
 //                            + person0._first_name + " "
@@ -471,7 +471,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //
 //            List<Person> personList = this.getAllPersons();
 //            for (Person p : personList) {
-//                Log.d("request!", "helperTest personList> "
+//                Log.d(LOG, "helperTest personList> "
 //                                //+ p._rowid + " "
 //                                + p._person_id + " "
 //                                + p._first_name + " "
@@ -482,15 +482,15 @@ public class DBHelper extends SQLiteOpenHelper{
 //                );
 //            }
 //
-//            Log.d("request!", "helperTest personCount> " + this.getPersonsCount());
+//            Log.d(LOG, "helperTest personCount> " + this.getPersonsCount());
 //
 //            PersonToAssessments pa = new PersonToAssessments();
 //            pa = this.getPersonToAssessments(1);
-//            Log.d("request!", "pa.get_assessment_id > " + pa.get_assessment_id());
+//            Log.d(LOG, "pa.get_assessment_id > " + pa.get_assessment_id());
 //
 //            Assessments assessment = new Assessments();
 //            assessment = getAssessments(pa.get_assessment_id());
-//            Log.d("request!", "assessment.get_assessment_type > " + assessment.get_assessment_type());
+//            Log.d(LOG, "assessment.get_assessment_type > " + assessment.get_assessment_type());
 ////            assessment = getAssessments(2);
 //
 //
@@ -500,7 +500,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //
 //            List<EditPageObject> editPageObjectList = this.getEditPageData( pa );
 ////            for (EditPageObject epo : editPageObjectList) {
-////                Log.d("request!", "helperTest editPageObjectList > "
+////                Log.d(LOG, "helperTest editPageObjectList > "
 ////                                //+ editPageObjectList._rowid + " "
 ////                                + epo._assessments_questions_id + " "
 ////                                + epo._question + " "
@@ -510,16 +510,16 @@ public class DBHelper extends SQLiteOpenHelper{
 ////                );
 ////            }
 //            for (EditPageObject epo : editPageObjectList) {
-//                Log.d("request!", "question and answer: " + epo.get_question() + " " + epo.get_answer());
+//                Log.d(LOG, "question and answer: " + epo.get_question() + " " + epo.get_answer());
 //                //epo.set_answer("new "+ epo.get_answer());
 //            }
 //
 //            setEditPageData(pa, editPageObjectList); //  insert/update answers
 //
-//            Log.d("request!", "helperTest personCount> " + this.getPersonsCount());
+//            Log.d(LOG, "helperTest personCount> " + this.getPersonsCount());
 //
 ////            if(assessmentsAnswers != null)
-////                Log.d("request!", "helperTest assessmentsAnswers "
+////                Log.d(LOG, "helperTest assessmentsAnswers "
 ////                        + assessmentsAnswers._assess_id + " "
 ////                        + assessmentsAnswers._person + " "
 ////                        + assessmentsAnswers._facility + " "
@@ -532,15 +532,15 @@ public class DBHelper extends SQLiteOpenHelper{
 //
 //            this.updateAssessmentsAnswers(1, 1, "2015-07-07", 2, 22, Integer.toString((getPersonsCount())));
 //            AssessmentsAnswers assessmentsAnswers1 = this.getAssessmentsAnswers(1, 1, "2015-07-07", 2, 22);
-//            Log.d("request!", "helperTest assessmentsAnswers1 " + assessmentsAnswers1.get_answer());
+//            Log.d(LOG, "helperTest assessmentsAnswers1 " + assessmentsAnswers1.get_answer());
 //            this.updateAssessmentsAnswers(assessmentsAnswers1.get_assess_id(), Integer.toString((getPersonsCount() + 1)));
 //            AssessmentsAnswers assessmentsAnswers2 = this.getAssessmentsAnswers(1, 1, "2015-07-07", 2, 22);
-//            Log.d("request!", "helperTest assessmentsAnswers2 " + assessmentsAnswers2.get_answer());
+//            Log.d(LOG, "helperTest assessmentsAnswers2 " + assessmentsAnswers2.get_answer());
 //            this.insertAssessmentsAnswers(0, 1, "2015-07-07", 2, 22, "this is a new answer");
 //            AssessmentsAnswers assessmentsAnswers3 = this.getAssessmentsAnswers(0, 1, "2015-07-07", 2, 22);
 //            AssessmentsAnswers assessmentsAnswers4 = this.getAssessmentsAnswers(assessmentsAnswers3.get_assess_id());
-//            Log.d("request!", "helperTest inserted new assess_id from insert: " +  assessmentsAnswers3.get_assess_id());
-//            Log.d("request!", "helperTest inserted new answer from insert: " +  assessmentsAnswers4.get_answer());
+//            Log.d(LOG, "helperTest inserted new assess_id from insert: " +  assessmentsAnswers3.get_assess_id());
+//            Log.d(LOG, "helperTest inserted new answer from insert: " +  assessmentsAnswers4.get_answer());
 //            this.deleteAssessmentsAnswers(0, 1, "2015-07-07", 2, 22);
 
 
@@ -550,7 +550,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //            // if you're checking if it's there
 //            try {
 //                PersonToAssessments personToAssessments1 = this.getPersonToAssessments(1, 1, "not_found", 2);
-//            } catch (Exception ex) { Log.d("request!", "helperTest getPersonToAssessments not found");}
+//            } catch (Exception ex) { Log.d(LOG, "helperTest getPersonToAssessments not found");}
 //
 //            List<PersonToAssessments> personToAssessmentsList = this.getAllPersonToAssessments();
 //            for (PersonToAssessments poa: personToAssessmentsList) { poa.dump(); }
@@ -567,26 +567,26 @@ public class DBHelper extends SQLiteOpenHelper{
 //            String parts[] = {};
 //            for (String personID : allPersonID){
 //                parts = personID.split("_");
-//                Log.d("request!", "person_id: " + parts[0] + " last, first, national, facility: " + parts[1]);
+//                Log.d(LOG, "person_id: " + parts[0] + " last, first, national, facility: " + parts[1]);
 //            }
 
 //            // returns unique sorted facility_names
 //            String[] allFacilityNames = {""};
 //            allFacilityNames = getAllFacilityNames();
 //            for (String facility_name : allFacilityNames){
-//                Log.d("request!", "facility_name: " + facility_name);
+//                Log.d(LOG, "facility_name: " + facility_name);
 //            }
 
 //            // returns unique sorted national_ids
 //            String[] allNationalIDs = {""};
 //            allNationalIDs = getAllNationalIDs();
 //            for (String nationalId : allNationalIDs){
-//                    Log.d("request!", "national_id: " + nationalId);
+//                    Log.d(LOG, "national_id: " + nationalId);
 //            }
 
 //            // returns Person object based on first_name, last_name, national_id
 //            Person person0 = this.getPerson("Greg", "Rossum", "%");
-//            Log.d("request!", "helperTest person0> "
+//            Log.d(LOG, "helperTest person0> "
 //                            //+ person0._rowid + " "
 //                            + person0.get_person_id() + " "
 //                            + person0.get_first_name() + " "
@@ -601,7 +601,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //            List<Person> personList = this.getAllPersons();
 //            for (Person p : personList) {
 //
-//                Log.d("request!", " first_last_name: " +
+//                Log.d(LOG, " first_last_name: " +
 //                                p.get_first_name() + " " + p.get_last_name() + " " +
 //                                p.get_national_id() + " " +
 //                                p.get_facility_name()
@@ -612,12 +612,12 @@ public class DBHelper extends SQLiteOpenHelper{
             Log.d(LOG, "helperTest Done");
 
         } catch (Exception ex) {
-            Log.d("request!", "helperTest catch " + ex.toString());
+            Log.d(LOG, "helperTest catch " + ex.toString());
         }
     }
 
     public ArrayList<String> getDropdownOptions(int assessments_question_id) {
-//        Log.d("request!", "getDropdownOptions: ");
+//        Log.d(LOG, "getDropdownOptions: ");
         SQLiteDatabase db = this.getReadableDatabase();
         ArrayList<String> dropdownOptionsList = new ArrayList<String>();
         String whereClause = "";
@@ -630,7 +630,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     "where  1=1 " +
                     whereClause;
 
-//    Log.d("request!", "Query: " + query);
+//    Log.d(LOG, "Query: " + query);
     Cursor cursor = db.rawQuery(query, null);
 
     // looping through all rows and adding to list
@@ -652,47 +652,47 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public List<String> getReadableAssessments(String person_id, String national_id, String facility_name, String assessment_type, String from_date, String to_date) {
         List<String> readableRecentAssessmentsList = new ArrayList<String>();
-        Log.d("request!", "readableRecentAssessments: ");
+        Log.d(LOG, "readableRecentAssessments: ");
         // all params can be null or ""
         String whereClause = "";
 
 //        if (person == null) {
-//            Log.d("request!", "Search button person is null: ");
+//            Log.d(LOG, "Search button person is null: ");
 //        } else {
-//            Log.d("request!", "Search button person: " + person.get_person_id());
+//            Log.d(LOG, "Search button person: " + person.get_person_id());
 //        }
 //        if (assessment == null) {
-//            Log.d("request!", "Search button assessment is null: ");
+//            Log.d(LOG, "Search button assessment is null: ");
 //        } else {
-//            Log.d("request!", "Search button assessment: " + assessment.get_assessment_type());
+//            Log.d(LOG, "Search button assessment: " + assessment.get_assessment_type());
 //        }
 //        if (facility_name.equals("")) {
-//            Log.d("request!", "Search button facility is null: ");
+//            Log.d(LOG, "Search button facility is null: ");
 //        } else {
-//            Log.d("request!", "Search button facilityName: " + facility_name);
+//            Log.d(LOG, "Search button facilityName: " + facility_name);
 //        }
 //        if (national_id.equals("")) {
-//            Log.d("request!", "Search button nationalID is null: ");
+//            Log.d(LOG, "Search button nationalID is null: ");
 //        } else {
-//            Log.d("request!", "Search button nationalID: " + national_id);
+//            Log.d(LOG, "Search button nationalID: " + national_id);
 //        }
 
         if (person_id.equals("")) {
-            Log.d("request!", "person is null: ");
+            Log.d(LOG, "person is null: ");
         } else {
-            Log.d("request!", "person: " + person_id);
+            Log.d(LOG, "person: " + person_id);
             whereClause = whereClause + "and p.person_id = " + person_id + " ";
         }
         if (assessment_type.equals("")) {
-            Log.d("request!", "assessment is null: ");
+            Log.d(LOG, "assessment is null: ");
         } else {
-            Log.d("request!", "assessment: " + assessment_type);
+            Log.d(LOG, "assessment: " + assessment_type);
             whereClause = whereClause + "and a.assessment_type = '" + assessment_type + "' ";
         }
         if (facility_name.equals("")) {
-            Log.d("request!", "facility is null: ");
+            Log.d(LOG, "facility is null: ");
         } else {
-            Log.d("request!", "facilityName: " + facility_name);
+            Log.d(LOG, "facilityName: " + facility_name);
             // test for single quote
             StringBuilder name = new StringBuilder(facility_name);
             if(facility_name.indexOf("'") != -1) {
@@ -701,9 +701,9 @@ public class DBHelper extends SQLiteOpenHelper{
             whereClause = whereClause + "and p.facility_name like '" + name + "' ";
         }
         if (national_id.equals("")) {
-            Log.d("request!", "nationalID is null: ");
+            Log.d(LOG, "nationalID is null: ");
         } else {
-            Log.d("request!", "nationalID: " + national_id);
+            Log.d(LOG, "nationalID: " + national_id);
             // test for single quote
             StringBuilder id = new StringBuilder(national_id);
             if(national_id.indexOf("'") != -1) {
@@ -712,10 +712,10 @@ public class DBHelper extends SQLiteOpenHelper{
             whereClause = whereClause + "and p.national_id like '" + id + "' ";
         }
         if (from_date.equals("")||to_date.equals("")) {
-            Log.d("request!", "from_date || to_date is null: ");
+            Log.d(LOG, "from_date || to_date is null: ");
         } else {
-            Log.d("request!", "from_date: " + from_date);
-            Log.d("request!", "to_date: " + to_date);
+            Log.d(LOG, "from_date: " + from_date);
+            Log.d(LOG, "to_date: " + to_date);
             whereClause = whereClause + "and ptoa.date_created between '" + from_date + "' and '" + to_date + " ";
         }
 
@@ -735,7 +735,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "order by ptoa.person_to_assessments_id desc " +
                         "limit 20";
 
-        Log.d("request!", "Query: " + query);
+        Log.d(LOG, "Query: " + query);
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -764,7 +764,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public List<String> getReadableRecentAssessments() {
         List<String> readableRecentAssessmentsList = new ArrayList<String>();
-        Log.d("request!", "readableRecentAssessments: ");
+        Log.d(LOG, "readableRecentAssessments: ");
         String query =
                 "select " +
                         "ptoa.person_to_assessments_id, " +
@@ -780,7 +780,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "order by ptoa.person_to_assessments_id desc " +
                         "limit 20";
 
-        Log.d("request!", "Query: " + query);
+        Log.d(LOG, "Query: " + query);
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -826,7 +826,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
             do {
-//                Log.d("request!", "getAllPersonIDs  "
+//                Log.d(LOG, "getAllPersonIDs  "
 //                                + cursor.getString(0) + " "
 //                                + cursor.getString(1) + " "
 //                                + cursor.getString(2) + " "
@@ -873,7 +873,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor != null)
             cursor.moveToFirst();
-//        Log.d("request!", "getAssessmentsQuestionsQuestion  "
+//        Log.d(LOG, "getAssessmentsQuestionsQuestion  "
 //                        + cursor.getString(0) + " "
 //        );
 
@@ -888,26 +888,26 @@ public class DBHelper extends SQLiteOpenHelper{
         List<String> personID = new ArrayList<String>();
 
         String[] tableColumns = new String[] {
-                PERSON_PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME,  PERSON_NATIONAL_ID, PERSON_FACILITY_NAME
+                PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
         };
 
         String whereClause = "1=1 ";
 
         String[] whereArgs = new String[]{};
 
-        String orderBy = PERSON_LAST_NAME + "," + PERSON_FIRST_NAME + "," + PERSON_NATIONAL_ID + "," + PERSON_FACILITY_NAME;
+        String orderBy = PERSON_FIRST_NAME + "," + PERSON_LAST_NAME + "," + PERSON_NATIONAL_ID;
 
         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, orderBy);
 
         if (cursor.moveToFirst()) {
             do {
-//                Log.d("request!", "getAllPersonIDs  "
-//                                + cursor.getString(0) + " "
+//                Log.d(LOG, "getAllPersonIDs  "
 //                                + cursor.getString(1) + " "
 //                                + cursor.getString(2) + " "
 //                                + cursor.getString(3) + " "
+//                                + cursor.getString(5) + " "
 //                );
-                personID.add(cursor.getString(1).trim() + ", " + cursor.getString(2).trim() + ", " + cursor.getString(3).trim() + ",  " + cursor.getString(4).trim());
+                personID.add(cursor.getString(1).trim() + " " + cursor.getString(2).trim() + ", " + cursor.getString(3).trim() + ", " + cursor.getString(5).trim());
             } while (cursor.moveToNext());
         }
 
@@ -944,7 +944,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
             do {
-//                Log.d("request!", "getAllFacilityNames  "
+//                Log.d(LOG, "getAllFacilityNames  "
 //                                + cursor.getString(0)
 //                );
                 assessmentTypes.add(cursor.getString(0));
@@ -1010,10 +1010,51 @@ public class DBHelper extends SQLiteOpenHelper{
             Toast.makeText(this._context, "Record: " + geoLocations.get_longitude() + " " + geoLocations.get_latitude(), Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             db.close();
-            Log.d("request!", "addGeoLocation catch " + ex.toString());
+            Log.d(LOG, "addGeoLocation catch " + ex.toString());
             return false;
         }
         return true;
+    }
+
+    public String[] getAllPhoneNumbers(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> phone_numbers = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                PERSON_PHONE
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = PERSON_PHONE;
+
+        Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllPhoneNumbers  "
+//                                + cursor.getString(0)
+//                );
+
+                phone_numbers.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(phone_numbers);
+        phone_numbers.clear();;
+        phone_numbers.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayPhoneNumbers = new String[ phone_numbers.size() ];
+        phone_numbers.toArray(stringArrayPhoneNumbers);
+
+        return stringArrayPhoneNumbers;
     }
 
     public String[] getAllFacilityNames(){
@@ -1034,7 +1075,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
             do {
-//                Log.d("request!", "getAllFacilityNames  "
+//                Log.d(LOG, "getAllFacilityNames  "
 //                                + cursor.getString(0)
 //                );
 
@@ -1060,7 +1101,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public int getFacilityID(String facility_name){
         SQLiteDatabase db = this.getReadableDatabase();
         int facility_id;
-        Log.d("request!", "getFacilityID: ");
+        Log.d(LOG, "getFacilityID: ");
         String query =
                 "select " +
                         "p.facility_id " +
@@ -1069,7 +1110,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "and facility_name = '" + facility_name + "' " +
                         "limit 1";
 
-        Log.d("request!", "Query: " + query);
+        Log.d(LOG, "Query: " + query);
 
         Cursor cursor = db.rawQuery(query, null);
         facility_id = parseInt(cursor.getString(0));
@@ -1097,7 +1138,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
             do {
-//                Log.d("request!", "getAllNationalIds  "
+//                Log.d(LOG, "getAllNationalIds  "
 //                                + cursor.getString(0)
 //                );
 
@@ -1122,7 +1163,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public List<EditPageObject> getEditPageData(PersonToAssessments person_to_assessment) {
         List<EditPageObject> editPageList = new ArrayList<EditPageObject>();
-        Log.d("request!", "getEditPageData > ");
+        Log.d(LOG, "getEditPageData > ");
         String query =
                 "select " +
                         "aq.assessments_questions_id, " +
@@ -1168,7 +1209,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         " and aq.itemtype = 'text' " +
                         "order by aq.itemorder ";
 
-        Log.d("request!", "Query: " + query);
+        Log.d(LOG, "Query: " + query);
 
         SQLiteDatabase db = this.getWritableDatabase();
         Cursor cursor = db.rawQuery(query, null);
@@ -1193,7 +1234,7 @@ public class DBHelper extends SQLiteOpenHelper{
         cursor.close();
         db.close();
         // return person list
-        Log.d("request!", "Return");
+        Log.d(LOG, "Return");
         return editPageList;
     }
 
@@ -1209,7 +1250,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if(assessmentsAnswers != null){
             this.updateAssessmentsAnswers(assessmentsAnswers.get_assess_id(), new_answer);
-            Log.d("request!", "update: " + assessmentsAnswers.get_assess_id() + " " + assessmentsAnswers.get_question() + " " + new_answer);
+            Log.d(LOG, "update: " + assessmentsAnswers.get_assess_id() + " " + assessmentsAnswers.get_question() + " " + new_answer);
         } else {
             this.insertAssessmentsAnswers(
                     pa.get_person_id(),
@@ -1218,10 +1259,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     pa.get_assessment_id(),
                     question_id,
                     new_answer );
-            Log.d("request!", "insert: " + " " + question_id + " " +  new_answer);
+            Log.d(LOG, "insert: " + " " + question_id + " " +  new_answer);
         }
 
-//            Log.d("request!", "helperTest setEditPageData editPageObjectList > "
+//            Log.d(LOG, "helperTest setEditPageData editPageObjectList > "
 //                            //+ editPageObjectList._rowid + " "
 //                            + epo._assessments_questions_id + " "
 //                            + epo._question + " "
@@ -1232,8 +1273,8 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public void setEditPageData(PersonToAssessments pa, List<EditPageObject> editPageObjectList){
-        Log.d("request!", "setEditPageData");
-        Log.d("request!", "pa >" + pa._person_id + " " + pa._facility_id + " " + pa._date_created + " " + pa._assessment_id);
+        Log.d(LOG, "setEditPageData");
+        Log.d(LOG, "pa >" + pa._person_id + " " + pa._facility_id + " " + pa._date_created + " " + pa._assessment_id);
         // for each questions, select from answers, if (answer) update answer else insert answer
         for (EditPageObject epo : editPageObjectList) {
 
@@ -1246,10 +1287,10 @@ public class DBHelper extends SQLiteOpenHelper{
                             epo.get_assessments_questions_id());
 
             if(assessmentsAnswers != null){
-                Log.d("request!", "setEditPageData update: " + epo.get_answer());
+                Log.d(LOG, "setEditPageData update: " + epo.get_answer());
                 this.updateAssessmentsAnswers(assessmentsAnswers.get_assess_id(), epo.get_answer());
             } else if (epo.get_itemtype() != ANSWER_TYPE_TEXT) {
-                Log.d("request!", "setEditPageData insert: ");
+                Log.d(LOG, "setEditPageData insert: ");
                 this.insertAssessmentsAnswers(
                         pa.get_person_id(),
                         pa.get_facility_id(),
@@ -1259,7 +1300,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         epo.get_answer() );
             }
 
-//            Log.d("request!", "helperTest setEditPageData editPageObjectList > "
+//            Log.d(LOG, "helperTest setEditPageData editPageObjectList > "
 //                            //+ editPageObjectList._rowid + " "
 //                            + epo._assessments_questions_id + " "
 //                            + epo._question + " "
@@ -1288,7 +1329,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor != null)
             cursor.moveToFirst();
-        Log.d("request!", "getAssessments  "
+        Log.d(LOG, "getAssessments  "
                         + cursor.getString(0) + " "
                         + cursor.getString(1) + " "
                         + cursor.getString(2) + " "
@@ -1322,7 +1363,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor != null)
             cursor.moveToFirst();
-//        Log.d("request!", "geAssessments  "
+//        Log.d(LOG, "geAssessments  "
 //                        + cursor.getString(0) + " "
 //                        + cursor.getString(1) + " "
 //                        + cursor.getString(2) + " "
@@ -1356,7 +1397,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
 
-//        Log.d("request!", "getAssessmentsAnswers  "
+//        Log.d(LOG, "getAssessmentsAnswers  "
 //                        + cursor.getString(0) + " "
 //                        + cursor.getString(1) + " "
 //                        + cursor.getString(2) + " "
@@ -1409,7 +1450,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
 
-//        Log.d("request!", "getAssessmentsAnswers  "
+//        Log.d(LOG, "getAssessmentsAnswers  "
 //                        + cursor.getString(0) + " "
 //                        + cursor.getString(1) + " "
 //                        + cursor.getString(2) + " "
@@ -1462,7 +1503,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
 
-//        Log.d("request!", "getAssessmentsAnswers  "
+//        Log.d(LOG, "getAssessmentsAnswers  "
 //                        + cursor.getString(0) + " "
 //                        + cursor.getString(1) + " "
 //                        + cursor.getString(2) + " "
@@ -1611,7 +1652,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor cursor = db.query(TABLE_PERSON_TO_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
-        Log.d("request!", "getPersonToAssessments  "
+        Log.d(LOG, "getPersonToAssessments  "
                         + cursor.getString(0) + " "
                         + cursor.getString(1) + " "
                         + cursor.getString(2) + " "
@@ -1660,7 +1701,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if ( cursor.moveToFirst() ) {
 
-//        Log.d("request!", "getPersonToAssessments  "
+//        Log.d(LOG, "getPersonToAssessments  "
 //                        + cursor.getString(0) + " "
 //                        + cursor.getString(1) + " "
 //                        + cursor.getString(2) + " "
@@ -1702,10 +1743,10 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_PERSON_TO_ASSESSMENTS, null, values);
-            Log.d("request!", "addPersonToAssessments insert: ");
+            Log.d(LOG, "addPersonToAssessments insert: ");
         } catch (Exception ex) {
             db.close();
-            Log.d("request!", "addPersonToAssessments catch " + ex.toString());
+            Log.d(LOG, "addPersonToAssessments catch " + ex.toString());
             return false;
         }
         return true;
@@ -1751,7 +1792,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 PERSON_LAST_NAME + ") like ? and trim(" +
                 PERSON_PHONE + ") like ? ";
 
-        Log.d("request!", "getPerson whereClause: " + whereClause);
+        Log.d(LOG, "getPerson whereClause: " + whereClause);
 
         String[] whereArgs = new String [] {
                 person_first_name, person_last_name, person_phone };
@@ -1773,6 +1814,68 @@ public class DBHelper extends SQLiteOpenHelper{
                             + cursor.getString(8) + " "
                             + cursor.getString(9) + " "
                             + cursor.getString(10) + " "
+            );
+
+            person = new Person(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    parseFloat(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseInt(cursor.getString(10))
+            );
+            cursor.close();
+            db.close();
+            return person;
+        } else {
+            cursor.close();
+            db.close();
+            return person;
+        }
+    }
+
+    public Person getPerson( String national_id, String phone_number ) {
+        Person person = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getPerson: " + national_id + ", " + phone_number );
+
+        String[] tableColumns = new String[] {
+                PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
+        };
+
+
+        String whereClause = "1=1 and trim(" +
+                PERSON_NATIONAL_ID + ") like ? or trim(" +
+                PERSON_PHONE + ") like ? ";
+
+
+        Log.d(LOG, "getPerson whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                national_id, phone_number };
+
+        Log.d(LOG, "getPerson whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":");
+
+        Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getPerson  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+                    + cursor.getString(2) + " "
+                    + cursor.getString(3) + " "
+                    + cursor.getString(4) + " "
+                    + cursor.getString(5) + " "
+                    + cursor.getString(6) + " "
+                    + cursor.getString(7) + " "
+                    + cursor.getString(8) + " "
+                    + cursor.getString(9) + " "
+                    + cursor.getString(10) + " "
             );
 
             person = new Person(
@@ -1948,7 +2051,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public int getPersonsCount() {
-        Log.d("request!", "getPersonsCount");
+        Log.d(LOG, "getPersonsCount");
         String countQuery = "SELECT  * FROM " + TABLE_PERSON;
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(countQuery, null);
@@ -1986,24 +2089,24 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public void uploadDBData() {
-        Log.d("request!", "uploadDBData ");
+        Log.d(LOG, "uploadDBData ");
         new putMySQLGeoLocationsTable(this).execute();
         new putMySQLPersonToAssessmentsTable(this).execute();
         new putMySQLAssessmentsAnswersTable(this._context, this).execute();
     }
 
     public void downloadDBData() {
-        Log.d("request!", "load person_to_assessments ");
+        Log.d(LOG, "load person_to_assessments ");
         load_person_to_assessments();
-        Log.d("request!", "load assessments_answers ");
+        Log.d(LOG, "load assessments_answers ");
         load_assessments_answers();
-        Log.d("request!", "downloadDBData getMySQLPersonTable");
+        Log.d(LOG, "downloadDBData getMySQLPersonTable");
         new getMySQLPersonTable(this._context, this).execute();
-        Log.d("request!", "downloadDBData getMySQLAssessmentsQuestionsTable");
+        Log.d(LOG, "downloadDBData getMySQLAssessmentsQuestionsTable");
         new getMySQLAssessmentsQuestionsTable(this).execute();
-        Log.d("request!", "downloadDBData getMySQLAssessmentsTable");
+        Log.d(LOG, "downloadDBData getMySQLAssessmentsTable");
         new getMySQLAssessmentsTable(this).execute();
-        Log.d("request!", "downloadDBData getMySQLQuestionDropdownOptionTable");
+        Log.d(LOG, "downloadDBData getMySQLQuestionDropdownOptionTable");
         new getMySQLQuestionDropdownOptionTable(this).execute();
     }
 

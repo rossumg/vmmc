@@ -12,22 +12,21 @@ import android.widget.ArrayAdapter;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 
-
 import java.util.List;
 
 
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link CreatePersonFragment.OnFragmentInteractionListener} interface
+ * {@link AddPersonFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link CreatePersonFragment#newInstance} factory method to
+ * Use the {@link AddPersonFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class CreatePersonFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class AddPersonFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static String TAG = "createPersonTag";
+    public static String TAG = "AddPersonTag";
     public static String LOG = "gnr";
 
     //private static final String ARG_PARAM1 = "param1";
@@ -49,11 +48,11 @@ public class CreatePersonFragment extends Fragment implements AdapterView.OnItem
      */
     // TODO: Rename and change types and number of parameters
     //  public static CreateFragment newInstance(String param1, String param2) {
-    public static CreatePersonFragment newInstance() {
-        CreatePersonFragment fragment = new CreatePersonFragment();
+    public static AddPersonFragment newInstance(String addPerson, String addPersonParams) {
+        AddPersonFragment fragment = new AddPersonFragment();
         Bundle args = new Bundle();
-        //args.putString(ARG_PARAM1, param1);
-        //args.putString(ARG_PARAM2, param2);
+        args.putString("addPerson", addPerson);
+        args.putString("addPersonParams", addPersonParams);
         fragment.setArguments(args);
         return fragment;
     }
@@ -75,9 +74,11 @@ public class CreatePersonFragment extends Fragment implements AdapterView.OnItem
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_create_person, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_person, container, false);
 
-        loadPersonIDDropdown(view);
+        getActivity().setTitle(getResources().getString(R.string.addPersonTitle));
+
+        //loadPersonIDDropdown(view);
         //loadAssessmentTypeDropdown(view);
 
         //nameView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
@@ -173,11 +174,11 @@ public class CreatePersonFragment extends Fragment implements AdapterView.OnItem
         });
 
 
-        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(dataAdapter);
+//        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
+//
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dropdown.setAdapter(dataAdapter);
 
     }
 

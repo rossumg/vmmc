@@ -33,6 +33,7 @@ public class RecentFragment extends Fragment implements AbsListView.OnItemClickL
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     //private static final String ARG_PARAM1 = "param1";
     //private static final String ARG_PARAM2 = "param2";
+    public static String LOG = "gnr";
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -41,22 +42,22 @@ public class RecentFragment extends Fragment implements AbsListView.OnItemClickL
             // fragment is attached to one) that an item has been selected.
 
             int pToA_id = Integer.parseInt(mAdapter.getItem(position).toString().substring(0, mAdapter.getItem(position).toString().indexOf(")")));
-            Log.d("request!", "recentFragment onItemClick: " + pToA_id);
+            Log.d(LOG, "recentFragment onItemClick: " + pToA_id);
             PersonToAssessments pToADB = dbHelp.getPersonToAssessments( pToA_id);
 
             Fragment fragment;
             fragment = getFragmentManager().findFragmentByTag(EditFragment.TAG);
             if (fragment == null || true) {
-                Log.d("request!", "fragment == null");
+                Log.d(LOG, "fragment == null");
                 PersonToAssessments pToA = dbHelp.getPersonToAssessments(pToADB.get_person_to_assessments_id());
                 fragment = EditFragment.newInstance(pToA);
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).addToBackStack("Edit").commit();
             } else {
-                Log.d("request!", "fragment != null");
+                Log.d(LOG, "fragment != null");
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).commit();
             }
             MainActivity.currentFragmentId = "Edit";
-            Log.d("request!", "Existing Assessment");
+            Log.d(LOG, "Existing Assessment");
             Toast.makeText(view.getContext(), "Existing Assessment", Toast.LENGTH_LONG).show();
         }
     }
@@ -110,8 +111,8 @@ public class RecentFragment extends Fragment implements AbsListView.OnItemClickL
         if (getArguments() != null) {
             mParam1 = getArguments().getString("searchAssessments");
             mParam2 = getArguments().getString("searchParams");
-            Log.d("request!", "recentFragment onCreate param1: " + mParam1.toString());
-            Log.d("request!", "recentFragment onCreate param2:>" + mParam2.toString() + "<");
+            Log.d(LOG, "recentFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "recentFragment onCreate param2:>" + mParam2.toString() + "<");
         }
 
         DBHelper dbHelp = new DBHelper(getActivity());
@@ -124,13 +125,13 @@ public class RecentFragment extends Fragment implements AbsListView.OnItemClickL
             String params = mParam2.toString();
             String parts[] = {};
             parts = params.split(":",6);
-    //        Log.d("request!", "param2:length>" + parts.length);
-    //        Log.d("request!", "param2:0>" + parts[0]);
-    //        Log.d("request!", "param2:1>" + parts[1]);
-    //        Log.d("request!", "param2:2>" + parts[2]);
-    //        Log.d("request!", "param2:3>" + parts[3]);
-    //        Log.d("request!", "param2:4>" + parts[4]);
-    //        Log.d("request!", "param2:5>" + parts[5]);
+    //        Log.d(LOG, "param2:length>" + parts.length);
+    //        Log.d(LOG, "param2:0>" + parts[0]);
+    //        Log.d(LOG, "param2:1>" + parts[1]);
+    //        Log.d(LOG, "param2:2>" + parts[2]);
+    //        Log.d(LOG, "param2:3>" + parts[3]);
+    //        Log.d(LOG, "param2:4>" + parts[4]);
+    //        Log.d(LOG, "param2:5>" + parts[5]);
 
             String person_id = parts[0];
             String nationalID = parts[1];
@@ -139,7 +140,7 @@ public class RecentFragment extends Fragment implements AbsListView.OnItemClickL
             String from_date = parts[4];
             String to_date = parts[5];
 
-//            Log.d("request!", "recentFrag onCreate: " +
+//            Log.d(LOG, "recentFrag onCreate: " +
 //                    person_id + "," +
 //                    nationalID + "," +
 //                    facilityName + "," +

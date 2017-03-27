@@ -148,7 +148,7 @@ class syncMySQLPersonTable extends AsyncTask<String, String, String> {
 //
 
     protected void onPostExecute(String result) {
-        Log.d(LOG, "onPostExecute: " + result);
+        Log.d(LOG, "syncMySQLPersonTable:onPostExecute: " + result);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         Toast.makeText(this._context, "Download Complete", Toast.LENGTH_LONG).show();
     }

@@ -28,7 +28,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         CreatePersonFragment.OnFragmentInteractionListener,
         SearchFragment.OnFragmentInteractionListener,
         RecentFragment.OnFragmentInteractionListener,
-        ActionFragment.OnFragmentInteractionListener
+        ActionFragment.OnFragmentInteractionListener,
+        AddEditPersonFragment.OnFragmentInteractionListener,
+        AddPersonFragment.OnFragmentInteractionListener,
+        EditPersonFragment.OnFragmentInteractionListener
 {
 
     public static Boolean LOGGED_IN = false;
@@ -149,10 +152,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             case 0:
                 fragment = getFragmentManager().findFragmentByTag(LoginFragment.LOG);
                 if (fragment == null) {
-                    Log.d("request!", "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    Log.d(LOG, "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
                     fragment = LoginFragment.newInstance();
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).addToBackStack(currentFragmentId).commit();
-                    Log.d("request!", "after add create to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    Log.d(LOG, "after add create to back stack: " + getFragmentManager().getBackStackEntryCount());
                 } else {
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).commit();
                 }
@@ -161,10 +164,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             case 1:
                 fragment = getFragmentManager().findFragmentByTag(CreateFragment.TAG);
                 if (fragment == null) {
-                    Log.d("request!", "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    Log.d(LOG, "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
                     fragment = CreateFragment.newInstance();
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, CreateFragment.TAG).addToBackStack(currentFragmentId).commit();
-                    Log.d("request!", "after add create to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    Log.d(LOG, "after add create to back stack: " + getFragmentManager().getBackStackEntryCount());
                 } else {
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, CreateFragment.TAG).commit();
                 }
@@ -175,10 +178,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             case 2:
                 fragment = getFragmentManager().findFragmentByTag(RecentFragment.TAG);
                 if (fragment == null) {
-                    Log.d("request!", "before add recent to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    Log.d(LOG, "before add recent to back stack: " + getFragmentManager().getBackStackEntryCount());
                     fragment = RecentFragment.newInstance("main", "");
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, RecentFragment.TAG).addToBackStack(currentFragmentId).commit();
-                    Log.d("request!", "after add recent to back stack: " + getFragmentManager().getBackStackEntryCount());
+                    Log.d(LOG, "after add recent to back stack: " + getFragmentManager().getBackStackEntryCount());
                 } else {
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, RecentFragment.TAG).commit();
                 }
@@ -232,6 +235,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
 
             case 6:
+                fragment = getFragmentManager().findFragmentByTag(AddEditPersonFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditPersonFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).addToBackStack(currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).commit();
+                }
+                currentFragmentId = "AddEditPerson";
+
                 break;
 
 
@@ -291,7 +303,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 //        if (mNavigationDrawerFragment.isDrawerOpen())
 //            mNavigationDrawerFragment.closeDrawer();
 //        else {
-//            Log.d("request!", "main:onBackPressed: ");
+//            Log.d(LOG, "main:onBackPressed: ");
 //            super.onBackPressed();
 //        }
 //    }

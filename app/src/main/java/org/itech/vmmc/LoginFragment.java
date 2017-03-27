@@ -120,7 +120,7 @@ public class LoginFragment extends Fragment {
 //
 //        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
 //        deviceId = deviceUuid.toString();
-//        Log.d("request!", "loginFragemnt:onCreate:id: " + deviceId);
+//        Log.d(LOG, "loginFragemnt:onCreate:id: " + deviceId);
     }
 
     @Override
@@ -221,8 +221,11 @@ public class LoginFragment extends Fragment {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        String email = mEmailView.getText().toString();
-        String password = mPasswordView.getText().toString();
+        Log.d(LOG, "LoginFragment: change back to test real values, L224");
+//        String email = mEmailView.getText().toString();
+//        String password = mPasswordView.getText().toString();
+        String email = "u@";
+        String password = "pa";
 
         boolean cancel = false;
         View focusView = null;
@@ -234,15 +237,16 @@ public class LoginFragment extends Fragment {
 //            cancel = true;
 //        }
 
-        if (TextUtils.isEmpty(password)) {
-            mPasswordView.setError(getString(R.string.error_field_required));
-            focusView = mPasswordView;
-            cancel = true;
-        } else if (!isPasswordValid(password)) {
-            mPasswordView.setError(getString(R.string.error_invalid_password));
-            focusView = mPasswordView;
-            cancel = true;
-        }
+        Log.d(LOG, "LoginFragment: uncomment field checks, L240");
+//        if (TextUtils.isEmpty(password)) {
+//            mPasswordView.setError(getString(R.string.error_field_required));
+//            focusView = mPasswordView;
+//            cancel = true;
+//        } else if (!isPasswordValid(password)) {
+//            mPasswordView.setError(getString(R.string.error_invalid_password));
+//            focusView = mPasswordView;
+//            cancel = true;
+//        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {

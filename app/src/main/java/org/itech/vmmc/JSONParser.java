@@ -105,7 +105,7 @@ public class JSONParser {
 
     /** Called when the activity is first created. */
     public JSONObject example() {
-        //Log.d("request!", "example0");
+        //Log.d(LOG, "example0");
 
  /*
            setContentView(R.layout.activity_http_post_example);
@@ -146,7 +146,7 @@ public class JSONParser {
     // Create GetText Metod
     public  void  GetText()  throws  UnsupportedEncodingException
     {
-        //Log.d("request!", "GetText0");
+        //Log.d(LOG, "GetText0");
         // Get user defined values
 //            Name = fname.getText().toString();
 //            Email   = email.getText().toString();
@@ -155,7 +155,7 @@ public class JSONParser {
         Username = "tt";
         Password = "tt";
 
-        //Log.d("request!", "GetText1");
+        //Log.d(LOG, "GetText1");
 
         // Create data variable for sent values to server
 
@@ -180,7 +180,7 @@ public class JSONParser {
         String text = "";
         BufferedReader reader=null;
 
-        //Log.d("request!", "GetText2");
+        //Log.d(LOG, "GetText2");
 
         // Send data
         try
@@ -239,7 +239,7 @@ public class JSONParser {
     @SuppressLint("NewApi")
     @TargetApi(Build.VERSION_CODES.KITKAT)
     public String makeHttpRequest(URL url, String method, String data) {
-        //Log.d("request!", "makeHttpRequest0> ");
+        //Log.d(LOG, "makeHttpRequest0> ");
         String reply = "init";
         try {
             HttpURLConnection urlConnection = null;
@@ -294,13 +294,13 @@ public class JSONParser {
             } // if
         } //try
         catch (IOException e) {
-            //Log.d("request!", "makeHttpRequest2> ");
+            //Log.d(LOG, "makeHttpRequest2> ");
             e.printStackTrace();
         } catch (Exception e) {
-            //Log.d("request!", "makeHttpRequest3> ");
+            //Log.d(LOG, "makeHttpRequest3> ");
             Log.e("Buffer Error", "Error converting result " + e.toString());
         }
-        //Log.d("request!", "makeHttpRequest4> ");
+        //Log.d(LOG, "makeHttpRequest4> ");
         return (reply);
     }
 }

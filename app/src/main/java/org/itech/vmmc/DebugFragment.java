@@ -49,6 +49,19 @@ public class DebugFragment extends Fragment implements AbsListView.OnItemClickLi
                 dbHelp.doCreateDB();
                 dbHelp.doTestDB();
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditPerson))) {
+                Log.d(LOG, getResources().getString(R.string.addEditPerson) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditPersonFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditPersonFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditPerson";
+
+
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
 
@@ -188,7 +201,7 @@ public class DebugFragment extends Fragment implements AbsListView.OnItemClickLi
 //                fragment = EditFragment.newInstance(pToA);
 //            }
 //            getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).addToBackStack("").commit();
-//            Log.d("request!", "Existing Assessment");
+//            Log.d(LOG, "Existing Assessment");
 //            Toast.makeText(view.getContext(), "Existing Assessment", Toast.LENGTH_LONG).show();
         }
     }
@@ -256,6 +269,7 @@ public class DebugFragment extends Fragment implements AbsListView.OnItemClickLi
         // actions.add(getResources().getString(R.string.DOWNLOAD));
         actions.add(getResources().getString(R.string.TEST));
         actions.add(getResources().getString(R.string.SYNC));
+        actions.add(getResources().getString(R.string.addEditPerson));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);

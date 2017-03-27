@@ -15,7 +15,7 @@ import java.util.List;
  * Created by rossumg on 9/28/2015.
  */
 class putMySQLGeoLocationsTable extends AsyncTask<String, String, String> {
-
+    public static String LOG = "gnr";
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
@@ -27,7 +27,7 @@ class putMySQLGeoLocationsTable extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d("request!", "putMySQLGeoLocationTable doInBackground ");
+        Log.d(LOG, "putMySQLGeoLocationTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -46,7 +46,7 @@ class putMySQLGeoLocationsTable extends AsyncTask<String, String, String> {
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d("request!", "putMySQLGeoLocationsTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "putMySQLGeoLocationsTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -55,7 +55,7 @@ class putMySQLGeoLocationsTable extends AsyncTask<String, String, String> {
             data += "&" + URLEncoder.encode("datatable", "UTF-8") + "=" + URLEncoder.encode(datatable, "UTF-8");
 
             List<GeoLocations> geoLocationsList = dbhelp.getAllGeoLocations();
-            Log.d("request!", "putMySQLGeoLocationsTable build rec: " + geoLocationsList.size() );
+            Log.d(LOG, "putMySQLGeoLocationsTable build rec: " + geoLocationsList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(geoLocationsList.size()), "UTF-8");
             int i = 0;
             String[] recs = new String[geoLocationsList.size()];
@@ -68,7 +68,7 @@ class putMySQLGeoLocationsTable extends AsyncTask<String, String, String> {
                                 geoLocations.get_username() + "," +
                                 geoLocations.get_password();
 
-                                Log.d("request!", "loop: " + recs[i] + "<");
+                                Log.d(LOG, "loop: " + recs[i] + "<");
 
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
                 i++;
@@ -81,17 +81,17 @@ class putMySQLGeoLocationsTable extends AsyncTask<String, String, String> {
             if (success == 1) {
                 LOGGED_IN = true;
                 //int num_person_recs = json.getInt("number_records");
-                Log.d("request!", "putMySQLGeoLocationsTable Success: ");
+                Log.d(LOG, "putMySQLGeoLocationsTable Success: ");
             } else {
-                Log.d("request!", "putMySQLGeoLocationTable: Not Successful");
+                Log.d(LOG, "putMySQLGeoLocationTable: Not Successful");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("request!", "putMySQLGeoLocationsTable exception > " + e.toString());
+            Log.d(LOG, "putMySQLGeoLocationsTable exception > " + e.toString());
         }
-        Log.d("request!", "putMySQLGeoLocationsTable.doInBackground end");
+        Log.d(LOG, "putMySQLGeoLocationsTable.doInBackground end");
         return null;
     }
 }

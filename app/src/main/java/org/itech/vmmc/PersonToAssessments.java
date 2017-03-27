@@ -6,6 +6,7 @@ import android.util.Log;
  * Created by rossumg on 9/4/2015.
  */
 public class PersonToAssessments {
+    public static String LOG = "gnr";
 
     //private variables
     int _rowid;
@@ -59,7 +60,7 @@ public class PersonToAssessments {
     }
 
     public void dump() {
-        Log.d("request!", "dumpPersonToAssessments: " +
+        Log.d(LOG, "dumpPersonToAssessments: " +
                         this.get_person_to_assessments_id() + " " +
                         this.get_person_id() + " " +
                         this.get_facility_id() + " " +

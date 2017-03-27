@@ -25,10 +25,10 @@ import java.util.List;
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class SearchFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class AddEditPersonFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static String TAG = "searchTag";
+    public static String TAG = "addEditPersonTag";
     public static String LOG = "gnr";
 
     //private static final String ARG_PARAM1 = "param1";
@@ -53,8 +53,8 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
      */
     // TODO: Rename and change types and number of parameters
     //  public static SearchFragment newInstance(String param1, String param2) {
-    public static SearchFragment newInstance() {
-        SearchFragment fragment = new SearchFragment();
+    public static AddEditPersonFragment newInstance() {
+        AddEditPersonFragment fragment = new AddEditPersonFragment();
         Bundle args = new Bundle();
         //args.putString(ARG_PARAM1, param1);
         //args.putString(ARG_PARAM2, param2);
@@ -80,21 +80,22 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_search, container, false);
+        View view = inflater.inflate(R.layout.fragment_add_edit_person, container, false);
 
-        getActivity().setTitle(getResources().getString(R.string.searchTitle));
+        getActivity().setTitle(getResources().getString(R.string.addEditPersonTitle));
 
         loadPersonNameDropdown(view);
-        loadAssessmentTypeDropdown(view);
+//        loadAssessmentTypeDropdown(view);
         loadNationalIDDropdown(view);
-        loadFacilityDropdown(view);
+//        loadFacilityDropdown(view);
+        loadPhoneNumberDropdown(view);
 
-        final ClearableAutoCompleteTextView facilityDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.last_name);
-        final ClearableAutoCompleteTextView nameDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.search);
-        final ClearableAutoCompleteTextView nationalIdDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.first_name);
+        final ClearableAutoCompleteTextView nameDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
+        final ClearableAutoCompleteTextView nationalIdDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.national_id);
+        final ClearableAutoCompleteTextView phoneNumberDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.phone_number);
 
-        Button btnSearch = (Button) view.findViewById(R.id.btnSearch);
-        btnSearch.setOnClickListener(new View.OnClickListener() {
+        Button btnEditPerson = (Button) view.findViewById(R.id.btnEditPerson);
+        btnEditPerson.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -102,54 +103,122 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
                 java.util.Date utilDate = cal.getTime();
                 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
-                Log.d(LOG, "Search button: ");
+                Log.d(LOG, "EditPerson button: ");
 
-                String paramPersonId = "";
-                String paramAssessmentType = "";
-                String paramFacilityName = "";
+                String paramName = "";
                 String paramNationalID = "";
-                Log.d(LOG, "Search button name: " + nameDropdown.getText().toString() + "<");
+                String paramPhoneNumber = "";
+                Log.d(LOG, "EditPerson button name: " + nameDropdown.getText().toString() + "<");
 
-                if (person == null || nameDropdown.getText().toString().equals("")) {
-                    Log.d(LOG, "Search button name is null: ");
+                if (nameDropdown.getText().toString().equals("")) {
+                    Log.d(LOG, "EditPerson button name is null: ");
                 } else {
-                    Log.d(LOG, "Search button name: " + nameDropdown.getText().toString());
-                    int personId = new Integer(person.get_id());
-                    paramPersonId = Integer.toString(personId);
+                    //int personId = new Integer(person.get_id());
+                    //paramPersonId = Integer.toString(personId);
+
+                    paramName = nameDropdown.getText().toString();
+                    String parts[] = {};
+                    parts = paramName.split(", ",3);
+
+                    switch( parts.length)  {
+                        case 0: {
+                            // add
+                            break;
+                        }
+                        case 1: {
+                            paramName = parts[0];
+                            break;
+                        }
+                        case 2: {
+                            paramName = parts[0];
+                            paramNationalID = parts[1];
+                            break;
+                        }
+                        case 3: {
+                            paramName = parts[0];
+                            paramNationalID = parts[1];
+                            paramPhoneNumber = parts[2];
+                            break;
+                        }
+                    }
+
+                    Log.d(LOG, "EditPerson button name/all: " + paramName + paramNationalID + paramPhoneNumber);
                 }
-                if (assessment == null) {
-                    Log.d(LOG, "Search button assessment is null: ");
+
+                if (nationalIdDropdown.getText().toString().equals("")) {
+                    Log.d(LOG, "EditPerson button nationalID is empty: ");
                 } else {
-                    Log.d(LOG, "Search button assessment: " + assessment.get_assessment_type());
-                    paramAssessmentType = assessment.get_assessment_type();
-                }
-                if (facilityDropdown.getText().equals("")) {
-                    Log.d(LOG, "Search button facility is null: ");
-                } else {
-                    Log.d(LOG, "Search button facilityName: " + facilityDropdown.getText().toString());
-                    paramFacilityName = facilityDropdown.getText().toString();
-                }
-                if (nationalIdDropdown.equals("")) {
-                    Log.d(LOG, "Search button nationalID is null: ");
-                } else {
-                    Log.d(LOG, "Search button nationalID: " + nationalIdDropdown.getText());
                     paramNationalID = nationalIdDropdown.getText().toString();
+                    Log.d(LOG, "EditPerson button nationalID: " + paramNationalID);
                 }
 
-                String from_date = "";
-                String to_date = "";
+                if (phoneNumberDropdown.getText().toString().equals("")) {
+                    Log.d(LOG, "EditPerson button phoneNumber is empty: ");
+                } else {
+                    paramPhoneNumber = phoneNumberDropdown.getText().toString();
+                    Log.d(LOG, "EditPerson button phoneNumber: " + paramPhoneNumber);
+                }
 
                 // get ptoa's where params and goto list
                 //List<String> searchAssessments = dbHelp.getReadablAssessments(paramPersonId, nationalID, facilityName, paramAssessmentType, from_date, to_date);
 
                 Fragment fragment;
-                //fragment = getFragmentManager().findFragmentByTag(RecentFragment.TAG);
+                //fragment = getFrAddPersonFragmentagmentManager().findFragmentByTag(RecentFragment.TAG);
                 //if (fragment == null) {
-                fragment = RecentFragment.newInstance("search", paramPersonId + ":" + paramNationalID + ":" + paramFacilityName + ":" + paramAssessmentType + ":" + from_date + ":" + to_date + ":");
+                fragment = EditPersonFragment.newInstance("editPerson", paramName + ":" + paramNationalID + ":" + paramPhoneNumber);
                 //}
-                getFragmentManager().beginTransaction().replace(R.id.container, fragment, RecentFragment.TAG).addToBackStack("Search").commit();
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditPersonFragment.TAG).addToBackStack("EditPerson").commit();
             }
         });
+
+//        Button btnAddPerson = (Button) view.findViewById(R.id.btnAddPerson);
+//        btnAddPerson.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                java.util.Calendar cal = java.util.Calendar.getInstance();
+//                java.util.Date utilDate = cal.getTime();
+//                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+//
+//                Log.d(LOG, "AddPerson button: ");
+//
+//                String paramPersonId = "";
+//                String paramNationalID = "";
+//                String paramPhoneNumber = "";
+//                Log.d(LOG, "AddPerson button name: " + nameDropdown.getText().toString() + "<");
+//
+//                if (person == null || nameDropdown.getText().toString().equals("")) {
+//                    Log.d(LOG, "AddPerson button name is null: ");
+//                } else {
+//                    Log.d(LOG, "AddPerson button name: " + nameDropdown.getText().toString());
+//                    int personId = new Integer(person.get_id());
+//                    paramPersonId = Integer.toString(personId);
+//                }
+//                if (nationalIdDropdown.equals("")) {
+//                    Log.d(LOG, "AddPerson button nationalID is null: ");
+//                } else {
+//                    Log.d(LOG, "AddPerson button nationalID: " + nationalIdDropdown.getText());
+//                    paramNationalID = nationalIdDropdown.getText().toString();
+//                }
+//
+//                if (phoneNumberDropdown.equals("")) {
+//                    Log.d(LOG, "AddPerson button phoneNumber is null: ");
+//                } else {
+//                    Log.d(LOG, "AddPerson button phoneNumber: " + phoneNumberDropdown.getText());
+//                    paramPhoneNumber = phoneNumberDropdown.getText().toString();
+//                }
+//
+//                // get ptoa's where params and goto list
+//                //List<String> searchAssessments = dbHelp.getReadablAssessments(paramPersonId, nationalID, facilityName, paramAssessmentType, from_date, to_date);
+//
+//                Fragment fragment;
+//                //fragment = getFragmentManager().findFragmentByTag(RecentFragment.TAG);
+//                //if (fragment == null) {
+//                fragment = AddPersonFragment.newInstance("addPerson", paramPersonId + ":" + paramNationalID + ":" + paramPhoneNumber + ":");
+//                //}
+//                getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddPersonFragment.TAG).addToBackStack("AddPerson").commit();
+//            }
+//        });
 
         // Inflate the layout for this fragment
         return view;
@@ -208,7 +277,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
         String[] stringArrayPersonID = new String[ personIDs.size() ];
         personIDs.toArray(stringArrayPersonID);
 
-        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.search);
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayPersonID);
         dropdown.setThreshold(1);
         dropdown.setAdapter(dataAdapter);
@@ -219,11 +288,11 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
                 String parts[] = {};
                 parts = nameText.split(", ");
 
-                String first_name = parts[0].trim();
-                String last_name = parts[1].trim();
-                String national_id =  parts[2].trim();
-                String facility_name = parts[3].trim();
-                Log.d(LOG, "person selected: " + first_name + "." + last_name + "." + national_id + "." + facility_name + ".");
+                String name = parts[0].trim();
+                String national_id =  parts[1].trim();
+                String phone_number = parts[2].trim();
+                Log.d(LOG, "person selected: " + name + "." + national_id + "." + phone_number + ".");
+
                 //person = dbHelp.getPerson(first_name, last_name, national_id, facility_name);
 //                Log.d(LOG, "person_id selected: " + person.get_person_id());
 //                Log.d(LOG, "first_name selected: " + first_name);
@@ -237,7 +306,7 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
     public void loadNationalIDDropdown(View view) {
         String[] nationalIDs = dbHelp.getAllNationalIDs();
 
-        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.first_name);
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.national_id);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, nationalIDs);
         dropdown.setThreshold(1);
         dropdown.setAdapter(dataAdapter);
@@ -260,6 +329,24 @@ public class SearchFragment extends Fragment implements AdapterView.OnItemSelect
         dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
             public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
                 Log.d(LOG, "facility selected: " + dropdown.getText());
+            }
+        });
+
+    }
+
+    public void loadPhoneNumberDropdown(View view) {
+        String[] phoneNumbers = dbHelp.getAllPhoneNumbers();
+
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.phone_number);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, phoneNumbers);
+        dropdown.setThreshold(1);
+        dropdown.setAdapter(dataAdapter);
+        // dropdown.setTextSize(R.dimen.font_size_medium);
+        //dropdown.setTextSize(TypedValue.COMPLEX_UNIT_DIP,25);
+
+        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                Log.d(LOG, "phoneNumber selected: " + dropdown.getText());
             }
         });
 

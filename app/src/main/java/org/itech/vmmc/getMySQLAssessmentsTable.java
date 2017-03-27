@@ -15,7 +15,7 @@ import java.net.URLEncoder;
  * Created by rossumg on 8/1/2015.
  */
 class getMySQLAssessmentsTable extends AsyncTask<String, String, String> {
-
+    public static String LOG = "gnr";
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
 
@@ -26,7 +26,7 @@ class getMySQLAssessmentsTable extends AsyncTask<String, String, String> {
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d("request!", "getMySQLAssessmentsTable doInBackground ");
+        Log.d(LOG, "getMySQLAssessmentsTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -45,7 +45,7 @@ class getMySQLAssessmentsTable extends AsyncTask<String, String, String> {
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d("request!", "getMySQLAssessmentsTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "getMySQLAssessmentsTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -74,22 +74,22 @@ class getMySQLAssessmentsTable extends AsyncTask<String, String, String> {
                                     + "'" + assessment_type + "'" + ","
                                     + status + ");";
                     try {
-                        //Log.d("request!", "getMySQLPersonTable personInsert " + personInsert.toString());
+                        //Log.d(LOG, "getMySQLPersonTable personInsert " + personInsert.toString());
                         _db.execSQL(assessmentInsert.toString());
                     } catch (Exception ex) {
-                        Log.d("request!", "getMySQLAssessmentsTable loop exception > " + assessmentInsert);
+                        Log.d(LOG, "getMySQLAssessmentsTable loop exception > " + assessmentInsert);
                     }
                 } // foreach
             } else {
-                Log.d("request!", "Login Failed");
+                Log.d(LOG, "Login Failed");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("request!", "assessments exception>" + e.toString());
+            Log.d(LOG, "assessments exception>" + e.toString());
         }
-        Log.d("request!", "getMySQLAssessmentsTable.doInBackground end");
+        Log.d(LOG, "getMySQLAssessmentsTable.doInBackground end");
         return null;
     }
 }

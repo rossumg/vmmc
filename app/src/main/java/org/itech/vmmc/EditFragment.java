@@ -33,8 +33,9 @@ import java.util.List;
 public class EditFragment extends Fragment {
 
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static String ALL = "request!";
+
     public static String TAG = "editTag";
+    public static String LOG = "gnr";
     DBHelper dbHelp;
     private static PersonToAssessments _pToA;
     //private static final String ARG_PARAM1 = "param1";
@@ -70,19 +71,19 @@ public class EditFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        //Log.d("request!", "onResume");
+        //Log.d(LOG, "onResume");
     }
 
     @Override
     public void onPause() {
         super.onPause();
-        //Log.d("request!", "onPause");
+        //Log.d(LOG, "onPause");
     }
 
     @Override
     public void onStop() {
         super.onStop();
-        //Log.d("request!", "onStop");
+        //Log.d(LOG, "onStop");
     }
 
     @Override
@@ -113,7 +114,7 @@ public class EditFragment extends Fragment {
         Person person = dbHelp.getPerson(_pToA.get_person_id());
         Assessments assessment = dbHelp.getAssessments(_pToA.get_assessment_id());
 
-//        Log.d("request!", "editFrag: " +
+//        Log.d(LOG, "editFrag: " +
 //                person.get_last_name() + ", " +
 //                person.get_first_name() + " " +
 //                person.get_national_id() + " " +
@@ -202,12 +203,12 @@ public class EditFragment extends Fragment {
         }
 
         public void onClick(View view) {
-            Log.d("request!", "on click: ");
+            Log.d(LOG, "on click: ");
         }
 
 
         public void afterTextChanged(Editable editable) {
-//            Log.d("request!", "editFrag:afterTextChanged: ");
+//            Log.d(LOG, "editFrag:afterTextChanged: ");
             Integer relativePos = position+1;
             int question_id =  dbHelp.getAssessmentsQuestionsQuestion(pToA.get_assessment_id(), relativePos);
             AssessmentsAnswers assessmentsAnswers = dbHelp.getAssessmentsAnswers(pToA.get_person_id(), pToA.get_facility_id(), pToA.get_date_created(), pToA.get_assessment_id(), question_id );
@@ -246,16 +247,16 @@ public class EditFragment extends Fragment {
         }
 
         public void beforeTextChanged(CharSequence s, int start, int count, int after) {
-            //Log.d("request!", "beforeTextChanged:editable: " + s +  ":" + start + ":" + count + ":" + after);
+            //Log.d(LOG, "beforeTextChanged:editable: " + s +  ":" + start + ":" + count + ":" + after);
         }
 
         public void onTextChanged(CharSequence s, int start, int before, int count) {
-            //Log.d("request!", "onTextChanged: " );
+            //Log.d(LOG, "onTextChanged: " );
         }
 
         @Override
         public void onProgressChanged(org.itech.vmmc.DiscreteSeekBar discreteSeekBar, int progress, boolean fromUser) {
-            Log.d("request!", "onProgressChanged: " + progress);
+            Log.d(LOG, "onProgressChanged: " + progress);
 
             pageData.get(position).set_answer(convertProgressToStr(progress));
             dbHelp.setEditPageRow(pToA, pageData.get(position).get_assessments_questions_id(), convertProgressToStr(progress));

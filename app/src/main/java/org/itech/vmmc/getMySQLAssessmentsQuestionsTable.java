@@ -12,7 +12,7 @@ import java.net.URL;
 import java.net.URLEncoder;
 
 class getMySQLAssessmentsQuestionsTable extends AsyncTask<String, String, String> {
-
+    public static String LOG = "gnr";
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
 
@@ -23,7 +23,7 @@ class getMySQLAssessmentsQuestionsTable extends AsyncTask<String, String, String
     @Override
     protected String doInBackground(String... args) {
 
-        Log.d("request!", "getMySQLAssessmentsQuestionsTable.doInBackground ");
+        Log.d(LOG, "getMySQLAssessmentsQuestionsTable.doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -42,7 +42,7 @@ class getMySQLAssessmentsQuestionsTable extends AsyncTask<String, String, String
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d("request!", "getMySQLAssessmentsQuestionsTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "getMySQLAssessmentsQuestionsTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -79,19 +79,19 @@ class getMySQLAssessmentsQuestionsTable extends AsyncTask<String, String, String
                     try {
                         _db.execSQL(assessments_questionsInsert.toString());
                     } catch (Exception ex) {
-                        Log.d("request!", "getMySQLAssessmentsQuestionsTable loop exception > " + assessments_questionsInsert);
+                        Log.d(LOG, "getMySQLAssessmentsQuestionsTable loop exception > " + assessments_questionsInsert);
                     }
                 } // for
             } else {
-                Log.d("request!", "Login Failed");
+                Log.d(LOG, "Login Failed");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("request!", "assessments_questions exception>" + e.toString());
+            Log.d(LOG, "assessments_questions exception>" + e.toString());
         }
-        Log.d("request!", "getMySQLAssessmentsQuestionsTable.doInBackground end ");
+        Log.d(LOG, "getMySQLAssessmentsQuestionsTable.doInBackground end ");
         return null;
     }
 

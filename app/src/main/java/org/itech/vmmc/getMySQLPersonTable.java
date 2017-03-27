@@ -103,7 +103,7 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
                     String latitude = person_rec.getString("latitude");
                     String longitude = person_rec.getString("longitude");
                     String is_deleted = person_rec.getString("is_deleted");
-
+                    Log.d(LOG, "getMYSQLPersonTable:doInBackground: " + first_name + ":" + last_name + ":" + national_id);
                     String personInsert =
                             "insert into person "
                                     + "(first_name, last_name, national_id, address, phone, dob, gender, latitude, longitude, is_deleted) "
@@ -167,7 +167,7 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
 //
 
     protected void onPostExecute(String result) {
-        Log.d(LOG, "onPostExecute: " + result);
+        Log.d(LOG, "getMYSQLPersonTable:onPostExecute: " + result);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         Toast.makeText(this._context, "Download Complete", Toast.LENGTH_LONG).show();
     }

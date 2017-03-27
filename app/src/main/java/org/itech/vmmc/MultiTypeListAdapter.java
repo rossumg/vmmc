@@ -31,6 +31,7 @@ import java.util.Locale;
 
 
 public class MultiTypeListAdapter extends BaseAdapter {
+    public static String LOG = "gnr";
     private Context context;
     private LayoutInflater inflater;
     public List<EditPageObject> pageData;
@@ -112,7 +113,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
         int type = getItemViewType(position);
         holder = new EditFragment.ViewHolder(saveData, pageData, dbHelp, pToA);
         holder.position = position;
-        //Log.d("request!", "pageData: " + pageData.get(position).get_assessments_questions_id() + ":" + pageData.get(position).get_answer() );
+        //Log.d(LOG, "pageData: " + pageData.get(position).get_assessments_questions_id() + ":" + pageData.get(position).get_answer() );
         //holder = new EditFragment.ViewHolder(pageData, position);
         if (convertView == null) switch (type) {
             case 0: //Label
@@ -134,7 +135,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
 
                     @Override
                     public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser) {
-                        Log.d("request!", "onProgressChanged:value: " + value + " " + position);
+                        Log.d(LOG, "onProgressChanged:value: " + value + " " + position);
 
                         pageData.get(position).set_answer(convertProgressToStr(value));
                         dbHelp.setEditPageRow(pToA, pageData.get(position).get_assessments_questions_id(), convertProgressToStr(value));
@@ -183,7 +184,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
                 view = inflater.inflate(R.layout.edit_questionmulti, parent, false);
                 holder.textView = (TextView) view.findViewById(R.id.textq);
                 holder.textView.setText(pageData.get(position).get_question());
-//                    Log.d("request!", "get_question: " + pageData.get(position).get_question());
+//                    Log.d(LOG, "get_question: " + pageData.get(position).get_question());
                 holder.editText2 = (EditText) view.findViewById(R.id.editText2);
                 String _text2 = pageData.get(position).get_answer();
                 holder.editText2.setText(_text2 == null ? "" : _text2);
@@ -211,15 +212,15 @@ public class MultiTypeListAdapter extends BaseAdapter {
                 spinnerArrayAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
                 holder.spinnerWidget.setAdapter(spinnerArrayAdapter);
 
-//                    Log.d("request!", "getView case 6:question_id: " + pageData.get(position).get_assessments_questions_id());
+//                    Log.d(LOG, "getView case 6:question_id: " + pageData.get(position).get_assessments_questions_id());
                 String dropdownValue = pageData.get(position).get_answer();
-//                    Log.d("request!", "getView case 6:dropdownValue: " + dropdownValue);
+//                    Log.d(LOG, "getView case 6:dropdownValue: " + dropdownValue);
                 holder.spinnerWidget.setSelection(convertStrToOptionInt(dropdownValue, spinnerArray));
 
                 holder.spinnerWidget.setOnItemSelectedListener(new AdapterView.OnItemSelectedListener() {
                     @Override
                     public void onItemSelected(AdapterView<?> parentView, View selectedItemView, int position, long id) {
-                        Log.d("request!", "getView case 6:onItemSelected: " + position + " " + convertOptionIntToStr(position, spinnerArray));
+                        Log.d(LOG, "getView case 6:onItemSelected: " + position + " " + convertOptionIntToStr(position, spinnerArray));
                         // insert
                         pageData.get(position).set_answer(convertOptionIntToStr(position, spinnerArray));
                         dbHelp.setEditPageRow(pToA, pageData.get(assessment_position).get_assessments_questions_id(), convertOptionIntToStr(position, spinnerArray));
@@ -228,7 +229,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
                     @Override
                     public void onNothingSelected(AdapterView<?> parentView) {
                         // your code here
-//                            Log.d("request!", "getView case 6:nothingSelected: " );
+//                            Log.d(LOG, "getView case 6:nothingSelected: " );
                     }
 
                 });
@@ -254,7 +255,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
                         newDate.set(year, monthOfYear, dayOfMonth);
                         extEditDate.setText(dateFormatter.format(newDate.getTime()));
 
-                        Log.d("request!", "getView case 7:onDateSet: " + position + " " + dateFormatter.format(newDate.getTime()));
+                        Log.d(LOG, "getView case 7:onDateSet: " + position + " " + dateFormatter.format(newDate.getTime()));
                         pageData.get(position).set_answer(dateFormatter.format(newDate.getTime()));
                         dbHelp.setEditPageRow(pToA, pageData.get(position).get_assessments_questions_id(), dateFormatter.format(newDate.getTime()));
                     }
@@ -266,7 +267,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
                 holder.editDate.setOnClickListener(new View.OnClickListener() {
                     @Override
                     public void onClick(View view) {
-                        Log.d("request!", "on click: ");
+                        Log.d(LOG, "on click: ");
                         extDatePickerDialog.show();
                     }
                 });
@@ -301,24 +302,24 @@ public class MultiTypeListAdapter extends BaseAdapter {
                     break;
                 case 7: // date
                     holder.editDate.setText(pageData.get(position).get_answer());
-//                    Log.d("request!", "Got answer: " + pageData.get(position).get_answer());
+//                    Log.d(LOG, "Got answer: " + pageData.get(position).get_answer());
                     break;
             }
             holder.position = position;
         }
         holder.textView.setText(pageData.get(position).get_question());
-//        Log.d("request!", "get_question: " + pageData.get(position).get_question());
+//        Log.d(LOG, "get_question: " + pageData.get(position).get_question());
         return view;
     }
 
 
 
     public int convertStrToOptionInt (String dropdownValue, List spinnerArray) {
-//        Log.d("request!", "convertStrToOptionInt:dropdownValue: " + dropdownValue);
+//        Log.d(LOG, "convertStrToOptionInt:dropdownValue: " + dropdownValue);
         Iterator iterator = spinnerArray.iterator();
         int i = 0;
         while (iterator.hasNext()) {
-//            Log.d("request!", "convertStrToOptionInt:spinnerArray: " + iterator.next());
+//            Log.d(LOG, "convertStrToOptionInt:spinnerArray: " + iterator.next());
             if(dropdownValue.equals(iterator.next())){
                 return i;
             }
@@ -328,7 +329,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
     }
 
     public String convertOptionIntToStr (int optionInt, List spinnerArray){
-//        Log.d("request!", "convertOptionIntToStr:optionInt: " + optionInt);
+//        Log.d(LOG, "convertOptionIntToStr:optionInt: " + optionInt);
         Iterator iterator = spinnerArray.iterator();
         int i = 0;
         while (iterator.hasNext()) {

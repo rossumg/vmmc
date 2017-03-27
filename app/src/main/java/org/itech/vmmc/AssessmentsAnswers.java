@@ -6,6 +6,7 @@ import android.util.Log;
  * Created by rossumg on 9/8/2015.
  */
 public class AssessmentsAnswers {
+    public static String LOG = "gnr";
 
     //private variables
     int _assess_id;
@@ -17,7 +18,7 @@ public class AssessmentsAnswers {
     String _answer;
 
     public void dump() {
-        Log.d("request!", "dumpAssessmentsAnswers: " +
+        Log.d(LOG, "dumpAssessmentsAnswers: " +
                         this.get_assess_id() + " " +
                         this.get_person() + " " +
                         this.get_facility() + " " +

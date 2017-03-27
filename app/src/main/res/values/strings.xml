@@ -21,6 +21,7 @@
     <string name="DOWNLOAD">Download</string>
     <string name="TEST">Test</string>
     <string name="SYNC">Sync</string>
+    <string name="addEditPerson">Add Edit Person</string>
 
 
     <string name="searchTitle">Search Assessments</string>
@@ -32,9 +33,12 @@
     <string name="editTitle">Edit Assessment</string>
     <string name="adminTitle">Administration</string>
     <string name="debugTitle">Debug</string>
+    <string name="addEditPersonTitle">Add Edit Person</string>
+    <string name="addPersonTitle">Add Person</string>
+    <string name="editPersonTitle">Edit Person</string>
 
 
-    <string name="app_name">TrainSMART</string>
+    <string name="app_name">VMMC</string>
     <string name="drawer_open">Menu opened</string>
     <string name="drawer_close">Menu closed</string>
     <string name="action_settings">Settings</string>
@@ -45,17 +49,29 @@
 
 <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
-
-
-
     <string name="hello">Hello World, MainActivity!</string>
     <string name="geoLocation">GeoLocation</string>
     <string name="title">Person Details</string>
-    <string name="national_id">National ID </string>
+
     <string name="name">Name </string>
+    <string name="search">Search </string>
     <string name="name_nationalId_facility">Name, National Id, Facility </string>
     <string name="first_name">First Name </string>
     <string name="last_name">Last Name </string>
+    <string name="national_id">National ID </string>
+    <string name="address">Address </string>
+    <string name="phone">Phone Number </string>
+    <string name="dob">Date of Birth </string>
+    <string name="gender">Gender </string>
+    <string name="latitude">Latitude </string>
+    <string name="longitude">Longitude </string>
+
+    <string name="btn_label_edit">EDIT </string>
+    <string name="btn_label_add">ADD </string>
+    <string name="btn_label_save">SAVE </string>
+    <string name="btn_label_update">UPDATE </string>
+    <string name="btn_label_go">go </string>
+
     <string name="facility_id">Enter Facility Id: </string>
     <string name="facility_name">Facility Name </string>
     <string name="assessment_name">Assessment Type </string>

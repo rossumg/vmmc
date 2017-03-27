@@ -15,7 +15,7 @@ import java.util.List;
  * Created by rossumg on 8/1/2015.
  */
 class putMySQLPersonToAssessmentsTable extends AsyncTask<String, String, String> {
-
+    public static String LOG = "gnr";
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
@@ -27,7 +27,7 @@ class putMySQLPersonToAssessmentsTable extends AsyncTask<String, String, String>
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d("request!", "putMySQLPersonToAssessmentsTable doInBackground ");
+        Log.d(LOG, "putMySQLPersonToAssessmentsTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -46,7 +46,7 @@ class putMySQLPersonToAssessmentsTable extends AsyncTask<String, String, String>
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d("request!", "putMySQLPersonToAssessmentsTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "putMySQLPersonToAssessmentsTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -57,7 +57,7 @@ class putMySQLPersonToAssessmentsTable extends AsyncTask<String, String, String>
 //            data += "&" + URLEncoder.encode("rec1", "UTF-8") + "=" + URLEncoder.encode(rec1, "UTF-8");
 
             List<PersonToAssessments> personToAssessmentsList = dbhelp.getAllPersonToAssessments();
-            Log.d("request!", "putMySQLPersonToAssessmentsTable build rec: " + personToAssessmentsList.size() );
+            Log.d(LOG, "putMySQLPersonToAssessmentsTable build rec: " + personToAssessmentsList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(personToAssessmentsList.size()), "UTF-8");
             int i = 0;
             String[] recs = new String[personToAssessmentsList.size()];
@@ -69,7 +69,7 @@ class putMySQLPersonToAssessmentsTable extends AsyncTask<String, String, String>
                     Integer.toString(poa.get_assessment_id()) + "," +
                     Integer.toString(poa.get_user_id());
 
-                Log.d("request!", "loop: " + recs[i] + "<");
+                Log.d(LOG, "loop: " + recs[i] + "<");
 
                 //data += "&" + URLEncoder.encode(Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(rec, "UTF-8");
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
@@ -83,17 +83,17 @@ class putMySQLPersonToAssessmentsTable extends AsyncTask<String, String, String>
             if (success == 1) {
                 LOGGED_IN = true;
                 //int num_person_recs = json.getInt("number_records");
-                Log.d("request!", "putMySQLPersonToAssessmentsTable Success: ");
+                Log.d(LOG, "putMySQLPersonToAssessmentsTable Success: ");
             } else {
-                Log.d("request!", "putMySQLPersonToAssessmentsTable: Not Successful");
+                Log.d(LOG, "putMySQLPersonToAssessmentsTable: Not Successful");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d("request!", "putMySQLPersonToAssessmentsTable exception > " + e.toString());
+            Log.d(LOG, "putMySQLPersonToAssessmentsTable exception > " + e.toString());
         }
-        Log.d("request!", "putMySQLPersonToAssessmentsTable.doInBackground end");
+        Log.d(LOG, "putMySQLPersonToAssessmentsTable.doInBackground end");
         return null;
     }
 }

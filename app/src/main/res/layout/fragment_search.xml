@@ -10,14 +10,14 @@
            android:id="@+id/textView0"
            android:paddingTop="128dp"
            android:layout_alignParentTop="true"
-           android:layout_alignStart="@+id/name"
+           android:layout_alignStart="@+id/search"
            />
 
 
     <org.itech.vmmc.ClearableAutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/name"
+        android:id="@+id/search"
         android:layout_below="@+id/textView0"
         android:layout_centerHorizontal="true"
         android:layout_marginLeft="78dp"
@@ -32,13 +32,13 @@
        android:text="@string/national_id"
        android:id="@+id/textView2"
        android:paddingTop="12dp"
-       android:layout_below="@+id/name"
-       android:layout_alignStart="@+id/nationalid" />
+       android:layout_below="@+id/search"
+       android:layout_alignStart="@+id/first_name" />
 
    <org.itech.vmmc.ClearableAutoCompleteTextView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
-       android:id="@+id/nationalid"
+       android:id="@+id/first_name"
        android:layout_below="@+id/textView2"
 
        android:layout_marginLeft="78dp"
@@ -53,13 +53,13 @@
            android:text="@string/facility_name"
            android:id="@+id/textView3"
            android:paddingTop="12dp"
-           android:layout_below="@+id/nationalid"
-           android:layout_alignStart="@+id/facility" />
+           android:layout_below="@+id/first_name"
+           android:layout_alignStart="@+id/last_name" />
 
     <org.itech.vmmc.ClearableAutoCompleteTextView
            android:layout_width="wrap_content"
            android:layout_height="wrap_content"
-           android:id="@+id/facility"
+           android:id="@+id/last_name"
            android:layout_below="@+id/textView3"
            android:layout_marginLeft="78dp"
            android:layout_marginRight="78dp"
@@ -74,7 +74,7 @@
               android:text="@string/assessment_name"
               android:id="@+id/textView4"
               android:paddingTop="12dp"
-              android:layout_below="@+id/facility"
+              android:layout_below="@+id/last_name"
               android:layout_alignStart="@+id/assessment_type" />
 
           <Spinner

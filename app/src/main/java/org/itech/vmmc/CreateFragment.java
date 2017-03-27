@@ -112,7 +112,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
         loadPersonIDDropdown(view);
         loadAssessmentTypeDropdown(view);
 
-        final ClearableAutoCompleteTextView nameDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
+        final ClearableAutoCompleteTextView nameDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.search);
 
         Button btnCreate = (Button) view.findViewById(R.id.btnCreate);
         btnCreate.setOnClickListener(new View.OnClickListener() {
@@ -125,7 +125,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                 java.util.Calendar cal = java.util.Calendar.getInstance();
                 java.util.Date utilDate = cal.getTime();
                 java.sql.Date sqlDate = new Date(utilDate.getTime());
-                //Log.d("request!", "create button: " + person.get_person_id() + " " + person.get_facility_id() + " " + sqlDate + " " + assessment.get_assessment_id());
+                //Log.d(LOG, "create button: " + person.get_person_id() + " " + person.get_facility_id() + " " + sqlDate + " " + assessment.get_assessment_id());
                 // PersonToAssessments pToANew = new PersonToAssessments(person.get_person_id(), person.get_facility_id(), sqlDate.toString(), assessment.get_assessment_id(), 1);
                 PersonToAssessments pToANew = new PersonToAssessments(person.get_id(), person.get_id(), sqlDate.toString(), assessment.get_assessment_id(), 1);
                 pToANew.dump();
@@ -141,11 +141,11 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                             fragment = EditFragment.newInstance(pToA);
                         }
                         getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).addToBackStack("Create").commit();
-                        Log.d("request!", "Assessment Created");
+                        Log.d(LOG, "Assessment Created");
                         Toast.makeText(v.getContext(), "Assessment Created", Toast.LENGTH_LONG).show();
                     }
                 } else {
-                    Log.d("request!", "create button: existing");
+                    Log.d(LOG, "create button: existing");
                     Fragment fragment;
                     fragment = getFragmentManager().findFragmentByTag(EditFragment.TAG);
                     if (fragment == null) {
@@ -154,7 +154,7 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                     }
 
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).addToBackStack("Create").commit();
-                    Log.d("request!", "Existing Assessment");
+                    Log.d(LOG, "Existing Assessment");
                     Toast.makeText(v.getContext(), "Existing Assessment", Toast.LENGTH_LONG).show();
                 }
             }
@@ -211,13 +211,13 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
 
     private Person person;
     public void loadPersonIDDropdown(View view) {
-        Log.d("request!", "loadPersonIDDropdown: ");
+        Log.d(LOG, "loadPersonIDDropdown: ");
         List<String> personIDs = dbHelp.getAllPersonIDs();
         // convert to array
         String[] stringArrayPersonID = new String[ personIDs.size() ];
         personIDs.toArray(stringArrayPersonID);
 
-        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.search);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayPersonID);
         dropdown.setThreshold(1);
 
@@ -237,39 +237,39 @@ public class CreateFragment extends Fragment implements AdapterView.OnItemSelect
                 String last_name = parts[1].trim();
                 String national_id =  parts[2].trim();
                 String facility_name = parts[3].trim();
-                Log.d("request!", "facility selected:" + facility_name + ":");
-                Log.d("request!", "person selected:" + first_name + ":" + last_name + ":" + national_id + ":" + facility_name + ":");
+                Log.d(LOG, "facility selected:" + facility_name + ":");
+                Log.d(LOG, "person selected:" + first_name + ":" + last_name + ":" + national_id + ":" + facility_name + ":");
                 // person = dbHelp.getPerson(first_name, last_name, national_id, facility_name);
 
-                // Log.d("request!", "person_id selected: " + person.get_person_id());
-//                Log.d("request!", "first_name selected: " + first_name);
-//                Log.d("request!", "last_name selected: " + last_name);
-//                Log.d("request!", "national_id selected: " + national_id);
-//                Log.d("request!", "facility_name selected: " + facility_name);
+                // Log.d(LOG, "person_id selected: " + person.get_person_id());
+//                Log.d(LOG, "first_name selected: " + first_name);
+//                Log.d(LOG, "last_name selected: " + last_name);
+//                Log.d(LOG, "national_id selected: " + national_id);
+//                Log.d(LOG, "facility_name selected: " + facility_name);
             }
         });
     }
 
     private Assessments assessment = null;
     public void loadAssessmentTypeDropdown(View view) {
-        Log.d("request!", "loadAssessmentTypeDropdown: ");
+        Log.d(LOG, "loadAssessmentTypeDropdown: ");
 
         final Spinner dropdown = (Spinner) view.findViewById(R.id.assessment_type);
         dropdown.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String assessmentTypeText  = dropdown.getSelectedItem().toString();
-                Log.d("request!", "assessmentTypeText: " + assessmentTypeText);
+                Log.d(LOG, "assessmentTypeText: " + assessmentTypeText);
                 assessment = dbHelp.getAssessments(assessmentTypeText);
 
 
                 //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-                Log.d("request!", "assessmentId/Type selected: " + assessment.get_assessment_id() + " " + assessment.get_assessment_type());
+                Log.d(LOG, "assessmentId/Type selected: " + assessment.get_assessment_id() + " " + assessment.get_assessment_type());
             }
 
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
-                Log.d("request!", "spinner nothing selected");
+                Log.d(LOG, "spinner nothing selected");
             }
         });
 

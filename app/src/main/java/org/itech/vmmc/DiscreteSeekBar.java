@@ -493,9 +493,9 @@ public class DiscreteSeekBar extends View {
     }
 
     private void notifyProgress(int value, boolean fromUser) {
-//        Log.d("request!", "notifyProgress:value: " + value + " " + mPublicChangeListener);
-//        Log.d("request!", "notifyProgress:other: " + this.toString());
-//        Log.d("request!", "notifyProgress:other: " + MainActivity.currentFragmentId);
+//        Log.d(LOG, "notifyProgress:value: " + value + " " + mPublicChangeListener);
+//        Log.d(LOG, "notifyProgress:other: " + this.toString());
+//        Log.d(LOG, "notifyProgress:other: " + MainActivity.currentFragmentId);
 
         if (mPublicChangeListener != null) {
             mPublicChangeListener.onProgressChanged(DiscreteSeekBar.this, value, fromUser);

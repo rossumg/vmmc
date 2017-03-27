@@ -35,13 +35,14 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     //private static final String ARG_PARAM1 = "param1";
     //private static final String ARG_PARAM2 = "param2";
+    public static String LOG = "gnr";
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
         if (mListener != null) {
             // Notify the active callbacks interface (the activity, if the
             // fragment is attached to one) that an item has been selected.
-            Log.d("request!", "actionFragment onItemClick: " + mAdapter.getItem(position).toString());
+            Log.d(LOG, "actionFragment onItemClick: " + mAdapter.getItem(position).toString());
 
             if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.GEOLOCATION))) {
 
@@ -139,7 +140,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //                fragment = EditFragment.newInstance(pToA);
 //            }
 //            getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFragment.TAG).addToBackStack("").commit();
-//            Log.d("request!", "Existing Assessment");
+//            Log.d(LOG, "Existing Assessment");
 //            Toast.makeText(view.getContext(), "Existing Assessment", Toast.LENGTH_LONG).show();
         }
     }
@@ -192,8 +193,8 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
         if (getArguments() != null) {
             mParam1 = getArguments().getString("searchAssessments");
             mParam2 = getArguments().getString("searchParams");
-            Log.d("request!", "recentFragment onCreate param1: " + mParam1.toString());
-            Log.d("request!", "recentFragment onCreate param2:>" + mParam2.toString() + "<");
+            Log.d(LOG, "recentFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "recentFragment onCreate param2:>" + mParam2.toString() + "<");
         }
 
         DBHelper dbHelp = new DBHelper(getActivity());
