@@ -118,7 +118,7 @@ class syncMySQLPersonTable extends AsyncTask<String, String, String> {
                         Log.d(LOG, "syncMySQLPersonTable loop exception > " + ex.toString());
                     }
                 } // foreach
-                mBuilder.setContentText("Sync complete (" + i + " records)").setProgress(0, 0, false);
+                mBuilder.setContentText(this._context.getResources().getString(R.string.sync_complete) + " (" + i + " records)").setProgress(0, 0, false);
                 mNotifyManager.notify(id, mBuilder.build());
             } else {
                 Log.d(LOG, "Login Failed");
@@ -150,7 +150,7 @@ class syncMySQLPersonTable extends AsyncTask<String, String, String> {
     protected void onPostExecute(String result) {
         Log.d(LOG, "syncMySQLPersonTable:onPostExecute: " + result);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
-        Toast.makeText(this._context, "Download Complete", Toast.LENGTH_LONG).show();
+        Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 
 }

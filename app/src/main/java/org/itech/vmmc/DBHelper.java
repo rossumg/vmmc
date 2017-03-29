@@ -120,6 +120,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String TABLE_GEOLOCATION  = "geolocation";
     private static final String TABLE_FACILITATOR_TYPE = "facilitator_type";
     private static final String TABLE_INTERACTION_TYPE = "interaction_type";
+    private static final String TABLE_INSTITUTION = "institution";
 
     // person table column names
     private static final String PERSON_ID          = "id";
@@ -161,16 +162,20 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String FACILITATOR_LOCATION_ID = "location_id";
     private static final String FACILITATOR_LAT         = "lat";
     private static final String FACILITATOR_LONG        = "long";
-    private static final String FACILITATOR_INSTITUTION = "institution";
+    private static final String FACILITATOR_INSTITUTION_ID = "institution_id";
 
     // location table column names
     private static final String LOCATION_ID   = "id";
     private static final String LOCATION_NAME = "name";
+    private static final String LOCATION_REGION_ID = "region_id";
+
+    // institution table column names
+    private static final String INSTITUTION_ID          = "id";
+    private static final String INSTITUTION_NAME        = "name";
 
     // region table column names
     private static final String REGION_ID          = "id";
     private static final String REGION_NAME        = "name";
-    private static final String REGION_LOCATION_ID = "location_id";
 
     // constituency table column names
     private static final String CONSTITUENCY_ID        = "id";
@@ -257,26 +262,32 @@ public class DBHelper extends SQLiteOpenHelper{
             String CREATE_FACILITATOR_TABLE = "CREATE TABLE IF NOT EXISTS facilitator(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "person_id int, " +
-                    "type_id int, " +
+                    "facilitator_type_id int, " +
                     "note varchar, " +
                     "location_id int, " +
                     "lat real, " +
                     "long real, " +
-                    "institution varchar)";
+                    "institution_id int)";
             db.execSQL(CREATE_FACILITATOR_TABLE);
 
             //try { db.execSQL("delete from location;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_LOCATION_TABLE = "CREATE TABLE IF NOT EXISTS location(" +
                     "id integer primary key  autoincrement  not null  unique, " +
-                    "location_name varchar)";
+                    "name varchar, " +
+                    "region_id int)";
             db.execSQL(CREATE_LOCATION_TABLE);
 
             //try { db.execSQL("delete from region;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_REGION_TABLE = "CREATE TABLE IF NOT EXISTS region(" +
                     "id integer primary key  autoincrement  not null  unique, " +
-                    "name varchar, " +
-                    "location_id int)";
+                    "name varchar)";
             db.execSQL(CREATE_REGION_TABLE);
+
+            //try { db.execSQL("delete from region;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_INSTITUTION_TABLE = "CREATE TABLE IF NOT EXISTS institution(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar)";
+            db.execSQL(CREATE_INSTITUTION_TABLE);
 
             //try { db.execSQL("delete from constituency;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_CONSTITUENCY_TABLE = "CREATE TABLE IF NOT EXISTS constituency(" +
@@ -338,8 +349,14 @@ public class DBHelper extends SQLiteOpenHelper{
 //        load_facilitator_type();
 //        load_interaction_type();
 //          load_person();
-          new putMySQLPersonTable(this).execute();
-          new getMySQLPersonTable(this._context, this).execute();
+        new putMySQLPersonTable(this).execute();
+        new getMySQLRegionTable(this._context, this).execute();
+        new getMySQLLocationTable(this._context, this).execute();
+        new getMySQLFacilitatorTypeTable(this._context, this).execute();
+        new getMySQLInstitutionTable(this._context, this).execute();
+        new getMySQLInteractionTypeTable(this._context, this).execute();
+        new getMySQLPersonTable(this._context, this).execute();
+        Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 
     public void doTestDB() {
@@ -368,6 +385,8 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_FACILITATOR_TYPE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERACTION_TYPE);
         db.execSQL("DROP TABLE IF EXISTS " + TABLE_GEOLOCATION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INSTITUTION);
+        db.execSQL("DROP TABLE IF EXISTS " + TABLE_INTERACTION);
 
         // Create tables again
         onCreate(db);
@@ -1848,11 +1867,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
         };
 
-
         String whereClause = "1=1 and trim(" +
                 PERSON_NATIONAL_ID + ") like ? or trim(" +
                 PERSON_PHONE + ") like ? ";
-
 
         Log.d(LOG, "getPerson whereClause: " + whereClause);
 
@@ -2063,19 +2080,94 @@ public class DBHelper extends SQLiteOpenHelper{
         return returnVal;
     }
 
-    public boolean updatePerson(Person person) {
-        SQLiteDatabase db = this.getWritableDatabase();
 
-//    ContentValues values = new ContentValues();
-//    values.put(KEY_NAME, person.getName());
-//    values.put(KEY_PH_NO, person.getPhoneNumber());
-//
-//    // updating row
-//    return db.update(TABLE_PERSON, values, KEY_ID + " = ?",
-//            new String[] { String.valueOf(person.getID()) });
-        db.close();
-        return true;
-    }
+     public boolean updatePerson(Person person) {
+         SQLiteDatabase db = this.getWritableDatabase();
+
+         ContentValues values = new ContentValues();
+         //values.put(PERSON_ID, person.get_id());
+         values.put(PERSON_FIRST_NAME, person.get_first_name());
+         values.put(PERSON_LAST_NAME, person.get_last_name());
+         values.put(PERSON_NATIONAL_ID, person.get_national_id());
+         values.put(PERSON_ADDRESS,  person.get_address());
+         values.put(PERSON_PHONE,  person.get_phone());
+         values.put(PERSON_DOB,  person.get_dob());
+         values.put(PERSON_GENDER,  person.get_gender());
+         values.put(PERSON_LATITUDE,  person.get_latitude());
+         values.put(PERSON_LONGITUDE,  person.get_longitude());
+         values.put(PERSON_IS_DELETED,  person.get_is_deleted());
+
+         String[] tableColumns = new String[]{
+                 PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
+         };
+
+         String whereClause = "1=1 and trim(" +
+                 PERSON_FIRST_NAME + ") like ? or trim(" +
+                 PERSON_LAST_NAME + ") like ? or trim(" +
+                 PERSON_PHONE + ") like ? ";
+
+         Log.d(LOG, "updatePerson whereClause: " + whereClause);
+
+         String[] whereArgs = new String[]{
+                 person.get_first_name(), person.get_last_name(), person.get_phone()};
+         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
+
+         if (cursor.moveToFirst()) {
+
+        Log.d(LOG, "dbHelp.updatePerson  "
+                        + cursor.getString(0) + " "
+                        + cursor.getString(1) + " "
+                        + cursor.getString(2) + " "
+                        + cursor.getString(3) + " "
+                        + cursor.getString(4) + " "
+                        + cursor.getString(5) + " "
+                        + cursor.getString(6) + " "
+                + cursor.getString(7) + " "
+        );
+
+//             Person new_person = new Person(
+//                     cursor.getString(0),
+//                     cursor.getString(1),
+//                     cursor.getString(2),
+//                     cursor.getString(3),
+//                     cursor.getString(4),
+//                     cursor.getString(5),
+//                     cursor.getString(6),
+//                     parseFloat(cursor.getString(7)),
+//                     parseFloat(cursor.getString(8)),
+//                     0.0,
+//                     0.0,
+//                     0
+//             );
+
+             values.put(PERSON_ID, parseInt(cursor.getString(0)));
+             cursor.close();
+             // use person.id to update
+//             ContentValues cv = new ContentValues();
+//             cv.put(PERSON_ID, new_person.get_id());
+//             cv.put(PERSON_FIRST_NAME, new_person.get_first_name());
+//             cv.put(PERSON_LAST_NAME, new_person.get_last_name());
+//             cv.put(PERSON_NATIONAL_ID, new_person.get_national_id());
+//             cv.put(PERSON_ADDRESS, new_person.get_address());
+//             cv.put(PERSON_PHONE, new_person.get_phone());
+//             cv.put(PERSON_DOB, new_person.get_dob());
+//             cv.put(PERSON_GENDER, new_person.get_gender());
+//             cv.put(PERSON_LONGITUDE, new_person.get_longitude());
+//             cv.put(PERSON_LATITUDE, new_person.get_latitude());
+//             cv.put(PERSON_IS_DELETED, new_person.get_is_deleted());
+
+
+             String updateWhereClause = "1=1 and " + PERSON_ID + " = " + values.get(PERSON_ID);
+             db.update(TABLE_PERSON, values, updateWhereClause, null);
+             db.close();
+             return true;
+
+         } else {
+             cursor.close();
+             db.close();
+             return false;
+         }
+     }
 
     public boolean deletePerson(Person person) {
         SQLiteDatabase db = this.getWritableDatabase();

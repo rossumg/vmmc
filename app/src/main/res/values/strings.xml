@@ -84,6 +84,9 @@
     <string name="view_assessments_questions">ViewQ</string>
     <string name="show_info">Show Info</string>
     <string name="download">Download</string>
+    <string name="download_complete">Download Complete</string>
+    <string name="sync_complete">Sync Complete</string>
+
     <string name="upload">Upload</string>
     <string name="error">There was an error</string>
     <string name="test">Test</string>

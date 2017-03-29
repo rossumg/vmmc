@@ -214,7 +214,9 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                         lookupPerson.set_phone(sPhoneNumber);
                         lookupPerson.set_dob(sDOB);
                         lookupPerson.set_gender(sGender);
-                        dbHelp.updatePerson(lookupPerson);
+                        Log.d(LOG, "UpdatePerson update: " + lookupPerson.get_gender());
+                        if(dbHelp.updatePerson(lookupPerson))
+                            Toast.makeText(getActivity(), "Person Updated", Toast.LENGTH_LONG).show();;
                     } else {
                         Person person = new Person();
                         person.set_first_name(sFirstName.toString());
@@ -224,10 +226,12 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                         person.set_phone(sPhoneNumber);
                         person.set_dob(sDOB);
                         person.set_gender(sGender);
-                        dbHelp.addPerson(person);
+                        Log.d(LOG, "UpdatePerson add: " + person.get_gender());
+                        if(dbHelp.addPerson(person))
+                            Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();;
                     }
 
-                    Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();
+                    //Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
                 }

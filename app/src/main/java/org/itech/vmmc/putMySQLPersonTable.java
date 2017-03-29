@@ -72,9 +72,9 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
                         person.get_gender() + "," +
                         Double.toString(person.get_latitude()) + "," +
                         Double.toString(person.get_longitude()) + "," +
-                        person.get_is_deleted() + "," +
+                        person.get_is_deleted();
 
-                        Log.d(LOG, "loop: " + recs[i] + "<");
+//                        Log.d(LOG, "loop: " + recs[i] + "<");
 
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
                 i++;
