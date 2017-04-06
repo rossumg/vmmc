@@ -29,7 +29,8 @@ import static java.lang.Integer.parseInt;
 public class DBHelper extends SQLiteOpenHelper{
 
     public static String LOG = "gnr";
-    public static String VMMC_DATE_FORMAT = "yyyy-MM-dd hh:mm:ss";
+    public static String VMMC_DATE_TIME_FORMAT = "yyyy-MM-dd hh:mm:ss";
+    public static String VMMC_DATE_FORMAT = "yyyy-MM-dd";
     private static final int DATABASE_VERSION = 1;
     public Context _context;
 
@@ -1994,7 +1995,7 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
         Log.d(LOG, "getBooking5: " + first_name + ", " + last_name + ", " + national_id + ", " + phone + ", " + projected_date );
 //        DateFormat df = new android.text.format.DateFormat();
-//        String sProjectedDate = df.format(VMMC_DATE_FORMAT, projected_date).toString();
+//        String sProjectedDate = df.format(VMMC_DATE_TIME_FORMAT, projected_date).toString();
 
         String[] tableColumns = new String[] {
                 BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
@@ -2105,7 +2106,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        booking.set_timestamp(df.format(VMMC_DATE_FORMAT, oTimestamp).toString());
+        booking.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         Log.d(LOG, "updateBooking timestamp: " + booking.get_timestamp());
         values.put(BOOKING_TIMESTAMP, booking.get_timestamp());
         values.put(BOOKING_FIRST_NAME, booking.get_first_name());
@@ -2482,7 +2483,7 @@ public class DBHelper extends SQLiteOpenHelper{
          Calendar calendar = Calendar.getInstance();
          Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
          DateFormat df = new android.text.format.DateFormat();
-         person.set_timestamp(df.format(VMMC_DATE_FORMAT, oTimestamp).toString());
+         person.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
          Log.d(LOG, "updatePerson timestamp: " + person.get_timestamp());
          values.put(PERSON_TIMESTAMP, person.get_timestamp());
          values.put(PERSON_FIRST_NAME, person.get_first_name());

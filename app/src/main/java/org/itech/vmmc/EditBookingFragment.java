@@ -1,6 +1,7 @@
 package org.itech.vmmc;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,11 +12,15 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -49,6 +54,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
     private static TextView _location_id;
     private static TextView _projected_date;
     private static TextView _actual_date;
+
+    private EditText et_projected_date;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -99,7 +106,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         String phoneNumber = "";
         String projectedDate = "";
 
-        switch( parts.length)  {
+        switch (parts.length) {
             case 0: {
                 // add
                 break;
@@ -130,7 +137,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
         String nameParts[] = {};
         nameParts = name.split(" ");
-        switch( nameParts.length )  {
+        switch (nameParts.length) {
             case 0: {
                 break;
             }
@@ -156,7 +163,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             //_booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
             _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);
         }
-        if(_booking != null) {
+        if (_booking != null) {
             Log.d(LOG, "EBF _booking != null ");
             //Log.d(LOG, "EBF _booking != null " + _booking.get_first_name());
         } else {
@@ -185,13 +192,35 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _national_id.setText(_booking.get_national_id());
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_booking.get_phone());
-            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
+            _projected_date = (EditText) _view.findViewById(R.id.projected_date);
             _projected_date.setText(_booking.get_projected_date());
 //            _dob = (TextView) _view.findViewById(R.id.dob);
 //            _dob.setText(_person.get_dob());
 //            _gender = (TextView) _view.findViewById(R.id.gender);
 //            _gender.setText(_person.get_gender());
         }
+
+        et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+            Calendar newCalendar = Calendar.getInstance();
+            DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                    Calendar newDate = Calendar.getInstance();
+                    newDate.set(year, monthOfYear, dayOfMonth);
+                    et_projected_date.setText(dateFormatter.format(newDate.getTime()));
+                    Log.d(LOG, "onDateSet: ");
+                }
+            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog projected_date_picker_dialog = hold_projected_date_picker_dialog;
+
+        et_projected_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                projected_date_picker_dialog.show();
+            }
+        });
 
         Button btnUpdateBooking = (Button) _view.findViewById(R.id.btnUpdateBooking);
         btnUpdateBooking.setOnClickListener(new View.OnClickListener() {
@@ -269,6 +298,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
         return _view;
     }
+
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {}

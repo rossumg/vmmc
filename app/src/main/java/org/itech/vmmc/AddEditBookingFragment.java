@@ -1,6 +1,7 @@
 package org.itech.vmmc;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
@@ -11,10 +12,13 @@ import android.widget.AbsListView;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.Spinner;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
 
 
@@ -41,6 +45,8 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
 
     private OnFragmentInteractionListener mListener;
     private AbsListView mListView;
+
+    private EditText et_projected_date;
 
     private ListAdapter mAdapter;
     private DBHelper dbHelp;
@@ -95,6 +101,28 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
         final ClearableAutoCompleteTextView nationalIdDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.national_id);
         final ClearableAutoCompleteTextView phoneNumberDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.phone_number);
         final EditText projectedDate = (EditText) view.findViewById(R.id.projected_date);
+
+        et_projected_date = (EditText) view.findViewById(R.id.projected_date);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_projected_date.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "onDateSet: ");
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog projected_date_picker_dialog = hold_projected_date_picker_dialog;
+
+        et_projected_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                projected_date_picker_dialog.show();
+            }
+        });
 
         Button btnEditBooking = (Button) view.findViewById(R.id.btnEditBooking);
         btnEditBooking.setOnClickListener(new View.OnClickListener() {
