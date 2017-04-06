@@ -22,6 +22,7 @@
     <string name="TEST">Test</string>
     <string name="SYNC">Sync</string>
     <string name="addEditPerson">Add Edit Person</string>
+    <string name="addEditBooking">Add Edit Booking</string>
 
 
     <string name="searchTitle">Search Assessments</string>
@@ -36,6 +37,9 @@
     <string name="addEditPersonTitle">Add Edit Person</string>
     <string name="addPersonTitle">Add Person</string>
     <string name="editPersonTitle">Edit Person</string>
+    <string name="addEditBookingTitle">Add Edit Booking</string>
+    <string name="addBookingTitle">Add Booking</string>
+    <string name="editBookingTitle">Edit Booking</string>
 
 
     <string name="app_name">VMMC</string>
@@ -66,6 +70,8 @@
     <string name="latitude">Latitude </string>
     <string name="longitude">Longitude </string>
 
+    <string name="client_id">ClientID </string>
+
     <string name="btn_label_edit">EDIT </string>
     <string name="btn_label_add">ADD </string>
     <string name="btn_label_save">SAVE </string>
@@ -90,5 +96,7 @@
     <string name="upload">Upload</string>
     <string name="error">There was an error</string>
     <string name="test">Test</string>
+    <string name="projected_date">Projected Date</string>
+
 
 </resources>

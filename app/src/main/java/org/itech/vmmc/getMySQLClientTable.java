@@ -20,22 +20,22 @@ import static org.itech.vmmc.MainActivity.LOG;
 /**
  * Created by rossumg on 8/1/2015.
  */
-class getMySQLPersonTable extends AsyncTask<String, String, String> {
+class getMySQLClientTable extends AsyncTask<String, String, String> {
 
     private boolean LOGGED_IN = false;
     public Context _context;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
 
-    getMySQLPersonTable(Context context, DBHelper dbhelp){
+    getMySQLClientTable(Context context, DBHelper dbhelp) {
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
-//        this._db.execSQL("delete from person");
+        this._db.execSQL("delete from client");
     }
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d(LOG, "getMySQLPersonTable doInBackground ");
+        Log.d(LOG, "getMySQLClientTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -51,13 +51,13 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
-        Log.d(LOG, "getMySQLPersonTable username/password: " + username + " " + password);
-        String datatable = "getPerson";
+        Log.d(LOG, "getMySQLClientTable username/password: " + username + " " + password);
+        String datatable = "getClient";
         try {
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d(LOG, "getMySQLPersonTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "getMySQLClientTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -68,11 +68,11 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
             String reply = jsonParser.makeHttpRequest(url, "POST", data);
             JSONObject json = new JSONObject(reply);
             success = json.getInt(MainActivity.TAG_SUCCESS);
-            int num_person_recs;
+            int num_recs;
             if (success == 1) {
                 LOGGED_IN = true;
-                num_person_recs = json.getInt("number_records");
-                JSONArray person_array = json.getJSONArray("posts");
+                num_recs = json.getInt("number_records");
+                JSONArray _array = json.getJSONArray("posts");
 
                 NotificationManager mNotifyManager = (NotificationManager) this._context.getSystemService(this._context.NOTIFICATION_SERVICE);
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this._context);
@@ -83,61 +83,51 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
 
                 int id = 1;
 
-                for (i = 0; i< person_array.length(); i++) {
-                    JSONObject person_rec = person_array.getJSONObject(i);
-                    int person_id = person_rec.getInt("id");
+                for (i = 0; i < _array.length(); i++) {
+                    JSONObject _rec = _array.getJSONObject(i);
                     // escape single quotes
-                    String timestamp = person_rec.getString("timestamp");
+//                    String _person_id = _rec.getString("person_id");
+//                    _person_id = _person_id.replace("'", "''");
+                    String timestamp = _rec.getString("timestamp");
                     timestamp = timestamp.replace("'","''");
-                    String first_name = person_rec.getString("first_name");
+                    String first_name = _rec.getString("first_name");
                     first_name = first_name.replace("'","''");
-                    String last_name = person_rec.getString("last_name");
+                    String last_name = _rec.getString("last_name");
                     last_name = last_name.replace("'","''");
-                    String national_id = person_rec.getString("national_id");
-                    String address = person_rec.getString("address");
-                    address = address.replace("'","''");
-                    String phone = person_rec.getString("phone");
+                    String national_id = _rec.getString("national_id");
+                    national_id = national_id.replace("'","''");
+                    String phone = _rec.getString("phone");
                     phone = phone.replace("'","''");
-                    String dob = person_rec.getString("dob");
-                    dob = dob.replace("'","''");
-                    String gender = person_rec.getString("gender");
-                    gender = gender.replace("'","''");
-                    String latitude = person_rec.getString("latitude");
-                    String longitude = person_rec.getString("longitude");
-                    String is_deleted = person_rec.getString("is_deleted");
-                    Log.d(LOG, "getMYSQLPersonTable:doInBackground: " + first_name + ":" + last_name + ":" + phone);
-                    String personInsert =
-                            "insert or replace into person "
-                                    + "(timestamp, first_name, last_name, national_id, address, phone, dob, gender, latitude, longitude, is_deleted) "
+                    String status = _rec.getString("status");
+                    status = status.replace("'", "''");
+
+                    Log.d(LOG, "getMySQLClientTable:doInBackground: " + timestamp + ", " + first_name + ", " + last_name + ", " + national_id + ", " + phone + ", " +status );
+                    String _insert =
+                            "insert into client "
+                                    + "(timestamp, first_name, last_name, national_id, phone, status) "
                                     + " values("
                                     // + person_id + ","
+//                                    + "'" + _person_id + "'" + ","
                                     + "'" + timestamp + "'" + ","
                                     + "'" + first_name + "'" + ","
                                     + "'" + last_name + "'" + ","
                                     + "'" + national_id + "'" + ","
-                                    + "'" + address + "'" + ","
                                     + "'" + phone + "'" + ","
-                                    + "'" + dob + "'" + ","
-                                    + "'" + gender + "'" + ","
-                                    + latitude + ","
-                                    + longitude + ","
-                                    + "'" + is_deleted + "'" + ");";
-                    try {
-                        // no longer used
-                        //int progress = (int)((i / (float) num_person_recs) * 100);
-                        //publishProgress(Integer.toString(progress));
+                                    + "'" + status + "'" +
+                                    ");";
 
-                        int incr = (int)((i / (float) num_person_recs) * 100);
+                    try {
+                        int incr = (int) ((i / (float) num_recs) * 100);
                         mBuilder.setProgress(100, incr, false);
                         mNotifyManager.notify(id, mBuilder.build());
 
-                        //Log.d(LOG, "getMySQLPersonTable personInsert " + personInsert.toString() + " " + i);
-                        //Log.d(LOG, "getMySQLPersonTable personInsert " + " " + i);
+                        Log.d(LOG, "getMySQLClientTable _insert " + _insert.toString() + " " + i);
+                        //Log.d(LOG, "getMySQLClientTable personInsert " + " " + i);
 
-                       _db.execSQL(personInsert.toString());
+                        _db.execSQL(_insert.toString());
 
                     } catch (Exception ex) {
-                        Log.d(LOG, "getMySQLPersonTable loop exception > " + ex.toString());
+                        Log.d(LOG, "getMySQLClientTable loop exception > " + ex.toString());
                     }
                 } // foreach
                 mBuilder.setContentText(this._context.getResources().getString(R.string.sync_complete) + " (" + i + " records)").setProgress(0, 0, false);
@@ -150,17 +140,15 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(LOG, "getMySQLPersonTable exception > " + e.toString());
+            Log.d(LOG, "getMySQLClientTable exception > " + e.toString());
         }
-        Log.d(LOG, "getMySQLPersonTable.doInBackground end");
+        Log.d(LOG, "getMySQLClientTable.doInBackground end");
         return Integer.toString(i);
     }
 
     protected void onPostExecute(String result) {
-        Log.d(LOG, "getMYSQLPersonTable:onPostExecute: " + result);
+        Log.d(LOG, "getMySQLClientTable:onPostExecute: " + result);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 }
-
-

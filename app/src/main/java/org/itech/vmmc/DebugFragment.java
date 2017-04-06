@@ -61,6 +61,17 @@ public class DebugFragment extends Fragment implements AbsListView.OnItemClickLi
                 }
                 MainActivity.currentFragmentId = "AddEditPerson";
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditBooking))) {
+                Log.d(LOG, "DebugFragment " + getResources().getString(R.string.addEditBooking) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditBookingFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditBookingFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditBookingFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditBookingFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditBooking";
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
@@ -254,8 +265,8 @@ public class DebugFragment extends Fragment implements AbsListView.OnItemClickLi
         if (getArguments() != null) {
             mParam1 = getArguments().getString("searchAssessments");
             mParam2 = getArguments().getString("searchParams");
-            Log.d(LOG, "recentFragment onCreate param1: " + mParam1.toString());
-            Log.d(LOG, "recentFragment onCreate param2:>" + mParam2.toString() + "<");
+            Log.d(LOG, "debugFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "debugFragment onCreate param2:>" + mParam2.toString() + "<");
         }
 
         Log.d(LOG, "DebugFragment:onCreate");
@@ -270,6 +281,7 @@ public class DebugFragment extends Fragment implements AbsListView.OnItemClickLi
         actions.add(getResources().getString(R.string.TEST));
         actions.add(getResources().getString(R.string.SYNC));
         actions.add(getResources().getString(R.string.addEditPerson));
+        actions.add(getResources().getString(R.string.addEditBooking));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);

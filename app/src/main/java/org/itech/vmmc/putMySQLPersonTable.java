@@ -63,6 +63,7 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
             String[] recs = new String[personList.size()];
             for (Person person: personList) {
                 recs[i] =
+                        person.get_timestamp() + "," +
                         person.get_first_name() + "," +
                         person.get_last_name() + "," +
                         person.get_national_id() + "," +
@@ -89,7 +90,7 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
                 //int num_person_recs = json.getInt("number_records");
                 Log.d(LOG, "putMySQLPersonTable Success: ");
             } else {
-                Log.d(LOG, "putMySQLGeoLocationTable: Not Successful");
+                Log.d(LOG, "putMySQLPersonTable: Not Successful");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }

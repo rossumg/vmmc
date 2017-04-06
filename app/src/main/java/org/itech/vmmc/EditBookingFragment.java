@@ -22,33 +22,33 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link EditPersonFragment.OnFragmentInteractionListener} interface
+ * {@link EditBookingFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
- * Use the {@link EditPersonFragment#newInstance} factory method to
+ * Use the {@link EditBookingFragment#newInstance} factory method to
  * create an instance of this fragment.
  */
-public class EditPersonFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+public class EditBookingFragment extends Fragment implements AdapterView.OnItemSelectedListener {
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-    public static String TAG = "EditPersonTag";
+    public static String TAG = "EditBookingTag";
     public static String LOG = "gnr";
     public Context _context;
 
-    private static final String ARG_EDIT_PERSON_PARAM = "EXTRA_EDIT_PERSON_PARAM";
-    private static final String ARG_EDIT_PERSON_RECORD_PARAM = "EXTRA_EDIT_PERSON_RECORD_PARAM";
+    private static final String ARG_EDIT_BOOKING_PARAM = "EXTRA_EDIT_BOOKING_PARAM";
+    private static final String ARG_EDIT_BOOKING_RECORD_PARAM = "EXTRA_EDIT_BOOKING_RECORD_PARAM";
 
     View _view;
 
-    // private String mEditPersonParam;
-    private static String _editPersonRecordParam;
-    private static Person _person;
+    // private String mEditBookingParam;
+    private static String _editBookingRecordParam;
+    private static Booking _booking;
     private static TextView _first_name;
     private static TextView _last_name;
     private static TextView _national_id;
-    private static TextView _address;
-    private static TextView _phone_number;
-    private static TextView _dob;
-    private static TextView _gender;
+    private static TextView _phone;
+    private static TextView _location_id;
+    private static TextView _projected_date;
+    private static TextView _actual_date;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -59,23 +59,23 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
      *
      //* @param param1 Parameter 1.
      //* @param param2 Parameter 2.
-     * @return A new instance of fragment CreatePersonFragment.
+     * @return A new instance of fragment EditBookingFragment.
      */
     // TODO: Rename and change types and number of parameters
     //  public static CreateFragment newInstance(String param1, String param2) {
-    public static EditPersonFragment newInstance(String mEditPersonParam, String mEditPersonRecordParam) {
-        EditPersonFragment fragment = new EditPersonFragment();
+    public static EditBookingFragment newInstance(String mEditBookingParam, String mEditBookingRecordParam) {
+        EditBookingFragment fragment = new EditBookingFragment();
         Bundle bundle = new Bundle();
-        bundle.putString("ARG_EDIT_PERSON_PARAM", mEditPersonParam);
-        bundle.putString("ARG_EDIT_PERSON_RECORD_PARAM", mEditPersonRecordParam);
+        bundle.putString("ARG_EDIT_BOOKING_PARAM", mEditBookingParam);
+        bundle.putString("ARG_EDIT_BOOKING_RECORD_PARAM", mEditBookingRecordParam);
 
-        _editPersonRecordParam = mEditPersonRecordParam;
+        _editBookingRecordParam = mEditBookingRecordParam;
 
         fragment.setArguments(bundle);
         return fragment;
     }
 
-    // public CreatePersonFragment() {
+    // public EditBookingFragment() {
     // Required empty public constructor
     //}
 
@@ -83,12 +83,12 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         if (getArguments() != null) {
-            _editPersonRecordParam = getArguments().getString("ARG_EDIT_PERSON_RECORD_PARAM");
-            Log.d(LOG, "editPersonFragment onCreate editPersonParam: ");
-            Log.d(LOG, "editPersonFragment onCreate editPersonRecordParam: " + _editPersonRecordParam.toString() + "<");
+            _editBookingRecordParam = getArguments().getString("ARG_EDIT_BOOKING_RECORD_PARAM");
+            Log.d(LOG, "editBookingFragment onCreate editBookingParam: ");
+            Log.d(LOG, "editBookingFragment onCreate editBookingRecordParam: " + _editBookingRecordParam.toString() + "<");
         }
 
-        String params = _editPersonRecordParam.toString();
+        String params = _editBookingRecordParam.toString();
         String parts[] = {};
         parts = params.split(":");
 
@@ -97,6 +97,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         String lastName = "";
         String nationalId = "";
         String phoneNumber = "";
+        String projectedDate = "";
 
         switch( parts.length)  {
             case 0: {
@@ -118,6 +119,13 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                 phoneNumber = parts[2];
                 break;
             }
+            case 4: {
+                name = parts[0];
+                nationalId = parts[1];
+                phoneNumber = parts[2];
+                projectedDate = parts[3];
+                break;
+            }
         }
 
         String nameParts[] = {};
@@ -137,41 +145,56 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             }
         }
 
-        Log.d(LOG, "First: " + firstName);
-        Log.d(LOG, "Last: " + lastName);
-        Log.d(LOG, "NationalId: " + nationalId);
-        Log.d(LOG, "PhoneNumber: " + phoneNumber);
+        Log.d(LOG, "EBF First: " + firstName);
+        Log.d(LOG, "EBF Last: " + lastName);
+        Log.d(LOG, "EBF NationalId: " + nationalId);
+        Log.d(LOG, "EBF PhoneNumber: " + phoneNumber);
+        Log.d(LOG, "EBF ProjectedDate: " + projectedDate);
 
         dbHelp = new DBHelper(getActivity());
-        if (!nationalId.equals("") || !phoneNumber.equals(""))
-          _person = dbHelp.getPerson(nationalId, phoneNumber);
-
+        if (!nationalId.equals("") || !phoneNumber.equals("")) {
+            //_booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
+            _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);
+        }
+        if(_booking != null) {
+            Log.d(LOG, "EBF _booking != null ");
+            //Log.d(LOG, "EBF _booking != null " + _booking.get_first_name());
+        } else {
+            Log.d(LOG, "EBF _booking is equal null ");
+            _booking = new Booking();
+            _booking.set_first_name(firstName);
+            _booking.set_last_name(lastName);
+            _booking.set_national_id(nationalId);
+            _booking.set_phone(phoneNumber);
+            _booking.set_projected_date(projectedDate);
+            //Log.d(LOG, "EBF _booking is equal null " + _booking.get_first_name());
+        }
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        _view = inflater.inflate(R.layout.fragment_edit_person, container, false);
+        _view = inflater.inflate(R.layout.fragment_edit_booking, container, false);
 
-        getActivity().setTitle(getResources().getString(R.string.editPersonTitle));
-        if(_person != null) {
+        getActivity().setTitle(getResources().getString(R.string.editBookingTitle));
+        if(_booking != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
-            _first_name.setText(_person.get_first_name());
+            _first_name.setText(_booking.get_first_name());
             _last_name = (TextView) _view.findViewById(R.id.last_name);
-            _last_name.setText(_person.get_last_name());
+            _last_name.setText(_booking.get_last_name());
             _national_id = (TextView) _view.findViewById(R.id.national_id);
-            _national_id.setText(_person.get_national_id());
-            _address = (TextView) _view.findViewById(R.id.address);
-            _address.setText(_person.get_address());
-            _phone_number = (TextView) _view.findViewById(R.id.phone_number);
-            _phone_number.setText(_person.get_phone());
-            _dob = (TextView) _view.findViewById(R.id.dob);
-            _dob.setText(_person.get_dob());
-            _gender = (TextView) _view.findViewById(R.id.gender);
-            _gender.setText(_person.get_gender());
+            _national_id.setText(_booking.get_national_id());
+            _phone = (TextView) _view.findViewById(R.id.phone_number);
+            _phone.setText(_booking.get_phone());
+            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
+            _projected_date.setText(_booking.get_projected_date());
+//            _dob = (TextView) _view.findViewById(R.id.dob);
+//            _dob.setText(_person.get_dob());
+//            _gender = (TextView) _view.findViewById(R.id.gender);
+//            _gender.setText(_person.get_gender());
         }
 
-        Button btnUpdatePerson = (Button) _view.findViewById(R.id.btnUpdatePerson);
-        btnUpdatePerson.setOnClickListener(new View.OnClickListener() {
+        Button btnUpdateBooking = (Button) _view.findViewById(R.id.btnUpdateBooking);
+        btnUpdateBooking.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -181,54 +204,60 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
 
                 _first_name = (TextView) _view.findViewById(R.id.first_name);
                 _last_name = (TextView) _view.findViewById(R.id.last_name);
-                _phone_number = (TextView) _view.findViewById(R.id.phone_number);
+                _national_id = (TextView) _view.findViewById(R.id.national_id);
+                _phone = (TextView) _view.findViewById(R.id.phone_number);
+                _projected_date= (TextView) _view.findViewById(R.id.projected_date);
 
-                Log.d(LOG, "UpdatePerson button: " +
-                        _first_name.getText() + _last_name.getText() + _phone_number.getText() + "<");
+                Log.d(LOG, "UpdateBooking button: " +
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + " <");
 
                 String sFirstName = _first_name.getText().toString();
                 String sLastName = _last_name.getText().toString();
                 String sNationalId = _national_id.getText().toString();
-                String sAddress = _address.getText().toString();
-                String sPhoneNumber = _phone_number.getText().toString();
-                String sDOB = _dob.getText().toString();
-                String sGender = _gender.getText().toString();
+                String sPhoneNumber = _phone.getText().toString();
+                String sProjectedDate = _projected_date.getText().toString();
+//                DateFormat df = new android.text.format.DateFormat();
+//                String dProjectedDate = df.format(VMMC_DATE_FORMAT, projected_date);
+//                String sDOB = _dob.getText().toString();
+//                String sGender = _gender.getText().toString();
 
-                Log.d(LOG, "UpdatePerson button2: " +
-                        sFirstName + sLastName + sPhoneNumber + "<");
+                Log.d(LOG, "UpdateBooking button2: " +
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
 
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
                 if(sLastName.matches("") ) complete = false;
                 if(sPhoneNumber.matches("") ) complete = false;
+                if(sProjectedDate.matches("") ) complete = false;
 
                 if(complete) {
 
-                    Person lookupPerson = dbHelp.getPerson(sFirstName, sLastName, sPhoneNumber);
+                    Booking lookupBooking = dbHelp.getBooking(sFirstName, sLastName, sNationalId, sPhoneNumber, sProjectedDate);
 
-                    if (lookupPerson != null) {
-                        lookupPerson.set_first_name(sFirstName);
-                        lookupPerson.set_last_name(sLastName);
-                        lookupPerson.set_national_id(sNationalId);
-                        lookupPerson.set_address(sAddress);
-                        lookupPerson.set_phone(sPhoneNumber);
-                        lookupPerson.set_dob(sDOB);
-                        lookupPerson.set_gender(sGender);
-                        Log.d(LOG, "UpdatePerson update: " + lookupPerson.get_gender());
-                        if(dbHelp.updatePerson(lookupPerson))
-                            Toast.makeText(getActivity(), "Person Updated", Toast.LENGTH_LONG).show();;
+                    if (lookupBooking != null) {
+                        lookupBooking.set_first_name(sFirstName);
+                        lookupBooking.set_last_name(sLastName);
+                        lookupBooking.set_national_id(sNationalId);
+                        lookupBooking.set_phone(sPhoneNumber);
+                        lookupBooking.set_projected_date(sProjectedDate);
+//                        lookupPerson.set_gender(sGender);
+                        Log.d(LOG, "UpdateBooking update: " +
+                                _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
+                        if(dbHelp.updateBooking(lookupBooking))
+                            Toast.makeText(getActivity(), "Booking Updated", Toast.LENGTH_LONG).show();;
                     } else {
-                        Person person = new Person();
-                        person.set_first_name(sFirstName.toString());
-                        person.set_last_name(sLastName);
-                        person.set_national_id(sNationalId);
-                        person.set_address(sAddress);
-                        person.set_phone(sPhoneNumber);
-                        person.set_dob(sDOB);
-                        person.set_gender(sGender);
-                        Log.d(LOG, "UpdatePerson add: " + person.get_gender());
-                        if(dbHelp.addPerson(person))
-                            Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();;
+                        Booking booking = new Booking();
+                        booking.set_first_name(sFirstName.toString());
+                        booking.set_last_name(sLastName);
+                        booking.set_national_id(sNationalId);
+                        booking.set_phone(sPhoneNumber);
+                        booking.set_projected_date(sProjectedDate);
+//                        person.set_dob(sDOB);
+//                        person.set_gender(sGender);
+                        Log.d(LOG, "UpdateBooking add: " +
+                                _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
+                        if(dbHelp.addBooking(booking))
+                            Toast.makeText(getActivity(), "Booking Saved", Toast.LENGTH_LONG).show();;
                     }
 
                     //Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();
@@ -238,11 +267,6 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             }
         });
 
-        //loadPersonIDDropdown(view);
-        //loadAssessmentTypeDropdown(view);
-
-        //nameView.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-        // Inflate the layout for this fragment
         return _view;
     }
 
@@ -274,14 +298,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         super.onDetach();
         mListener = null;
         Log.d(LOG, "Detach: ");
-         _person = null;
-//        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("first");
-//        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("last");
-//        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
-//        _address = (TextView) _view.findViewById(R.id.address); _address.setText("");
-//        _phone_number = (TextView) _view.findViewById(R.id.phone_number); _phone_number.setText("");
-//        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
-//        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
+         _booking = null;
     }
 
     @Override
@@ -292,26 +309,26 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
         _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
         _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
-        _address = (TextView) _view.findViewById(R.id.address); _address.setText("");
-        _phone_number = (TextView) _view.findViewById(R.id.phone_number); _phone_number.setText("");
-        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
-        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
+        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
+        _projected_date = (TextView) _view.findViewById(R.id.projected_date); _projected_date.setText("");
+//        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
+//        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
-        if(_person != null) {
+        if(_booking != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
-            _first_name.setText(_person.get_first_name());
+            _first_name.setText(_booking.get_first_name());
             _last_name = (TextView) _view.findViewById(R.id.last_name);
-            _last_name.setText(_person.get_last_name());
+            _last_name.setText(_booking.get_last_name());
             _national_id = (TextView) _view.findViewById(R.id.national_id);
-            _national_id.setText(_person.get_national_id());
-            _address = (TextView) _view.findViewById(R.id.address);
-            _address.setText(_person.get_address());
-            _phone_number = (TextView) _view.findViewById(R.id.phone_number);
-            _phone_number.setText(_person.get_phone());
-            _dob = (TextView) _view.findViewById(R.id.dob);
-            _dob.setText(_person.get_dob());
-            _gender = (TextView) _view.findViewById(R.id.gender);
-            _gender.setText(_person.get_gender());
+            _national_id.setText(_booking.get_national_id());
+            _phone = (TextView) _view.findViewById(R.id.phone_number);
+            _phone.setText(_booking.get_phone());
+            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
+            _projected_date.setText(_booking.get_projected_date());
+//            _dob = (TextView) _view.findViewById(R.id.dob);
+//            _dob.setText(_person.get_dob());
+//            _gender = (TextView) _view.findViewById(R.id.gender);
+//            _gender.setText(_person.get_gender());
         }
     }
 

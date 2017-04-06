@@ -7,6 +7,7 @@ public class Person {
 
     //private variables
     int _id;
+    String _timestamp;
     String _first_name;
     String _last_name;
     String _national_id;
@@ -51,12 +52,34 @@ public class Person {
         this._is_deleted = _is_deleted;
     }
 
+    public Person(String _timestamp, String _first_name, String _last_name, String _national_id, String _address, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
+        this._timestamp = _timestamp;
+        this._first_name = _first_name;
+        this._last_name = _last_name;
+        this._national_id = _national_id;
+        this._address = _address;
+        this._phone = _phone;
+        this._dob = _dob;
+        this._gender = _gender;
+        this._latitude = _latitude;
+        this._longitude = _longitude;
+        this._is_deleted = _is_deleted;
+    }
+
     public int get_id() {
         return _id;
     }
 
     public void set_id(int _id) {
         this._id = _id;
+    }
+
+    public String get_timestamp() {
+        return _timestamp;
+    }
+
+    public void set_timestamp(String _timestamp) {
+        this._timestamp = _timestamp;
     }
 
     public String get_first_name() {
