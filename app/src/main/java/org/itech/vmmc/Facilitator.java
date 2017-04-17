@@ -13,42 +13,42 @@ public class Facilitator {
     String _last_name;
     String _national_id;
     String _phone;
-    String _type;
+    int _facilitator_type_id;
     String _note;
-    String _location_id;
-    String _lat;
-    String _long;
-    String _institution_id;
+    int _location_id;
+    float _latitude;
+    float _longitude;
+    int _institution_id;
 
     public Facilitator() {
     }
 
-    public Facilitator(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _type, String _note, String _location_id, String _lat, String _long, String _institution_id) {
+    public Facilitator(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _facilitator_type_id, String _note, int _location_id, float _latitude, float _longitude, int _institution_id) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
         this._phone = _phone;
-        this._type = _type;
+        this._facilitator_type_id = _facilitator_type_id;
         this._note = _note;
         this._location_id = _location_id;
-        this._lat = _lat;
-        this._long = _long;
+        this._latitude = _latitude;
+        this._longitude = _longitude;
         this._institution_id = _institution_id;
     }
 
-    public Facilitator(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _type, String _note, String _location_id, String _lat, String _long, String _institution_id) {
+    public Facilitator(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _facilitator_type_id, String _note, int _location_id, float _latitude, float _longitude, int _institution_id) {
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
         this._phone = _phone;
-        this._type = _type;
+        this._facilitator_type_id = _facilitator_type_id;
         this._note = _note;
         this._location_id = _location_id;
-        this._lat = _lat;
-        this._long = _long;
+        this._latitude = _latitude;
+        this._longitude = _longitude;
         this._institution_id = _institution_id;
     }
 
@@ -100,12 +100,12 @@ public class Facilitator {
         this._phone = _phone;
     }
 
-    public String get_type() {
-        return _type;
+    public int get_facilitator_type_id() {
+        return _facilitator_type_id;
     }
 
-    public void set_type(String _type) {
-        this._type = _type;
+    public void set_facilitator_type_id(int _facilitator_type_id) {
+        this._facilitator_type_id = _facilitator_type_id;
     }
 
     public String get_note() {
@@ -116,35 +116,35 @@ public class Facilitator {
         this._note = _note;
     }
 
-    public String get_location_id() {
+    public int get_location_id() {
         return _location_id;
     }
 
-    public void set_location_id(String _location_id) {
+    public void set_location_id(int _location_id) {
         this._location_id = _location_id;
     }
 
-    public String get_lat() {
-        return _lat;
+    public float get_latitude() {
+        return _latitude;
     }
 
-    public void set_lat(String _lat) {
-        this._lat = _lat;
+    public void set_latitude(float _latitude) {
+        this._latitude = _latitude;
     }
 
-    public String get_long() {
-        return _long;
+    public float get_longitude() {
+        return _longitude;
     }
 
-    public void set_long(String _long) {
-        this._long = _long;
+    public void set_longitude(float _longitude) {
+        this._longitude = _longitude;
     }
 
-    public String get_institution_id() {
+    public int get_institution_id() {
         return _institution_id;
     }
 
-    public void set_institution_id(String _institution_id) {
+    public void set_institution_id(int _institution_id) {
         this._institution_id = _institution_id;
     }
 }

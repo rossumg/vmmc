@@ -126,6 +126,86 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                     dbHelp.downloadDBData();
                 }
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditPerson))) {
+                Log.d(LOG, getResources().getString(R.string.addEditPerson) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditPersonFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditPersonFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditPerson";
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditBooking))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditBooking) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditBookingFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditBookingFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditBookingFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditBookingFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditBooking";
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditClient))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditClient) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditClientFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditClientFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditClientFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditClient";
+
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
+                Log.d(LOG, "SYNC btn");
+
+                if(MainActivity._pass.equals("")) {
+
+                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+                    builder.setTitle("Password");
+
+                    final EditText input = new EditText(getActivity());
+                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+                    builder.setView(input);
+
+                    // Set up the buttons
+                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            MainActivity._pass = input.getText().toString();
+                            Log.d(TAG, "_pass: " + MainActivity._pass);
+                            dbHelp.doSyncDB();
+                        }
+                    });
+                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            dialog.cancel();
+                        }
+                    });
+
+                    builder.show();
+                }
+
+                if(MainActivity._pass.equals("")){
+                    //requires password
+                    //Toast.makeText(v.getContext(), "Valid password required.", Toast.LENGTH_LONG).show();
+                } else {
+                    // try
+//                    dbHelp.uploadDBData();
+                    Log.d(LOG, "debugFragment call sync");
+                    dbHelp.doSyncDB();
+                }
+
+
+
             } else {} // do nothing
 
 
@@ -202,9 +282,13 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 
         List<String> actions = new ArrayList<String>();
 
-        actions.add(getResources().getString(R.string.GEOLOCATION));
-        actions.add(getResources().getString(R.string.UPLOAD));
-        actions.add(getResources().getString(R.string.DOWNLOAD));
+//        actions.add(getResources().getString(R.string.GEOLOCATION));
+//        actions.add(getResources().getString(R.string.UPLOAD));
+//        actions.add(getResources().getString(R.string.DOWNLOAD));
+        actions.add(getResources().getString(R.string.SYNC));
+        actions.add(getResources().getString(R.string.addEditPerson));
+        actions.add(getResources().getString(R.string.addEditClient));
+        actions.add(getResources().getString(R.string.addEditBooking));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);

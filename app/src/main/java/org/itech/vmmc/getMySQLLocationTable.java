@@ -86,6 +86,8 @@ class getMySQLLocationTable extends AsyncTask<String, String, String> {
                 for (i = 0; i < _array.length(); i++) {
                     JSONObject _rec = _array.getJSONObject(i);
                     // escape single quotes
+                    String _id = _rec.getString("id");
+                    _id = _id.replace("'", "''");
                     String _name = _rec.getString("name");
                     _name = _name.replace("'", "''");
                     String _region_id = _rec.getString("region_id");
@@ -94,9 +96,10 @@ class getMySQLLocationTable extends AsyncTask<String, String, String> {
                     Log.d(LOG, "getMySQLLocationTable:doInBackground: " + _name + ", " + _region_id );
                     String _insert =
                             "insert into location "
-                                    + "(name, region_id) "
+                                    + "(id, name, region_id) "
                                     + " values("
                                     // + person_id + ","
+                                    + "'" + _id + "'" + ","
                                     + "'" + _name + "'" + ","
                                     + "'" + _region_id + "'" +
                                     ");";

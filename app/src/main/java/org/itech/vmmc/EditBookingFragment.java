@@ -47,6 +47,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
     // private String mEditBookingParam;
     private static String _editBookingRecordParam;
     private static Booking _booking;
+    private static Status _status;
+    private static Client _client;
     private static TextView _first_name;
     private static TextView _last_name;
     private static TextView _national_id;
@@ -54,6 +56,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
     private static TextView _location_id;
     private static TextView _projected_date;
     private static TextView _actual_date;
+
 
     private EditText et_projected_date;
 
@@ -168,13 +171,37 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             //Log.d(LOG, "EBF _booking != null " + _booking.get_first_name());
         } else {
             Log.d(LOG, "EBF _booking is equal null ");
+//            should check for more info like person frag, GNR
+//            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
+//                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
+//            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
+//                _person = dbHelp.getPerson(nationalId, phoneNumber);
+//            }
+
+            Person person = dbHelp.getPerson(nationalId, phoneNumber);
             _booking = new Booking();
-            _booking.set_first_name(firstName);
-            _booking.set_last_name(lastName);
-            _booking.set_national_id(nationalId);
-            _booking.set_phone(phoneNumber);
+            _booking.set_first_name(person.get_first_name());
+            _booking.set_last_name(person.get_last_name());
+            _booking.set_national_id(person.get_national_id());
+            _booking.set_phone(person.get_phone());
             _booking.set_projected_date(projectedDate);
             //Log.d(LOG, "EBF _booking is equal null " + _booking.get_first_name());
+        }
+
+        _client = dbHelp.getClient(_booking.get_first_name(), _booking.get_last_name(), _booking.get_national_id(), _booking.get_phone());
+//        Log.d(LOG, "EBF build _client0 " + _booking.get_first_name() + _booking.get_last_name() + _booking.get_national_id() + _booking.get_phone());
+        if(_client == null) {
+//            Log.d(LOG, "EBF build _client1 " + _booking.get_first_name() + _booking.get_last_name() + _booking.get_national_id() + _booking.get_phone());
+            _client = new Client();
+            _client.set_first_name(_booking.get_first_name());
+            _client.set_last_name(_booking.get_last_name());
+            _client.set_national_id(_booking.get_national_id());
+            _client.set_phone(_booking.get_phone());
+            _status = dbHelp.getStatus("13"); // "New"
+            _client.set_status_id(_status.get_id());
+            dbHelp.addClient( _client );
+        } else {
+            _status = dbHelp.getStatus( (String.valueOf(_client.get_status_id())));
         }
     }
 
@@ -200,6 +227,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 //            _gender.setText(_person.get_gender());
         }
 
+        loadStatusDropdown(_view );
+
         et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
             Calendar newCalendar = Calendar.getInstance();
@@ -208,7 +237,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                     Calendar newDate = Calendar.getInstance();
                     newDate.set(year, monthOfYear, dayOfMonth);
                     et_projected_date.setText(dateFormatter.format(newDate.getTime()));
-                    Log.d(LOG, "onDateSet: ");
+                    Log.d(LOG, "EBF: onDateSet: " + et_projected_date.getText());
                 }
             }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
@@ -260,6 +289,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 if(sProjectedDate.matches("") ) complete = false;
 
                 if(complete) {
+                    dbHelp.updateClient(_client);
 
                     Booking lookupBooking = dbHelp.getBooking(sFirstName, sLastName, sNationalId, sPhoneNumber, sProjectedDate);
 
@@ -281,15 +311,11 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         booking.set_national_id(sNationalId);
                         booking.set_phone(sPhoneNumber);
                         booking.set_projected_date(sProjectedDate);
-//                        person.set_dob(sDOB);
-//                        person.set_gender(sGender);
                         Log.d(LOG, "UpdateBooking add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.addBooking(booking))
                             Toast.makeText(getActivity(), "Booking Saved", Toast.LENGTH_LONG).show();;
                     }
-
-                    //Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
                 }
@@ -298,7 +324,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
         return _view;
     }
-
 
     @Override
     public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {}
@@ -362,7 +387,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         }
     }
 
-
     /**
      * This interface must be implemented by activities that contain this
      * fragment to allow an interaction in this fragment to be communicated
@@ -378,8 +402,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         public void onFragmentInteraction(int position);
 
     }
-
-
 
     public void loadPersonIDDropdown(View view) {
 
@@ -400,19 +422,74 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 Log.d(LOG, "name selected: " + text);
             }
         });
-
     }
 
+    public void loadStatusDropdown(View view ) {
+        Log.d(LOG, "loadStatusDropdown: " );
 
+        final Spinner pSpinner = (Spinner) view.findViewById(R.id.status);
+        final List<String> statusNames = dbHelp.getAllStatusTypes();
 
-    public void loadAssessmentTypeDropdown(View view) {
-        Spinner dropdown = (Spinner) view.findViewById(R.id.assessment_type);
-        dropdown.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, statusNames);
+//        {
+//            @Override
+//            public boolean isEnabled(int position) {
+//                return position != 1;
+//            }
+//
+//            @Override
+//            public boolean areAllItemsEnabled() {
+//                return false;
+//            }
+
+//            @Override
+//            public View getDropDownView(int position, View convertView, ViewGroup parent){
+//                View v = convertView;
+//                if (v == null) {
+//                    Context mContext = this.getContext();
+//                    LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                    v = vi.inflate(R.layout.simple_spinner_item, null);
+//                }
+////                Spinner spinner = (Spinner) v.findViewById(R.id.status);
+//                Log.d(LOG, "loadStatusDropdown:position: " + position + ":" + statusNames.get(position));
+//                TextView tv = (TextView) v.findViewById(R.id.spinnerTarget);
+////                tv.setText(statusNames.get(position));
+//
+//                switch (position) {
+//                    case 0:
+////                        tv.setTextColor(Color.RED);
+//                        break;
+//                    case 1:
+////                        tv.setTextColor(Color.BLUE);
+//                        break;
+//                    default:
+////                        tv.setTextColor(Color.BLACK);
+//                        break;
+//                }
+//                return v;
+//            }
+//        };
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        pSpinner.setAdapter(dataAdapter);
+        String compareValue = _status.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            pSpinner.setSelection(spinnerPosition);
+        }
+
+        pSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
             @Override
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
+                String statusText  = pSpinner.getSelectedItem().toString();
+                _status = dbHelp.getStatus(statusText);
+                _client.set_status_id(_status.get_id());
+                Log.d(LOG, "_status: " + _status.get_id() + _status.get_name());
+//                status_type = dbHelp.getStatusType(statusText);
+
+
                 //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-                Log.d(LOG, "assessment_type item selected: " + item);
+//                Log.d(LOG, "statusId/Name selected: " + status.get_id() + " " + status.get_name());
             }
 
             @Override
@@ -420,14 +497,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 Log.d(LOG, "spinner nothing selected");
             }
         });
-
-
-//        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
-//
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-//        dropdown.setAdapter(dataAdapter);
-
     }
-
 }
+

@@ -276,14 +276,14 @@ public class LoginFragment extends Fragment {
                 if (pieces[0].equals(email) && pieces[1].equals(password)) {
                     // Log.d(TAG, "good");
                     MainActivity.LOGGED_IN = true;
-                    Fragment fragment = getFragmentManager().findFragmentByTag(DebugFragment.TAG);
+                    Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
                     if (fragment == null) {
-                        fragment = DebugFragment.newInstance("main", "");
-                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, DebugFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                        fragment = ActionFragment.newInstance("main", "");
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
                     } else {
-                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, DebugFragment.TAG).commit();
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
                     }
-                    MainActivity.currentFragmentId = "Debug";
+                    MainActivity.currentFragmentId = "Action";
 
                 } else {
                     // Log.d(TAG, "bad");
@@ -292,7 +292,10 @@ public class LoginFragment extends Fragment {
             // Log.d(TAG, "Logged In?:" + MainActivity.LOGGED_IN);
             if (!MainActivity.LOGGED_IN){
                 Toast.makeText(getView().getContext(), getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
+            } else {
+                Toast.makeText(getView().getContext(), getString(R.string.sync_reminder), Toast.LENGTH_SHORT).show();
             }
+
         }
     }
 

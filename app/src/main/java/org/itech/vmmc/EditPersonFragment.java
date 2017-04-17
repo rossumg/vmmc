@@ -1,6 +1,7 @@
 package org.itech.vmmc;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -11,12 +12,18 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
+import java.util.Calendar;
 import java.util.List;
+
+import static org.itech.vmmc.R.id.dob;
 
 
 /**
@@ -49,6 +56,8 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
     private static TextView _phone_number;
     private static TextView _dob;
     private static TextView _gender;
+
+    private EditText et_dob;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -143,8 +152,11 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         Log.d(LOG, "PhoneNumber: " + phoneNumber);
 
         dbHelp = new DBHelper(getActivity());
-        if (!nationalId.equals("") || !phoneNumber.equals(""))
-          _person = dbHelp.getPerson(nationalId, phoneNumber);
+        if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
+            _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
+        } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
+            _person = dbHelp.getPerson(nationalId, phoneNumber);
+        }
 
     }
 
@@ -164,11 +176,33 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _address.setText(_person.get_address());
             _phone_number = (TextView) _view.findViewById(R.id.phone_number);
             _phone_number.setText(_person.get_phone());
-            _dob = (TextView) _view.findViewById(R.id.dob);
+            _dob = (TextView) _view.findViewById(dob);
             _dob.setText(_person.get_dob());
             _gender = (TextView) _view.findViewById(R.id.gender);
             _gender.setText(_person.get_gender());
         }
+
+        et_dob = (EditText) _view.findViewById(R.id.dob);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_dob_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_dob.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "EBF: onDateSet: " + et_dob.getText());
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog dob_date_picker_dialog = hold_dob_date_picker_dialog;
+
+        et_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                dob_date_picker_dialog.show();
+            }
+        });
 
         Button btnUpdatePerson = (Button) _view.findViewById(R.id.btnUpdatePerson);
         btnUpdatePerson.setOnClickListener(new View.OnClickListener() {
@@ -195,7 +229,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                 String sGender = _gender.getText().toString();
 
                 Log.d(LOG, "UpdatePerson button2: " +
-                        sFirstName + sLastName + sPhoneNumber + "<");
+                        sFirstName + sLastName + sPhoneNumber + sDOB + "<");
 
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
@@ -294,7 +328,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
         _address = (TextView) _view.findViewById(R.id.address); _address.setText("");
         _phone_number = (TextView) _view.findViewById(R.id.phone_number); _phone_number.setText("");
-        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
+        _dob = (TextView) _view.findViewById(dob); _dob.setText("");
         _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
         if(_person != null) {
@@ -308,7 +342,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _address.setText(_person.get_address());
             _phone_number = (TextView) _view.findViewById(R.id.phone_number);
             _phone_number.setText(_person.get_phone());
-            _dob = (TextView) _view.findViewById(R.id.dob);
+            _dob = (TextView) _view.findViewById(dob);
             _dob.setText(_person.get_dob());
             _gender = (TextView) _view.findViewById(R.id.gender);
             _gender.setText(_person.get_gender());
@@ -378,7 +412,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
 //        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
 //
 //        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
 //        dropdown.setAdapter(dataAdapter);
 
     }

@@ -177,7 +177,7 @@ public class AddPersonFragment extends Fragment implements AdapterView.OnItemSel
 //        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
 //
 //        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
 //        dropdown.setAdapter(dataAdapter);
 
     }

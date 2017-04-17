@@ -115,7 +115,7 @@ public class DBHelper extends SQLiteOpenHelper{
     // vmmc.db table names
     private static final String TABLE_PERSON      = "person";
     private static final String TABLE_USER        = "user";
-    private static final String TABLE_CLIENT      = "client";
+    private static final String TABLE_CLIENT      = "client_table";
     private static final String TABLE_FACILITATOR = "facilitator";
     private static final String TABLE_LOCATION    = "location";
     private static final String TABLE_REGION      = "region";
@@ -125,7 +125,8 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String TABLE_GEOLOCATION  = "geolocation";
     private static final String TABLE_FACILITATOR_TYPE = "facilitator_type";
     private static final String TABLE_INTERACTION_TYPE = "interaction_type";
-    private static final String TABLE_INSTITUTION = "institution";
+    private static final String TABLE_STATUS_TYPE  = "status_type";
+    private static final String TABLE_INSTITUTION  = "institution";
 
     // person table column names
     private static final String PERSON_ID          = "id";
@@ -148,6 +149,12 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String BOOKING_LAST_NAME   = "last_name";
     private static final String BOOKING_NATIONAL_ID = "national_id";
     private static final String BOOKING_PHONE       = "phone";
+
+    private static final String BOOKING_FAC_FIRST_NAME  = "first_name";
+    private static final String BOOKING_FAC_LAST_NAME   = "last_name";
+    private static final String BOOKING_FAC_NATIONAL_ID = "national_id";
+    private static final String BOOKING_FAC_PHONE       = "phone";
+
     private static final String BOOKING_LOCATION_ID     = "location_id";
     private static final String BOOKING_PROJECTED_DATE  = "projected_date";
     private static final String BOOKING_ACTUAL_DATE     = "actual_date";
@@ -165,16 +172,24 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String CLIENT_LAST_NAME   = "last_name";
     private static final String CLIENT_NATIONAL_ID = "national_id";
     private static final String CLIENT_PHONE       = "phone";
-    private static final String CLIENT_STATUS    = "status";
+    private static final String CLIENT_STATUS_ID    = "status_id";
+    private static final String CLIENT_LOC_ID    = "loc_id";
+    private static final String CLIENT_LATITUDE    = "latitude";
+    private static final String CLIENT_LONGITUDE    = "longitude";
+    private static final String CLIENT_INSTITUTION_ID    = "institution_id";
 
     // facilitator table column names
     private static final String FACILITATOR_ID          = "id";
-    private static final String FACILITATOR_PERSON_ID   = "person_id";
-    private static final String FACILITATOR_TYPE        = "type_id";
+    private static final String FACILITATOR_TIMESTAMP  = "timestamp";
+    private static final String FACILITATOR_FIRST_NAME  = "first_name";
+    private static final String FACILITATOR_LAST_NAME = "last_name";
+    private static final String FACILITATOR_NATIONAL_ID = "national_id";
+    private static final String FACILITATOR_PHONE       = "phone";
+    private static final String FACILITATOR_FACILITATOR_TYPE_ID  = "facilitator_type_id";
     private static final String FACILITATOR_NOTE        = "note";
     private static final String FACILITATOR_LOCATION_ID = "location_id";
-    private static final String FACILITATOR_LAT         = "lat";
-    private static final String FACILITATOR_LONG        = "long";
+    private static final String FACILITATOR_LAT         = "latitude";
+    private static final String FACILITATOR_LONG        = "longitude";
     private static final String FACILITATOR_INSTITUTION_ID = "institution_id";
 
     // location table column names
@@ -209,6 +224,10 @@ public class DBHelper extends SQLiteOpenHelper{
     // facilitator_type table column names
     private static final String FACILITATOR_TYPE_ID     = "id";
     private static final String FACILITATOR_TYPE_NAME   = "name";
+
+    // status_type table column names
+    private static final String STATUS_TYPE_ID     = "id";
+    private static final String STATUS_TYPE_NAME   = "name";
 
     // geolocation table column names
     private static final String GEOLOCATION_ID        = "id";
@@ -255,9 +274,14 @@ public class DBHelper extends SQLiteOpenHelper{
                     "last_name varchar, " +
                     "national_id varchar, " +
                     "phone varchar, " +
+                    "fac_first_name varchar, " +
+                    "fac_last_name varchar, " +
+                    "fac_national_id varchar, " +
+                    "fac_phone varchar, " +
                     "location_id int, " +
                     "projected_date date, " +
-                    "actual_date date)";
+                    "actual_date date, " +
+                    "constraint name_constraint unique (first_name, last_name, national_id, phone, projected_date) );";
             db.execSQL(CREATE_BOOKING_TABLE);
 
             //try { db.execSQL("delete from user;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
@@ -269,25 +293,34 @@ public class DBHelper extends SQLiteOpenHelper{
             db.execSQL(CREATE_USER_TABLE);
 
             //try { db.execSQL("delete from client;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
-            String CREATE_CLIENT_TABLE = "CREATE TABLE IF NOT EXISTS client(" +
+            String CREATE_CLIENT_TABLE = "CREATE TABLE IF NOT EXISTS client_table(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "timestamp datetime default current_timestamp, " +
                     "first_name varchar, " +
                     "last_name varchar, " +
                     "national_id varchar, " +
                     "phone varchar, " +
-                    "status varchar)";
+                    "status_id int, " +
+                    "loc_id int, " +
+                    "latitude real, " +
+                    "longitude real, " +
+                    "institution_id, " +
+                    "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_CLIENT_TABLE);
 
             //try { db.execSQL("delete from facilitator;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_FACILITATOR_TABLE = "CREATE TABLE IF NOT EXISTS facilitator(" +
                     "id integer primary key  autoincrement  not null  unique, " +
-                    "person_id int, " +
+                    "timestamp datetime default current_timestamp, " +
+                    "first_name varchar, " +
+                    "last_name varchar, " +
+                    "national_id varchar, " +
+                    "phone varchar, " +
                     "facilitator_type_id int, " +
                     "note varchar, " +
                     "location_id int, " +
-                    "lat real, " +
-                    "long real, " +
+                    "latitude real, " +
+                    "longitude real, " +
                     "institution_id int)";
             db.execSQL(CREATE_FACILITATOR_TABLE);
 
@@ -338,6 +371,12 @@ public class DBHelper extends SQLiteOpenHelper{
                     "name varchar);";
                     db.execSQL(CREATE_FACILITATOR_TYPE_TABLE);
 
+            //try { db.execSQL("delete from status_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_STATUS_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS status_type(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar);";
+            db.execSQL(CREATE_STATUS_TYPE_TABLE);
+
             //try { db.execSQL("delete from geolocation;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_GEOLOCATION_TABLE = "CREATE TABLE IF NOT EXISTS geolocation(" +
                     "geolocations_id integer primary key  autoincrement  not null  unique, " +
@@ -371,12 +410,16 @@ public class DBHelper extends SQLiteOpenHelper{
 //        load_interaction_type();
 //          load_person();
         new putMySQLPersonTable(this).execute();
+        new putMySQLBookingTable(this).execute();
+        new putMySQLClientTable(this).execute();
         new getMySQLRegionTable(this._context, this).execute();
         new getMySQLLocationTable(this._context, this).execute();
         new getMySQLFacilitatorTypeTable(this._context, this).execute();
+        new getMySQLStatusTypeTable(this._context, this).execute();
         new getMySQLInstitutionTable(this._context, this).execute();
         new getMySQLInteractionTypeTable(this._context, this).execute();
         new getMySQLPersonTable(this._context, this).execute();
+        new getMySQLBookingTable(this._context, this).execute();
         new getMySQLClientTable(this._context, this).execute();
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
@@ -387,11 +430,75 @@ public class DBHelper extends SQLiteOpenHelper{
         onCreate(db);
 //        load_facilitator_type();
 //        load_interaction_type();
-        load_person();
+//        load_person();
 //        new putMySQLPersonTable(this).execute();
 //        new getMySQLPersonTable(this._context, this).execute();
+//        display_bookings();
+
+        List<Client> _list = getAllClients();
+
+//        List<Client> clientList = new ArrayList<Client>();
+//        String selectQuery = "SELECT  * FROM " + TABLE_CLIENT + " order by first_name, last_name ";
+//
+//        Cursor cursor1 = null;
+//
+//        cursor1 = db.rawQuery(selectQuery, null);
+//            cursor1.moveToFirst();
+//try {
+//    Log.d(LOG, "getAllClients: " + cursor1.getString(1) + ":" + cursor1.getString(2) + ":" + cursor1.getString(3) + ":" + cursor1.getString(4) + ":");
+//} catch (Exception ex){
+//    Log.d(LOG, "Exception: " + ex);
+//}
+//
+//        if (cursor1.moveToFirst()) {
+//            do {
+//                Log.d(LOG, "getAllClients: loop: " + cursor1.getString(1));
+//                Client client = new Client();
+//                client.set_id(parseInt(cursor1.getString(0)));
+//                client.set_timestamp(cursor1.getString(1));
+//                client.set_first_name(cursor1.getString(2));
+//                client.set_last_name(cursor1.getString(3));
+//                client.set_national_id(cursor1.getString(4));
+//                client.set_phone(cursor1.getString(5));
+//                client.set_status_id(parseInt(cursor1.getString(6)));
+//                client.set_loc_id(parseInt(cursor1.getString(7)));
+//                client.set_latitude(parseFloat(cursor1.getString(8)));
+//                client.set_longitude(parseFloat(cursor1.getString(9)));
+//                client.set_institution_id(parseInt(cursor1.getString(10)));
+//
+//                // Adding person to list
+//                clientList.add(client);
+//            } while (cursor1.moveToNext());
+//        }
+//        cursor1.close();
     }
 
+    protected void display_bookings() {
+        Log.d(LOG, "debugFragment:display_bookings");
+
+        SQLiteDatabase db = this.getWritableDatabase();
+        List<Booking> BookingList = getAllBookings();
+        int i=0;
+        String[] recs = new String[BookingList.size()];
+        for (Booking Booking: BookingList) {
+            recs[i] =
+                    Booking.get_timestamp() + "," +
+                            Booking.get_first_name() + "," +
+                            Booking.get_last_name() + "," +
+                            Booking.get_national_id() + "," +
+                            Booking.get_phone() + "," +
+                            Booking.get_fac_first_name() + "," +
+                            Booking.get_fac_last_name() + "," +
+                            Booking.get_fac_national_id() + "," +
+                            Booking.get_fac_phone() + "," +
+                            Booking.get_location_id() + "," +
+                            Booking.get_projected_date() + "," +
+                            Booking.get_actual_date();
+
+                        Log.d(LOG, "loop: " + recs[i] + "<");
+            i++;
+        }
+    }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
@@ -468,7 +575,6 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("insert into facilitator_type values (2,\"Activity\");");
 
     }
-
     protected void load_interaction_type() {
         Log.d(LOG, "debugFragment:load_interaction_type");
         SQLiteDatabase db = this.getWritableDatabase();
@@ -1011,29 +1117,29 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public List<String> getAllAssessmentTypes(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<String> assessmentTypes = new ArrayList<String>();
+            SQLiteDatabase db = this.getReadableDatabase();
+            List<String> assessmentTypes = new ArrayList<String>();
 
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ASSESSMENT_TYPE
-        };
+            String[] tableColumns = new String[] {
+                    ASSESSMENTS_ASSESSMENT_TYPE
+            };
 
-        String whereClause = "1=1 ";
+            String whereClause = "1=1 ";
 
-        String[] whereArgs = new String[]{};
+            String[] whereArgs = new String[]{};
 
-        String orderBy = ASSESSMENTS_ASSESSMENT_ID;
+            String orderBy = ASSESSMENTS_ASSESSMENT_ID;
 
-        Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, orderBy);
+            Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, orderBy);
 
-        if (cursor.moveToFirst()) {
-            do {
+            if (cursor.moveToFirst()) {
+                do {
 //                Log.d(LOG, "getAllFacilityNames  "
 //                                + cursor.getString(0)
 //                );
-                assessmentTypes.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        }
+                    assessmentTypes.add(cursor.getString(0));
+                } while (cursor.moveToNext());
+            }
 
         cursor.close();
         db.close();
@@ -1048,6 +1154,255 @@ public class DBHelper extends SQLiteOpenHelper{
         assessmentTypes.toArray(stringArrayFacilityNames);
 
         return assessmentTypes;
+    }
+
+    public List<String> getAllStatusTypes(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> statusTypes = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                STATUS_TYPE_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = STATUS_TYPE_ID;
+
+        Cursor cursor = db.query(TABLE_STATUS_TYPE, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllFacilityNames  "
+//                                + cursor.getString(0)
+//                );
+                statusTypes.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(statusTypes);
+        statusTypes.clear();;
+        statusTypes.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ statusTypes.size() ];
+        statusTypes.toArray(stringArrayNames);
+
+        return statusTypes;
+    }
+
+    public Status getStatus( String status_id ) {
+        Status status = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getStatus: " + status_id);
+
+        String[] tableColumns = new String[] {
+                STATUS_TYPE_ID, STATUS_TYPE_NAME
+        };
+
+        String whereClause = "trim(" +
+                STATUS_TYPE_ID + ") like ? or trim(" +
+                STATUS_TYPE_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getStatus whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                status_id, status_id };  // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getStatus whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_STATUS_TYPE, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getStatus  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            status = new Status(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            db.close();
+            return status;
+        } else {
+            cursor.close();
+            db.close();
+            return status;
+        }
+    }
+
+    public List<String> getAllLocationNames(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> locationNames = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                LOCATION_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = LOCATION_ID;
+
+        Cursor cursor = db.query(TABLE_LOCATION, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllLocationNames  "
+//                                + cursor.getString(0)
+//                );
+                locationNames.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(locationNames);
+        locationNames.clear();;
+        locationNames.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ locationNames.size() ];
+        locationNames.toArray(stringArrayNames);
+
+        return locationNames;
+    }
+
+    public VMMCLocation getLocation( String location_id ) {
+        VMMCLocation location = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getLocation: " + location_id);
+
+        String[] tableColumns = new String[] {
+                LOCATION_ID, LOCATION_NAME
+        };
+
+        String whereClause = "trim(" +
+                LOCATION_ID + ") like ? or trim(" +
+                LOCATION_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getLocaction whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                location_id, location_id }; // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getLocaction whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_LOCATION, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getLocaction  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            location = new VMMCLocation(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            db.close();
+            return location;
+        } else {
+            cursor.close();
+            db.close();
+            return location;
+        }
+    }
+
+    public List<String> getAllInstitutionNames(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> institutionNames = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                INSTITUTION_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = INSTITUTION_ID;
+
+        Cursor cursor = db.query(TABLE_INSTITUTION, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllInstitutionNames  "
+//                                + cursor.getString(0)
+//                );
+                institutionNames.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(institutionNames);
+        institutionNames.clear();;
+        institutionNames.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ institutionNames.size() ];
+        institutionNames.toArray(stringArrayNames);
+
+        return institutionNames;
+    }
+
+    public Institution getInstitution( String institution_id ) {
+        Institution institution = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getInstitution: " + institution_id);
+
+        String[] tableColumns = new String[] {
+                INSTITUTION_ID, INSTITUTION_NAME
+        };
+
+        String whereClause = "trim(" +
+                INSTITUTION_ID + ") like ? or trim(" +
+                INSTITUTION_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getInstitution whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                institution_id, institution_id };  // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getInstitution whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_INSTITUTION, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getInstitution  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            institution = new Institution(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            db.close();
+            return institution;
+        } else {
+            cursor.close();
+            db.close();
+            return institution;
+        }
     }
 
     public List<GeoLocations> getAllGeoLocations() {
@@ -1289,7 +1644,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
         return stringArrayNationalIDS;
     }
-
 
     public String[] getAllPersonNationalIDs() {
       return getAllNationalIDs();
@@ -1927,14 +2281,119 @@ public class DBHelper extends SQLiteOpenHelper{
         return true;
     }
 
+//    dbHelp.addClient(_booking.get_first_name(), _booking.get_last_name(), _booking.get_national_id(), _booking.get_phone());
+
+    public boolean addClient(Client client) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        //values.put(PERSON_ID, person.get_id());
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+        values.put(CLIENT_TIMESTAMP, oTimestamp.toString());
+
+        values.put(CLIENT_FIRST_NAME, client.get_first_name());
+        values.put(CLIENT_LAST_NAME, client.get_last_name());
+        values.put(CLIENT_NATIONAL_ID, client.get_national_id());
+        values.put(CLIENT_PHONE,  client.get_phone());
+        values.put(CLIENT_STATUS_ID,  client.get_status_id());
+        values.put(CLIENT_LOC_ID,  client.get_loc_id());
+        values.put(CLIENT_LATITUDE,  client.get_latitude());
+        values.put(CLIENT_LONGITUDE,  client.get_longitude());
+        values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
+
+        try {
+            db.insert(TABLE_CLIENT, null, values);
+        } catch (Exception ex) {
+            db.close();
+            Log.d(LOG, "addClient catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateClient(Client client) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
+        DateFormat df = new android.text.format.DateFormat();
+        client.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        Log.d(LOG, "updateClient timestamp: " + client.get_timestamp());
+        values.put(CLIENT_TIMESTAMP, client.get_timestamp());
+        values.put(CLIENT_FIRST_NAME, client.get_first_name());
+        values.put(CLIENT_LAST_NAME, client.get_last_name());
+        values.put(CLIENT_NATIONAL_ID, client.get_national_id());
+        values.put(CLIENT_PHONE,  client.get_phone());
+        values.put(CLIENT_STATUS_ID,  client.get_status_id());
+        values.put(CLIENT_LOC_ID,  client.get_loc_id());
+        values.put(CLIENT_LATITUDE,  client.get_latitude());
+        values.put(CLIENT_LONGITUDE,  client.get_longitude());
+        values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
+
+        String[] tableColumns = new String[]{
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
+        };
+
+//        String whereClause = "1=1 and trim(" +
+//                CLIENT_FIRST_NAME + ") like ? or trim(" +
+//                CLIENT_LAST_NAME + ") like ? or trim(" +
+//                CLIENT_NATIONAL_ID + ") like ? or trim(" +
+//                CLIENT_PHONE + ") like ? ";
+
+//        Log.d(LOG, "updatePerson whereClause: " + whereClause);
+
+//        String[] whereArgs = new String[]{
+//                client.get_first_name(), client.get_last_name(), client._national_id, client.get_phone()};
+
+        String updateWhereClause = "1=1 and " +
+                CLIENT_FIRST_NAME + " = '" + values.get(CLIENT_FIRST_NAME) + "' and " +
+                CLIENT_LAST_NAME + " = '" + values.get(CLIENT_LAST_NAME) + "' and " +
+                CLIENT_NATIONAL_ID + " = '" + values.get(CLIENT_NATIONAL_ID) + "' and " +
+                CLIENT_PHONE + " = '" + values.get(CLIENT_PHONE) + "'";
+
+        db.update(TABLE_CLIENT, values, updateWhereClause, null);
+        db.close();
+        return true;
+    }
+
+    public boolean addPerson(Person person) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        //values.put(PERSON_ID, person.get_id());
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+        values.put(PERSON_TIMESTAMP, oTimestamp.toString());
+
+        values.put(PERSON_FIRST_NAME, person.get_first_name());
+        values.put(PERSON_LAST_NAME, person.get_last_name());
+        values.put(PERSON_NATIONAL_ID, person.get_national_id());
+        values.put(PERSON_ADDRESS,  person.get_address());
+        values.put(PERSON_PHONE,  person.get_phone());
+        values.put(PERSON_DOB,  person.get_dob());
+        values.put(PERSON_GENDER,  person.get_gender());
+        values.put(PERSON_LATITUDE,  person.get_latitude());
+        values.put(PERSON_LONGITUDE,  person.get_longitude());
+        values.put(PERSON_IS_DELETED,  person.get_is_deleted());
+
+        try {
+            db.insert(TABLE_PERSON, null, values);
+        } catch (Exception ex) {
+            db.close();
+            Log.d(LOG, "addPerson catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
     public Client getClient( String first_name, String last_name, String national_id, String phone ) {
         Client client = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Log.d(LOG, "getClient: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
-
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
         };
 
         String whereClause = "1=1 and trim(" +
@@ -1961,10 +2420,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     + cursor.getString(4) + " "
                     + cursor.getString(5) + " "
                     + cursor.getString(6) + " "
-//                    + cursor.getString(7) + " "
-//                    + cursor.getString(8) + " "
-//                    + cursor.getString(9) + " "
-//                    + cursor.getString(10) + " "
+                    + cursor.getString(7) + " "
+                    + cursor.getString(8) + " "
+                    + cursor.getString(9) + " "
+                    + cursor.getString(10) + " "
             );
 
             client = new Client(
@@ -1974,11 +2433,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(3),
                     cursor.getString(4),
                     cursor.getString(5),
-                    cursor.getString(6)
-//                    cursor.getString(7),
-//                    parseFloat(cursor.getString(8)),
-//                    parseFloat(cursor.getString(9)),
-//                    parseInt(cursor.getString(10))
+                    parseInt(cursor.getString(6)),
+                    parseInt(cursor.getString(7)),
+                    parseFloat(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseInt(cursor.getString(10))
             );
             cursor.close();
             db.close();
@@ -1987,6 +2446,175 @@ public class DBHelper extends SQLiteOpenHelper{
             cursor.close();
             db.close();
             return client;
+        }
+    }
+
+    public Client getClient( String national_id, String phone_number ) {
+        Client client = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getClient: " + national_id + ", " + phone_number );
+
+        String[] tableColumns = new String[] {
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
+        };
+
+        String whereClause = "1=1 and trim(" +
+                CLIENT_NATIONAL_ID + ") like ? or trim(" +
+                CLIENT_PHONE + ") like ? ";
+
+        Log.d(LOG, "getClient whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                national_id, phone_number };
+
+        Log.d(LOG, "getClient whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":");
+
+        Cursor cursor = db.query(TABLE_CLIENT, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+//            Log.d(LOG, "getClient  "
+//                    + cursor.getString(0) + " "
+//                    + cursor.getString(1) + " "
+//                    + cursor.getString(2) + " "
+//                    + cursor.getString(3) + " "
+//                    + cursor.getString(4) + " "
+//                    + cursor.getString(5) + " "
+//                    + cursor.getString(6) + " "
+//                    + cursor.getString(7) + " "
+//                    + cursor.getString(8) + " "
+//                    + cursor.getString(9) + " "
+//                    + cursor.getString(10) + " "
+//            );
+
+            client = new Client(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    parseInt(cursor.getString(6)),
+                    parseInt(cursor.getString(7)),
+                    parseFloat(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseInt(cursor.getString(10))
+            );
+            cursor.close();
+            db.close();
+            return client;
+        } else {
+            cursor.close();
+            db.close();
+            return client;
+        }
+    }
+
+    public List<Client> getAllClients() {
+        List<Client> clientList = new ArrayList<Client>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_CLIENT + " order by first_name, last_name ";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor1 = null;
+        cursor1 = db.rawQuery(selectQuery, null);
+// GNR: very odd behavior, had to add following moveToFirst only for getAllClients, not getAllPersons or getAllBookings
+        cursor1.moveToFirst();
+
+        Log.d(LOG, "getAllClients: " + cursor1.getString(1) + ":" + cursor1.getString(2) + ":" + cursor1.getString(3) + ":" + cursor1.getString(4) + ":" );
+
+        // looping through all rows and adding to list
+        if (cursor1.moveToFirst()) {
+            do {
+                Log.d(LOG, "getAllClients: loop: "
+                        + cursor1.getString(1) + ":"
+                        + cursor1.getString(2) + ":"
+                        + cursor1.getString(3) + ":"
+                        + cursor1.getString(4) + ":"
+                        + cursor1.getString(5) + ":"
+                        + cursor1.getString(6) + ":"
+                        + cursor1.getString(7) + ":" );
+                Client client = new Client();
+                client.set_id(parseInt(cursor1.getString(0)));
+                client.set_timestamp(cursor1.getString(1));
+                client.set_first_name(cursor1.getString(2));
+                client.set_last_name(cursor1.getString(3));
+                client.set_national_id(cursor1.getString(4));
+                client.set_phone(cursor1.getString(5));
+                client.set_status_id(parseInt(cursor1.getString(6)));
+                client.set_loc_id(parseInt(cursor1.getString(7)));
+                client.set_latitude(parseFloat(cursor1.getString(8)));
+                client.set_longitude(parseFloat(cursor1.getString(9)));
+                client.set_institution_id(parseInt(cursor1.getString(10)));
+
+                // Adding person to list
+                clientList.add(client);
+            } while (cursor1.moveToNext());
+        }
+        cursor1.close();
+//        db.close();
+        return clientList;
+    }
+
+    public Facilitator getFacilitator( String first_name, String last_name, String national_id, String phone ) {
+        Facilitator facilitator = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getFacilitator: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
+
+        String[] tableColumns = new String[] {
+                FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LAT, FACILITATOR_LONG, FACILITATOR_INSTITUTION_ID
+        };
+
+        String whereClause = "1=1 and trim(" +
+                FACILITATOR_FIRST_NAME + ") like ? and trim(" +
+                FACILITATOR_LAST_NAME + ") like ? and trim(" +
+                FACILITATOR_NATIONAL_ID + ") like ? and trim(" +
+                FACILITATOR_PHONE + ") like ? ";
+
+        Log.d(LOG, "getFacilitator whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                first_name, last_name, national_id, phone };
+
+        Log.d(LOG, "getFacilitor whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":" + whereArgs[3] + ":");
+
+        Cursor cursor = db.query(TABLE_FACILITATOR, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getFacilitator  "
+                            + cursor.getString(0) + " "
+                            + cursor.getString(1) + " "
+                            + cursor.getString(2) + " "
+                            + cursor.getString(3) + " "
+                            + cursor.getString(4) + " "
+                            + cursor.getString(5) + " "
+                            + cursor.getString(6) + " "
+                    + cursor.getString(7) + " "
+                    + cursor.getString(8) + " "
+                    + cursor.getString(9) + " "
+                    + cursor.getString(10) + " "
+            );
+
+            facilitator = new Facilitator(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    parseInt(cursor.getString(6)),
+                    cursor.getString(7),
+                    parseInt(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseFloat(cursor.getString(10)),
+                    parseInt(cursor.getString(11))
+            );
+            cursor.close();
+            db.close();
+            return facilitator;
+        } else {
+            cursor.close();
+            db.close();
+            return facilitator;
         }
     }
 
@@ -2108,12 +2736,6 @@ public class DBHelper extends SQLiteOpenHelper{
         DateFormat df = new android.text.format.DateFormat();
         booking.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         Log.d(LOG, "updateBooking timestamp: " + booking.get_timestamp());
-        values.put(BOOKING_TIMESTAMP, booking.get_timestamp());
-        values.put(BOOKING_FIRST_NAME, booking.get_first_name());
-        values.put(BOOKING_LAST_NAME, booking.get_last_name());
-        values.put(BOOKING_NATIONAL_ID, booking.get_national_id());
-        values.put(BOOKING_PHONE,  booking.get_phone());
-        values.put(BOOKING_PROJECTED_DATE,  booking.get_projected_date());
 
         String[] tableColumns = new String[]{
                 BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
@@ -2130,6 +2752,9 @@ public class DBHelper extends SQLiteOpenHelper{
 
         String[] whereArgs = new String[]{
                 booking.get_first_name(), booking.get_last_name(), booking.get_phone(), booking.get_projected_date()};
+
+        Log.d(LOG, "updateBooking whereArgs: " + whereArgs);
+
         Cursor cursor = db.query(TABLE_BOOKING, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
@@ -2158,36 +2783,6 @@ public class DBHelper extends SQLiteOpenHelper{
             db.close();
             return false;
         }
-    }
-
-    public boolean addPerson(Person person) {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        //values.put(PERSON_ID, person.get_id());
-        Calendar calendar = Calendar.getInstance();
-        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-        values.put(PERSON_TIMESTAMP, oTimestamp.toString());
-
-        values.put(PERSON_FIRST_NAME, person.get_first_name());
-        values.put(PERSON_LAST_NAME, person.get_last_name());
-        values.put(PERSON_NATIONAL_ID, person.get_national_id());
-        values.put(PERSON_ADDRESS,  person.get_address());
-        values.put(PERSON_PHONE,  person.get_phone());
-        values.put(PERSON_DOB,  person.get_dob());
-        values.put(PERSON_GENDER,  person.get_gender());
-        values.put(PERSON_LATITUDE,  person.get_latitude());
-        values.put(PERSON_LONGITUDE,  person.get_longitude());
-        values.put(PERSON_IS_DELETED,  person.get_is_deleted());
-
-        try {
-            db.insert(TABLE_PERSON, null, values);
-        } catch (Exception ex) {
-            db.close();
-            Log.d(LOG, "addPerson catch " + ex.toString());
-            return false;
-        }
-        return true;
     }
 
     public Person getPerson(String person_first_name, String person_last_name, String person_phone ) {
@@ -2368,7 +2963,7 @@ public class DBHelper extends SQLiteOpenHelper{
     public List<Person> getAllPersons() {
         List<Person> personList = new ArrayList<Person>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_PERSON;
+        String selectQuery = "SELECT  * FROM " + TABLE_PERSON + " order by first_name, last_name ";
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2376,6 +2971,7 @@ public class DBHelper extends SQLiteOpenHelper{
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
+                Log.d(LOG, "getAllPersons: loop: " + cursor.getString(1));
                 Person person = new Person();
                 person.set_id(parseInt(cursor.getString(0)));
                 person.set_timestamp(cursor.getString(1));
@@ -2395,9 +2991,45 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        // db.close();
+//        db.close();
         // return person list
         return personList;
+    }
+
+    public List<Booking> getAllBookings() {
+        List<Booking> _List = new ArrayList<Booking>();
+        // Select All Query
+        String selectQuery = "SELECT * FROM " + TABLE_BOOKING + " order by first_name, last_name, projected_date ";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                Booking booking = new Booking();
+                booking.set_id(parseInt(cursor.getString(0)));
+                booking.set_timestamp(cursor.getString(1));
+                booking.set_first_name(cursor.getString(2));
+                booking.set_last_name(cursor.getString(3));
+                booking.set_national_id(cursor.getString(4));
+                booking.set_phone(cursor.getString(5));
+                booking.set_fac_first_name(cursor.getString(6));
+                booking.set_fac_last_name(cursor.getString(7));
+                booking.set_fac_national_id(cursor.getString(8));
+                booking.set_fac_phone(cursor.getString(9));
+                booking.set_location_id(cursor.getString(10));
+                booking.set_projected_date(cursor.getString(11));
+                booking.set_actual_date(cursor.getString(12));
+
+                // Adding booking to list
+                _List.add(booking);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+//        db.close();
+        // return person list
+        return _List;
     }
 
     public List<AssessmentsAnswers> getAllAssessmentsAnswers() {
@@ -2510,63 +3142,15 @@ public class DBHelper extends SQLiteOpenHelper{
 
          String[] whereArgs = new String[]{
                  person.get_first_name(), person.get_last_name(), person.get_phone()};
-         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
 
-         if (cursor.moveToFirst()) {
+             String updateWhereClause = "1=1 and " +
+                     PERSON_FIRST_NAME + " = '" + values.get(PERSON_FIRST_NAME) + "' and " +
+                     PERSON_LAST_NAME + " = '" + values.get(PERSON_LAST_NAME) + "' and " +
+                     PERSON_PHONE + " = '" + values.get(PERSON_PHONE) + "'";
 
-        Log.d(LOG, "dbHelp.updatePerson  "
-                        + cursor.getString(0) + " "
-                        + cursor.getString(1) + " "
-                        + cursor.getString(2) + " "
-                        + cursor.getString(3) + " "
-                        + cursor.getString(4) + " "
-                        + cursor.getString(5) + " "
-                        + cursor.getString(6) + " "
-                        + cursor.getString(7) + " "
-        );
-
-//             Person new_person = new Person(
-//                     cursor.getString(0),
-//                     cursor.getString(1),
-//                     cursor.getString(2),
-//                     cursor.getString(3),
-//                     cursor.getString(4),
-//                     cursor.getString(5),
-//                     cursor.getString(6),
-//                     parseFloat(cursor.getString(7)),
-//                     parseFloat(cursor.getString(8)),
-//                     0.0,
-//                     0.0,
-//                     0
-//             );
-
-             values.put(PERSON_ID, parseInt(cursor.getString(0)));
-             cursor.close();
-             // use person.id to update
-//             ContentValues cv = new ContentValues();
-//             cv.put(PERSON_ID, new_person.get_id());
-//             cv.put(PERSON_FIRST_NAME, new_person.get_first_name());
-//             cv.put(PERSON_LAST_NAME, new_person.get_last_name());
-//             cv.put(PERSON_NATIONAL_ID, new_person.get_national_id());
-//             cv.put(PERSON_ADDRESS, new_person.get_address());
-//             cv.put(PERSON_PHONE, new_person.get_phone());
-//             cv.put(PERSON_DOB, new_person.get_dob());
-//             cv.put(PERSON_GENDER, new_person.get_gender());
-//             cv.put(PERSON_LONGITUDE, new_person.get_longitude());
-//             cv.put(PERSON_LATITUDE, new_person.get_latitude());
-//             cv.put(PERSON_IS_DELETED, new_person.get_is_deleted());
-
-
-             String updateWhereClause = "1=1 and " + PERSON_ID + " = " + values.get(PERSON_ID);
              db.update(TABLE_PERSON, values, updateWhereClause, null);
              db.close();
              return true;
-
-         } else {
-             cursor.close();
-             db.close();
-             return false;
-         }
      }
 
     public boolean deletePerson(Person person) {
@@ -2702,7 +3286,7 @@ public class DBHelper extends SQLiteOpenHelper{
         db.execSQL("insert into assessments_answers values (3399,1,1,\"2015-09-07\",2,38,\"4.7.\",\"Y\");");
         db.execSQL("insert into assessments_answers values (3400,1,1,\"2015-09-07\",2,40,\"5.1.\",\"Y\");");
         db.execSQL("insert into assessments_answers values (3401,1,1,\"2015-07-07\",3,42,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3402,1,1,\"2015-07-07\",3,43,\"test comment loooooooooooooooooooooooooooooooooooooooooooooog comment\",\"Y\");");
+        db.execSQL("insert into assessments_answers values (3402,1,1,\"2015-07-07\",3,43,\": comment loooooooooooooooooooooooooooooooooooooooooooooog comment\",\"Y\");");
         db.execSQL("insert into assessments_answers values (3403,1,1,\"2015-07-07\",3,44,\"B\",\"Y\");");
         db.execSQL("insert into assessments_answers values (3404,1,1,\"2015-07-07\",3,46,\"C\",\"Y\");");
         db.execSQL("insert into assessments_answers values (3405,1,1,\"2015-07-07\",3,48,\"F\",\"Y\");");
@@ -2837,5 +3421,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //        c.close();
         return questionData;
     }
+
+
 
 } // class

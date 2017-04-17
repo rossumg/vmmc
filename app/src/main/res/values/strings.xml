@@ -97,6 +97,15 @@
     <string name="error">There was an error</string>
     <string name="test">Test</string>
     <string name="projected_date">Projected Date</string>
+    <string name="btn_label_display">Display</string>
+    <string name="displayTitle">Display</string>
+    <string name="status">Status</string>
+    <string name="addEditClientTitle">Add Edit Client</string>
+    <string name="addEditClient">Add Edit Client</string>
+    <string name="editClientTitle">Edit Client</string>
+    <string name="location">Location</string>
+    <string name="institution">Institution</string>
+    <string name="sync_reminder">Tab must have been SYNC\'d</string>
 
 
 </resources>

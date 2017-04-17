@@ -20,7 +20,7 @@ import java.util.List;
 /**
  * A simple {@link Fragment} subclass.
  * Activities that contain this fragment must implement the
- * {@link SearchFragment.OnFragmentInteractionListener} interface
+ * {@link AddEditPersonFragment.OnFragmentInteractionListener} interface
  * to handle interaction events.
  * Use the {@link SearchFragment#newInstance} factory method to
  * create an instance of this fragment.
@@ -94,6 +94,92 @@ public class AddEditPersonFragment extends Fragment implements AdapterView.OnIte
         final ClearableAutoCompleteTextView nationalIdDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.national_id);
         final ClearableAutoCompleteTextView phoneNumberDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.phone_number);
 
+        Button btnDisplayPerson = (Button) view.findViewById(R.id.btnDisplayPerson);
+        btnDisplayPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                java.util.Date utilDate = cal.getTime();
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+                Log.d(LOG, "DisplayPerson button: ");
+
+                String paramName = "";
+                String paramNationalID = "";
+                String paramPhoneNumber = "";
+                String paramProjectedDate = "";
+                Log.d(LOG, "DisplayPerson button name: " + nameDropdown.getText().toString() + "<");
+
+                if (nameDropdown.getText().toString().equals("")) {
+                    Log.d(LOG, "DisplayPerson button name is null: ");
+                } else {
+                    //int bookingId = new Integer(booking.get_id());
+                    //paramBookingId = Integer.toString(bookingId);
+
+                    paramName = nameDropdown.getText().toString();
+                    String parts[] = {};
+                    parts = paramName.split(", ",3);
+
+                    switch( parts.length)  {
+                        case 0: {
+                            // add
+                            break;
+                        }
+                        case 1: {
+                            paramName = parts[0];
+                            break;
+                        }
+                        case 2: {
+                            paramName = parts[0];
+                            paramNationalID = parts[1];
+                            break;
+                        }
+                        case 3: {
+                            paramName = parts[0];
+                            paramNationalID = parts[1];
+                            paramPhoneNumber = parts[2];
+                            break;
+                        }
+                    }
+
+                    Log.d(LOG, "DisplayPerson button name/all: " + paramName + paramNationalID + paramPhoneNumber + paramProjectedDate);
+                }
+
+                boolean complete = false;
+                if (nationalIdDropdown.getText().toString().equals("")) {
+                    Log.d(LOG, "DisplayPerson button nationalID is empty: ");
+                } else {
+                    paramNationalID = nationalIdDropdown.getText().toString();
+                    complete = true;
+                    Log.d(LOG, "DisplayPerson button nationalID: " + paramNationalID);
+                }
+
+                if (phoneNumberDropdown.getText().toString().equals("")) {
+                    Log.d(LOG, "DisplayBooking button phoneNumber is empty: ");
+                } else {
+                    paramPhoneNumber = phoneNumberDropdown.getText().toString();
+                    complete = true;
+                    Log.d(LOG, "DisplayBooking button phoneNumber: " + paramPhoneNumber);
+                }
+
+                Fragment fragment;
+                fragment = DisplayFragment.newInstance("displayPerson", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayPerson").commit();
+
+//                if (complete && !paramProjectedDate.toString().equals("") ||
+//                        !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
+//
+//                    Fragment fragment;
+//                    fragment = DisplayFragment.newInstance("displayBooking", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
+//                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayBooking").commit();
+//                } else {
+//                    Toast.makeText(getActivity(), "Must enter Name or ID or Phone and Date", Toast.LENGTH_LONG).show();
+//                }
+            }
+        });
+
+
         Button btnEditPerson = (Button) view.findViewById(R.id.btnEditPerson);
         btnEditPerson.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -159,14 +245,8 @@ public class AddEditPersonFragment extends Fragment implements AdapterView.OnIte
                     Log.d(LOG, "EditPerson button phoneNumber: " + paramPhoneNumber);
                 }
 
-                // get ptoa's where params and goto list
-                //List<String> searchAssessments = dbHelp.getReadablAssessments(paramPersonId, nationalID, facilityName, paramAssessmentType, from_date, to_date);
-
                 Fragment fragment;
-                //fragment = getFrAddPersonFragmentagmentManager().findFragmentByTag(RecentFragment.TAG);
-                //if (fragment == null) {
                 fragment = EditPersonFragment.newInstance("editPerson", paramName + ":" + paramNationalID + ":" + paramPhoneNumber);
-                //}
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditPersonFragment.TAG).addToBackStack("EditPerson").commit();
             }
         });

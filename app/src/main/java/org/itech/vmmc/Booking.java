@@ -13,9 +13,30 @@ public class Booking {
     String _last_name;
     String _national_id;
     String _phone;
+
+    String _fac_first_name;
+    String _fac_last_name;
+    String _fac_national_id;
+    String _fac_phone;
+
     String _location_id;
     String _projected_date;
     String _actual_date;
+
+    public Booking(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, String _location_id, String _projected_date, String _actual_date) {
+        this._timestamp = _timestamp;
+        this._first_name = _first_name;
+        this._last_name = _last_name;
+        this._national_id = _national_id;
+        this._phone = _phone;
+        this._fac_first_name = _fac_first_name;
+        this._fac_last_name = _fac_last_name;
+        this._fac_national_id = _fac_national_id;
+        this._fac_phone = _fac_phone;
+        this._location_id = _location_id;
+        this._projected_date = _projected_date;
+        this._actual_date = _actual_date;
+    }
 
     public Booking() {
     }
@@ -107,11 +128,43 @@ public class Booking {
         this._projected_date = _projected_date;
     }
 
-    public String get_actural_date() {
+    public String get_actual_date() {
         return _actual_date;
     }
 
-    public void set_actural_date(String _actural_date) {
+    public void set_actual_date(String _actural_date) {
         this._actual_date = _actural_date;
+    }
+
+    public String get_fac_first_name() {
+        return _fac_first_name;
+    }
+
+    public void set_fac_first_name(String _fac_first_name) {
+        this._fac_first_name = _fac_first_name;
+    }
+
+    public String get_fac_last_name() {
+        return _fac_last_name;
+    }
+
+    public void set_fac_last_name(String _fac_last_name) {
+        this._fac_last_name = _fac_last_name;
+    }
+
+    public String get_fac_national_id() {
+        return _fac_national_id;
+    }
+
+    public void set_fac_national_id(String _fac_national_id) {
+        this._fac_national_id = _fac_national_id;
+    }
+
+    public String get_fac_phone() {
+        return _fac_phone;
+    }
+
+    public void set_fac_phone(String _fac_phone) {
+        this._fac_phone = _fac_phone;
     }
 }

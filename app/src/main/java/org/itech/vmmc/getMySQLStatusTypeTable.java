@@ -1,10 +1,5 @@
 package org.itech.vmmc;
 
-/**
- * Created by rossumg on 3/29/2017.
- * getMySQLInstitutionTable
- */
-
 import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
@@ -22,22 +17,25 @@ import java.net.URLEncoder;
 
 import static org.itech.vmmc.MainActivity.LOG;
 
-class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
+/**
+ * Created by rossumg on 8/1/2015.
+ */
+class getMySQLStatusTypeTable extends AsyncTask<String, String, String> {
 
     private boolean LOGGED_IN = false;
     public Context _context;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
 
-    getMySQLInstitutionTable(Context context, DBHelper dbhelp) {
+    getMySQLStatusTypeTable(Context context, DBHelper dbhelp) {
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
-        this._db.execSQL("delete from institution");
+        this._db.execSQL("delete from Status_type");
     }
 
     @Override
     protected String doInBackground(String... args) {
-        Log.d(LOG, "getMySQLInstitutionTable doInBackground ");
+        Log.d(LOG, "getMySQLStatusTypeTable doInBackground ");
 
         try {
             //Thread.sleep(4000); // 4 secs
@@ -53,13 +51,13 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
-        Log.d(LOG, "getMySQLInstitutionTable username/password: " + username + " " + password);
-        String datatable = "getInstitution";
+        Log.d(LOG, "getMySQLStatusTypeTable username/password: " + username + " " + password);
+        String datatable = "getStatusType";
         try {
             URL url = null;
             try {
                 url = new URL(MainActivity.GET_TABLE_URL);
-                Log.d(LOG, "getMySQLInstitutionTable GET_TABLE_URL " + url.toString());
+                Log.d(LOG, "getMySQLStatusTypeTable GET_TABLE_URL " + url.toString());
             } catch (MalformedURLException e) {
                 e.printStackTrace();
             }
@@ -93,26 +91,25 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
                     String _name = _rec.getString("name");
                     _name = _name.replace("'", "''");
 
-                    Log.d(LOG, "getMySQLInstitutionTable:doInBackground: " + _name );
+                    Log.d(LOG, "getMySQLStatusTypeTable:doInBackground: " + _name );
                     String _insert =
-                            "insert into institution "
-                                    + "(id, name) "
-                                    + " values("
-                                    + "'" + _id + "'" + ","
-                                    + "'" + _name + "'" + ");";
+                            "insert into Status_type "
+                                    + "(id, name ) "
+                                    + " values(" + "'" + _id + "'" + ", '" + _name + "'"
+                                    + ");";
 
                     try {
                         int incr = (int) ((i / (float) num_recs) * 100);
                         mBuilder.setProgress(100, incr, false);
                         mNotifyManager.notify(id, mBuilder.build());
 
-                        //Log.d(LOG, "getMySQLInstitutionTable personInsert " + personInsert.toString() + " " + i);
-                        //Log.d(LOG, "getMySQLInstitutionTable personInsert " + " " + i);
+                        //Log.d(LOG, "getMySQLStatusTypeTable personInsert " + personInsert.toString() + " " + i);
+                        //Log.d(LOG, "getMySQLStatusTypeTable personInsert " + " " + i);
 
                         _db.execSQL(_insert.toString());
 
                     } catch (Exception ex) {
-                        Log.d(LOG, "getMySQLInstitutionTable loop exception > " + ex.toString());
+                        Log.d(LOG, "getMySQLStatusTypeTable loop exception > " + ex.toString());
                     }
                 } // foreach
                 mBuilder.setContentText(this._context.getResources().getString(R.string.sync_complete) + " (" + i + " records)").setProgress(0, 0, false);
@@ -125,14 +122,14 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
             }
         } catch (Exception e) {
             e.printStackTrace();
-            Log.d(LOG, "getMySQLInstitutionTable exception > " + e.toString());
+            Log.d(LOG, "getMySQLStatusTypeTable exception > " + e.toString());
         }
-        Log.d(LOG, "getMySQLInstitutionTable.doInBackground end");
+        Log.d(LOG, "getMySQLStatusTypeTable.doInBackground end");
         return Integer.toString(i);
     }
 
     protected void onPostExecute(String result) {
-        Log.d(LOG, "getMySQLInstitutionTable:onPostExecute: " + result);
+        Log.d(LOG, "getMySQLStatusTypeTable:onPostExecute: " + result);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
