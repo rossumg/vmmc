@@ -115,8 +115,8 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
         if (getArguments() != null) {
             mParam1 = getArguments().getString("display");
             mParam2 = getArguments().getString("displayParams");
-            Log.d(LOG, "DisplayFragment onCreate param1: " + mParam1.toString());
-            Log.d(LOG, "DisplayFragment onCreate param2:>" + mParam2.toString() + "<");
+            Log.d(LOG, "displayFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "displayFragment onCreate param2:>" + mParam2.toString() + "<");
         }
 
         displayType = mParam1.toString();

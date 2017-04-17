@@ -474,7 +474,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     protected void display_bookings() {
-        Log.d(LOG, "debugFragment:display_bookings");
+        Log.d(LOG, "DebugFrag:display_bookings");
 
         SQLiteDatabase db = this.getWritableDatabase();
         List<Booking> BookingList = getAllBookings();
