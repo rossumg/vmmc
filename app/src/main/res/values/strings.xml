@@ -106,6 +106,10 @@
     <string name="location">Location</string>
     <string name="institution">Institution</string>
     <string name="sync_reminder">Tab must have been SYNC\'d</string>
+    <string name="addEditFacilitatorTitle">Add Edit Facilitator</string>
+    <string name="editFacilitatorTitle">Edit Facilitator</string>
+    <string name="facilitator_type">Facilitator Type</string>
+    <string name="note">Note</string>
 
 
 </resources>

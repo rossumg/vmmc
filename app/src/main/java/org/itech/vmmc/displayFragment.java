@@ -38,6 +38,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     List<Booking> bookings = new ArrayList<Booking>();
     List<Person> persons = new ArrayList<Person>();
     List<Client> clients = new ArrayList<Client>();
+    List<Facilitator> facilitators = new ArrayList<Facilitator>();
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -63,6 +64,11 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 Log.d(LOG, "DisplayFragment editClient: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
                 fragment = EditClientFragment.newInstance("editClient", displayParts.get_first_name() + " " + displayParts.get_last_name() + ":" + displayParts.get_national_id() + ":" + displayParts.get_phone());
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditClientFragment.TAG).addToBackStack("EditClient").commit();
+
+            } else if (displayType == "displayFacilitator") {
+                Log.d(LOG, "DisplayFragment editFacilitator: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
+                fragment = EditFacilitatorFragment.newInstance("editFacilitator", displayParts.get_first_name() + " " + displayParts.get_last_name() + ":" + displayParts.get_national_id() + ":" + displayParts.get_phone());
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFacilitatorFragment.TAG).addToBackStack("EditFacilitator").commit();
             }
         }
     }
@@ -156,6 +162,18 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             String[] _stringArray = new String[clients.size()];
             int i = 0;
             for (Client _rec : clients) {
+                _stringArray[i] =
+                        _rec.get_first_name() + " " + _rec.get_last_name() + ", " + _rec.get_national_id() + ", " + _rec.get_phone();
+                i++;
+            }
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
+        } else if (displayType == "displayFacilitator") {
+            facilitators = dbHelp.getAllFacilitators();
+            String[] _stringArray = new String[facilitators.size()];
+            int i = 0;
+            for (Facilitator _rec : facilitators) {
                 _stringArray[i] =
                         _rec.get_first_name() + " " + _rec.get_last_name() + ", " + _rec.get_national_id() + ", " + _rec.get_phone();
                 i++;

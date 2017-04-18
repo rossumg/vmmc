@@ -188,8 +188,8 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String FACILITATOR_FACILITATOR_TYPE_ID  = "facilitator_type_id";
     private static final String FACILITATOR_NOTE        = "note";
     private static final String FACILITATOR_LOCATION_ID = "location_id";
-    private static final String FACILITATOR_LAT         = "latitude";
-    private static final String FACILITATOR_LONG        = "longitude";
+    private static final String FACILITATOR_LATITUDE    = "latitude";
+    private static final String FACILITATOR_LONGITUDE   = "longitude";
     private static final String FACILITATOR_INSTITUTION_ID = "institution_id";
 
     // location table column names
@@ -304,7 +304,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     "loc_id int, " +
                     "latitude real, " +
                     "longitude real, " +
-                    "institution_id, " +
+                    "institution_id int, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_CLIENT_TABLE);
 
@@ -321,7 +321,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "location_id int, " +
                     "latitude real, " +
                     "longitude real, " +
-                    "institution_id int)";
+                    "institution_id int, " +
+                    "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_FACILITATOR_TABLE);
 
             //try { db.execSQL("delete from location;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
@@ -412,6 +413,7 @@ public class DBHelper extends SQLiteOpenHelper{
         new putMySQLPersonTable(this).execute();
         new putMySQLBookingTable(this).execute();
         new putMySQLClientTable(this).execute();
+        new putMySQLFacilitatorTable(this).execute();
         new getMySQLRegionTable(this._context, this).execute();
         new getMySQLLocationTable(this._context, this).execute();
         new getMySQLFacilitatorTypeTable(this._context, this).execute();
@@ -421,6 +423,7 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLPersonTable(this._context, this).execute();
         new getMySQLBookingTable(this._context, this).execute();
         new getMySQLClientTable(this._context, this).execute();
+        new getMySQLFacilitatorTable(this._context, this).execute();
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 
@@ -1156,6 +1159,46 @@ public class DBHelper extends SQLiteOpenHelper{
         return assessmentTypes;
     }
 
+    public List<String> getAllFacilitatorTypes(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> facilitatorTypes = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                FACILITATOR_TYPE_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = FACILITATOR_TYPE_ID;
+
+        Cursor cursor = db.query(TABLE_FACILITATOR_TYPE, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllFacilityNames  "
+//                                + cursor.getString(0)
+//                );
+                facilitatorTypes.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(facilitatorTypes);
+        facilitatorTypes.clear();;
+        facilitatorTypes.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ facilitatorTypes.size() ];
+        facilitatorTypes.toArray(stringArrayNames);
+
+        return facilitatorTypes;
+    }
+
     public List<String> getAllStatusTypes(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> statusTypes = new ArrayList<String>();
@@ -1236,6 +1279,49 @@ public class DBHelper extends SQLiteOpenHelper{
             cursor.close();
             db.close();
             return status;
+        }
+    }
+
+    public FacilitatorType getFacilitatorType( String facilitator_type_id ) {
+        FacilitatorType facilitatorType = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getFacilitatorType: " + facilitator_type_id);
+
+        String[] tableColumns = new String[] {
+                FACILITATOR_TYPE_ID, FACILITATOR_TYPE_NAME
+        };
+
+        String whereClause = "trim(" +
+                FACILITATOR_TYPE_ID + ") like ? or trim(" +
+                FACILITATOR_TYPE_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getFacilitatorType whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                facilitator_type_id, facilitator_type_id };  // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getFacilitatorType whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_FACILITATOR_TYPE, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getFacilitatorType  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            facilitatorType = new FacilitatorType(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            db.close();
+            return facilitatorType;
+        } else {
+            cursor.close();
+            db.close();
+            return facilitatorType;
         }
     }
 
@@ -2520,7 +2606,7 @@ public class DBHelper extends SQLiteOpenHelper{
 // GNR: very odd behavior, had to add following moveToFirst only for getAllClients, not getAllPersons or getAllBookings
         cursor1.moveToFirst();
 
-        Log.d(LOG, "getAllClients: " + cursor1.getString(1) + ":" + cursor1.getString(2) + ":" + cursor1.getString(3) + ":" + cursor1.getString(4) + ":" );
+//        Log.d(LOG, "getAllClients: " + cursor1.getString(1) + ":" + cursor1.getString(2) + ":" + cursor1.getString(3) + ":" + cursor1.getString(4) + ":" );
 
         // looping through all rows and adding to list
         if (cursor1.moveToFirst()) {
@@ -2555,13 +2641,135 @@ public class DBHelper extends SQLiteOpenHelper{
         return clientList;
     }
 
+    public List<Facilitator> getAllFacilitators() {
+        List<Facilitator> facilitatorList = new ArrayList<Facilitator>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_FACILITATOR + " order by first_name, last_name ";
+
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = null;
+        cursor = db.rawQuery(selectQuery, null);
+// GNR: very odd behavior, had to add following moveToFirst only for getAllClients, not getAllPersons or getAllBookings
+        cursor.moveToFirst();
+
+//        Log.d(LOG, "getAllFacilitators: " + cursor1.getString(1) + ":" + cursor1.getString(2) + ":" + cursor1.getString(3) + ":" + cursor1.getString(4) + ":" );
+
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllFacilitators: loop: "
+//                        + cursor1.getString(1) + ":"
+//                        + cursor1.getString(2) + ":"
+//                        + cursor1.getString(3) + ":"
+//                        + cursor1.getString(4) + ":"
+//                        + cursor1.getString(5) + ":"
+//                        + cursor1.getString(6) + ":"
+//                        + cursor1.getString(7) + ":" );
+
+                Facilitator facilitator = new Facilitator();
+                facilitator.set_id(parseInt(cursor.getString(0)));
+                facilitator.set_timestamp(cursor.getString(1));
+                facilitator.set_first_name(cursor.getString(2));
+                facilitator.set_last_name(cursor.getString(3));
+                facilitator.set_national_id(cursor.getString(4));
+                facilitator.set_phone(cursor.getString(5));
+                facilitator.set_facilitator_type_id(parseInt(cursor.getString(6)));
+                facilitator.set_note(cursor.getString(7));
+                facilitator.set_location_id(parseInt(cursor.getString(8)));
+                facilitator.set_latitude(parseFloat(cursor.getString(9)));
+                facilitator.set_longitude(parseFloat(cursor.getString(10)));
+                facilitator.set_institution_id(parseInt(cursor.getString(11)));
+
+                // Adding person to list
+                facilitatorList.add(facilitator);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+//        db.close();
+        return facilitatorList;
+    }
+
+    public boolean addFacilitator(Facilitator facilitator) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+        values.put(FACILITATOR_TIMESTAMP, oTimestamp.toString());
+        values.put(FACILITATOR_FIRST_NAME, facilitator.get_first_name());
+        values.put(FACILITATOR_LAST_NAME, facilitator.get_last_name());
+        values.put(FACILITATOR_NATIONAL_ID, facilitator.get_national_id());
+        values.put(FACILITATOR_PHONE,  facilitator.get_phone());
+        values.put(FACILITATOR_FACILITATOR_TYPE_ID,  facilitator.get_facilitator_type_id());
+        values.put(FACILITATOR_NOTE,  facilitator.get_note());
+        values.put(FACILITATOR_LOCATION_ID,  facilitator.get_location_id());
+        values.put(FACILITATOR_LATITUDE,  facilitator.get_latitude());
+        values.put(FACILITATOR_LONGITUDE,  facilitator.get_longitude());
+        values.put(FACILITATOR_INSTITUTION_ID,  facilitator.get_institution_id());
+
+        try {
+            db.insert(TABLE_FACILITATOR, null, values);
+        } catch (Exception ex) {
+            db.close();
+            Log.d(LOG, "addFacilitator catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateFacilitator(Facilitator facilitator) {
+        Log.d(LOG, "updateFacilitator: " + facilitator.get_first_name() + ", " + facilitator.get_last_name() + ", " + facilitator.get_facilitator_type_id() );
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
+        DateFormat df = new android.text.format.DateFormat();
+        facilitator.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        values.put(FACILITATOR_TIMESTAMP, oTimestamp.toString());
+        values.put(FACILITATOR_FIRST_NAME, facilitator.get_first_name());
+        values.put(FACILITATOR_LAST_NAME, facilitator.get_last_name());
+        values.put(FACILITATOR_NATIONAL_ID, facilitator.get_national_id());
+        values.put(FACILITATOR_PHONE,  facilitator.get_phone());
+        values.put(FACILITATOR_FACILITATOR_TYPE_ID,  facilitator.get_facilitator_type_id());
+        values.put(FACILITATOR_NOTE,  facilitator.get_note());
+        values.put(FACILITATOR_LOCATION_ID,  facilitator.get_location_id());
+        values.put(FACILITATOR_LATITUDE,  facilitator.get_latitude());
+        values.put(FACILITATOR_LONGITUDE,  facilitator.get_longitude());
+        values.put(FACILITATOR_INSTITUTION_ID,  facilitator.get_institution_id());
+
+        String[] tableColumns = new String[]{
+                FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
+        };
+
+//        String whereClause = "1=1 and trim(" +
+//                CLIENT_FIRST_NAME + ") like ? or trim(" +
+//                CLIENT_LAST_NAME + ") like ? or trim(" +
+//                CLIENT_NATIONAL_ID + ") like ? or trim(" +
+//                CLIENT_PHONE + ") like ? ";
+
+//        Log.d(LOG, "updatePerson whereClause: " + whereClause);
+
+//        String[] whereArgs = new String[]{
+//                client.get_first_name(), client.get_last_name(), client._national_id, client.get_phone()};
+
+        String updateWhereClause = "1=1 and " +
+                FACILITATOR_FIRST_NAME + " = '" + values.get(FACILITATOR_FIRST_NAME) + "' and " +
+                FACILITATOR_LAST_NAME + " = '" + values.get(FACILITATOR_LAST_NAME) + "' and " +
+                FACILITATOR_NATIONAL_ID + " = '" + values.get(FACILITATOR_NATIONAL_ID) + "' and " +
+                FACILITATOR_PHONE + " = '" + values.get(FACILITATOR_PHONE) + "'";
+
+        db.update(TABLE_FACILITATOR, values, updateWhereClause, null);
+        db.close();
+        return true;
+    }
+
     public Facilitator getFacilitator( String first_name, String last_name, String national_id, String phone ) {
         Facilitator facilitator = null;
         SQLiteDatabase db = this.getReadableDatabase();
         Log.d(LOG, "getFacilitator: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
         String[] tableColumns = new String[] {
-                FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LAT, FACILITATOR_LONG, FACILITATOR_INSTITUTION_ID
+                FACILITATOR_TYPE_ID, FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
         };
 
         String whereClause = "1=1 and trim(" +
@@ -2578,21 +2786,82 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getFacilitor whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":" + whereArgs[3] + ":");
 
         Cursor cursor = db.query(TABLE_FACILITATOR, tableColumns, whereClause, whereArgs, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+//            Log.d(LOG, "getFacilitator  "
+//                            + cursor.getString(0) + " "
+//                            + cursor.getString(1) + " "
+//                            + cursor.getString(2) + " "
+//                            + cursor.getString(3) + " "
+//                            + cursor.getString(4) + " "
+//                            + cursor.getString(5) + " "
+//                            + cursor.getString(6) + " "
+//                    + cursor.getString(7) + " "
+//                    + cursor.getString(8) + " "
+//                    + cursor.getString(9) + " "
+//                    + cursor.getString(10) + " "
+//            );
+
+            facilitator = new Facilitator(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    parseInt(cursor.getString(6)),
+                    cursor.getString(7),
+                    parseInt(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseFloat(cursor.getString(10)),
+                    parseInt(cursor.getString(11))
+            );
+            cursor.close();
+            db.close();
+            return facilitator;
+        } else {
+            cursor.close();
+            db.close();
+            return facilitator;
+        }
+    }
+
+    public Facilitator getFacilitator( String national_id, String phone_number ) {
+        Facilitator facilitator = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getFacilitator: " + national_id + ", " + phone_number );
+
+        String[] tableColumns = new String[] {
+                FACILITATOR_ID, FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
+        };
+
+        String whereClause = "1=1 and trim(" +
+                FACILITATOR_NATIONAL_ID + ") like ? or trim(" +
+                FACILITATOR_PHONE + ") like ? ";
+
+        Log.d(LOG, "getFacilitator whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                national_id, phone_number };
+
+        Log.d(LOG, "getFacilitator whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":");
+
+        Cursor cursor = db.query(TABLE_FACILITATOR, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
-            Log.d(LOG, "getFacilitator  "
-                            + cursor.getString(0) + " "
-                            + cursor.getString(1) + " "
-                            + cursor.getString(2) + " "
-                            + cursor.getString(3) + " "
-                            + cursor.getString(4) + " "
-                            + cursor.getString(5) + " "
-                            + cursor.getString(6) + " "
-                    + cursor.getString(7) + " "
-                    + cursor.getString(8) + " "
-                    + cursor.getString(9) + " "
-                    + cursor.getString(10) + " "
-            );
+//            Log.d(LOG, "getFacilitator  "
+//                    + cursor.getString(0) + " "
+//                    + cursor.getString(1) + " "
+//                    + cursor.getString(2) + " "
+//                    + cursor.getString(3) + " "
+//                    + cursor.getString(4) + " "
+//                    + cursor.getString(5) + " "
+//                    + cursor.getString(6) + " "
+//                    + cursor.getString(7) + " "
+//                    + cursor.getString(8) + " "
+//                    + cursor.getString(9) + " "
+//                    + cursor.getString(10) + " "
+//            );
 
             facilitator = new Facilitator(
                     parseInt(cursor.getString(0)),

@@ -35,6 +35,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         AddEditBookingFragment.OnFragmentInteractionListener,
         AddEditClientFragment.OnFragmentInteractionListener,
         EditClientFragment.OnFragmentInteractionListener,
+        AddEditFacilitatorFragment.OnFragmentInteractionListener,
+        EditFacilitatorFragment.OnFragmentInteractionListener,
 //        AddBookingFragment.OnFragmentInteractionListener,
         EditBookingFragment.OnFragmentInteractionListener,
         DisplayFragment.OnFragmentInteractionListener
@@ -252,6 +254,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
 
             case 3:
+                fragment = getFragmentManager().findFragmentByTag(AddEditFacilitatorFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditFacilitatorFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditFacilitatorFragment.TAG).addToBackStack(currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditFacilitatorFragment.TAG).commit();
+                }
+                currentFragmentId = "AddEditFacilitator";
+
+                break;
+
+            case 4:
                 fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditClientFragment.newInstance();
@@ -263,7 +277,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 4:
+            case 5:
                 fragment = getFragmentManager().findFragmentByTag(AddEditBookingFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditBookingFragment.newInstance();

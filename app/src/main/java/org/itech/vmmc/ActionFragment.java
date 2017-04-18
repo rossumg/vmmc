@@ -162,6 +162,18 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 }
                 MainActivity.currentFragmentId = "AddEditClient";
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditFacilitatorTitle))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditFacilitatorTitle) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditFacilitatorFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditFacilitatorFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditFacilitatorFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditFacilitatorFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditFacilitator";
+
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
 
@@ -273,8 +285,8 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
         if (getArguments() != null) {
             mParam1 = getArguments().getString("searchAssessments");
             mParam2 = getArguments().getString("searchParams");
-            Log.d(LOG, "recentFragment onCreate param1: " + mParam1.toString());
-            Log.d(LOG, "recentFragment onCreate param2:>" + mParam2.toString() + "<");
+            Log.d(LOG, "actionFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "actionFragment onCreate param2:>" + mParam2.toString() + "<");
         }
 
         DBHelper dbHelp = new DBHelper(getActivity());
@@ -287,6 +299,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //        actions.add(getResources().getString(R.string.DOWNLOAD));
         actions.add(getResources().getString(R.string.SYNC));
         actions.add(getResources().getString(R.string.addEditPerson));
+        actions.add(getResources().getString(R.string.addEditFacilitatorTitle));
         actions.add(getResources().getString(R.string.addEditClient));
         actions.add(getResources().getString(R.string.addEditBooking));
 

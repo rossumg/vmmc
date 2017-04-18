@@ -86,15 +86,17 @@ class getMySQLFacilitatorTypeTable extends AsyncTask<String, String, String> {
                 for (i = 0; i < _array.length(); i++) {
                     JSONObject _rec = _array.getJSONObject(i);
                     // escape single quotes
+                    String _id = _rec.getString("id");
+                    _id = _id.replace("'", "''");
                     String _name = _rec.getString("name");
                     _name = _name.replace("'", "''");
 
                     Log.d(LOG, "getMySQLFacilitatorTypeTable:doInBackground: " + _name );
                     String _insert =
                             "insert into facilitator_type "
-                                    + "(name) "
+                                    + "(id, name) "
                                     + " values("
-                                    // + person_id + ","
+                                    + "'" + _id + "'" + ","
                                     + "'" + _name + "'" + ");";
 
                     try {
