@@ -91,8 +91,8 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.
      * @return A new instance of fragment DisplayFragment.
      */
     // TODO: Rename and change types and number of parameters
@@ -225,3 +225,4 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
         builder.show();
     }
 }
+
