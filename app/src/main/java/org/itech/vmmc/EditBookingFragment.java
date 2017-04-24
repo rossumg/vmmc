@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -49,16 +50,19 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
     private static Booking _booking;
     private static Status _status;
     private static Client _client;
+    private static VMMCLocation _location;
     private static TextView _first_name;
     private static TextView _last_name;
     private static TextView _national_id;
     private static TextView _phone;
+    private static TextView _facilitator;
     private static TextView _location_id;
     private static TextView _projected_date;
     private static TextView _actual_date;
 
 
     private EditText et_projected_date;
+    private EditText et_actual_date;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -107,7 +111,9 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         String lastName = "";
         String nationalId = "";
         String phoneNumber = "";
+        String facilitator = "";
         String projectedDate = "";
+        String actualDate = "";
 
         switch (parts.length) {
             case 0: {
@@ -162,15 +168,33 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         Log.d(LOG, "EBF ProjectedDate: " + projectedDate);
 
         dbHelp = new DBHelper(getActivity());
+
+
         if (!nationalId.equals("") || !phoneNumber.equals("")) {
             //_booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
             _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);
+
         }
+
+
+
         if (_booking != null) {
             Log.d(LOG, "EBF _booking != null ");
             //Log.d(LOG, "EBF _booking != null " + _booking.get_first_name());
+            _location = dbHelp.getLocation(String.valueOf(_booking.get_location_id()));
+
+            Log.d(LOG, "EBF after getBooking: "
+                    + _booking.get_fac_first_name() + ", "
+                    + _booking.get_fac_last_name() + ", "
+                    + _booking.get_fac_national_id() + ", "
+                    + _booking.get_fac_phone() + ", "
+            );
+            Log.d(LOG, "EBF ActualDate: " + actualDate);
+
         } else {
             Log.d(LOG, "EBF _booking is equal null ");
+            _location = dbHelp.getLocation("1"); // Default
+
 //            should check for more info like person frag, GNR
 //            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
 //                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
@@ -213,33 +237,52 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         if(_booking != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_booking.get_first_name());
+            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_booking.get_last_name());
+            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_booking.get_national_id());
+            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_booking.get_phone());
+            _phone.setInputType(InputType.TYPE_NULL);
+            _facilitator = (TextView) _view.findViewById(R.id.facilitator);
+
+
+            if(_booking.get_fac_first_name() == null &&
+                    _booking.get_fac_last_name() == null &&
+                    _booking.get_fac_national_id() == null &&
+                    _booking.get_fac_phone() == null) {
+            } else {
+                _facilitator.setText(_booking.get_fac_first_name() + " " + _booking.get_fac_last_name() + ", " + _booking.get_fac_national_id() + ", " + _booking.get_fac_phone());
+            }
+
             _projected_date = (EditText) _view.findViewById(R.id.projected_date);
             _projected_date.setText(_booking.get_projected_date());
+            _actual_date = (EditText) _view.findViewById(R.id.actual_date);
+            _actual_date.setText(_booking.get_actual_date());
 //            _dob = (TextView) _view.findViewById(R.id.dob);
 //            _dob.setText(_person.get_dob());
 //            _gender = (TextView) _view.findViewById(R.id.gender);
 //            _gender.setText(_person.get_gender());
         }
 
+        loadFacilitatorAutoComplete(_view );
         loadStatusDropdown(_view );
+        loadLocationDropdown(_view );
 
         et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
-            Calendar newCalendar = Calendar.getInstance();
-            DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-                    Calendar newDate = Calendar.getInstance();
-                    newDate.set(year, monthOfYear, dayOfMonth);
-                    et_projected_date.setText(dateFormatter.format(newDate.getTime()));
-                    Log.d(LOG, "EBF: onDateSet: " + et_projected_date.getText());
-                }
-            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_projected_date.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "EBF: onDateSet: " + et_projected_date.getText());
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
 
         final DatePickerDialog projected_date_picker_dialog = hold_projected_date_picker_dialog;
 
@@ -248,6 +291,28 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             public void onClick(View v) {
                 Log.d(LOG, "onClick: ");
                 projected_date_picker_dialog.show();
+            }
+        });
+
+        et_actual_date = (EditText) _view.findViewById(R.id.actual_date);
+//        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+//        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_actual_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_actual_date.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "EBF: onDateSet: " + et_actual_date.getText());
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog actual_date_picker_dialog = hold_actual_date_picker_dialog;
+
+        et_actual_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                actual_date_picker_dialog.show();
             }
         });
 
@@ -264,23 +329,37 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 _last_name = (TextView) _view.findViewById(R.id.last_name);
                 _national_id = (TextView) _view.findViewById(R.id.national_id);
                 _phone = (TextView) _view.findViewById(R.id.phone_number);
+                _facilitator = (TextView) _view.findViewById(R.id.facilitator);
+
+                Spinner lSpinner = (Spinner) _view.findViewById(R.id.vmmclocation);
+//              String sLocationText  = lSpinner.getSelectedItem().toString();
+                VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
+
                 _projected_date= (TextView) _view.findViewById(R.id.projected_date);
+                _actual_date= (TextView) _view.findViewById(R.id.actual_date);
 
                 Log.d(LOG, "UpdateBooking button: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + " <");
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitator.getText() + " <");
 
                 String sFirstName = _first_name.getText().toString();
                 String sLastName = _last_name.getText().toString();
                 String sNationalId = _national_id.getText().toString();
                 String sPhoneNumber = _phone.getText().toString();
+                String sFacilitator = _facilitator.getText().toString();
+
                 String sProjectedDate = _projected_date.getText().toString();
+                String sActualDate = _actual_date.getText().toString();
 //                DateFormat df = new android.text.format.DateFormat();
 //                String dProjectedDate = df.format(VMMC_DATE_FORMAT, projected_date);
 //                String sDOB = _dob.getText().toString();
 //                String sGender = _gender.getText().toString();
 
                 Log.d(LOG, "UpdateBooking button2: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitator.getText() +" <");
+
+                DisplayParts displayParts = new DisplayParts(sFacilitator);
+                Log.d(LOG, "UpdateBooking button3: " +
+                        displayParts.get_first_name() + ", " +displayParts.get_last_name() + ", " + displayParts.get_national_id() + ", " + displayParts.get_phone());
 
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
@@ -298,10 +377,16 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         lookupBooking.set_last_name(sLastName);
                         lookupBooking.set_national_id(sNationalId);
                         lookupBooking.set_phone(sPhoneNumber);
+                        lookupBooking.set_fac_first_name(displayParts.get_first_name());
+                        lookupBooking.set_fac_last_name(displayParts.get_last_name());
+                        lookupBooking.set_fac_national_id(displayParts.get_national_id());
+                        lookupBooking.set_fac_phone(displayParts.get_phone());
+                        lookupBooking.set_location_id(String.valueOf(_location.get_id()));
                         lookupBooking.set_projected_date(sProjectedDate);
+                        lookupBooking.set_actual_date(sActualDate);
 //                        lookupPerson.set_gender(sGender);
                         Log.d(LOG, "UpdateBooking update: " +
-                                _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
+                                _first_name.getText() + " " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.updateBooking(lookupBooking))
                             Toast.makeText(getActivity(), "Booking Updated", Toast.LENGTH_LONG).show();;
                     } else {
@@ -310,7 +395,13 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         booking.set_last_name(sLastName);
                         booking.set_national_id(sNationalId);
                         booking.set_phone(sPhoneNumber);
+                        booking.set_fac_first_name(displayParts.get_first_name());
+                        booking.set_fac_last_name(displayParts.get_last_name());
+                        booking.set_fac_national_id(displayParts.get_national_id());
+                        booking.set_fac_phone(displayParts.get_phone());
+                        booking.set_location_id(String.valueOf(_location.get_id()));
                         booking.set_projected_date(sProjectedDate);
+                        booking.set_actual_date(sActualDate);
                         Log.d(LOG, "UpdateBooking add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.addBooking(booking))
@@ -366,6 +457,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
         _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
         _projected_date = (TextView) _view.findViewById(R.id.projected_date); _projected_date.setText("");
+        _actual_date = (TextView) _view.findViewById(R.id.actual_date); _actual_date.setText("");
 //        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
 //        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
@@ -380,6 +472,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _phone.setText(_booking.get_phone());
             _projected_date = (TextView) _view.findViewById(R.id.projected_date);
             _projected_date.setText(_booking.get_projected_date());
+            _actual_date = (TextView) _view.findViewById(R.id.actual_date);
+            _actual_date.setText(_booking.get_actual_date());
 //            _dob = (TextView) _view.findViewById(R.id.dob);
 //            _dob.setText(_person.get_dob());
 //            _gender = (TextView) _view.findViewById(R.id.gender);
@@ -420,6 +514,39 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
                 String text = dropdown.getText().toString();
                 Log.d(LOG, "name selected: " + text);
+            }
+        });
+    }
+
+    private Booking booking;
+    public void loadFacilitatorAutoComplete(View view) {
+
+//        List<String> facilitatorIDs = dbHelp.getAllPersonIDs();
+        List<String> facilitatorIDs = dbHelp.getAllFacilitatorIDs();
+        // convert to array
+        String[] stringArrayFacilitatorID = new String[ facilitatorIDs.size() ];
+        facilitatorIDs.toArray(stringArrayFacilitatorID);
+
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.facilitator);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayFacilitatorID);
+        dropdown.setThreshold(1);
+        dropdown.setAdapter(dataAdapter);
+
+        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                String facilitatorText = dropdown.getText().toString();
+                String parts[] = {};
+                parts = facilitatorText.split(", ");
+
+                String fac_name = parts[0].trim();
+                String fac_national_id =  parts[1].trim();
+                String fac_phone_number = parts[2].trim();
+//                String projected_date = parts[3].trim();
+                Log.d(LOG, "booking facilitator selected: " + fac_name + "." + fac_national_id + "." + fac_phone_number + "." );
+
+//                booking = dbHelp.getBooking(national_id, phone_number, projected_date);
+//                Log.d(LOG, "booking_id selected: " + booking.get_id());
+
             }
         });
     }
@@ -498,5 +625,42 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             }
         });
     }
+
+    public void loadLocationDropdown(View view ) {
+        Log.d(LOG, "loadLoactionDropdown: " );
+
+        final Spinner lSpinner = (Spinner) view.findViewById(R.id.vmmclocation);
+        final List<String> locationNames = dbHelp.getAllLocationNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, locationNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        lSpinner.setAdapter(dataAdapter);
+        _location = dbHelp.getLocation(String.valueOf(_booking.get_location_id()));
+        if (_location == null) {
+            _location = dbHelp.getLocation("1"); // Default
+        }
+        String compareValue = _location.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            lSpinner.setSelection(spinnerPosition);
+        }
+
+        lSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String locationText  = lSpinner.getSelectedItem().toString();
+                _location = dbHelp.getLocation(locationText);
+                _client.set_loc_id(_location.get_id());
+                Log.d(LOG, "location: " + _location.get_id() + _location.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
 }
 

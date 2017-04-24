@@ -42,6 +42,7 @@
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+
         android:textSize="@dimen/font_size_small"
         android:id="@+id/first_name"
         android:layout_centerHorizontal="true"
@@ -150,10 +151,57 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
+        android:text="@string/facilitator"
+        android:id="@+id/textViewFacilitator"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewStatus" />
+
+    <org.itech.vmmc.ClearableAutoCompleteTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/facilitator"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewFacilitator"
+        android:layout_below="@+id/textViewStatus"
+        android:paddingTop="12dp"
+        android:maxLines="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/location"
+        android:id="@+id/textViewLocation"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewFacilitator" />
+
+    <Spinner
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:id="@+id/vmmclocation"
+        android:textSize="@dimen/font_size_small"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewLocation"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewFacilitator" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
         android:text="@string/projected_date"
         android:id="@+id/textViewProjectedDate"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewStatus" />
+        android:layout_below="@+id/textViewLocation" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -165,7 +213,30 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewProjectedDate"
-        android:layout_below="@+id/textViewStatus"
+        android:layout_below="@+id/textViewLocation"
+        android:maxLines="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/actual_date"
+        android:id="@+id/textViewActualDate"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewProjectedDate" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/actual_date"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewActualDate"
+        android:layout_below="@+id/textViewProjectedDate"
         android:maxLines="1" />
 
     <!--
@@ -245,8 +316,8 @@
                   android:textSize="@dimen/font_size_small"
                   android:text="@string/btn_label_update"
                   android:id="@+id/btnUpdateBooking"
-                  android:layout_below="@+id/textViewProjectedDate"
-                  android:layout_alignEnd="@+id/projected_date"
+                  android:layout_below="@+id/textViewActualDate"
+                  android:layout_alignEnd="@+id/actual_date"
                   android:layout_marginTop="48dp" />
 
 

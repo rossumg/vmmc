@@ -97,6 +97,7 @@
     <string name="error">There was an error</string>
     <string name="test">Test</string>
     <string name="projected_date">Projected Date</string>
+    <string name="actual_date">Actual Date</string>
     <string name="btn_label_display">Display</string>
     <string name="displayTitle">Display</string>
     <string name="status">Status</string>
@@ -110,6 +111,15 @@
     <string name="editFacilitatorTitle">Edit Facilitator</string>
     <string name="facilitator_type">Facilitator Type</string>
     <string name="note">Note</string>
+    <string name="facilitator">Facilitator</string>
+    <string name="person">Person</string>
+    <string name="interaction_type">Interaction Type</string>
+    <string name="followup_date">Follow-up Date</string>
+    <string name="interaction_date">Interaction Date</string>
+    <string name="addEditInteractionTitle">Add Edit Interaction</string>
+    <string name="addEditInteraction">Add Edit Interaction</string>
+    <string name="editInteractionTitle">Edit Interaction</string>
+    <string name="editInteraction">Edit Interaction</string>
 
 
 </resources>

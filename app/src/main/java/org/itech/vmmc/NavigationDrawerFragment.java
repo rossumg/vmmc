@@ -132,6 +132,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem(getResources().getString(R.string.addEditFacilitatorTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditClientTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditBookingTitle)));
+        items.add(new NavigationItem(getResources().getString(R.string.addEditInteractionTitle)));
 
 
         return items;

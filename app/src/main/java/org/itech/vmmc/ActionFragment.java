@@ -174,6 +174,18 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 }
                 MainActivity.currentFragmentId = "AddEditFacilitator";
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditInteractionTitle))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditInteractionTitle) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditInteractionFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditInteractionFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditInteractionFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditInteractionFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditInteraction";
+
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
 
@@ -302,6 +314,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
         actions.add(getResources().getString(R.string.addEditFacilitatorTitle));
         actions.add(getResources().getString(R.string.addEditClient));
         actions.add(getResources().getString(R.string.addEditBooking));
+        actions.add(getResources().getString(R.string.addEditInteraction));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);

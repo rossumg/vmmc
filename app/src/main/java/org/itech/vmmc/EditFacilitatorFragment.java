@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -204,12 +205,16 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         if(_facilitator != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_facilitator.get_first_name());
+            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_facilitator.get_last_name());
+            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_facilitator.get_national_id());
+            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_facilitator.get_phone());
+            _phone.setInputType(InputType.TYPE_NULL);
             _note = (TextView) _view.findViewById(R.id.note);
             _note.setText(_facilitator.get_note());
 //            _projected_date = (EditText) _view.findViewById(R.id.projected_date);

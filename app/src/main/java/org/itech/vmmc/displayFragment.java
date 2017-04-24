@@ -39,6 +39,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     List<Person> persons = new ArrayList<Person>();
     List<Client> clients = new ArrayList<Client>();
     List<Facilitator> facilitators = new ArrayList<Facilitator>();
+    List<Interaction> interactions = new ArrayList<Interaction>();
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -47,8 +48,9 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             // fragment is attached to one) that an item has been selected.
 
             displayParts = new DisplayParts(mAdapter.getItem(position).toString());
-            Log.d(LOG, "DisplayFragment onItemClick: " + displayType + " " + mAdapter.getItem(position).toString());
-            Log.d(LOG, "DisplayFragment displayParts: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
+            Log.d(LOG, "DisplayFragment onItemClick1: " + displayType + " " + mAdapter.getItem(position).toString());
+            Log.d(LOG, "DisplayFragment displayParts2: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
+            Log.d(LOG, "DisplayFragment displayParts3: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
 
 
             Fragment fragment;
@@ -69,6 +71,14 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 Log.d(LOG, "DisplayFragment editFacilitator: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
                 fragment = EditFacilitatorFragment.newInstance("editFacilitator", displayParts.get_first_name() + " " + displayParts.get_last_name() + ":" + displayParts.get_national_id() + ":" + displayParts.get_phone());
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFacilitatorFragment.TAG).addToBackStack("EditFacilitator").commit();
+
+            } else if (displayType == "displayInteraction") {
+                Log.d(LOG, "DisplayFragment editInteraction: " + displayParts.get_facFirstName() + " " + displayParts.get_facLastName() + " " + displayParts.get_personFirstName() + " " + displayParts.get_personLastName());
+                fragment = EditInteractionFragment.newInstance("editInteraction",
+                        displayParts.get_facFirstName() + " " + displayParts.get_facLastName() + ":" + displayParts.get_facNationalId() + ":" + displayParts.get_facPhone() + "<>" +
+                        displayParts.get_personFirstName() + " " + displayParts.get_personLastName() + ":" + displayParts.get_personNationalId() + ":" + displayParts.get_personPhone() + "<>" +
+                                displayParts.get_interactionDate() + ":" + displayParts.get_followupDate() );
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditInteractionFragment.TAG).addToBackStack("EditInteraction").commit();
             }
         }
     }
@@ -134,7 +144,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
 //        Log.d(LOG, "DisplayFragment onCreate last_name: " + indexParts.get_last_name());
 
         if (displayType == "displayBooking" ) {
-            bookings = dbHelp.getAllBookings();
+            bookings = dbHelp.getAllLikeBookings(mParam2);
             String[] _stringArray = new String[bookings.size()];
             int i = 0;
             for (Booking _rec : bookings) {
@@ -146,7 +156,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
         } else if (displayType == "displayPerson") {
-            persons = dbHelp.getAllPersons();
+            persons = dbHelp.getAllLikePersons(mParam2);
             String[] _stringArray = new String[persons.size()];
             int i = 0;
             for (Person _rec : persons) {
@@ -158,7 +168,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
         } else if (displayType == "displayClient") {
-            clients = dbHelp.getAllClients();
+            clients = dbHelp.getAllLikeClients(mParam2);
             String[] _stringArray = new String[clients.size()];
             int i = 0;
             for (Client _rec : clients) {
@@ -170,12 +180,29 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
         } else if (displayType == "displayFacilitator") {
-            facilitators = dbHelp.getAllFacilitators();
+            facilitators = dbHelp.getAllLikeFacilitators(mParam2);
             String[] _stringArray = new String[facilitators.size()];
             int i = 0;
             for (Facilitator _rec : facilitators) {
                 _stringArray[i] =
                         _rec.get_first_name() + " " + _rec.get_last_name() + ", " + _rec.get_national_id() + ", " + _rec.get_phone();
+                i++;
+            }
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
+        } else if (displayType == "displayInteraction") {
+            Log.d(LOG, "displayFragment getAllLikeInteractions:mParam2 >" + mParam2.toString() + "<");
+            interactions = dbHelp.getAllLikeInteractions(mParam2);
+//            interactions = dbHelp.getAllInteractions();
+            String[] _stringArray = new String[interactions.size()];
+            int i = 0;
+            for (Interaction _rec : interactions) {
+                _stringArray[i] =
+                        _rec.get_fac_first_name() + " " + _rec.get_fac_last_name() + ", " + _rec.get_fac_national_id() + ", " + _rec.get_fac_phone() + ", " +
+                        _rec.get_person_first_name() + " " + _rec.get_person_last_name() + ", " + _rec.get_person_national_id() + ", " + _rec.get_person_phone() + ", " +
+                        _rec.get_interaction_date() + ", " + _rec.get_followup_date()
+                ;
                 i++;
             }
             mAdapter = new ArrayAdapter<String>(getActivity(),

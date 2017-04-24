@@ -88,17 +88,18 @@ class getMySQLInteractionTypeTable extends AsyncTask<String, String, String> {
                 for (i = 0; i < _array.length(); i++) {
                     JSONObject _rec = _array.getJSONObject(i);
                     // escape single quotes
+                    String _id = _rec.getString("id");
+                    _id = _id.replace("'", "''");
                     String _name = _rec.getString("name");
                     _name = _name.replace("'", "''");
 
                     Log.d(LOG, "getMySQLInteractionTypeTable:doInBackground: " + _name );
                     String _insert =
                             "insert into interaction_type "
-                                    + "(name) "
+                                    + "(id, name) "
                                     + " values("
-                                    // + person_id + ","
+                                    + "'" + _id + "'" + ","
                                     + "'" + _name + "'" + ");";
-
                     try {
                         int incr = (int) ((i / (float) num_recs) * 100);
                         mBuilder.setProgress(100, incr, false);

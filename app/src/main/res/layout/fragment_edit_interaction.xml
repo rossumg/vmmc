@@ -28,28 +28,27 @@
         android:layout_height="wrap_content"
         android:src="@drawable/vmmc50" />
 
-     <TextView
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/first_name"
-        android:id="@+id/textViewFirstName"
+        android:text="@string/facilitator"
+        android:id="@+id/textViewFacilitator"
         android:paddingTop="128dp"
         android:layout_below="@+id/imageViewVMMC"
         android:layout_alignParentTop="true" />
 
-    <EditText
+    <org.itech.vmmc.ClearableAutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/first_name"
-        android:layout_centerHorizontal="true"
+        android:id="@+id/facilitator"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewFirstName"
+        android:layout_toEndOf="@+id/textViewFacilitator"
         android:paddingTop="128dp"
         android:maxLines="1" />
 
@@ -58,46 +57,23 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/last_name"
-        android:id="@+id/textViewLastName"
+        android:text="@string/person"
+        android:id="@+id/textViewPerson"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewFirstName" />
+        android:layout_below="@+id/textViewFacilitator" />
 
-   <EditText
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:textSize="@dimen/font_size_small"
-       android:id="@+id/last_name"
-       android:layout_marginLeft="200dp"
-       android:layout_marginRight="50dp"
-       android:layout_alignParentEnd="true"
-       android:layout_alignParentStart="true"
-       android:layout_toEndOf="@+id/textViewLastName"
-       android:layout_below="@+id/textViewFirstName"
-       android:maxLines="1" />
-
-    <TextView
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginLeft="10dp"
-        android:textSize="@dimen/font_size_small"
-        android:text="@string/national_id"
-        android:id="@+id/textViewNationalId"
-        android:paddingTop="12dp"
-        android:layout_below="@+id/textViewLastName" />
-
-    <EditText
+    <org.itech.vmmc.ClearableAutoCompleteTextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/national_id"
-
+        android:id="@+id/person"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewNationalId"
-        android:layout_below="@+id/textViewLastName"
+        android:layout_toEndOf="@+id/textViewPerson"
+        android:layout_below="@+id/textViewFacilitator"
+        android:paddingTop="12dp"
         android:maxLines="1" />
 
     <TextView
@@ -105,92 +81,73 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/phone"
-        android:id="@+id/textViewPhone"
+        android:text="@string/interaction_type"
+        android:id="@+id/textViewInteractionType"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewNationalId" />
+        android:layout_below="@+id/textViewPerson" />
 
-    <EditText
+    <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:id="@+id/interaction_type"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/phone_number"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewPhone"
-        android:layout_below="@+id/textViewNationalId"
-        android:maxLines="1" />
+        android:layout_toEndOf="@+id/textViewInteractionType"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewPerson" />
+
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/facilitator_type"
-        android:id="@+id/textViewFacilitatorType"
+        android:text="@string/interaction_date"
+        android:id="@+id/textViewInteractionDate"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewPhone" />
+        android:layout_below="@+id/textViewInteractionType" />
 
-    <Spinner
+    <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/facilitator_type"
         android:textSize="@dimen/font_size_small"
+        android:id="@+id/interaction_date"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewFacilitatorType"
-        android:paddingTop="12dp"
-        android:layout_below="@+id/textViewPhone" />
+        android:layout_toEndOf="@+id/textViewInteractionDate"
+        android:layout_below="@+id/textViewInteractionType"
+        android:maxLines="1" />
 
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
-      android:textSize="@dimen/font_size_small"
-      android:text="@string/location"
-      android:id="@+id/textViewLocation"
-      android:paddingTop="12dp"
-      android:layout_below="@+id/textViewFacilitatorType" />
 
-    <Spinner
+
+
+    <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/vmmclocation"
+        android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
+        android:text="@string/followup_date"
+        android:id="@+id/textViewFollowupDate"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewInteractionDate" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/followup_date"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewLocation"
-        android:paddingTop="12dp"
-        android:layout_below="@+id/textViewFacilitatorType" />
-
-  <TextView
-      android:layout_width="wrap_content"
-      android:layout_height="wrap_content"
-      android:layout_marginLeft="10dp"
-      android:textSize="@dimen/font_size_small"
-      android:text="@string/institution"
-      android:id="@+id/textViewInstitution"
-      android:paddingTop="12dp"
-      android:layout_below="@+id/textViewLocation" />
-
-    <Spinner
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:id="@+id/institution"
-        android:textSize="@dimen/font_size_small"
-        android:layout_marginLeft="200dp"
-        android:layout_marginRight="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewInstitution"
-        android:paddingTop="12dp"
-        android:layout_below="@+id/textViewLocation" />
+        android:layout_toEndOf="@+id/textViewFollowupDate"
+        android:layout_below="@+id/textViewInteractionDate"
+        android:maxLines="1" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -200,7 +157,7 @@
         android:text="@string/note"
         android:id="@+id/textViewNote"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewInstitution" />
+        android:layout_below="@+id/textViewFollowupDate" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -212,39 +169,17 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewNote"
-        android:layout_below="@+id/textViewInstitution"
-        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewFollowupDate"
         android:inputType="textMultiLine"
-        android:maxLines="3" />
+        android:lines="3" />
 
-    <!--
-               <TextView
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:text="@string/assessment_name"
-                   android:id="@+id/textView4"
-                   android:paddingTop="12dp"
-                   android:layout_below="@+id/facility"
-                   android:layout_alignStart="@+id/assessment_type" />
 
-               <Spinner
-                   android:layout_width="wrap_content"
-                   android:layout_height="wrap_content"
-                   android:id="@+id/assessment_type"
-
-                   android:layout_below="@+id/textView4"
-                   android:layout_marginLeft="128dp"
-                   android:layout_marginRight="128dp"
-                   android:layout_alignParentEnd="true"
-                   android:layout_alignParentStart="true"/>
-
-               -->
               <Button
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
                   android:textSize="@dimen/font_size_small"
                   android:text="@string/btn_label_update"
-                  android:id="@+id/btnUpdate"
+                  android:id="@+id/btnUpdateInteraction"
                   android:layout_below="@+id/textViewNote"
                   android:layout_alignEnd="@+id/note"
                   android:layout_marginTop="72dp" />

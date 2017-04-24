@@ -37,6 +37,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         EditClientFragment.OnFragmentInteractionListener,
         AddEditFacilitatorFragment.OnFragmentInteractionListener,
         EditFacilitatorFragment.OnFragmentInteractionListener,
+        AddEditInteractionFragment.OnFragmentInteractionListener,
+        EditInteractionFragment.OnFragmentInteractionListener,
 //        AddBookingFragment.OnFragmentInteractionListener,
         EditBookingFragment.OnFragmentInteractionListener,
         DisplayFragment.OnFragmentInteractionListener
@@ -286,6 +288,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditBookingFragment.TAG).commit();
                 }
                 currentFragmentId = "AddEditBooking";
+
+                break;
+
+            case 6:
+                fragment = getFragmentManager().findFragmentByTag(AddEditInteractionFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditInteractionFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditInteractionFragment.TAG).addToBackStack(currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditInteractionFragment.TAG).commit();
+                }
+                currentFragmentId = "AddEditInteraction";
 
                 break;
         }

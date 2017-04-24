@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -215,12 +216,17 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         if(_client != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_client.get_first_name());
+            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_client.get_last_name());
+            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_client.get_national_id());
+            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_client.get_phone());
+            _phone.setInputType(InputType.TYPE_NULL);
+
 //            _projected_date = (EditText) _view.findViewById(R.id.projected_date);
 //            _projected_date.setText(_client.get_projected_date());
 //            _dob = (TextView) _view.findViewById(R.id.dob);
