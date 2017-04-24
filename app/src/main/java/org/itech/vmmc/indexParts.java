@@ -14,11 +14,13 @@ public class IndexParts {
     private String phoneNumber = "";
     private String projectedDate = "";
 
+    public IndexParts() {}
+
     public IndexParts(DisplayParts displayParts) {
-        firstName = displayParts.get_first_name();
-        lastName = displayParts.get_last_name();
-        nationalId = displayParts.get_national_id();
-        phoneNumber = displayParts.get_phone();
+        firstName = displayParts.get_facFirstName();
+        lastName = displayParts.get_facLastName();
+        nationalId = displayParts.get_facNationalId();
+        phoneNumber = displayParts.get_facPhone();
     }
 
     public IndexParts( String sIndex ) {

@@ -281,10 +281,13 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
 
                 Log.d(LOG, "EditInteraction button: ");
 
-                String paramName = "";
-                String paramNationalID = "";
-                String paramPhoneNumber = "";
-                String paramProjectedDate = "";
+                String paramFacName = "";
+                String paramFacNationalID = "";
+                String paramFacPhoneNumber = "";
+                String paramPersonName = "";
+                String paramPersonNationalID = "";
+                String paramPersonPhoneNumber = "";
+                String paramInteractionDate = "";
                 Log.d(LOG, "EditInteraction button name: " + personAutoComplete.getText().toString() + "<");
 
                 if (personAutoComplete.getText().toString().equals("")) {
@@ -293,9 +296,9 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
                     //int interactionId = new Integer(interaction.get_id());
                     //paramInteractionId = Integer.toString(interactionId);
 
-                    paramName = personAutoComplete.getText().toString();
+                    paramFacName = facilitatorAutoComplete.getText().toString();
                     String parts[] = {};
-                    parts = paramName.split(", ",4);
+                    parts = paramFacName.split(", ",3);
 
                     switch( parts.length)  {
                         case 0: {
@@ -303,30 +306,49 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
                             break;
                         }
                         case 1: {
-                            paramName = parts[0];
+                            paramFacName = parts[0];
                             break;
                         }
                         case 2: {
-                            paramName = parts[0];
-                            paramNationalID = parts[1];
+                            paramFacName = parts[0];
+                            paramFacNationalID = parts[1];
                             break;
                         }
                         case 3: {
-                            paramName = parts[0];
-                            paramNationalID = parts[1];
-                            paramPhoneNumber = parts[2];
-                            break;
-                        }
-                        case 4: {
-                            paramName = parts[0];
-                            paramNationalID = parts[1];
-                            paramPhoneNumber = parts[2];
-                            paramProjectedDate = parts[3];
+                            paramFacName = parts[0];
+                            paramFacNationalID = parts[1];
+                            paramFacPhoneNumber = parts[2];
                             break;
                         }
                     }
 
-                    Log.d(LOG, "EditInteraction button name/all: " + paramName + paramNationalID + paramPhoneNumber + paramProjectedDate);
+                    paramPersonName = personAutoComplete.getText().toString();
+                    String personParts[] = {};
+                    parts = paramPersonName.split(", ",3);
+
+                    switch( personParts.length)  {
+                        case 0: {
+                            // add
+                            break;
+                        }
+                        case 1: {
+                            paramPersonName = parts[0];
+                            break;
+                        }
+                        case 2: {
+                            paramPersonName = parts[0];
+                            paramPersonNationalID = parts[1];
+                            break;
+                        }
+                        case 3: {
+                            paramPersonName = parts[0];
+                            paramPersonNationalID = parts[1];
+                            paramPersonPhoneNumber = parts[2];
+                            break;
+                        }
+                    }
+
+                    Log.d(LOG, "EditInteraction button name/all: " + paramFacName + paramFacNationalID + paramFacPhoneNumber + paramPersonName + paramPersonNationalID + paramPersonPhoneNumber + paramInteractionDate);
                 }
 
                 boolean complete = false;
@@ -355,11 +377,10 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
                 }
                 */
 
-                if (complete && !paramProjectedDate.toString().equals("") ||
-                        !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
-
+//                if (complete && !paramProjectedDate.toString().equals("") || !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
+                if (true) {
                     Fragment fragment;
-                    fragment = EditInteractionFragment.newInstance("editInteraction", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
+                    fragment = EditInteractionFragment.newInstance("editInteraction", paramFacName + ":" + paramFacNationalID + ":" + paramFacPhoneNumber + "<>" + paramPersonName + ":" + paramPersonNationalID + ":" + paramPersonPhoneNumber + "<>" + paramInteractionDate);
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditInteractionFragment.TAG).addToBackStack("EditInteraction").commit();
                 } else {
                     Toast.makeText(getActivity(), "Must enter Name or ID or Phone and Date", Toast.LENGTH_LONG).show();

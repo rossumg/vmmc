@@ -3453,7 +3453,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         String[] whereArgs = new String [] {facParts.get_first_name(), facParts.get_last_name(), facParts.get_national_id(), facParts.get_phone(),
                 personParts.get_first_name(), personParts.get_last_name(), personParts.get_national_id(), personParts.get_phone(),
-                interactionDate, followupDate
+                interactionDate
         };
 
         Log.d(LOG, "getInteraction whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":" + whereArgs[3] + ":" + whereArgs[4] + ":");

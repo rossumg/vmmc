@@ -112,27 +112,42 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
 
         String parts[] = _editInteractionRecordParam.toString().split("<>", 3);
 
-        Log.d(LOG, " from Display:0: " + parts[0] + "," + parts[1] + "," + parts[2] );
+        Log.d(LOG, " from Display:0: " + parts.length );
 
-        IndexParts facParts = new IndexParts(parts[0]);
-        IndexParts personParts = new IndexParts(parts[1]);
-        String dateParts[] = parts[2].split(":");
-        String _interactionDate = dateParts[0];
-        String _followupDate = dateParts[1];
+        IndexParts facParts = new IndexParts();
+        IndexParts personParts = new IndexParts();
+        String dateParts[] = {};
+        String _interactionDate = "";
+        String _followupDate = "";
 
-        Log.d(LOG, " from Display:1: " + _editInteractionParam );
-        Log.d(LOG, " from Display:2: " +
-                facParts.get_first_name() + " " + facParts.get_last_name() + " " + facParts.get_national_id() + " " + facParts.get_phone() + " " +
-                personParts.get_first_name() + " " + personParts.get_last_name() + " " + personParts.get_national_id() + " " + personParts.get_phone() + " " +
-                _interactionDate + " " + _followupDate);
+        if (parts[0].toString() != "" ) { facParts = new IndexParts(parts[0]); }
+        if (parts[1].toString() != "" ) { personParts = new IndexParts(parts[1]); }
+        if (parts[2].toString() != "" ) {
 
-        dbHelp = new DBHelper(getActivity());
+            dateParts = parts[2].toString().split(":");
 
-//        if (!nationalId.equals("") || !phoneNumber.equals("")) {
-            //_interaction = dbHelp.getInteraction(firstName, lastName, nationalId, phoneNumber, projectedDate);
+            if (dateParts[0].toString() != "") {
+                _interactionDate = dateParts[0];
+            }
+            if(dateParts.length == 2) {
+                if (dateParts[1].toString() != "") {
+                    _followupDate = dateParts[1];
+                }
+            }
+        }
+
+        Log.d(LOG, " from Display:1: " + _editInteractionParam);
+//        Log.d(LOG, " from Display:2: " +
+//                facParts.get_first_name() + " " + facParts.get_last_name() + " " + facParts.get_national_id() + " " + facParts.get_phone() + " " +
+//                personParts.get_first_name() + " " + personParts.get_last_name() + " " + personParts.get_national_id() + " " + personParts.get_phone() + " " +
+//                _interactionDate + " " + _followupDate);
+
+
+
+            dbHelp = new DBHelper(getActivity());
             _interaction = dbHelp.getInteraction(facParts, personParts, _interactionDate, _followupDate);
 
-//        }
+
 
         if (_interaction != null) {
             Log.d(LOG, "EBF _interaction != null ");
@@ -255,6 +270,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
 
                 Spinner itSpinner = (Spinner) _view.findViewById(R.id.interaction_type);
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
+                DBHelper dbHelp = new DBHelper(getActivity());
                 InteractionType _interactionType = dbHelp.getInteractionType( itSpinner.getSelectedItem().toString());
 
                 _interaction_date= (TextView) _view.findViewById(R.id.interaction_date);
@@ -276,15 +292,17 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
 
                 DisplayParts dFacParts = new DisplayParts(sFacilitator);
                 DisplayParts dPersonParts = new DisplayParts(sPerson);
-                IndexParts iFacParts = new IndexParts(dFacParts);
-                IndexParts iPersonParts = new IndexParts(dPersonParts);
+                IndexParts iFacParts = new IndexParts(dFacParts.get_first_name() + " " +  dFacParts.get_last_name() + ":" +  dFacParts.get_national_id() + ":" + dFacParts.get_phone());
+                IndexParts iPersonParts = new IndexParts(dPersonParts.get_first_name() + " " +  dPersonParts.get_last_name() + ":" +  dPersonParts.get_national_id() + ":" + dPersonParts.get_phone());
 
 
                 Log.d(LOG, "UpdateInteraction button3: " +
                         dFacParts.get_first_name() + ", " + dFacParts.get_last_name() + ", " + dFacParts.get_national_id() + ", " + dFacParts.get_phone() + " - " +
-                        dPersonParts.get_first_name() + ", " + dPersonParts.get_last_name() + ", " + dPersonParts.get_national_id() + ", " + dPersonParts.get_phone() );
+                        dPersonParts.get_first_name() + ", " + dPersonParts.get_last_name() + ", " + dPersonParts.get_national_id() + ", " + dPersonParts.get_phone() + "i: " +
+                        iFacParts.get_first_name().toString() + ":" + iPersonParts.get_first_name().toString() + ":" +  sInteractionDate.toString()
+                );
 
-                if(true) { // fac, per, type, idate != null
+                if( iFacParts.get_first_name().toString() != "" && iPersonParts.get_first_name().toString() != "" && sInteractionDate.toString() != "" ) {
                     Interaction lookupInteraction = dbHelp.getInteraction(
                             iFacParts, iPersonParts, sInteractionDate, sFollowupDate);
 
@@ -324,7 +342,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
                             Toast.makeText(getActivity(), "Interaction Saved", Toast.LENGTH_LONG).show();;
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Must enter Facilitator, Person and Interaction Date", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -548,7 +566,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
 //    }
 
     public void loadFacilitatorAutoComplete(View view) {
-
+        DBHelper dbHelp = new DBHelper(getActivity());
         List<String> facilitatorIDs = dbHelp.getAllFacilitatorIDs();
         // convert to array
         String[] stringArrayFacilitatorID = new String[ facilitatorIDs.size() ];
@@ -576,7 +594,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
     }
 
     public void loadPersonAutoComplete(View view) {
-
+        DBHelper dbHelp = new DBHelper(getActivity());
         List<String> personIDs = dbHelp.getAllPersonIDs();
         // convert to array
         String[] stringArrayPersonID = new String[ personIDs.size() ];
@@ -608,6 +626,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
         Log.d(LOG, "loadInteractionTypeDropdown: " + _interaction.get_type_id());
 
         final Spinner itSpinner = (Spinner) view.findViewById(R.id.interaction_type);
+        final DBHelper dbHelp = new DBHelper(getActivity());
         final List<String> interactionTypeNames = dbHelp.getAllInteractionTypes();
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, interactionTypeNames);

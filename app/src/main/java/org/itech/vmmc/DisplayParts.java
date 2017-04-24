@@ -64,6 +64,17 @@ public class DisplayParts {
                 projectedDate = parts[3];
                 break;
             }
+            case 7: { //interaction
+                facName = parts[0];
+                facNationalId = parts[1];
+                facPhoneNumber = parts[2];
+                personName = parts[3];
+                personNationalId = parts[4];
+                personPhoneNumber = parts[5];
+                interactionDate = parts[6];
+//                followupDate = parts[7];
+                break;
+            }
             case 8: { //interaction
                 facName = parts[0];
                 facNationalId = parts[1];

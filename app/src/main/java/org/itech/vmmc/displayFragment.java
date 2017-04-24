@@ -49,9 +49,6 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
 
             displayParts = new DisplayParts(mAdapter.getItem(position).toString());
             Log.d(LOG, "DisplayFragment onItemClick1: " + displayType + " " + mAdapter.getItem(position).toString());
-            Log.d(LOG, "DisplayFragment displayParts2: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
-            Log.d(LOG, "DisplayFragment displayParts3: " + displayParts.get_first_name() + " " + displayParts.get_last_name() + " " + displayParts.get_national_id() + " " + displayParts.get_phone());
-
 
             Fragment fragment;
             if (displayType == "displayBooking") {
