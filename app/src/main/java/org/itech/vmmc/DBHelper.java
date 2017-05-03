@@ -115,6 +115,9 @@ public class DBHelper extends SQLiteOpenHelper{
     // vmmc.db table names
     private static final String TABLE_PERSON      = "person";
     private static final String TABLE_USER        = "user";
+    private static final String TABLE_USER_TYPE   = "user_type";
+    private static final String TABLE_USER_TO_ACL = "user_to_acl";
+    private static final String TABLE_ACL         = "acl";
     private static final String TABLE_CLIENT      = "client_table";
     private static final String TABLE_FACILITATOR = "facilitator";
     private static final String TABLE_LOCATION    = "location";
@@ -160,10 +163,38 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String BOOKING_ACTUAL_DATE     = "actual_date";
 
     // user table column names
-    private static final String USER_ID        = "id";
-    private static final String USER_PERSON_ID = "person_id";
-    private static final String USER_USERNAME  = "username";
-    private static final String USER_PASSWORD  = "password";
+    private static final String USER_ID = "id";
+    private static final String USER_USERNAME = "username";
+    private static final String USER_PASSWORD = "password";
+    private static final String USER_EMAIL = "email";
+    private static final String USER_FIRST_NAME = "first_name";
+    private static final String USER_LAST_NAME = "last_name";
+    private static final String USER_NATIONAL_ID = "national_id";
+    private static final String USER_PHONE = "phone";
+    private static final String USER_REGION_ID = "region_id";
+    private static final String USER_USER_TYPE_ID = "user_type_id";
+    private static final String USER_LOCALE = "locale";
+    private static final String USER_MODIFIED_BY = "modified_by";
+    private static final String USER_CREATED_BY = "created_by";
+    private static final String USER_IS_BLOCKED = "is_blocked";
+    private static final String USER_TIMESTAMP_UPDATED = "timestamp_updated";
+    private static final String USER_TIMESTAMP_CREATED = "timestamp_created";
+    private static final String USER_TIMESTAMP_LAST_LOGIN = "timestamp_last_login";
+
+    // user_type table column names
+    private static final String USER_TYPE_ID = "id";
+    private static final String USER_TYPE_NAME = "name";
+
+    // user_to_acl table column names
+    private static final String USER_TO_ACL_ID = "id";
+    private static final String USER_TO_ACL_TIMESTAMP_CREATED = "timestamp_created";
+    private static final String USER_TO_ACL_ACL_ID = "acl_id";
+    private static final String USER_TO_ACL_USER_ID = "user_id";
+    private static final String USER_TO_ACL_CREATED_BY = "created_by";
+
+    // acl table column names
+    private static final String ACL_ID = "id";
+    private static final String ACL_ACL = "acl";
 
     // client table column names
     private static final String CLIENT_ID        = "id";
@@ -293,12 +324,46 @@ public class DBHelper extends SQLiteOpenHelper{
                     "constraint name_constraint unique (first_name, last_name, national_id, phone, projected_date) );";
             db.execSQL(CREATE_BOOKING_TABLE);
 
+            //try { db.execSQL("delete from user_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_USER_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS user_type(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar);";
+            db.execSQL(CREATE_USER_TYPE_TABLE);
+
+            //try { db.execSQL("delete from acl;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_ACL_TABLE = "CREATE TABLE IF NOT EXISTS acl(" +
+                    "id varchar, " +
+                    "acl varchar);";
+            db.execSQL(CREATE_ACL_TABLE);
+
+            //try { db.execSQL("delete from user_to_acl;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_USER_TO_ACL_TABLE = "CREATE TABLE IF NOT EXISTS USER_TO_ACL(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "timestamp_created datetime default current_timestamp, " +
+                    "acl_id varchar, " +
+                    "user_id varchar, " +
+                    "created_by varchar);";
+            db.execSQL(CREATE_USER_TO_ACL_TABLE);
+
             //try { db.execSQL("delete from user;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS user(" +
                     "id integer primary key  autoincrement  not null  unique, " +
-                    "person_id int, " +
                     "username varchar, " +
-                    "password varchar)";
+                    "password varchar, " +
+                    "email varchar, " +
+                    "first_name varchar, " +
+                    "last_name varchar, " +
+                    "national_id varchar, " +
+                    "phone varchar, " +
+                    "region_id int, " +
+                    "user_type_id int, " +
+                    "locale varchar, " +
+                    "modified_by int, " +
+                    "created_by int, " +
+                    "is_blocked int, " +
+                    "timestamp_updated datetime default current_timestamp, " +
+                    "timestamp_created datetime default '0000-00-00', " +
+                    "timestamp_last_login datetime default '0000-00-00');";
             db.execSQL(CREATE_USER_TABLE);
 
             //try { db.execSQL("delete from client;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
@@ -445,6 +510,8 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLClientTable(this._context, this).execute();
         new getMySQLFacilitatorTable(this._context, this).execute();
         new getMySQLInteractionTable(this._context, this).execute();
+        new getMySQLUserTable(this._context, this).execute();
+        new getMySQLUserTypeTable(this._context, this).execute();
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 
@@ -3562,10 +3629,10 @@ public class DBHelper extends SQLiteOpenHelper{
         };
 
         String whereClause = "1=1 and trim(" +
-                BOOKING_FIRST_NAME + ") like ? or trim(" +
-                BOOKING_LAST_NAME + ") like ? or trim(" +
-//                BOOKING_NATIONAL_ID + ") like ? or trim(" +
-                BOOKING_PHONE + ") like ? or trim(" +
+                BOOKING_FIRST_NAME + ") like ? and trim(" +
+                BOOKING_LAST_NAME + ") like ? and trim(" +
+//                BOOKING_NATIONAL_ID + ") like ? and trim(" +
+                BOOKING_PHONE + ") like ? and trim(" +
                 BOOKING_PROJECTED_DATE + ") like ? ";
 
         Log.d(LOG, "updateBooking whereClause: " + whereClause);
@@ -3573,7 +3640,7 @@ public class DBHelper extends SQLiteOpenHelper{
         String[] whereArgs = new String[]{
                 booking.get_first_name(), booking.get_last_name(), booking.get_phone(), booking.get_projected_date()};
 
-        Log.d(LOG, "updateBooking whereArgs: " + whereArgs);
+        Log.d(LOG, "updateBooking whereArgs: " + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":" + whereArgs[3]);
 
         Cursor cursor = db.query(TABLE_BOOKING, tableColumns, whereClause, whereArgs, null, null, null);
 
@@ -3606,6 +3673,22 @@ public class DBHelper extends SQLiteOpenHelper{
             cursor.close();
 
             String updateWhereClause = "1=1 and " + BOOKING_ID + " = " + values.get(BOOKING_ID);
+            Log.d(LOG, "updateBooking 2 updateWhereClause: " + updateWhereClause);
+            Log.d(LOG, "updateBooking 2 updateWhereClause: " +
+                    values.get(BOOKING_ID) + " " +
+                            values.get(BOOKING_TIMESTAMP) + " " +
+                            values.get(BOOKING_FIRST_NAME) + " " +
+                            values.get(BOOKING_LAST_NAME) + " " +
+                            values.get(BOOKING_NATIONAL_ID) + " " +
+                            values.get(BOOKING_PHONE) + " " +
+                            values.get(BOOKING_FAC_FIRST_NAME) + " " +
+                            values.get(BOOKING_FAC_LAST_NAME) + " " +
+                            values.get(BOOKING_FAC_NATIONAL_ID) + " " +
+                            values.get(BOOKING_FAC_PHONE) + " " +
+                            values.get(BOOKING_LOCATION_ID) + " " +
+                            values.get(BOOKING_PROJECTED_DATE) + " " +
+                            values.get(BOOKING_ACTUAL_DATE)
+            );
             db.update(TABLE_BOOKING, values, updateWhereClause, null);
             db.close();
             return true;

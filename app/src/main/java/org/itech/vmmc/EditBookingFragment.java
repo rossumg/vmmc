@@ -221,7 +221,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _client.set_last_name(_booking.get_last_name());
             _client.set_national_id(_booking.get_national_id());
             _client.set_phone(_booking.get_phone());
-            _status = dbHelp.getStatus("13"); // "New"
+            _status = dbHelp.getStatus("Pending");
             _client.set_status_id(_status.get_id());
             dbHelp.addClient( _client );
         } else {
@@ -355,7 +355,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 //                String sGender = _gender.getText().toString();
 
                 Log.d(LOG, "UpdateBooking button2: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitator.getText() +" <");
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() + " <");
 
                 DisplayParts displayParts = new DisplayParts(sFacilitator);
                 Log.d(LOG, "UpdateBooking button3: " +

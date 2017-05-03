@@ -488,7 +488,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         sSpinner.setAdapter(dataAdapter);
         _status = dbHelp.getStatus(String.valueOf(_client.get_status_id()));
         if (_status == null) {
-            _status = dbHelp.getStatus("13"); // NEW
+            _status = dbHelp.getStatus("Pending");
         }
         String compareValue = _status.get_name();
         if (!compareValue.equals(null)) {

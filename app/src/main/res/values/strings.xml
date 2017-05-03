@@ -21,8 +21,8 @@
     <string name="DOWNLOAD">Download</string>
     <string name="TEST">Test</string>
     <string name="SYNC">Sync</string>
-    <string name="addEditPerson">Add Edit Person</string>
-    <string name="addEditBooking">Add Edit Booking</string>
+    <string name="addEditPerson">Person</string>
+    <string name="addEditBooking">Booking</string>
 
 
     <string name="searchTitle">Search Assessments</string>
@@ -34,10 +34,10 @@
     <string name="editTitle">Edit Assessment</string>
     <string name="adminTitle">Administration</string>
     <string name="debugTitle">Debug</string>
-    <string name="addEditPersonTitle">Add Edit Person</string>
+    <string name="addEditPersonTitle">Person</string>
     <string name="addPersonTitle">Add Person</string>
     <string name="editPersonTitle">Edit Person</string>
-    <string name="addEditBookingTitle">Add Edit Booking</string>
+    <string name="addEditBookingTitle">Booking</string>
     <string name="addBookingTitle">Add Booking</string>
     <string name="editBookingTitle">Edit Booking</string>
 
@@ -101,25 +101,30 @@
     <string name="btn_label_display">Display</string>
     <string name="displayTitle">Display</string>
     <string name="status">Status</string>
-    <string name="addEditClientTitle">Add Edit Client</string>
-    <string name="addEditClient">Add Edit Client</string>
+    <string name="addEditClientTitle">Client</string>
+    <string name="addEditClient">Client</string>
     <string name="editClientTitle">Edit Client</string>
     <string name="location">Location</string>
     <string name="institution">Institution</string>
     <string name="sync_reminder">Tab must have been SYNC\'d</string>
-    <string name="addEditFacilitatorTitle">Add Edit Facilitator</string>
-    <string name="editFacilitatorTitle">Edit Facilitator</string>
-    <string name="facilitator_type">Facilitator Type</string>
+    <string name="addEditFacilitatorTitle">Community Recruiter</string>
+    <string name="editFacilitatorTitle">Edit Community Recruiter</string>
+    <string name="facilitator_type">Type</string>
     <string name="note">Note</string>
-    <string name="facilitator">Facilitator</string>
+    <string name="facilitator">Community Recruiter</string>
     <string name="person">Person</string>
-    <string name="interaction_type">Interaction Type</string>
+    <string name="interaction_type">Type</string>
     <string name="followup_date">Follow-up Date</string>
-    <string name="interaction_date">Interaction Date</string>
-    <string name="addEditInteractionTitle">Add Edit Interaction</string>
-    <string name="addEditInteraction">Add Edit Interaction</string>
-    <string name="editInteractionTitle">Edit Interaction</string>
-    <string name="editInteraction">Edit Interaction</string>
+    <string name="interaction_date">Date</string>
+    <string name="addEditInteractionTitle">Group Mobilization Activity</string>
+    <string name="addEditInteraction">Group Mobilization Activity</string>
+    <string name="editInteractionTitle">Edit Group Mobilization Activity</string>
+    <string name="editInteraction">Edit Group Mobilization Activity</string>
+    <string name="displayBookingTitle">Display Bookings</string>
+    <string name="displayPersonTitle">Display Persons</string>
+    <string name="displayClientTitle">Display Clients</string>
+    <string name="displayFacilitatorTitle">Display Community Recruiters</string>
+    <string name="displayInteractionTitle">Display Group Mobilization Activities</string>
 
 
 </resources>

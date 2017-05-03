@@ -213,9 +213,19 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_recent, container, false);
 
-        getActivity().setTitle(getResources().getString(R.string.displayTitle));
+
+        if (getArguments() != null) {
+            mParam1 = getArguments().getString("display");
+            mParam2 = getArguments().getString("displayParams");
+            Log.d(LOG, "displayFragment onCreate param1: " + mParam1.toString());
+            Log.d(LOG, "displayFragment onCreate param2:>" + mParam2.toString() + "<");
+        }
+
+        displayType = mParam1.toString();
+        setTitle(displayType);
+
+        View view = inflater.inflate(R.layout.fragment_recent, container, false);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -265,6 +275,23 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
+    }
+
+    public void setTitle(String displayType) {
+
+        if (displayType == "displayBooking" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayBookingTitle) );
+        } else if(displayType == "displayPerson" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayPersonTitle) );
+        } else if(displayType == "displayClient" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayClientTitle) );
+        } else if(displayType == "displayFacilitator" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayFacilitatorTitle) );
+        } else if(displayType == "displayInteraction" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayInteractionTitle) );
+        } else if(displayType == "" ) {
+//
+        }
     }
 }
 
