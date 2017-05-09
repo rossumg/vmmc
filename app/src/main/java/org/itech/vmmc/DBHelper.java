@@ -130,6 +130,8 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String TABLE_INTERACTION_TYPE = "interaction_type";
     private static final String TABLE_STATUS_TYPE  = "status_type";
     private static final String TABLE_INSTITUTION  = "institution";
+    private static final String TABLE_GROUP_ACTIVITY  = "group_activity";
+    private static final String TABLE_GROUP_TYPE  = "group_type";
 
     // person table column names
     private static final String PERSON_ID          = "id";
@@ -223,6 +225,19 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String FACILITATOR_LONGITUDE   = "longitude";
     private static final String FACILITATOR_INSTITUTION_ID = "institution_id";
 
+    // group_activity table column names
+    private static final String GROUP_ACTIVITY_ID          = "id";
+    private static final String GROUP_ACTIVITY_NAME  = "name";
+    private static final String GROUP_ACTIVITY_TIMESTAMP  = "timestamp";
+    private static final String GROUP_ACTIVITY_LOCATION_ID = "location_id";
+    private static final String GROUP_ACTIVITY_ACTIVITY_DATE = "activity_date";
+    private static final String GROUP_ACTIVITY_GROUP_TYPE_ID  = "group_type_id";
+    private static final String GROUP_ACTIVITY_MALES  = "males";
+    private static final String GROUP_ACTIVITY_FEMALES  = "females";
+    private static final String GROUP_ACTIVITY_MESSAGES        = "messages";
+    private static final String GROUP_ACTIVITY_LATITUDE    = "latitude";
+    private static final String GROUP_ACTIVITY_LONGITUDE   = "longitude";
+
     // location table column names
     private static final String LOCATION_ID   = "id";
     private static final String LOCATION_NAME = "name";
@@ -231,6 +246,10 @@ public class DBHelper extends SQLiteOpenHelper{
     // institution table column names
     private static final String INSTITUTION_ID          = "id";
     private static final String INSTITUTION_NAME        = "name";
+
+    // group_type table column names
+    private static final String GROUP_TYPE_ID          = "id";
+    private static final String GROUP_TYPE_NAME        = "name";
 
     // region table column names
     private static final String REGION_ID          = "id";
@@ -300,8 +319,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "phone varchar, " +
                     "dob date, " +
                     "gender varchar, " +
-                    "latitude real, " +
-                    "longitude real, " +
+                    "latitude real default 0.0, " +
+                    "longitude real default 0.0, " +
                     "is_deleted inti, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_PERSON_TABLE);
@@ -324,11 +343,33 @@ public class DBHelper extends SQLiteOpenHelper{
                     "constraint name_constraint unique (first_name, last_name, national_id, phone, projected_date) );";
             db.execSQL(CREATE_BOOKING_TABLE);
 
+            //try { db.execSQL("delete from group_activity;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_GROUP_ACTIVITY_TABLE = "CREATE TABLE IF NOT EXISTS group_activity(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "timestamp datetime default current_timestamp, " +
+                    "name varchar, " +
+                    "location_id int, " +
+                    "activity_date date, " +
+                    "group_type_id int, " +
+                    "males int, " +
+                    "females int, " +
+                    "messages varchar, " +
+                    "latitude real default 0.0, " +
+                    "longitude real default 0.0, " +
+                    "constraint name_constraint unique (name, group_type_id, activity_date) );";
+            db.execSQL(CREATE_GROUP_ACTIVITY_TABLE);
+
             //try { db.execSQL("delete from user_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_USER_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS user_type(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "name varchar);";
             db.execSQL(CREATE_USER_TYPE_TABLE);
+
+            //try { db.execSQL("delete from group_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_GROUP_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS group_type(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar);";
+            db.execSQL(CREATE_GROUP_TYPE_TABLE);
 
             //try { db.execSQL("delete from acl;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_ACL_TABLE = "CREATE TABLE IF NOT EXISTS acl(" +
@@ -337,7 +378,7 @@ public class DBHelper extends SQLiteOpenHelper{
             db.execSQL(CREATE_ACL_TABLE);
 
             //try { db.execSQL("delete from user_to_acl;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
-            String CREATE_USER_TO_ACL_TABLE = "CREATE TABLE IF NOT EXISTS USER_TO_ACL(" +
+            String CREATE_USER_TO_ACL_TABLE = "CREATE TABLE IF NOT EXISTS user_to_acl(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "timestamp_created datetime default current_timestamp, " +
                     "acl_id varchar, " +
@@ -376,8 +417,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "phone varchar, " +
                     "status_id int, " +
                     "loc_id int, " +
-                    "latitude real, " +
-                    "longitude real, " +
+                    "latitude real default 0.0, " +
+                    "longitude real default 0.0, " +
                     "institution_id int, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_CLIENT_TABLE);
@@ -393,8 +434,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "facilitator_type_id int, " +
                     "note varchar, " +
                     "location_id int, " +
-                    "latitude real, " +
-                    "longitude real, " +
+                    "latitude real default 0.0, " +
+                    "longitude real default 0.0, " +
                     "institution_id int, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_FACILITATOR_TABLE);
@@ -499,6 +540,7 @@ public class DBHelper extends SQLiteOpenHelper{
         new putMySQLClientTable(this).execute();
         new putMySQLFacilitatorTable(this).execute();
         new putMySQLInteractionTable(this).execute();
+        new putMySQLGroupActivityTable(this).execute();
         new getMySQLRegionTable(this._context, this).execute();
         new getMySQLLocationTable(this._context, this).execute();
         new getMySQLFacilitatorTypeTable(this._context, this).execute();
@@ -512,13 +554,151 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLInteractionTable(this._context, this).execute();
         new getMySQLUserTable(this._context, this).execute();
         new getMySQLUserTypeTable(this._context, this).execute();
+        new getMySQLAclTable(this._context, this).execute();
+        new getMySQLUserToAclTable(this._context, this).execute();
+        new getMySQLGroupTypeTable(this._context, this).execute();
+        new getMySQLGroupActivityTable(this._context, this).execute();
+
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
+    }
+
+    public User getUser(String username, String password){
+        User _user = null;
+        Log.d(LOG, "DBHelper.getUser");
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] tableColumns = new String[] {
+                USER_ID, USER_USERNAME, USER_PASSWORD, USER_EMAIL, USER_FIRST_NAME, USER_LAST_NAME, USER_NATIONAL_ID, USER_PHONE, USER_REGION_ID, USER_USER_TYPE_ID, USER_LOCALE, USER_MODIFIED_BY, USER_CREATED_BY, USER_IS_BLOCKED, USER_TIMESTAMP_UPDATED, USER_TIMESTAMP_CREATED, USER_TIMESTAMP_LAST_LOGIN
+        };
+
+        String whereClause = "trim(" +
+                USER_USERNAME + ") like ? and trim(" +
+                USER_PASSWORD + ") like ? "
+                ;
+
+        String[] whereArgs = new String[]{ username, password };
+
+        Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getUser  "
+                    + cursor.getString(1)
+                    + cursor.getString(2)
+            );
+            _user = new User(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    parseInt(cursor.getString(8)),
+                    parseInt(cursor.getString(9)),
+                    cursor.getString(10),
+                    parseInt(cursor.getString(11)),
+                    parseInt(cursor.getString(12)),
+                    parseInt(cursor.getString(13)),
+                    cursor.getString(14),
+                    cursor.getString(15),
+                    cursor.getString(16)
+            );
+
+            cursor.close();
+            // db.close();
+            return _user;
+        } else {
+            cursor.close();
+            return _user;
+        }
+    }
+
+    public ArrayList<String> getUserPerms(String username){
+        ArrayList<String> _userPerms = new ArrayList<String>();
+        Log.d(LOG, "DBHelper.getUserPerms");
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "select replace(uta.acl_id, 'status_', '') " +
+                "from user u " +
+                "join user_type ut on u.user_type_id = ut.id " +
+                "join user_to_acl uta on uta.user_id = u.id " +
+                "where 1=1 " +
+                "and u.username = ? " +
+                "and ut.id = u.user_type_id " +
+                "and uta.acl_id not like 'status_%'; ";
+
+        Cursor cursor = db.rawQuery(query, new String[]{ username });
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.d(LOG, "getUserPerms  "
+                        + cursor.getString(0)
+                );
+                _userPerms.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(_userPerms);
+        _userPerms.clear();
+        _userPerms.addAll(noDups);
+
+        return _userPerms;
+    }
+
+    public ArrayList<String> getUserStatusList(String username){
+        ArrayList<String> _userStatusList = new ArrayList<String>();
+        Log.d(LOG, "DBHelper.getUserStatusList");
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "select replace(uta.acl_id, 'status_', '') " +
+                "from user u " +
+                "join user_type ut on u.user_type_id = ut.id " +
+                "join user_to_acl uta on uta.user_id = u.id " +
+                "where 1=1 " +
+                "and u.username = ? " +
+                "and ut.id = u.user_type_id " +
+                "and uta.acl_id like 'status_%'; ";
+
+        Cursor cursor = db.rawQuery(query, new String[]{ username });
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.d(LOG, "getUserStatusList  "
+                        + cursor.getString(0)
+                );
+                _userStatusList.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(_userStatusList);
+        _userStatusList.clear();
+        _userStatusList.addAll(noDups);
+
+        return _userStatusList;
     }
 
     public void doTestDB() {
         Log.d(LOG, "DBHelper.doTestDB");
         SQLiteDatabase db = this.getReadableDatabase();
         onCreate(db);
+
+        DBHelper dbHelp = new DBHelper(_context);
+//        String _credentials = "a@:pa";
+        Log.d(LOG, "DBHelper.doTestDB:user/pass " + MainActivity._user + "/" + MainActivity._pass);
+        Log.d(LOG, "DBHelper.doTestDB:username/password " + MainActivity._username + "/" + MainActivity._password);
+        User _user = new User(dbHelp,MainActivity._username + ":" + MainActivity._password);
+        Log.d(LOG, "DBHelper.doTestDB:_user.region_id: " + _user._region_id);
+
+
 //        load_facilitator_type();
 //        load_interaction_type();
 //        load_person();
@@ -526,7 +706,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //        new getMySQLPersonTable(this._context, this).execute();
 //        display_bookings();
 
-        List<Client> _list = getAllClients();
+//        List<Client> _list = getAllClients();
 
 //        List<Client> clientList = new ArrayList<Client>();
 //        String selectQuery = "SELECT  * FROM " + TABLE_CLIENT + " order by first_name, last_name ";
@@ -854,6 +1034,42 @@ public class DBHelper extends SQLiteOpenHelper{
         }
     }
 
+    public ArrayList<String> getCredentials(){
+        Log.d(LOG, "DBHelper.getCredentials");
+        SQLiteDatabase db = this.getReadableDatabase();
+        ArrayList<String> credentials = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                USER_USERNAME, USER_PASSWORD
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+                Log.d(LOG, "getCredentials  "
+                        + cursor.getString(0)
+                        + cursor.getString(1)
+                );
+                credentials.add(cursor.getString(0) + ":" + cursor.getString(1));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(credentials);
+        credentials.clear();
+        credentials.addAll(noDups);
+
+        return credentials;
+    }
+
     public ArrayList<String> getDropdownOptions(int assessments_question_id) {
 //        Log.d(LOG, "getDropdownOptions: ");
         SQLiteDatabase db = this.getReadableDatabase();
@@ -883,7 +1099,7 @@ public class DBHelper extends SQLiteOpenHelper{
         } while (cursor.moveToNext());
     }
     cursor.close();
-    db.close();
+    // db.close();
     // return list
     return dropdownOptionsList;
     }
@@ -995,7 +1211,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        // db.close();
         // return person list
         return readableRecentAssessmentsList;
     }
@@ -1040,7 +1256,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        // db.close();
         // return person list
         return readableRecentAssessmentsList;
     }
@@ -1075,7 +1291,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
 //        Set<String> noDups = new LinkedHashSet<>(recentAssessements);
@@ -1117,7 +1333,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         int returnQuestion = parseInt(cursor.getString(0));
         cursor.close();
-        db.close();
+        // db.close();
         return returnQuestion;
     }
 
@@ -1150,7 +1366,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(personID);
@@ -1193,7 +1409,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_ID);
@@ -1236,7 +1452,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_ID);
@@ -1248,6 +1464,81 @@ public class DBHelper extends SQLiteOpenHelper{
 //        personID.toArray(stringArrayPersonID);
 
         return _ID;
+    }
+
+    public List<String> getAllGroupActivityIDs(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> _ID = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = GROUP_ACTIVITY_ACTIVITY_DATE;
+
+        Cursor cursor = db.query(TABLE_GROUP_ACTIVITY, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllBookingIDs  "
+//                                + cursor.getString(1) + " "
+//                                + cursor.getString(2) + " "
+//                                + cursor.getString(3) + " "
+//                                + cursor.getString(5) + " "
+//                );
+                _ID.add(cursor.getString(1).trim() + ", " + cursor.getString(4).trim());
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(_ID);
+        _ID.clear();;
+        _ID.addAll(noDups);
+
+        // convert to array
+//        String[] stringArrayPersonID = new String[ personID.size() ];
+//        personID.toArray(stringArrayPersonID);
+
+        return _ID;
+    }
+
+    public List<GroupActivity> getAllGroupActivities() {
+        List<GroupActivity> groupActivityList = new ArrayList<GroupActivity>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_GROUP_ACTIVITY;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                GroupActivity groupActivity = new GroupActivity();
+                groupActivity.set_id(cursor.getInt(0));
+                groupActivity.set_timestamp(cursor.getString(1));
+                groupActivity.set_name(cursor.getString(2));
+                groupActivity.set_location_id(parseInt(cursor.getString(3)));
+                groupActivity.set_activity_date(cursor.getString(4));
+                groupActivity.set_group_type_id(parseInt(cursor.getString(5)));
+                groupActivity.set_males(parseInt(cursor.getString(6)));
+                groupActivity.set_females(parseInt(cursor.getString(7)));
+                groupActivity.set_messages(cursor.getString(8));
+                groupActivity.set_longitude(parseFloat(cursor.getString(9)));
+                groupActivity.set_latitude(parseFloat(cursor.getString(10)));
+
+                // Adding groupActivity to list
+                groupActivityList.add(groupActivity);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        // db.close();
+
+        return groupActivityList;
     }
 
     public List<String> getAllAssessmentTypes(){
@@ -1276,7 +1567,7 @@ public class DBHelper extends SQLiteOpenHelper{
             }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(assessmentTypes);
@@ -1316,7 +1607,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(facilitatorTypes);
@@ -1356,7 +1647,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(interactionTypes);
@@ -1396,7 +1687,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(statusTypes);
@@ -1444,12 +1735,95 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1)
             );
             cursor.close();
-            db.close();
+            // db.close();
             return status;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return status;
+        }
+    }
+
+    public List<String> getAllGroupActivityTypes(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> groupActivityTypes = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                GROUP_TYPE_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = GROUP_TYPE_NAME;
+
+        Cursor cursor = db.query(TABLE_GROUP_TYPE, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllFacilityNames  "
+//                                + cursor.getString(0)
+//                );
+                groupActivityTypes.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(groupActivityTypes);
+        groupActivityTypes.clear();;
+        groupActivityTypes.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ groupActivityTypes.size() ];
+        groupActivityTypes.toArray(stringArrayNames);
+
+        return groupActivityTypes;
+    }
+
+    public GroupActivityType getGroupActivityType( String group_type_id ) {
+        GroupActivityType groupActivityType = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getGroupActivityType: " + group_type_id);
+
+        String[] tableColumns = new String[] {
+                GROUP_TYPE_ID, GROUP_TYPE_NAME
+        };
+
+        String whereClause = "trim(" +
+                GROUP_TYPE_ID + ") like ? or trim(" +
+                GROUP_TYPE_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getGroupActivityType whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                group_type_id, group_type_id };  // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getGroupActivityType whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_GROUP_TYPE, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getGroupActivityType  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            groupActivityType = new GroupActivityType(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            // db.close();
+            return groupActivityType;
+        } else {
+            cursor.close();
+            // db.close();
+            return groupActivityType;
         }
     }
 
@@ -1487,11 +1861,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1)
             );
             cursor.close();
-            db.close();
+            // db.close();
             return facilitatorType;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return facilitatorType;
         }
     }
@@ -1530,11 +1904,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1)
             );
             cursor.close();
-            db.close();
+            // db.close();
             return interactionType;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return interactionType;
         }
     }
@@ -1565,7 +1939,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(locationNames);
@@ -1613,11 +1987,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1)
             );
             cursor.close();
-            db.close();
+            // db.close();
             return location;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return location;
         }
     }
@@ -1648,7 +2022,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(institutionNames);
@@ -1696,11 +2070,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1)
             );
             cursor.close();
-            db.close();
+            // db.close();
             return institution;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return institution;
         }
     }
@@ -1727,7 +2101,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        // db.close();
 
         return geoLocationsList;
     }
@@ -1748,7 +2122,7 @@ public class DBHelper extends SQLiteOpenHelper{
             db.insert(TABLE_GEOLOCATIONS, null, values);
             Toast.makeText(this._context, "Record: " + geoLocations.get_longitude() + " " + geoLocations.get_latitude(), Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addGeoLocation catch " + ex.toString());
             return false;
         }
@@ -1786,7 +2160,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(phone_numbers);
@@ -1827,7 +2201,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(phone_numbers);
@@ -1868,7 +2242,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(facility_names);
@@ -1900,7 +2274,7 @@ public class DBHelper extends SQLiteOpenHelper{
         facility_id = parseInt(cursor.getString(0));
 
         cursor.close();
-        db.close();
+        // db.close();
         return facility_id;
     }
 
@@ -1931,7 +2305,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(nationalIds);
@@ -1976,7 +2350,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         cursor.close();
-        db.close();
+        // db.close();
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(nationalIds);
@@ -2061,7 +2435,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         }
         cursor.close();
-        db.close();
+        // db.close();
         // return person list
         Log.d(LOG, "Return");
         return editPageList;
@@ -2170,7 +2544,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         );
         cursor.close();
-        db.close();
+        // db.close();
         return assessments;
     }
 
@@ -2204,7 +2578,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         );
         cursor.close();
-        db.close();
+        // db.close();
         return assessments;
     }
 
@@ -2247,12 +2621,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
             );
             cursor.close();
-            db.close();
+            // db.close();
             return assessments_answers;
         }
         else {
             cursor.close();
-            db.close();
+            // db.close();
             return null;
         }
     }
@@ -2300,12 +2674,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
             );
             cursor.close();
-            db.close();
+            // db.close();
             return assessments_answers;
         }
         else {
             cursor.close();
-            db.close();
+            // db.close();
             return null;
         }
     }
@@ -2358,11 +2732,11 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
             String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assessments_answers.get_assess_id();
             db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
-            db.close();
+            // db.close();
         }
         else {
             cursor.close();
-            db.close();
+            // db.close();
         }
     }
 
@@ -2378,7 +2752,7 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
             String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assess_id;
             db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
-            db.close();
+            // db.close();
     }
 
     public void insertAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question, String answer) {
@@ -2399,7 +2773,7 @@ public class DBHelper extends SQLiteOpenHelper{
         cv.put(ASSESSMENTS_ANSWERS_ANSWER, answer);
         cv.put(ASSESSMENTS_ANSWERS_ACTIVE, "Y"); // not used
         db.insert(TABLE_ASSESSMENTS_ANSWERS, null, cv);
-        db.close();
+        // db.close();
     }
 
     public void insertAssessmentsAnswers(AssessmentsAnswers assessmentsAnswers) {
@@ -2420,7 +2794,7 @@ public class DBHelper extends SQLiteOpenHelper{
         cv.put(ASSESSMENTS_ANSWERS_ANSWER, assessmentsAnswers.get_answer());
         cv.put(ASSESSMENTS_ANSWERS_ACTIVE, "Y"); // not used
         db.insert(TABLE_ASSESSMENTS_ANSWERS, null, cv);
-        db.close();
+        // db.close();
     }
 
     public void deleteAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question){
@@ -2442,7 +2816,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 Integer.toString(person), Integer.toString(facility), date_created, Integer.toString(assessment_id), Integer.toString(question) };
 
         db.delete(TABLE_ASSESSMENTS_ANSWERS, whereClause, whereArgs);
-        db.close();
+        // db.close();
     }
 
     public void deleteAssessmentsAnswers(int assess_id) {
@@ -2460,7 +2834,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 Integer.toString(assess_id) };
 
         db.delete(TABLE_ASSESSMENTS_ANSWERS, whereClause, whereArgs);
-        db.close();
+        // db.close();
     }
 
     public PersonToAssessments getPersonToAssessments(int pa_pa_id) {
@@ -2500,11 +2874,11 @@ public class DBHelper extends SQLiteOpenHelper{
 
             );
             cursor.close();
-            db.close();
+            // db.close();
             return person_to_assessments;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return person_to_assessments;
         }
     }
@@ -2550,11 +2924,11 @@ public class DBHelper extends SQLiteOpenHelper{
 
             );
             cursor.close();
-            db.close();
+            // db.close();
             return personToAssessments;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return personToAssessments;
         }
     }
@@ -2574,7 +2948,7 @@ public class DBHelper extends SQLiteOpenHelper{
             db.insert(TABLE_PERSON_TO_ASSESSMENTS, null, values);
             Log.d(LOG, "addPersonToAssessments insert: ");
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addPersonToAssessments catch " + ex.toString());
             return false;
         }
@@ -2605,7 +2979,7 @@ public class DBHelper extends SQLiteOpenHelper{
         try {
             db.insert(TABLE_CLIENT, null, values);
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addClient catch " + ex.toString());
             return false;
         }
@@ -2653,7 +3027,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 CLIENT_PHONE + " = '" + values.get(CLIENT_PHONE) + "'";
 
         db.update(TABLE_CLIENT, values, updateWhereClause, null);
-        db.close();
+        // db.close();
         return true;
     }
 
@@ -2683,7 +3057,7 @@ public class DBHelper extends SQLiteOpenHelper{
         try {
             db.insert(TABLE_INTERACTION, null, values);
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addInteraction catch " + ex.toString());
             return false;
         }
@@ -2732,7 +3106,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //                INTERACTION_FOLLOWUP_DATE + " = '" + values.get(INTERACTION_FOLLOWUP_DATE) + "'";
 
         db.update(TABLE_INTERACTION, values, updateWhereClause, null);
-        db.close();
+        // db.close();
         return true;
     }
 
@@ -2759,7 +3133,7 @@ public class DBHelper extends SQLiteOpenHelper{
         try {
             db.insert(TABLE_PERSON, null, values);
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addPerson catch " + ex.toString());
             return false;
         }
@@ -2819,11 +3193,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(10))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return client;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return client;
         }
     }
@@ -2879,11 +3253,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(10))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return client;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return client;
         }
     }
@@ -2930,7 +3304,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor1.moveToNext());
         }
         cursor1.close();
-//        db.close();
+//        // db.close();
         return clientList;
     }
 
@@ -2988,7 +3362,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         return clientList;
     }
 
@@ -3035,7 +3409,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         return interactionList;
     }
 
@@ -3118,8 +3492,68 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         return interactionList;
+    }
+
+    public List<GroupActivity> getAllLikeGroupActivities(String index) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<GroupActivity> _List = new ArrayList<GroupActivity>();
+        Log.d(LOG, "getAllLikeGroupActivities:index: " + index);
+
+
+        String parts[] = index.split(":",2);
+        String _name = parts[0];
+        String _date = parts[1];
+
+        String[] tableColumns = new String[] {
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+        };
+
+        String whereClause = "1=1 and trim(" +
+                GROUP_ACTIVITY_NAME + ") like ? and trim(" +
+                GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
+
+        Log.d(LOG, "getAllLikeInteractions whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                "%" +_name + "%", "%" + _date + "%"
+        };
+
+        Log.d(LOG, "getAllLikeInteractions whereArgs: " + whereArgs[0]);
+
+        Cursor cursor = db.query(TABLE_GROUP_ACTIVITY, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllClients: loop: "
+//                        + cursor1.getString(1) + ":"
+//                        + cursor1.getString(2) + ":"
+//                        + cursor1.getString(3) + ":"
+//                        + cursor1.getString(4) + ":"
+//                        + cursor1.getString(5) + ":"
+//                        + cursor1.getString(6) + ":"
+//                        + cursor1.getString(7) + ":" );
+                GroupActivity group_activity = new GroupActivity();
+                group_activity.set_id(parseInt(cursor.getString(0)));
+                group_activity.set_name(cursor.getString(1));
+                group_activity.set_timestamp(cursor.getString(2));
+                group_activity.set_location_id(parseInt(cursor.getString(3)));
+                group_activity.set_activity_date(cursor.getString(4));
+                group_activity.set_group_type_id(parseInt(cursor.getString(5)));
+                group_activity.set_males(parseInt(cursor.getString(6)));
+                group_activity.set_females(parseInt(cursor.getString(7)));
+                group_activity.set_messages(cursor.getString(8));
+                group_activity.set_latitude(parseFloat(cursor.getString(9)));
+                group_activity.set_longitude(parseFloat(cursor.getString(10)));
+
+                // Adding person to list
+                _List.add(group_activity);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+//        // db.close();
+        return _List;
     }
 
     public List<Facilitator> getAllFacilitators() {
@@ -3166,7 +3600,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         return facilitatorList;
     }
 
@@ -3220,7 +3654,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         return facilitatorList;
     }
 
@@ -3245,7 +3679,7 @@ public class DBHelper extends SQLiteOpenHelper{
         try {
             db.insert(TABLE_FACILITATOR, null, values);
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addFacilitator catch " + ex.toString());
             return false;
         }
@@ -3294,7 +3728,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 FACILITATOR_PHONE + " = '" + values.get(FACILITATOR_PHONE) + "'";
 
         db.update(TABLE_FACILITATOR, values, updateWhereClause, null);
-        db.close();
+        // db.close();
         return true;
     }
 
@@ -3352,11 +3786,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(11))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return facilitator;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return facilitator;
         }
     }
@@ -3413,14 +3847,145 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(11))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return facilitator;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return facilitator;
         }
     }
+
+    public boolean addGroupActivity(GroupActivity groupActivity) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+
+        values.put(GROUP_ACTIVITY_NAME, groupActivity.get_name());
+        values.put(GROUP_ACTIVITY_TIMESTAMP, oTimestamp.toString());
+        values.put(GROUP_ACTIVITY_LOCATION_ID, groupActivity.get_location_id());
+        values.put(GROUP_ACTIVITY_ACTIVITY_DATE, groupActivity.get_activity_date());
+        values.put(GROUP_ACTIVITY_GROUP_TYPE_ID,  groupActivity.get_group_type_id());
+        values.put(GROUP_ACTIVITY_MALES,  groupActivity.get_males());
+        values.put(GROUP_ACTIVITY_FEMALES,  groupActivity.get_females());
+        values.put(GROUP_ACTIVITY_MESSAGES,  groupActivity.get_messages());
+        values.put(GROUP_ACTIVITY_LATITUDE,  groupActivity.get_latitude());
+        values.put(GROUP_ACTIVITY_LONGITUDE,  groupActivity.get_longitude());
+
+        try {
+            db.insert(TABLE_GROUP_ACTIVITY, null, values);
+        } catch (Exception ex) {
+            // db.close();
+            Log.d(LOG, "addGroupActivity catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+    public boolean updateGroupActivity(GroupActivity groupActivity) {
+        Log.d(LOG, "updateGroupActivity: " + groupActivity.get_name() + ", " + groupActivity.get_activity_date() );
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
+        DateFormat df = new android.text.format.DateFormat();
+        groupActivity.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+
+        values.put(GROUP_ACTIVITY_TIMESTAMP, oTimestamp.toString());
+        values.put(GROUP_ACTIVITY_NAME, groupActivity.get_name());
+        values.put(GROUP_ACTIVITY_LOCATION_ID, groupActivity.get_location_id());
+        values.put(GROUP_ACTIVITY_ACTIVITY_DATE, groupActivity.get_activity_date());
+        values.put(GROUP_ACTIVITY_GROUP_TYPE_ID,  groupActivity.get_group_type_id());
+        values.put(GROUP_ACTIVITY_MALES,  groupActivity.get_males());
+        values.put(GROUP_ACTIVITY_FEMALES,  groupActivity.get_females());
+        values.put(GROUP_ACTIVITY_MESSAGES,  groupActivity.get_messages());
+        values.put(GROUP_ACTIVITY_LATITUDE,  groupActivity.get_latitude());
+        values.put(GROUP_ACTIVITY_LONGITUDE,  groupActivity.get_longitude());
+
+        String[] tableColumns = new String[]{
+                GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+        };
+
+        String whereClause = "1=1 and trim(" +
+                GROUP_ACTIVITY_NAME + ") like ? or trim(" +
+                GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
+
+        Log.d(LOG, "updateGroupActivity whereClause: " + whereClause);
+
+        String[] whereArgs = new String[]{
+                groupActivity.get_name(), groupActivity.get_activity_date() };
+
+        String updateWhereClause = "1=1 and " +
+                GROUP_ACTIVITY_NAME + " = '" + values.get(GROUP_ACTIVITY_NAME) + "' and " +
+                GROUP_ACTIVITY_ACTIVITY_DATE + " = '" + values.get(GROUP_ACTIVITY_ACTIVITY_DATE) + "'";
+
+        db.update(TABLE_GROUP_ACTIVITY, values, updateWhereClause, null);
+        // db.close();
+        return true;
+    }
+
+    public GroupActivity getGroupActivity( String name, String activity_date ) {
+        GroupActivity groupActivity = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getGroupActivity: " + name + ", " + activity_date  );
+
+        String[] tableColumns = new String[] {
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+        };
+
+        String whereClause = "1=1 and trim(" +
+                GROUP_ACTIVITY_NAME + ") like ? and trim(" +
+                GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
+
+        Log.d(LOG, "getGroupActivity whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                name, activity_date };
+
+        Log.d(LOG, "getGroupActivity whereArgs:" + whereArgs[0] + ":" + whereArgs[1] );
+
+        Cursor cursor = db.query(TABLE_GROUP_ACTIVITY, tableColumns, whereClause, whereArgs, null, null, null);
+        cursor.moveToFirst();
+        if (cursor.moveToFirst()) {
+//            Log.d(LOG, "getGroupActivity  "
+//                            + cursor.getString(0) + " "
+//                            + cursor.getString(1) + " "
+//                            + cursor.getString(2) + " "
+//                            + cursor.getString(3) + " "
+//                            + cursor.getString(4) + " "
+//                            + cursor.getString(5) + " "
+//                            + cursor.getString(6) + " "
+//                    + cursor.getString(7) + " "
+//                    + cursor.getString(8) + " "
+//                    + cursor.getString(9) + " "
+//                    + cursor.getString(10) + " "
+//            );
+
+            groupActivity = new GroupActivity(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    parseInt(cursor.getString(3)),
+                    cursor.getString(4),
+                    parseInt(cursor.getString(5)),
+                    parseInt(cursor.getString(6)),
+                    parseInt(cursor.getString(7)),
+                    cursor.getString(8),
+                    parseFloat(cursor.getString(9)),
+                    parseFloat(cursor.getString(10))
+            );
+            cursor.close();
+            // db.close();
+            return groupActivity;
+        } else {
+            cursor.close();
+            // db.close();
+            return groupActivity;
+        }
+    }
+
 
     public Booking getBooking( String first_name, String last_name, String national_id, String phone, String projected_date) {
         Booking booking = null;
@@ -3484,11 +4049,11 @@ public class DBHelper extends SQLiteOpenHelper{
 //                    parseInt(cursor.getString(10))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return booking;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return booking;
         }
     }
@@ -3563,11 +4128,11 @@ public class DBHelper extends SQLiteOpenHelper{
 //                    parseInt(cursor.getString(10))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return interaction;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return interaction;
         }
     }
@@ -3606,7 +4171,7 @@ public class DBHelper extends SQLiteOpenHelper{
         try {
             db.insert(TABLE_BOOKING, null, values);
         } catch (Exception ex) {
-            db.close();
+            // db.close();
             Log.d(LOG, "addBooking catch " + ex.toString());
             return false;
         }
@@ -3690,12 +4255,12 @@ public class DBHelper extends SQLiteOpenHelper{
                             values.get(BOOKING_ACTUAL_DATE)
             );
             db.update(TABLE_BOOKING, values, updateWhereClause, null);
-            db.close();
+            // db.close();
             return true;
 
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return false;
         }
     }
@@ -3724,19 +4289,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
-            Log.d(LOG, "getPerson  "
-                            + cursor.getString(0) + " "
-                            + cursor.getString(1) + " "
-                            + cursor.getString(2) + " "
-                            + cursor.getString(3) + " "
-                            + cursor.getString(4) + " "
-                            + cursor.getString(5) + " "
-                            + cursor.getString(6) + " "
-                            + cursor.getString(7) + " "
-                            + cursor.getString(8) + " "
-                            + cursor.getString(9) + " "
-                            + cursor.getString(10) + " "
-            );
+
 
             person = new Person(
                     parseInt(cursor.getString(0)),
@@ -3752,11 +4305,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(10))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return person;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return person;
         }
     }
@@ -3812,11 +4365,11 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(10))
             );
             cursor.close();
-            db.close();
+            // db.close();
             return person;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return person;
         }
     }
@@ -3866,11 +4419,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 parseInt(cursor.getString(10))
         );
             cursor.close();
-            db.close();
+            // db.close();
             return person;
         } else {
             cursor.close();
-            db.close();
+            // db.close();
             return person;
         }
     }
@@ -3906,7 +4459,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         // return person list
         return personList;
     }
@@ -3962,7 +4515,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         // return person list
         return personList;
     }
@@ -3998,7 +4551,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         // return person list
         return _List;
     }
@@ -4048,7 +4601,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-//        db.close();
+//        // db.close();
         // return person list
         return _List;
     }
@@ -4079,7 +4632,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        // db.close();
         // return personToAssessments list
         return assessmentsAnswersList;
     }
@@ -4109,7 +4662,7 @@ public class DBHelper extends SQLiteOpenHelper{
             } while (cursor.moveToNext());
         }
         cursor.close();
-        db.close();
+        // db.close();
         // return personToAssessments list
         return personToAssessmentsList;
     }
@@ -4123,7 +4676,7 @@ public class DBHelper extends SQLiteOpenHelper{
         // return count
         int returnVal = cursor.getCount();
         cursor.close();
-        db.close();
+        // db.close();
         return returnVal;
     }
 
@@ -4170,7 +4723,7 @@ public class DBHelper extends SQLiteOpenHelper{
                      PERSON_PHONE + " = '" + values.get(PERSON_PHONE) + "'";
 
              db.update(TABLE_PERSON, values, updateWhereClause, null);
-             db.close();
+             // db.close();
              return true;
      }
 
@@ -4178,7 +4731,7 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         //db.delete(TABLE_PERSON, KEY_ID + " = ?", new String[] { String.valueOf(person.getID()) });
 
-        db.close();
+        // db.close();
         return true;
     }
 

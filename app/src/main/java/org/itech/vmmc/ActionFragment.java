@@ -186,6 +186,18 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 }
                 MainActivity.currentFragmentId = "AddEditInteraction";
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditGroupActivityTitle))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditGroupActivityTitle) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditGroupActivityFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditGroupActivityFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditGroupActivityFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditGroupActivityFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditGroupActivity";
+
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
 
@@ -224,11 +236,13 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 } else {
                     // try
 //                    dbHelp.uploadDBData();
-                    Log.d(LOG, "debugFragment call sync");
+                    Log.d(LOG, "actionFragment call sync");
                     dbHelp.doSyncDB();
                 }
 
-
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.TEST))) {
+                Log.d(LOG, "actionFragment call testDB");
+                dbHelp.doTestDB();
 
             } else {} // do nothing
 
@@ -309,12 +323,28 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //        actions.add(getResources().getString(R.string.GEOLOCATION));
 //        actions.add(getResources().getString(R.string.UPLOAD));
 //        actions.add(getResources().getString(R.string.DOWNLOAD));
+
+        if (!MainActivity._username.equals("sync@")) {
+            User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
+            if (_user.userPerms.contains("edit_group")) {
+                Log.d(LOG, "actionFragment:edit_group");
+            }
+            if (_user.userPerms.contains("edit_not")) {
+                Log.d(LOG, "actionFragment:edit_not");
+            }
+            if (_user.userPerms.contains("edit_recruiter")) {
+                Log.d(LOG, "actionFragment:edit_recruiter");
+            }
+        }
+
+        actions.add(getResources().getString(R.string.TEST));
         actions.add(getResources().getString(R.string.SYNC));
         actions.add(getResources().getString(R.string.addEditPerson));
         actions.add(getResources().getString(R.string.addEditFacilitatorTitle));
         actions.add(getResources().getString(R.string.addEditClient));
         actions.add(getResources().getString(R.string.addEditBooking));
         actions.add(getResources().getString(R.string.addEditInteraction));
+        actions.add(getResources().getString(R.string.addEditGroupActivity));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);

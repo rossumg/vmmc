@@ -39,6 +39,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         EditFacilitatorFragment.OnFragmentInteractionListener,
         AddEditInteractionFragment.OnFragmentInteractionListener,
         EditInteractionFragment.OnFragmentInteractionListener,
+        AddEditGroupActivityFragment.OnFragmentInteractionListener,
+        EditGroupActivityFragment.OnFragmentInteractionListener,
 //        AddBookingFragment.OnFragmentInteractionListener,
         EditBookingFragment.OnFragmentInteractionListener,
         DisplayFragment.OnFragmentInteractionListener
@@ -59,6 +61,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static SQLiteDatabase db;
     public static String _user = "rossumg";
     public static String _pass = "";
+    public static String _username = "";
+    public static String _password = "";
     public static boolean configChange = false;
     public static String LOG = "gnr";
 
@@ -68,6 +72,11 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static float lng = 0;
 
     public static String deviceId = "";
+
+
+//    public static ArrayList<String> _CREDENTIALS = new ArrayList<String>();
+
+//                "user@itech.org:password", "bar@example.com:world", "u@:pa", "a@:pa"
 
     /**
      * Fragment managing the behaviors, interactions and presentation of the navigation drawer.

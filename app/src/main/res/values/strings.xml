@@ -22,7 +22,7 @@
     <string name="TEST">Test</string>
     <string name="SYNC">Sync</string>
     <string name="addEditPerson">Person</string>
-    <string name="addEditBooking">Booking</string>
+    <string name="addEditBooking">Direct Booking</string>
 
 
     <string name="searchTitle">Search Assessments</string>
@@ -37,7 +37,7 @@
     <string name="addEditPersonTitle">Person</string>
     <string name="addPersonTitle">Add Person</string>
     <string name="editPersonTitle">Edit Person</string>
-    <string name="addEditBookingTitle">Booking</string>
+    <string name="addEditBookingTitle">Direct Booking</string>
     <string name="addBookingTitle">Add Booking</string>
     <string name="editBookingTitle">Edit Booking</string>
 
@@ -116,15 +116,24 @@
     <string name="interaction_type">Type</string>
     <string name="followup_date">Follow-up Date</string>
     <string name="interaction_date">Date</string>
-    <string name="addEditInteractionTitle">Group Mobilization Activity</string>
-    <string name="addEditInteraction">Group Mobilization Activity</string>
-    <string name="editInteractionTitle">Edit Group Mobilization Activity</string>
-    <string name="editInteraction">Edit Group Mobilization Activity</string>
+    <string name="addEditInteractionTitle">Interaction</string>
+    <string name="addEditInteraction">Interaction</string>
+    <string name="editInteractionTitle">Edit interaction</string>
+    <string name="editInteraction">Edit Interaction</string>
     <string name="displayBookingTitle">Display Bookings</string>
     <string name="displayPersonTitle">Display Persons</string>
     <string name="displayClientTitle">Display Clients</string>
     <string name="displayFacilitatorTitle">Display Community Recruiters</string>
-    <string name="displayInteractionTitle">Display Group Mobilization Activities</string>
+    <string name="displayInteractionTitle">Display Interactions</string>
+    <string name="addEditGroupActivity">Group Activity</string>
+    <string name="addEditGroupActivityTitle">Group Activity</string>
+    <string name="editGroupActivityTitle">Edit Group Activity</string>
+    <string name="activity_date">Activity Date</string>
+    <string name="displayGroupActivityTitle">Display Group Activities</string>
+    <string name="group_type">Group Type</string>
+    <string name="males">Males</string>
+    <string name="females">Females</string>
+    <string name="messages">Messages</string>
 
 
 </resources>

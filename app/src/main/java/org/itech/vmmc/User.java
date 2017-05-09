@@ -1,5 +1,7 @@
 package org.itech.vmmc;
 
+import java.util.ArrayList;
+
 /**
  * Created by rossumg on 5/3/2017.
  */
@@ -23,6 +25,8 @@ public class User {
     String _timestamp_updated;
     String _timestamp_created;
     String _timestamp_last_login;
+    ArrayList<String> userPerms;
+    ArrayList<String> userStatusList;
 
     public User(){}
 
@@ -63,6 +67,30 @@ public class User {
         this._timestamp_updated = _timestamp_updated;
         this._timestamp_created = _timestamp_created;
         this._timestamp_last_login = _timestamp_last_login;
+    }
+
+    public User(DBHelper dbHelp, String credentials){
+        String parts[] = credentials.split(":",2);
+        this._username = parts[0];
+        this._password = parts[1];
+        User _user = new User();
+        _user = dbHelp.getUser(this._username, this._password);
+        this._email = _user.get_email();
+        this._first_name = _user._first_name;
+        this._last_name = _user._last_name;
+        this._national_id = _user._national_id;
+        this._phone = _user._phone;
+        this._region_id = _user._region_id;
+        this._user_type_id = _user._user_type_id;
+        this._locale = _user._locale;
+        this._modified_by = _user._modified_by;
+        this._created_by = _user._created_by;
+        this._is_blocked = _user._is_blocked;
+        this._timestamp_updated = _user._timestamp_updated;
+        this._timestamp_created =_user._timestamp_created;
+        this._timestamp_last_login = _user._timestamp_last_login;
+        this.userPerms = dbHelp.getUserPerms(this._username);
+        this.userStatusList = dbHelp.getUserStatusList(this._username);
     }
 
     public int get_id() {

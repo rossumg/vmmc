@@ -20,6 +20,7 @@ import android.widget.EditText;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 
 
 /**
@@ -58,9 +59,9 @@ public class LoginFragment extends Fragment {
      * A dummy authentication store containing known user names and passwords.
      * TODO: remove after connecting to a real authentication system.
      */
-    private static final String[] DUMMY_CREDENTIALS = new String[]{
-            "user@itech.org:password", "bar@example.com:world", "u@:pa"
-    };
+//    private static final String[] DUMMY_CREDENTIALS = new String[]{
+//            "user@itech.org:password", "bar@example.com:world", "u@:pa"
+//    };
     /**
      * Keep track of the login task to ensure we can cancel it if requested.
      */
@@ -71,7 +72,6 @@ public class LoginFragment extends Fragment {
     private EditText mPasswordView;
     private View mProgressView;
     private View mLoginFormView;
-
 
     /**
      * Use this factory method to create a new instance of
@@ -110,9 +110,6 @@ public class LoginFragment extends Fragment {
         this._dbHelp = dbHelp;
         Log.d(LOG, "LoginFragment.onCreate1");
 
-
-
-
 //        final TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
 //
 //        final String tmDevice, tmSerial, androidId;
@@ -134,7 +131,6 @@ public class LoginFragment extends Fragment {
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) view.findViewById(R.id.email);
-
 
         mPasswordView = (EditText) view.findViewById(R.id.password);
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
@@ -181,7 +177,6 @@ public class LoginFragment extends Fragment {
         return view;
     }
 
-
      private boolean mayRequestContacts() {
         /*
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.M) {
@@ -212,7 +207,9 @@ public class LoginFragment extends Fragment {
      * errors are presented and no actual login attempt is made.
      */
     private void attemptLogin() {
-        // Log.d(TAG, "attemptLogin");
+
+        Log.d(LOG, "attemptLogin0");
+
         // not using async login
 //        if (mAuthTask != null) {
 //            return;
@@ -223,32 +220,32 @@ public class LoginFragment extends Fragment {
         mPasswordView.setError(null);
 
         // Store values at the time of the login attempt.
-        Log.d(LOG, "LoginFragment: change back to test real values, L224");
-//        String email = mEmailView.getText().toString();
-//        String password = mPasswordView.getText().toString();
-        String email = "u@";
-        String password = "pa";
+//        Log.d(LOG, "LoginFragment: change back to test real values, L224");
+        String email = mEmailView.getText().toString();
+        String password = mPasswordView.getText().toString();
+//        String email = "u@";
+//        String password = "pa";
 
         boolean cancel = false;
         View focusView = null;
 
         // Check for a valid password, if the user entered one.
-//        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
-//            mPasswordView.setError(getString(R.string.error_invalid_password));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        }
+        if (!TextUtils.isEmpty(password) && !isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
-        Log.d(LOG, "LoginFragment: uncomment field checks, L240");
-//        if (TextUtils.isEmpty(password)) {
-//            mPasswordView.setError(getString(R.string.error_field_required));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        } else if (!isPasswordValid(password)) {
-//            mPasswordView.setError(getString(R.string.error_invalid_password));
-//            focusView = mPasswordView;
-//            cancel = true;
-//        }
+//        Log.d(LOG, "LoginFragment: uncomment field checks, L240");
+        if (TextUtils.isEmpty(password)) {
+            mPasswordView.setError(getString(R.string.error_field_required));
+            focusView = mPasswordView;
+            cancel = true;
+        } else if (!isPasswordValid(password)) {
+            mPasswordView.setError(getString(R.string.error_invalid_password));
+            focusView = mPasswordView;
+            cancel = true;
+        }
 
         // Check for a valid email address.
         if (TextUtils.isEmpty(email)) {
@@ -272,12 +269,20 @@ public class LoginFragment extends Fragment {
             // mAuthTask = new UserLoginTask(email, password);
             // mAuthTask.execute((Void) null);
 
-            // Log.d(TAG, "check credentials");
-            for (String credential : DUMMY_CREDENTIALS) {
+            Log.d(LOG, "check credentials0");
+            DBHelper dbHelp = new DBHelper(getActivity());
+            ArrayList<String> _CREDENTIALS = new ArrayList<String>();
+            _CREDENTIALS = dbHelp.getCredentials();
+            if(_CREDENTIALS.isEmpty()) {
+                _CREDENTIALS.add("sync@:password");
+            }
+            for (String credential : _CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(email) && pieces[1].equals(password)) {
                     // Log.d(TAG, "good");
                     MainActivity.LOGGED_IN = true;
+                    MainActivity._username = email; // referred to as username in db, email in pop-up
+                    MainActivity._password = password;
                     Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
                     if (fragment == null) {
                         fragment = ActionFragment.newInstance("main", "");
@@ -299,7 +304,7 @@ public class LoginFragment extends Fragment {
                 if(MainActivity._pass.equals("")) {
 
                     AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Password");
+                    builder.setTitle("Sync Password");
 
                     final EditText input = new EditText(getActivity());
                     // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
@@ -408,8 +413,11 @@ public class LoginFragment extends Fragment {
                 return false;
             }
 
-            Log.d(LOG, "check credentials");
-            for (String credential : DUMMY_CREDENTIALS) {
+            Log.d(LOG, "check credentials1");
+            ArrayList<String> _CREDENTIALS = new ArrayList<String>();
+            // fill with getCredentials
+
+            for (String credential : _CREDENTIALS) {
                 String[] pieces = credential.split(":");
                 if (pieces[0].equals(mEmail)) {
                     // Account exists, return true if the password matches.

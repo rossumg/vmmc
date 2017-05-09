@@ -40,6 +40,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     List<Client> clients = new ArrayList<Client>();
     List<Facilitator> facilitators = new ArrayList<Facilitator>();
     List<Interaction> interactions = new ArrayList<Interaction>();
+    List<GroupActivity> group_activities = new ArrayList<GroupActivity>();
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -73,9 +74,16 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 Log.d(LOG, "DisplayFragment editInteraction: " + displayParts.get_facFirstName() + " " + displayParts.get_facLastName() + " " + displayParts.get_personFirstName() + " " + displayParts.get_personLastName());
                 fragment = EditInteractionFragment.newInstance("editInteraction",
                         displayParts.get_facFirstName() + " " + displayParts.get_facLastName() + ":" + displayParts.get_facNationalId() + ":" + displayParts.get_facPhone() + "<>" +
-                        displayParts.get_personFirstName() + " " + displayParts.get_personLastName() + ":" + displayParts.get_personNationalId() + ":" + displayParts.get_personPhone() + "<>" +
-                                displayParts.get_interactionDate() + ":" + displayParts.get_followupDate() );
+                                displayParts.get_personFirstName() + " " + displayParts.get_personLastName() + ":" + displayParts.get_personNationalId() + ":" + displayParts.get_personPhone() + "<>" +
+                                displayParts.get_interactionDate() + ":" + displayParts.get_followupDate());
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditInteractionFragment.TAG).addToBackStack("EditInteraction").commit();
+
+            } else if (displayType == "displayGroupActivity") {
+                String parts[] = mAdapter.getItem(position).toString().split(", ",2);
+                Log.d(LOG, "DisplayFragment editGroupActivity: " + parts[0] + " " + parts[1]);
+                fragment = EditGroupActivityFragment.newInstance("editGroupActivity", parts[0] + ":" + parts[1]);
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditGroupActivityFragment.TAG).addToBackStack("EditGroupActivity").commit();
+
             }
         }
     }
@@ -205,6 +213,18 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             mAdapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
+        } else if (displayType == "displayGroupActivity") {
+            group_activities = dbHelp.getAllLikeGroupActivities(mParam2);
+            String[] _stringArray = new String[group_activities.size()];
+            int i = 0;
+            for (GroupActivity _rec : group_activities) {
+                _stringArray[i] =
+                        _rec.get_name() + ", " + _rec.get_activity_date();
+                i++;
+            }
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
         } else if (displayType == "") {
 
         }
@@ -289,6 +309,8 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             getActivity().setTitle(getResources().getString(R.string.displayFacilitatorTitle) );
         } else if(displayType == "displayInteraction" ) {
             getActivity().setTitle(getResources().getString(R.string.displayInteractionTitle) );
+        } else if(displayType == "displayGroupActivity" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayGroupActivityTitle) );
         } else if(displayType == "" ) {
 //
         }

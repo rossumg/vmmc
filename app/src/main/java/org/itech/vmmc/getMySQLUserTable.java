@@ -124,8 +124,9 @@ class getMySQLUserTable extends AsyncTask<String, String, String> {
                     Log.d(LOG, "getMySQLUserTable:doInBackground: " + _username );
                     String _insert =
                             "insert or replace into user "
-                                    + "(username, password, email, first_name, last_name, national_id, phone, region_id, user_type_id, locale, modified_by, created_by, is_blocked, timestamp_updated, timestamp_created, timestamp_last_login) "
+                                    + "(id, username, password, email, first_name, last_name, national_id, phone, region_id, user_type_id, locale, modified_by, created_by, is_blocked, timestamp_updated, timestamp_created, timestamp_last_login) "
                                     + " values("
+                                    + "'" + user_id + "'" + ","
                                     + "'" + _username + "'" + ","
                                     + "'" + _password + "'" + ","
                                     + "'" + email + "'" + ","
