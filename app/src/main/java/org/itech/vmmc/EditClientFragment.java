@@ -43,10 +43,10 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
     // private String mEditClientParam;
     private static String _editClientRecordParam;
-//    private static Booking _booking;
     private static Status _status;
     private static VMMCLocation _location;
     private static Institution _institution;
+    private static GroupActivity _groupActivity;
     private static Client _client;
     private static TextView _first_name;
     private static TextView _last_name;
@@ -55,6 +55,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
     private static TextView _status_id;
     private static TextView _location_id;
     private static TextView _institution_id;
+    private static TextView _group_activity;
 //    private static TextView _projected_date;
 //    private static TextView _actual_date;
 
@@ -160,52 +161,37 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         Log.d(LOG, "ECF Last: " + lastName);
         Log.d(LOG, "ECF NationalId: " + nationalId);
         Log.d(LOG, "ECF PhoneNumber: " + phoneNumber);
-//        Log.d(LOG, "EBF ProjectedDate: " + projectedDate);
-
-        /*
-        if (!nationalId.equals("") || !phoneNumber.equals("")) {
-            //_client = dbHelp.getClient(firstName, lastName, nationalId, phoneNumber, projectedDate);
-            _client = dbHelp.getClient(nationalId, phoneNumber);
-        }
-        if (_client != null) {
-            Log.d(LOG, "EBF _client != null ");
-            //Log.d(LOG, "EBF _client != null " + _client.get_first_name());
-        } else {
-            Log.d(LOG, "EBF _client is equal null ");
-//            should check for more info like person frag, GNR
-//            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
-//            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(nationalId, phoneNumber);
-//            }
-
-            Person person = dbHelp.getPerson(nationalId, phoneNumber);
-            _client = new Client();
-            _client.set_first_name(person.get_first_name());
-            _client.set_last_name(person.get_last_name());
-            _client.set_national_id(person.get_national_id());
-            _client.set_phone(person.get_phone());
-//            _client.set_projected_date(projectedDate);
-            //Log.d(LOG, "EBF _client is equal null " + _client.get_first_name());
-        }
-        */
 
         dbHelp = new DBHelper(getActivity());
 
-        _client = new Client();
         if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
             _client = dbHelp.getClient(firstName, lastName, nationalId, phoneNumber);
-            _status = dbHelp.getStatus( (String.valueOf(_client.get_status_id())));
-            _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
-            _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
         }
         else if (!nationalId.equals("") || !phoneNumber.equals("")) {
             _client = dbHelp.getClient(nationalId, phoneNumber);
         }
+        if(_client == null) { // use defaults
+            _client = new Client();
+            _client.set_first_name(firstName);
+            _client.set_last_name(lastName);
+            _client.set_national_id(nationalId);
+            _client.set_phone(phoneNumber);
+            _status = dbHelp.getStatus("Pending");
+            _location = dbHelp.getLocation("Surrey(1)");
+            _institution = dbHelp.getInstitution("Other");
+            _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+        } else {
+            _status = dbHelp.getStatus((String.valueOf(_client.get_status_id())));
+            _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
+            _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
+            _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+        }
 
-//        _status = new Status(String.valueOf(_client.get_status_id()));
-//        _location = new VMMCLocation(String.valueOf(_client.get_loc_id()));
-//        _institution = new Institution(String.valueOf(_client.get_institution_id()));
+//        Log.d(LOG, "ECF _client.GroupActivityName: " + _client.get_group_activity_name());
+//        Log.d(LOG, "ECF _client.GroupActivityDate: " + _client.get_group_activity_date());
+//        Log.d(LOG, "ECF groupActivity.GroupActivityName: " + _groupActivity.get_name());
+//        Log.d(LOG, "ECF groupActivity.GroupActivityDate: " + _groupActivity.get_activity_date());
+
     }
 
     @Override
@@ -226,40 +212,12 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_client.get_phone());
             _phone.setInputType(InputType.TYPE_NULL);
-
-//            _projected_date = (EditText) _view.findViewById(R.id.projected_date);
-//            _projected_date.setText(_client.get_projected_date());
-//            _dob = (TextView) _view.findViewById(R.id.dob);
-//            _dob.setText(_person.get_dob());
-//            _gender = (TextView) _view.findViewById(R.id.gender);
-//            _gender.setText(_person.get_gender());
         }
 
         loadStatusDropdown(_view );
         loadLocationDropdown(_view );
         loadInstitutionDropdown(_view );
-
-//        et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
-//        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
-//            Calendar newCalendar = Calendar.getInstance();
-//            DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
-//                public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
-//                    Calendar newDate = Calendar.getInstance();
-//                    newDate.set(year, monthOfYear, dayOfMonth);
-//                    et_projected_date.setText(dateFormatter.format(newDate.getTime()));
-//                    Log.d(LOG, "EBF: onDateSet: " + et_projected_date.getText());
-//                }
-//            }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
-//
-//        final DatePickerDialog projected_date_picker_dialog = hold_projected_date_picker_dialog;
-//
-//        et_projected_date.setOnClickListener(new View.OnClickListener() {
-//            @Override
-//            public void onClick(View v) {
-//                Log.d(LOG, "onClick: ");
-//                projected_date_picker_dialog.show();
-//            }
-//        });
+        loadGroupActivityDropdown(_view);
 
         Button btnUpdateClient = (Button) _view.findViewById(R.id.btnUpdate);
         btnUpdateClient.setOnClickListener(new View.OnClickListener() {
@@ -287,9 +245,15 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //                String sInstitutionText  = iSpinner.getSelectedItem().toString();
                 Institution _institution = dbHelp.getInstitution( iSpinner.getSelectedItem().toString());
 
+                Spinner gaSpinner = (Spinner) _view.findViewById(R.id.group_activity);
+//                String sGroupActivityText  = gaSpinner.getSelectedItem().toString();
+                String parts[] = gaSpinner.getSelectedItem().toString().split(", ",2);
+                GroupActivity _groupActivity = dbHelp.getGroupActivity( parts[0], parts[1]);
+
+
                 Log.d(LOG, "UpdateClient button: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
-                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
+                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
 
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
@@ -309,6 +273,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         lookupClient.set_status_id(_status.get_id());
                         lookupClient.set_loc_id(_location.get_id());
                         lookupClient.set_institution_id(_institution.get_id());
+                        lookupClient.set_group_activity_name(_groupActivity.get_name());
+                        lookupClient.set_group_activity_date(_groupActivity.get_activity_date());
                         Log.d(LOG, "UpdateClient update: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.updateClient(lookupClient))
@@ -322,6 +288,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         client.set_status_id(_status.get_id());
                         client.set_loc_id(_location.get_id());
                         client.set_institution_id(_institution.get_id());
+                        client.set_group_activity_name(_groupActivity.get_name());
+                        client.set_group_activity_date(_groupActivity.get_activity_date());
                         Log.d(LOG, "UpdateClient add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addClient(client))
@@ -332,7 +300,6 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 }
             }
         });
-
         return _view;
     }
 
@@ -376,12 +343,6 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
         _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
         _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
-//        _status_id = (TextView) _view.findViewById(R.id.status); _status_id.setText("");
-//        _location_id= (TextView) _view.findViewById(R.id.vmmclocation); _location_id.setText("");
-//        _institution_id = (TextView) _view.findViewById(R.id.institution); _institution_id.setText("");
-//        _projected_date = (TextView) _view.findViewById(R.id.projected_date); _projected_date.setText("");
-//        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
-//        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
         if(_client != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
@@ -392,12 +353,6 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _national_id.setText(_client.get_national_id());
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_client.get_phone());
-//            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
-//            _projected_date.setText(_client.get_projected_date());
-//            _dob = (TextView) _view.findViewById(R.id.dob);
-//            _dob.setText(_person.get_dob());
-//            _gender = (TextView) _view.findViewById(R.id.gender);
-//            _gender.setText(_person.get_gender());
         }
     }
 
@@ -486,9 +441,11 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         sSpinner.setAdapter(dataAdapter);
-        _status = dbHelp.getStatus(String.valueOf(_client.get_status_id()));
-        if (_status == null) {
+        if(_client == null) {
             _status = dbHelp.getStatus("Pending");
+        } else {
+            _client.set_status_id(_status.get_id());
+            _status = dbHelp.getStatus(String.valueOf(_client.get_status_id()));
         }
         String compareValue = _status.get_name();
         if (!compareValue.equals(null)) {
@@ -501,13 +458,89 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String statusText  = sSpinner.getSelectedItem().toString();
                 _status = dbHelp.getStatus(statusText);
-                _client.set_status_id(_status.get_id());
+//                _client.set_status_id(_status.get_id());
                 Log.d(LOG, "_status: " + _status.get_id() + _status.get_name());
 //                status_type = dbHelp.getStatusType(statusText);
 
 
                 //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
 //                Log.d(LOG, "statusId/Name selected: " + status.get_id() + " " + status.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadGroupActivityDropdown(View view ) {
+        final Spinner gaSpinner = (Spinner) view.findViewById(R.id.group_activity);
+        final List<String> groupActivityNames = dbHelp.getAllGroupActivityIDs();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, groupActivityNames);
+//        {
+//            @Override
+//            public boolean isEnabled(int position) {
+//                return position != 1;
+//            }
+//
+//            @Override
+//            public boolean areAllItemsEnabled() {
+//                return false;
+//            }
+
+//            @Override
+//            public View getDropDownView(int position, View convertView, ViewGroup parent){
+//                View v = convertView;
+//                if (v == null) {
+//                    Context mContext = this.getContext();
+//                    LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                    v = vi.inflate(R.layout.simple_spinner_item, null);
+//                }
+////                Spinner spinner = (Spinner) v.findViewById(R.id.status);
+//                Log.d(LOG, "loadStatusDropdown:position: " + position + ":" + statusNames.get(position));
+//                TextView tv = (TextView) v.findViewById(R.id.spinnerTarget);
+////                tv.setText(statusNames.get(position));
+//
+//                switch (position) {
+//                    case 0:
+////                        tv.setTextColor(Color.RED);
+//                        break;
+//                    case 1:
+////                        tv.setTextColor(Color.BLUE);
+//                        break;
+//                    default:
+////                        tv.setTextColor(Color.BLACK);
+//                        break;
+//                }
+//                return v;
+//            }
+//        };
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        gaSpinner.setAdapter(dataAdapter);
+        if(_client == null) {
+            _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+        } else {
+            _client.set_group_activity_name(_groupActivity.get_name());
+            _client.set_group_activity_date(_groupActivity.get_activity_date());
+            _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+        }
+        String compareValue = _groupActivity.get_name() + ", " + _groupActivity.get_activity_date();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            gaSpinner.setSelection(spinnerPosition);
+        }
+
+        gaSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String gaID  = gaSpinner.getSelectedItem().toString();
+                String parts[] = gaID.split(", ", 2);
+                _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
+//                _client.set_group_activity_name(_groupActivity.get_name());
+//                _client.set_group_activity_date(_groupActivity.get_activity_date());
+                Log.d(LOG, "_groupActivity: " + _groupActivity.get_name() + _groupActivity.get_activity_date());
             }
 
             @Override
@@ -527,9 +560,11 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         lSpinner.setAdapter(dataAdapter);
-        _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
-        if (_location == null) {
-            _location = dbHelp.getLocation("1"); // Default
+        if (_client == null) {
+            _location = dbHelp.getLocation("Surrey(1)");
+        } else {
+            _client.set_loc_id(_location.get_id());
+            _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
         }
         String compareValue = _location.get_name();
         if (!compareValue.equals(null)) {
@@ -542,7 +577,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String locationText  = lSpinner.getSelectedItem().toString();
                 _location = dbHelp.getLocation(locationText);
-                _client.set_loc_id(_location.get_id());
+//                _client.set_loc_id(_location.get_id());
                 Log.d(LOG, "location: " + _location.get_id() + _location.get_name());
             }
 
@@ -563,9 +598,11 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         iSpinner.setAdapter(dataAdapter);
-        _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
-        if (_institution == null) {
-            _institution = dbHelp.getInstitution("3"); // Default
+        if(_client == null) {
+            _institution = dbHelp.getInstitution("Other");
+        } else {
+            _client.set_institution_id(_institution.get_id());
+            _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
         }
         String compareValue = _institution.get_name();
         if (!compareValue.equals(null)) {
@@ -578,7 +615,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
                 String institutionText  = iSpinner.getSelectedItem().toString();
                 _institution = dbHelp.getInstitution(institutionText);
-                _client.set_institution_id(_institution.get_id());
+//                _client.set_institution_id(_institution.get_id());
                 Log.d(LOG, "institution: " + _institution.get_id() + _institution.get_name());
             }
 

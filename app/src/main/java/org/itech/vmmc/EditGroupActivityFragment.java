@@ -132,6 +132,10 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         dbHelp = new DBHelper(getActivity());
         _groupActivity = dbHelp.getGroupActivity(_name, _date);
 
+        if (_groupActivity == null) {
+            _groupActivity = new GroupActivity();
+        }
+
 //        if (!nationalId.equals("") || !phoneNumber.equals("")) {
 //            _groupActivity = new GroupActivity();
 //            _groupActivity = dbHelp.getGroupActivity(firstName, lastName, nationalId, phoneNumber, projectedDate);
@@ -139,7 +143,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 //        }
 //        if (_groupActivity != null) {
 //            Log.d(LOG, "EBF _groupActivity != null ");
-//            Log.d(LOG, "EBF _groupActivity != null " + _groupActivity.get_first_name());
+//            Log.d(LOG, "EBF _groupActivity != null " + _groupActivity.get_name());
 //        } else { // defaults
 //            Log.d(LOG, "EBF _groupActivity is equal null ");
 //            should check for more info like person frag, GNR
@@ -147,23 +151,18 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 //                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
 //            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
 //                _person = dbHelp.getPerson(nationalId, phoneNumber);
-//            }
-
-
-
+            }
 //            _groupActivity.set_name(_groupActivity.get_first_name());
 //            _groupActivity.set_last_name(_groupActivity.get_last_name());
 //            _groupActivity.set_national_id(_groupActivity.get_national_id());
 //            _groupActivity.set_phone(_groupActivity.get_phone());
 //            _groupActivityType = dbHelp.getGroupActivityType("3");
-//            _location = dbHelp.getLocation("1");
-
 //        }
 
 //        _groupActivity_type = new Status(String.valueOf(_groupActivity.get_groupActivity_type_id()));
 //        _location = new VMMCLocation(String.valueOf(_groupActivity.get_loc_id()));
 //        _institution = new Institution(String.valueOf(_groupActivity.get_institution_id()));
-    }
+//    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -225,16 +224,19 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                 java.util.Date utilDate = cal.getTime();
                 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
-                _name = (TextView) _view.findViewById(R.id.name); String sName = _name.getText().toString();
-                _activity_date = (TextView) _view.findViewById(R.id.activity_date); String sActivityDate = _activity_date.getText().toString();
+                _name = (TextView) _view.findViewById(R.id.name);
+                String sName = _name.getText().toString();
+                _activity_date = (TextView) _view.findViewById(R.id.activity_date);
+                String sActivityDate = _activity_date.getText().toString();
                 _males = (TextView) _view.findViewById(R.id.males);
                 Integer iMales = Integer.valueOf(_males.getText().toString());
                 _females = (TextView) _view.findViewById(R.id.females);
                 Integer iFemales = Integer.valueOf(_females.getText().toString());
-
+                _messages = (TextView) _view.findViewById(R.id.messages);
+                String sMessages = _messages.getText().toString();
 
               Spinner gtSpinner = (Spinner) _view.findViewById(R.id.group_type);
-              String gtGroupType  = gtSpinner.getSelectedItem().toString();
+//              String gtGroupType  = gtSpinner.getSelectedItem().toString();
               GroupActivityType _groupActivityType = dbHelp.getGroupActivityType( gtSpinner.getSelectedItem().toString());
 
                 Spinner lSpinner = (Spinner) _view.findViewById(R.id.vmmclocation);
@@ -257,6 +259,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         lookupGroupActivity.set_location_id(_location.get_id());
                         lookupGroupActivity.set_males(iMales);
                         lookupGroupActivity.set_females(iFemales);
+                        lookupGroupActivity.set_messages(sMessages);
                         Log.d(LOG, "UpdateGroupActivity update: " +
                                 _name.getText() + ", " +  _activity_date.getText() + ", " + iMales.toString() + ", " + iFemales.toString() +"<");
                         if(dbHelp.updateGroupActivity(lookupGroupActivity))
@@ -264,10 +267,12 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                     } else {
                         GroupActivity groupActivity = new GroupActivity();
                         groupActivity.set_name(sName.toString());
+                        groupActivity.set_activity_date(sActivityDate.toString());
                         groupActivity.set_group_type_id(_groupActivityType.get_id());
                         groupActivity.set_location_id(_location.get_id());
                         groupActivity.set_males(iMales);
                         groupActivity.set_females(iFemales);
+                        groupActivity.set_messages(sMessages);
                         Log.d(LOG, "UpdateGroupActivity add: " +
                                 _name.getText() + ", " +  " <");
                         if(dbHelp.addGroupActivity(groupActivity))
@@ -456,7 +461,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         lSpinner.setAdapter(dataAdapter);
         _location = dbHelp.getLocation(String.valueOf(_groupActivity.get_location_id()));
         if (_location == null) {
-            _location = dbHelp.getLocation("1"); // Default
+            _location = dbHelp.getLocation("Surrey(1)");
         }
         String compareValue = _location.get_name();
         if (!compareValue.equals(null)) {

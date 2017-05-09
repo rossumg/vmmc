@@ -21,6 +21,12 @@ public class GroupActivity {
 
     public GroupActivity() {}
 
+    public GroupActivity(String _id) {
+        String parts[] = _id.split(", ",2);
+        this._name = parts[0];
+        this._activity_date = parts[1];
+    }
+
     public GroupActivity(int _id, String _name, String _timestamp, int _location_id, String _activity_date, int group_type_id, int males, int females, String messages, float _latitude, float _longitude) {
         this._id = _id;
         this._name = _name;

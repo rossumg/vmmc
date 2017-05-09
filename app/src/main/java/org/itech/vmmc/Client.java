@@ -18,11 +18,13 @@ public class Client {
     float _latitude;
     float _longitude;
     int _institution_id;
+    String _group_activity_name;
+    String _group_activity_date;
 
     public Client() {
     }
 
-    public Client(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id) {
+    public Client(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -34,9 +36,11 @@ public class Client {
         this._latitude = _latitude;
         this._longitude = _longitude;
         this._institution_id = _institution_id;
+        this._group_activity_name = _group_activity_name;
+        this._group_activity_date = _group_activity_date;
     }
 
-    public Client(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id) {
+    public Client(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date) {
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
@@ -47,6 +51,8 @@ public class Client {
         this._latitude = _latitude;
         this._longitude = _longitude;
         this._institution_id = _institution_id;
+        this._group_activity_name = _group_activity_name;
+        this._group_activity_date = _group_activity_date;
     }
 
     public int get_id() {
@@ -135,5 +141,21 @@ public class Client {
 
     public void set_institution_id(int _institution_id) {
         this._institution_id = _institution_id;
+    }
+
+    public String get_group_activity_name() {
+        return _group_activity_name;
+    }
+
+    public void set_group_activity_name(String _group_activity_name) {
+        this._group_activity_name = _group_activity_name;
+    }
+
+    public String get_group_activity_date() {
+        return _group_activity_date;
+    }
+
+    public void set_group_activity_date(String _group_activity_date) {
+        this._group_activity_date = _group_activity_date;
     }
 }

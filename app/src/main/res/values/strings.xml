@@ -134,6 +134,7 @@
     <string name="males">Males</string>
     <string name="females">Females</string>
     <string name="messages">Messages</string>
+    <string name="GroupActivity">Group Activity</string>
 
 
 </resources>

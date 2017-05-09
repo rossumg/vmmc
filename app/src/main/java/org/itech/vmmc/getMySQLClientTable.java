@@ -105,14 +105,19 @@ class getMySQLClientTable extends AsyncTask<String, String, String> {
                     String latitude = _rec.getString("latitude");
                     latitude = latitude.replace("'", "''");
                     String longitude = _rec.getString("longitude");
-                    status_id = status_id.replace("'", "''");
+                    longitude = longitude.replace("'", "''");
                     String institution_id = _rec.getString("institution_id");
                     institution_id = institution_id.replace("'", "''");
+
+                    String group_activity_name = _rec.getString("group_activity_name");
+                    group_activity_name = group_activity_name.replace("'", "''");
+                    String group_activity_date = _rec.getString("group_activity_date");
+                    group_activity_date = group_activity_date.replace("'", "''");
 
                     Log.d(LOG, "getMySQLClientTable:doInBackground: " + timestamp + ", " + first_name + ", " + last_name + ", " + national_id + ", " + phone + ", " + status_id );
                     String _insert =
                             "insert or replace into client_table "
-                                    + "(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id) "
+                                    + "(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date) "
                                     + " values("
                                     // + person_id + ","
 //                                    + "'" + _person_id + "'" + ","
@@ -125,8 +130,10 @@ class getMySQLClientTable extends AsyncTask<String, String, String> {
                                     + "'" + loc_id + "'" + ","
                                     + "'" + latitude + "'" + ","
                                     + "'" + longitude + "'" + ","
-                                    + "'" + institution_id + "'" +
-                                    ");";
+                                    + "'" + institution_id + "'" + ","
+                                    + "'" + group_activity_name + "'" + ","
+                                    + "'" + group_activity_date + "'"
+                                    + ");";
 
                     try {
                         int incr = (int) ((i / (float) num_recs) * 100);

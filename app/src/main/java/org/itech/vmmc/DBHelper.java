@@ -210,6 +210,8 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String CLIENT_LATITUDE    = "latitude";
     private static final String CLIENT_LONGITUDE    = "longitude";
     private static final String CLIENT_INSTITUTION_ID    = "institution_id";
+    private static final String CLIENT_GROUP_ACTIVITY_NAME    = "group_activity_name";
+    private static final String CLIENT_GROUP_ACTIVITY_DATE    = "group_activity_date";
 
     // facilitator table column names
     private static final String FACILITATOR_ID          = "id";
@@ -420,6 +422,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "latitude real default 0.0, " +
                     "longitude real default 0.0, " +
                     "institution_id int, " +
+                    "group_activity_name varchar, " +
+                    "group_activity_date varchar, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_CLIENT_TABLE);
 
@@ -1490,7 +1494,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //                                + cursor.getString(3) + " "
 //                                + cursor.getString(5) + " "
 //                );
-                _ID.add(cursor.getString(1).trim() + ", " + cursor.getString(4).trim());
+                _ID.add(cursor.getString(2).trim() + ", " + cursor.getString(4).trim());
             } while (cursor.moveToNext());
         }
 
@@ -1530,6 +1534,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 groupActivity.set_messages(cursor.getString(8));
                 groupActivity.set_longitude(parseFloat(cursor.getString(9)));
                 groupActivity.set_latitude(parseFloat(cursor.getString(10)));
+
+                Log.d(LOG, "getAllGroupActivities loop: " + groupActivity.get_name() );
 
                 // Adding groupActivity to list
                 groupActivityList.add(groupActivity);
@@ -2975,6 +2981,8 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_LATITUDE,  client.get_latitude());
         values.put(CLIENT_LONGITUDE,  client.get_longitude());
         values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
+        values.put(CLIENT_GROUP_ACTIVITY_NAME,  client.get_group_activity_name());
+        values.put(CLIENT_GROUP_ACTIVITY_DATE,  client.get_group_activity_date());
 
         try {
             db.insert(TABLE_CLIENT, null, values);
@@ -3004,9 +3012,11 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_LATITUDE,  client.get_latitude());
         values.put(CLIENT_LONGITUDE,  client.get_longitude());
         values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
+        values.put(CLIENT_GROUP_ACTIVITY_NAME,  client.get_group_activity_name());
+        values.put(CLIENT_GROUP_ACTIVITY_DATE,  client.get_group_activity_date());
 
         String[] tableColumns = new String[]{
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
         };
 
 //        String whereClause = "1=1 and trim(" +
@@ -3146,7 +3156,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3177,6 +3187,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     + cursor.getString(8) + " "
                     + cursor.getString(9) + " "
                     + cursor.getString(10) + " "
+                    + cursor.getString(11) + " "
+                    + cursor.getString(12) + " "
             );
 
             client = new Client(
@@ -3190,7 +3202,9 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(7)),
                     parseFloat(cursor.getString(8)),
                     parseFloat(cursor.getString(9)),
-                    parseInt(cursor.getString(10))
+                    parseInt(cursor.getString(10)),
+                    cursor.getString(11),
+                    cursor.getString(12)
             );
             cursor.close();
             // db.close();
@@ -3208,7 +3222,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + national_id + ", " + phone_number );
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3250,7 +3264,9 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(7)),
                     parseFloat(cursor.getString(8)),
                     parseFloat(cursor.getString(9)),
-                    parseInt(cursor.getString(10))
+                    parseInt(cursor.getString(10)),
+                    cursor.getString(11),
+                    cursor.getString(12)
             );
             cursor.close();
             // db.close();
@@ -3298,6 +3314,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_latitude(parseFloat(cursor1.getString(8)));
                 client.set_longitude(parseFloat(cursor1.getString(9)));
                 client.set_institution_id(parseInt(cursor1.getString(10)));
+                client.set_group_activity_name(cursor1.getString(11));
+                client.set_group_activity_date(cursor1.getString(12));
 
                 // Adding person to list
                 clientList.add(client);
@@ -3314,7 +3332,7 @@ public class DBHelper extends SQLiteOpenHelper{
         IndexParts indexParts = new IndexParts(index);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3356,6 +3374,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_latitude(parseFloat(cursor.getString(8)));
                 client.set_longitude(parseFloat(cursor.getString(9)));
                 client.set_institution_id(parseInt(cursor.getString(10)));
+                client.set_group_activity_name(cursor.getString(11));
+                client.set_group_activity_date(cursor.getString(12));
 
                 // Adding person to list
                 clientList.add(client);
