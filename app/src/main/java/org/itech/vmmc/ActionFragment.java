@@ -44,6 +44,8 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
             // fragment is attached to one) that an item has been selected.
             Log.d(LOG, "actionFragment onItemClick: " + mAdapter.getItem(position).toString());
 
+
+
             if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.GEOLOCATION))) {
 
                 dbHelp.addGeoLocation();
@@ -323,19 +325,6 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //        actions.add(getResources().getString(R.string.GEOLOCATION));
 //        actions.add(getResources().getString(R.string.UPLOAD));
 //        actions.add(getResources().getString(R.string.DOWNLOAD));
-
-        if (!MainActivity._username.equals("sync@")) {
-            User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
-            if (_user.userPerms.contains("edit_group")) {
-                Log.d(LOG, "actionFragment:edit_group");
-            }
-            if (_user.userPerms.contains("edit_not")) {
-                Log.d(LOG, "actionFragment:edit_not");
-            }
-            if (_user.userPerms.contains("edit_recruiter")) {
-                Log.d(LOG, "actionFragment:edit_recruiter");
-            }
-        }
 
         actions.add(getResources().getString(R.string.TEST));
         actions.add(getResources().getString(R.string.SYNC));

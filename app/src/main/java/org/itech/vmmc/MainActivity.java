@@ -73,7 +73,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     public static String deviceId = "";
 
-
 //    public static ArrayList<String> _CREDENTIALS = new ArrayList<String>();
 
 //                "user@itech.org:password", "bar@example.com:world", "u@:pa", "a@:pa"
@@ -161,6 +160,17 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
         if (!MainActivity.LOGGED_IN) {
             position = 0;
+        } else {
+            DBHelper dbHelp = new DBHelper(this);
+            User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
+            int i = 0;
+            do {
+                Log.d(LOG, "DBHelper.doTestDB:_user.userPerms: " + _user.userPerms.get(i));
+            } while(i++ < _user.userPerms.size()-1);
+
+            if (_user.userPerms.contains("edit_group")) {
+                Log.d(LOG, "actionFragment:edit_group");
+            }
         }
 
         Log.d(LOG, "Main Loop: " + position);
@@ -170,14 +180,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             case 0:
                 fragment = getFragmentManager().findFragmentByTag(LoginFragment.LOG);
                 if (fragment == null) {
-                    Log.d(LOG, "before add create to back stack: " + getFragmentManager().getBackStackEntryCount());
                     fragment = LoginFragment.newInstance();
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).addToBackStack(currentFragmentId).commit();
-                    Log.d(LOG, "after add create to back stack: " + getFragmentManager().getBackStackEntryCount());
                 } else {
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).commit();
                 }
                 currentFragmentId = "Login";
+
                 break;
 //            case 1:
 //                fragment = getFragmentManager().findFragmentByTag(CreateFragment.TAG);
@@ -309,6 +318,18 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditInteractionFragment.TAG).commit();
                 }
                 currentFragmentId = "AddEditInteraction";
+
+                break;
+
+            case 7:
+                fragment = getFragmentManager().findFragmentByTag(AddEditGroupActivityFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditGroupActivityFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditGroupActivityFragment.TAG).addToBackStack(currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditGroupActivityFragment.TAG).commit();
+                }
+                currentFragmentId = "AddEditGroupActivity";
 
                 break;
         }

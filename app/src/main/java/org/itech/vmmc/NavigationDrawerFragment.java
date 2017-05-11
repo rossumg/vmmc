@@ -16,8 +16,8 @@ import android.graphics.Shader;
 import android.graphics.drawable.Drawable;
 import android.os.Bundle;
 import android.preference.PreferenceManager;
-import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
@@ -25,7 +25,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
-
 
 import java.util.ArrayList;
 import java.util.List;
@@ -133,6 +132,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem(getResources().getString(R.string.addEditClientTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditBookingTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditInteractionTitle)));
+        items.add(new NavigationItem(getResources().getString(R.string.addEditGroupActivity)));
 
 
         return items;

@@ -699,8 +699,38 @@ public class DBHelper extends SQLiteOpenHelper{
 //        String _credentials = "a@:pa";
         Log.d(LOG, "DBHelper.doTestDB:user/pass " + MainActivity._user + "/" + MainActivity._pass);
         Log.d(LOG, "DBHelper.doTestDB:username/password " + MainActivity._username + "/" + MainActivity._password);
-        User _user = new User(dbHelp,MainActivity._username + ":" + MainActivity._password);
-        Log.d(LOG, "DBHelper.doTestDB:_user.region_id: " + _user._region_id);
+//        User _user = new User(dbHelp,MainActivity._username + ":" + MainActivity._password);
+
+
+        if (!MainActivity._username.equals("sync@")) {
+            User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
+            Log.d(LOG, "DBHelper.doTestDB:username/password: " + _user.get_username() + ", " + _user.get_password());
+            Log.d(LOG, "DBHelper.doTestDB:_user._user_type_id: " + _user._user_type_id);
+            Log.d(LOG, "DBHelper.doTestDB:_user._region_id: " + _user._region_id);
+
+            int i = 0;
+            do {
+                Log.d(LOG, "DBHelper.doTestDB:_user.userPerms: " + _user.userPerms.get(i));
+            } while(i++ < _user.userPerms.size()-1);
+
+             i = 0;
+            do {
+                Log.d(LOG, "DBHelper.doTestDB:_user.userStatusList: " + _user.userStatusList.get(i));
+            } while(i++ < _user.userStatusList.size()-1);
+
+//            if (_user.userPerms.contains("edit_group")) {
+//                Log.d(LOG, "actionFragment:edit_group");
+//            }
+//            if (_user.userPerms.contains("edit_not")) {
+//                Log.d(LOG, "actionFragment:edit_not");
+//            }
+//            if (_user.userPerms.contains("edit_recruiter")) {
+//                Log.d(LOG, "actionFragment:edit_recruiter");
+//            }
+//            if (_user.userStatusList.contains("status_Lost")) {
+//                Log.d(LOG, "actionFragment:status_Lost");
+//            }
+        }
 
 
 //        load_facilitator_type();
