@@ -200,6 +200,18 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 }
                 MainActivity.currentFragmentId = "AddEditGroupActivity";
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditUserTitle))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditUserTitle) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditUserFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "AddEditGroupActivity";
+
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
 
@@ -238,8 +250,10 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 } else {
                     // try
 //                    dbHelp.uploadDBData();
-                    Log.d(LOG, "actionFragment call sync");
+                    Log.d(LOG, "actionFragment call sync: _username: " + MainActivity._username );
                     dbHelp.doSyncDB();
+
+
                 }
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.TEST))) {
@@ -334,6 +348,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
         actions.add(getResources().getString(R.string.addEditBooking));
         actions.add(getResources().getString(R.string.addEditInteraction));
         actions.add(getResources().getString(R.string.addEditGroupActivity));
+        actions.add(getResources().getString(R.string.addEditUserTitle));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);

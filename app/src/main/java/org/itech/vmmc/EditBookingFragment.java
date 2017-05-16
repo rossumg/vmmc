@@ -169,14 +169,11 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
         dbHelp = new DBHelper(getActivity());
 
+        _booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
 
-        if (!nationalId.equals("") || !phoneNumber.equals("")) {
-            //_booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
-            _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);
-
-        }
-
-
+//        if (!nationalId.equals("") || !phoneNumber.equals("")) {
+//            _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);
+//        }
 
         if (_booking != null) {
             Log.d(LOG, "EBF _booking != null ");
@@ -202,7 +199,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 //                _person = dbHelp.getPerson(nationalId, phoneNumber);
 //            }
 
-            Person person = dbHelp.getPerson(nationalId, phoneNumber);
+//            Person person = dbHelp.getPerson(nationalId, phoneNumber);
+            Person person = dbHelp.getPerson(firstName, lastName, phoneNumber);
             _booking = new Booking();
             _booking.set_first_name(person.get_first_name());
             _booking.set_last_name(person.get_last_name());

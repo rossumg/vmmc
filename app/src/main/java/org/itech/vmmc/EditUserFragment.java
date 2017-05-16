@@ -1,0 +1,429 @@
+package org.itech.vmmc;
+
+import android.app.Activity;
+import android.app.Fragment;
+import android.content.Context;
+import android.os.Bundle;
+import android.util.Log;
+import android.view.LayoutInflater;
+import android.view.View;
+import android.view.ViewGroup;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
+import android.widget.Button;
+import android.widget.Spinner;
+import android.widget.TextView;
+import android.widget.Toast;
+
+import java.util.Calendar;
+import java.util.List;
+
+
+/**
+ * A simple {@link Fragment} subclass.
+ * Activities that contain this fragment must implement the
+ * {@link EditUserFragment.OnFragmentInteractionListener} interface
+ * to handle interaction events.
+ * Use the {@link EditUserFragment#newInstance} factory method to
+ * create an instance of this fragment.
+ */
+public class EditUserFragment extends Fragment implements AdapterView.OnItemSelectedListener {
+    // TODO: Rename parameter arguments, choose usernames that match
+    // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
+    public static String TAG = "EditUserTag";
+    public static String LOG = "gnr";
+    public Context _context;
+
+    private static final String ARG_EDIT_USER_PARAM = "EXTRA_EDIT_USER_PARAM";
+    private static final String ARG_EDIT_USER_RECORD_PARAM = "EXTRA_EDIT_USER_RECORD_PARAM";
+
+    View _view;
+
+    // private String mEditUserParam;
+    private static String _editUserRecordParam;
+//    private static Booking _booking;
+//    private static UserType _userType;
+
+    private static User _user;
+    private static UserType _userType;
+    private static TextView _username;
+    private static TextView _phone;
+    private static TextView _firstName;
+    private static TextView _lastName;
+    private static TextView _email;
+    private static TextView _RegionId;
+    private static TextView _IsBlocked;
+    private static TextView _timestamp;
+    private static VMMCLocation _location;
+
+
+
+    private static OnFragmentInteractionListener mListener;
+    private DBHelper dbHelp;
+
+    /**
+     * Use this factory method to create a new instance of
+     * this fragment using the provided parameters.
+     *
+     //* @param param1 Parameter 1.
+     //* @param param2 Parameter 2.
+     * @return A new instance of fragment EditUserFragment.
+     */
+    // TODO: Reusername and change types and number of parameters
+    //  public static CreateFragment newInstance(String param1, String param2) {
+    public static EditUserFragment newInstance(String mEditUserParam, String mEditUserRecordParam) {
+        EditUserFragment fragment = new EditUserFragment();
+        Bundle bundle = new Bundle();
+        bundle.putString("ARG_EDIT_USER_PARAM", mEditUserParam);
+        bundle.putString("ARG_EDIT_USER_RECORD_PARAM", mEditUserRecordParam);
+
+        _editUserRecordParam = mEditUserRecordParam;
+
+        fragment.setArguments(bundle);
+        return fragment;
+    }
+
+    // public EditUserFragment() {
+    // Required empty public constructor
+    //}
+
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        if (getArguments() != null) {
+            _editUserRecordParam = getArguments().getString("ARG_EDIT_USER_RECORD_PARAM");
+            Log.d(LOG, "editUserFragment onCreate editUserParam: ");
+            Log.d(LOG, "editUserFragment onCreate editUserRecordParam: " + _editUserRecordParam.toString() + "<");
+        }
+
+        String params = _editUserRecordParam.toString();
+        String parts[] = {};
+        parts = params.split(":", 2);
+
+        String _username = "";
+        String _phone = "";
+
+        switch (parts.length) {
+            case 0: {
+                // add
+                break;
+            }
+            case 1: {
+                _username = parts[0];
+                break;
+            }
+            case 2: {
+                _username = parts[0];
+                _phone = parts[1];
+                break;
+            }
+        }
+
+        Log.d(LOG, "EG Name: " + _username);
+        Log.d(LOG, "EG Phone: " + _phone);
+
+        dbHelp = new DBHelper(getActivity());
+        _user = dbHelp.getUser(_username, _phone);
+
+        if (_user == null) {
+            _user = new User();
+        }
+
+//        if (!nationalId.equals("") || !phoneNumber.equals("")) {
+//            _user = new User();
+//            _user = dbHelp.getUser(firstName, lastName, nationalId, phoneNumber, projectedDate);
+//            _user = dbHelp.getUser(nationalId, phoneNumber);
+//        }
+//        if (_user != null) {
+//            Log.d(LOG, "EBF _user != null ");
+//            Log.d(LOG, "EBF _user != null " + _user.get_username());
+//        } else { // defaults
+//            Log.d(LOG, "EBF _user is equal null ");
+//            should check for more info like person frag, GNR
+//            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
+//                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
+//            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
+//                _person = dbHelp.getPerson(nationalId, phoneNumber);
+            }
+//            _user.set_username(_user.get_first_username());
+//            _user.set_last_username(_user.get_last_username());
+//            _user.set_national_id(_user.get_national_id());
+//            _user.set_phone(_user.get_phone());
+//            _userType = dbHelp.getUserType("3");
+//        }
+
+//        _user_type = new Status(String.valueOf(_user.get_user_type_id()));
+//        _location = new VMMCLocation(String.valueOf(_user.get_loc_id()));
+//        _institution = new Institution(String.valueOf(_user.get_institution_id()));
+//    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        _view = inflater.inflate(R.layout.fragment_edit_user, container, false);
+
+        getActivity().setTitle(getResources().getString(R.string.editUserTitle));
+        if(_user != null) {
+            _username = (TextView) _view.findViewById(R.id.username);
+            _username.setText(_user.get_username());
+            _phone = (TextView) _view.findViewById(R.id.phone);
+            _phone.setText(_user.get_phone());
+        }
+
+        loadLocationDropdown(_view );
+        loadUserTypeDropdown(_view );
+
+        Button btnUpdate = (Button) _view.findViewById(R.id.btnUpdate);
+        btnUpdate.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Calendar cal = Calendar.getInstance();
+                java.util.Date utilDate = cal.getTime();
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+                _username = (TextView) _view.findViewById(R.id.username);
+                String sUsername = _username.getText().toString();
+                _phone = (TextView) _view.findViewById(R.id.phone);
+                String sPhone = _phone.getText().toString();
+                _firstName = (TextView) _view.findViewById(R.id.first_name);
+                String sFirstName = _firstName.getText().toString();
+                _lastName = (TextView) _view.findViewById(R.id.last_name);
+                String sLastName = _lastName.getText().toString();
+                _email = (TextView) _view.findViewById(R.id.email);
+                String sEmail = _email.getText().toString();
+
+                // region and is_blocked
+               int iRegionId = 0;
+               int iIsBlocked = 0;
+
+              Spinner utSpinner = (Spinner) _view.findViewById(R.id.user_type);
+              String sUserType  = utSpinner.getSelectedItem().toString();
+              UserType _userType = dbHelp.getUserType( utSpinner.getSelectedItem().toString());
+
+              Spinner lSpinner = (Spinner) _view.findViewById(R.id.vmmclocation);
+              String sLocationText  = lSpinner.getSelectedItem().toString();
+              VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
+
+                Log.d(LOG, "UpdateUser button: " +
+                        sUsername + ", " + sPhone + " <");
+
+                boolean complete = true;
+                if(sUsername.matches("") ) complete = false;
+
+                if(complete) {
+                    User lookupUser = dbHelp.getUser(sUsername, sPhone );
+
+                    if (lookupUser != null) {
+                        lookupUser.set_username(sUsername);
+                        lookupUser.set_phone(sPhone);
+                        lookupUser.set_user_type_id(_userType.get_id());
+                        lookupUser.set_location_id(_location.get_id());
+                        lookupUser.set_first_name(sFirstName);
+                        lookupUser.set_last_name(sLastName);
+                        lookupUser.set_email(sEmail);
+                        lookupUser.set_region_id(iRegionId);
+                        lookupUser.set_is_blocked(iIsBlocked);
+
+                        Log.d(LOG, "UpdateUser update: " + _username.getText() + ", " +  "<");
+                        if(dbHelp.updateUser(lookupUser))
+                            Toast.makeText(getActivity(), "User Updated", Toast.LENGTH_LONG).show();
+                    } else {
+                        User user = new User();
+                        user.set_username(sUsername);
+                        user.set_phone(sPhone);
+                        user.set_user_type_id(_userType.get_id());
+                        user.set_location_id(_location.get_id());
+                        user.set_first_name(sFirstName);
+                        user.set_last_name(sLastName);
+                        user.set_email(sEmail);
+                        user.set_region_id(iRegionId);
+                        user.set_is_blocked(iIsBlocked);
+
+                        Log.d(LOG, "UpdateUser add: " + _username.getText() + ", " +  " <");
+                        if(dbHelp.addUser(user))
+                            Toast.makeText(getActivity(), "User Saved", Toast.LENGTH_LONG).show();;
+                    }
+                } else {
+                    Toast.makeText(getActivity(), "Must enter userusername", Toast.LENGTH_LONG).show();
+                }
+            }
+        });
+
+        return _view;
+    }
+
+    @Override
+    public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {}
+
+    public void onNothingSelected(AdapterView<?> arg0) {}
+
+    // TODO: Reusername method, update argument and hook method into UI event
+    public void onListItemPressed(int position) {
+        if (mListener != null) {
+            mListener.onFragmentInteraction(position);
+        }
+    }
+
+    @Override
+    public void onAttach(Activity activity) {
+        super.onAttach(activity);
+        try {
+            mListener = (OnFragmentInteractionListener) activity;
+        } catch (ClassCastException e) {
+            throw new ClassCastException(activity.toString()
+                    + " must implement OnFragmentInteractionListener");
+        }
+    }
+
+     @Override
+    public void onDetach() {
+        super.onDetach();
+        mListener = null;
+        Log.d(LOG, "Detach: ");
+         _user = null;
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        mListener = null;
+        Log.d(LOG, "Resume: ");
+//        _first_username = (TextView) _view.findViewById(R.id.first_username); _first_username.setText("");
+
+
+        if(_user != null) {
+//            _userusername = (TextView) _view.findViewById(R.id.userusername);
+//            _userusername.setText(_user.get_userusername());
+
+        }
+    }
+
+    /**
+     * This interface must be implemented by activities that contain this
+     * fragment to allow an interaction in this fragment to be communicated
+     * to the activity and potentially other fragments contained in that
+     * activity.
+     * <p/>
+     * See the Android Training lesson <a href=
+     * "http://developer.android.com/training/basics/fragments/communicating.html"
+     * >Communicating with Other Fragments</a> for more information.
+     */
+    public interface OnFragmentInteractionListener {
+        // TODO: Update argument type and username
+        public void onFragmentInteraction(int position);
+
+    }
+
+    public void loadUserTypeDropdown(View view ) {
+        Log.d(LOG, "loadUserTypeDropdown: " );
+
+        final Spinner utSpinner = (Spinner) view.findViewById(R.id.user_type);
+        final List<String> userTypeNames = dbHelp.getAllUserTypes();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, userTypeNames);
+//        {
+//            @Override
+//            public boolean isEnabled(int position) {
+//                return position != 1;
+//            }
+//
+//            @Override
+//            public boolean areAllItemsEnabled() {
+//                return false;
+//            }
+
+//            @Override
+//            public View getDropDownView(int position, View convertView, ViewGroup parent){
+//                View v = convertView;
+//                if (v == null) {
+//                    Context mContext = this.getContext();
+//                    LayoutInflater vi = (LayoutInflater) mContext.getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+//                    v = vi.inflate(R.layout.simple_spinner_item, null);
+//                }
+////                Spinner spinner = (Spinner) v.findViewById(R.id.status);
+//                Log.d(LOG, "loadStatusDropdown:position: " + position + ":" + statusNames.get(position));
+//                TextView tv = (TextView) v.findViewById(R.id.spinnerTarget);
+////                tv.setText(statusNames.get(position));
+//
+//                switch (position) {
+//                    case 0:
+////                        tv.setTextColor(Color.RED);
+//                        break;
+//                    case 1:
+////                        tv.setTextColor(Color.BLUE);
+//                        break;
+//                    default:
+////                        tv.setTextColor(Color.BLACK);
+//                        break;
+//                }
+//                return v;
+//            }
+//        };
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        utSpinner.setAdapter(dataAdapter);
+        _userType = dbHelp.getUserType(String.valueOf(_user.get_user_type_id()));
+        if (_userType == null) {
+           _userType = dbHelp.getUserType("Clerk");
+        }
+        String compareValue = _userType.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            utSpinner.setSelection(spinnerPosition);
+        }
+
+        utSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String userTypeText  = utSpinner.getSelectedItem().toString();
+                _userType = dbHelp.getUserType(userTypeText);
+//                _userType.set_id(_userType.get_id());
+//                Log.d(LOG, "userType: " + _userType.get_id() + _userType.get_username());
+//                status_type = dbHelp.getStatusType(statusText);
+//                Log.d(LOG, "statusId/Name selected: " + status.get_id() + " " + status.get_username());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadLocationDropdown(View view ) {
+        Log.d(LOG, "loadLocationDropdown: " );
+
+        final Spinner lSpinner = (Spinner) view.findViewById(R.id.vmmclocation);
+        final List<String> locationNames = dbHelp.getAllLocationNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, locationNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        lSpinner.setAdapter(dataAdapter);
+        _location = dbHelp.getLocation(String.valueOf(_user.get_location_id()));
+        if (_location == null) {
+            _location = dbHelp.getLocation("1");
+        }
+        String compareValue = _location.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            lSpinner.setSelection(spinnerPosition);
+        }
+
+        lSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String locationText  = lSpinner.getSelectedItem().toString();
+                _location = dbHelp.getLocation(locationText);
+                _user.set_location_id(_location.get_id());
+                Log.d(LOG, "location: " + _location.get_id() + _location.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+}
+

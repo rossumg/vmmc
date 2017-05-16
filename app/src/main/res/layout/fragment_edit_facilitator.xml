@@ -239,6 +239,18 @@
                    android:layout_alignParentStart="true"/>
 
                -->
+
+    <Button
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/btn_label_client"
+        android:id="@+id/btnClient"
+        android:paddingTop="12dp"
+        android:layout_alignStart="@+id/textViewNote"
+        android:layout_below="@+id/textViewNote"
+        android:layout_marginTop="32dp" />
+
               <Button
                   android:layout_width="wrap_content"
                   android:layout_height="wrap_content"
@@ -247,7 +259,7 @@
                   android:id="@+id/btnUpdate"
                   android:layout_below="@+id/textViewNote"
                   android:layout_alignEnd="@+id/note"
-                  android:layout_marginTop="72dp" />
+                  android:layout_marginTop="32dp" />
 
 
 </RelativeLayout>

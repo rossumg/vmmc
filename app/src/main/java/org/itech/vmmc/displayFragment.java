@@ -41,6 +41,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     List<Facilitator> facilitators = new ArrayList<Facilitator>();
     List<Interaction> interactions = new ArrayList<Interaction>();
     List<GroupActivity> group_activities = new ArrayList<GroupActivity>();
+    List<User> users = new ArrayList<User>();
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -84,6 +85,11 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 fragment = EditGroupActivityFragment.newInstance("editGroupActivity", parts[0] + ":" + parts[1]);
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditGroupActivityFragment.TAG).addToBackStack("EditGroupActivity").commit();
 
+            }  else if (displayType == "displayUser") {
+                String parts[] = mAdapter.getItem(position).toString().split(", ", 2);
+                Log.d(LOG, "DisplayFragment editUser: " + parts[0] + " " + parts[1]);
+                fragment = EditUserFragment.newInstance("editUser", parts[0] + ":" + parts[1]);
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditUserFragment.TAG).addToBackStack("EditUser").commit();
             }
         }
     }
@@ -222,6 +228,20 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                         _rec.get_name() + ", " + _rec.get_activity_date();
                 i++;
             }
+
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
+        } else if (displayType == "displayUser") {
+            users = dbHelp.getAllLikeUsers(mParam2);
+            String[] _stringArray = new String[users.size()];
+            int i = 0;
+            for (User _rec : users) {
+                _stringArray[i] =
+                        _rec.get_username() + ", " + _rec.get_phone();
+                i++;
+            }
+
             mAdapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
@@ -310,7 +330,9 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
         } else if(displayType == "displayInteraction" ) {
             getActivity().setTitle(getResources().getString(R.string.displayInteractionTitle) );
         } else if(displayType == "displayGroupActivity" ) {
-            getActivity().setTitle(getResources().getString(R.string.displayGroupActivityTitle) );
+            getActivity().setTitle(getResources().getString(R.string.displayGroupActivityTitle));
+        } else if(displayType == "displayUser" ) {
+                getActivity().setTitle(getResources().getString(R.string.displayUserTitle) );
         } else if(displayType == "" ) {
 //
         }

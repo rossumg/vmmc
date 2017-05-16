@@ -72,10 +72,10 @@
 
     <string name="client_id">ClientID </string>
 
-    <string name="btn_label_edit">EDIT </string>
-    <string name="btn_label_add">ADD </string>
-    <string name="btn_label_save">SAVE </string>
-    <string name="btn_label_update">UPDATE </string>
+    <string name="btn_label_edit">Edit </string>
+    <string name="btn_label_add">Add </string>
+    <string name="btn_label_save">Save </string>
+    <string name="btn_label_update">Update </string>
     <string name="btn_label_go">go </string>
 
     <string name="facility_id">Enter Facility Id: </string>
@@ -135,6 +135,17 @@
     <string name="females">Females</string>
     <string name="messages">Messages</string>
     <string name="GroupActivity">Group Activity</string>
+    <string name="btn_label_client">Client</string>
+    <string name="btn_label_person">Person</string>
+    <string name="btn_label_booking">Booking</string>
+    <string name="Username">Username</string>
+    <string name="Region">Region</string>
+    <string name="Usergroup">User Group</string>
+    <string name="addEditUserTitle">User</string>
+    <string name="editUserTitle">Edit User</string>
+    <string name="displayUserTitle">Display Users</string>
+    <string name="email">Email</string>
+    <string name="is_blocked">Is Blocked</string>
 
 
 </resources>

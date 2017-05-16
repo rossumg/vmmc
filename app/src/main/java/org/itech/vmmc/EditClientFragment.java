@@ -181,6 +181,10 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _institution = dbHelp.getInstitution("Other");
             _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
         } else {
+            _client.set_first_name(firstName);
+            _client.set_last_name(lastName);
+            _client.set_national_id(nationalId);
+            _client.set_phone(phoneNumber);
             _status = dbHelp.getStatus((String.valueOf(_client.get_status_id())));
             _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
@@ -218,6 +222,61 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         loadLocationDropdown(_view );
         loadInstitutionDropdown(_view );
         loadGroupActivityDropdown(_view);
+
+//        Button btnBooking = (Button) _view.findViewById(R.id.btnBooking);
+//        btnBooking.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Log.d(LOG, "Booking button: " +
+//                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+//                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+//
+//                Calendar cal = Calendar.getInstance();
+//                java.util.Date utilDate = cal.getTime();
+//                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+//
+//                Fragment fragment = EditBookingFragment.newInstance("editBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + sqlDate);
+//                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
+//
+//                Toast.makeText(getActivity(), "Booking button", Toast.LENGTH_LONG).show();
+//            }
+//        }); gnr: direct to edit frag
+
+        Button btnBooking = (Button) _view.findViewById(R.id.btnBooking);
+        btnBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                java.util.Date utilDate = cal.getTime();
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+                Log.d(LOG, "Booking button: " +
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+
+                Fragment fragment;
+                fragment = DisplayFragment.newInstance("displayBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "");
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayBooking").commit();
+            }
+        });
+
+        Button btnPerson = (Button) _view.findViewById(R.id.btnPerson);
+        btnPerson.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d(LOG, "Person button: " +
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+
+                Fragment fragment = EditPersonFragment.newInstance("editPerson", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText());
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditPersonFragment.TAG).addToBackStack("EditPerson").commit();
+
+//                Toast.makeText(getActivity(), "Person button", Toast.LENGTH_LONG).show();
+            }
+        });
 
         Button btnUpdateClient = (Button) _view.findViewById(R.id.btnUpdate);
         btnUpdateClient.setOnClickListener(new View.OnClickListener() {
@@ -397,7 +456,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         Log.d(LOG, "loadStatusDropdown: " );
 
         final Spinner sSpinner = (Spinner) view.findViewById(R.id.status);
-        final List<String> statusNames = dbHelp.getAllStatusTypes();
+
+
+        final List<String> statusNames = dbHelp.getUserStatusTypes();
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, statusNames);
 //        {

@@ -9,6 +9,7 @@ import java.util.ArrayList;
 public class User {
 
     int _id;
+    String _timestamp;
     String _username;
     String _password;
     String _email;
@@ -18,7 +19,7 @@ public class User {
     String _phone;
     int _region_id;
     int _user_type_id;
-    String _locale;
+    int _location_id;
     int _modified_by;
     int _created_by;
     int _is_blocked;
@@ -30,8 +31,9 @@ public class User {
 
     public User(){}
 
-    public User(int _id, String _username, String _password, String _email, String _first_name, String _last_name, String _national_id, String _phone, int _region_id, int _user_type_id, String _locale, int _modified_by, int _created_by, int _is_blocked, String _timestamp_updated, String _timestamp_created, String _timestamp_last_login) {
+    public User(int _id, String _timestamp, String _username, String _password, String _email, String _first_name, String _last_name, String _national_id, String _phone, int _region_id, int _user_type_id, int _location_id, int _modified_by, int _created_by, int _is_blocked, String _timestamp_updated, String _timestamp_created, String _timestamp_last_login) {
         this._id = _id;
+        this._timestamp = _timestamp;
         this._username = _username;
         this._password = _password;
         this._email = _email;
@@ -41,7 +43,7 @@ public class User {
         this._phone = _phone;
         this._region_id = _region_id;
         this._user_type_id = _user_type_id;
-        this._locale = _locale;
+        this._location_id = _location_id;
         this._modified_by = _modified_by;
         this._created_by = _created_by;
         this._is_blocked = _is_blocked;
@@ -50,7 +52,8 @@ public class User {
         this._timestamp_last_login = _timestamp_last_login;
     }
 
-    public User(String _username, String _password, String _email, String _first_name, String _last_name, String _national_id, String _phone, int _region_id, int _user_type_id, String _locale, int _modified_by, int _created_by, int _is_blocked, String _timestamp_updated, String _timestamp_created, String _timestamp_last_login) {
+    public User(String _timestamp, String _username, String _password, String _email, String _first_name, String _last_name, String _national_id, String _phone, int _region_id, int _user_type_id, int _location_id, int _modified_by, int _created_by, int _is_blocked, String _timestamp_updated, String _timestamp_created, String _timestamp_last_login) {
+        this._timestamp = _timestamp;
         this._username = _username;
         this._password = _password;
         this._email = _email;
@@ -60,7 +63,7 @@ public class User {
         this._phone = _phone;
         this._region_id = _region_id;
         this._user_type_id = _user_type_id;
-        this._locale = _locale;
+        this._location_id = _location_id;
         this._modified_by = _modified_by;
         this._created_by = _created_by;
         this._is_blocked = _is_blocked;
@@ -68,6 +71,8 @@ public class User {
         this._timestamp_created = _timestamp_created;
         this._timestamp_last_login = _timestamp_last_login;
     }
+
+
 
     public User(DBHelper dbHelp, String credentials){
         String parts[] = credentials.split(":",2);
@@ -75,6 +80,7 @@ public class User {
         this._password = parts[1];
         User _user = new User();
         _user = dbHelp.getUser(this._username, this._password);
+        this._timestamp = _user.get_timestamp();
         this._email = _user.get_email();
         this._first_name = _user._first_name;
         this._last_name = _user._last_name;
@@ -82,7 +88,7 @@ public class User {
         this._phone = _user._phone;
         this._region_id = _user._region_id;
         this._user_type_id = _user._user_type_id;
-        this._locale = _user._locale;
+        this._location_id = _user._location_id;
         this._modified_by = _user._modified_by;
         this._created_by = _user._created_by;
         this._is_blocked = _user._is_blocked;
@@ -99,6 +105,14 @@ public class User {
 
     public void set_id(int _id) {
         this._id = _id;
+    }
+
+    public String get_timestamp() {
+        return _timestamp;
+    }
+
+    public void set_timestamp(String _timestamp) {
+        this._timestamp = _timestamp;
     }
 
     public String get_username() {
@@ -173,12 +187,12 @@ public class User {
         this._user_type_id = _user_type_id;
     }
 
-    public String get_locale() {
-        return _locale;
+    public int get_location_id() {
+        return _location_id;
     }
 
-    public void set_locale(String _locale) {
-        this._locale = _locale;
+    public void set_location_id(int _location_id) {
+        this._location_id = _location_id;
     }
 
     public int get_modified_by() {

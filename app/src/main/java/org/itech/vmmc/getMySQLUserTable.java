@@ -87,6 +87,8 @@ class getMySQLUserTable extends AsyncTask<String, String, String> {
                     JSONObject _rec = _array.getJSONObject(i);
                     int user_id = _rec.getInt("id");
                     // escape single quotes
+                    String _timestamp = _rec.getString("timestamp");
+                    _timestamp = _timestamp.replace("'","''");
                     String _username = _rec.getString("username");
                     _username = _username.replace("'","''");
                     String _password = _rec.getString("password");
@@ -105,8 +107,8 @@ class getMySQLUserTable extends AsyncTask<String, String, String> {
                     region_id = region_id.replace("'","''");
                     String user_type_id = _rec.getString("user_type_id");
                     user_type_id = user_type_id.replace("'","''");
-                    String locale = _rec.getString("locale");
-                    locale = locale.replace("'","''");
+                    String location_id = _rec.getString("location_id");
+                    location_id = location_id.replace("'","''");
                     String modified_by = _rec.getString("modified_by");
                     modified_by = modified_by.replace("'","''");
                     String created_by = _rec.getString("created_by");
@@ -124,9 +126,10 @@ class getMySQLUserTable extends AsyncTask<String, String, String> {
                     Log.d(LOG, "getMySQLUserTable:doInBackground: " + _username );
                     String _insert =
                             "insert or replace into user "
-                                    + "(id, username, password, email, first_name, last_name, national_id, phone, region_id, user_type_id, locale, modified_by, created_by, is_blocked, timestamp_updated, timestamp_created, timestamp_last_login) "
+                                    + "(id, timestamp, username, password, email, first_name, last_name, national_id, phone, region_id, user_type_id, location_id, modified_by, created_by, is_blocked, timestamp_updated, timestamp_created, timestamp_last_login) "
                                     + " values("
                                     + "'" + user_id + "'" + ","
+                                    + "'" + _timestamp + "'" + ","
                                     + "'" + _username + "'" + ","
                                     + "'" + _password + "'" + ","
                                     + "'" + email + "'" + ","
@@ -136,7 +139,7 @@ class getMySQLUserTable extends AsyncTask<String, String, String> {
                                     + "'" + phone + "'" + ","
                                     + "'" + region_id + "'" + ","
                                     + "'" + user_type_id + "'" + ","
-                                    + "'" + locale + "'" + ","
+                                    + "'" + location_id + "'" + ","
                                     + "'" + modified_by + "'" + ","
                                     + "'" + created_by + "'" + ","
                                     + "'" + is_blocked + "'" + ","

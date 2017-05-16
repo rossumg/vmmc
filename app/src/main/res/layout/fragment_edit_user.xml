@@ -14,8 +14,8 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/name"
-        android:id="@+id/textViewName"
+        android:text="@string/Username"
+        android:id="@+id/textViewUsername"
         android:paddingTop="128dp"
         android:layout_below="@+id/imageViewVMMC" />
 
@@ -23,12 +23,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/name"
+        android:id="@+id/username"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewName"
+        android:layout_toEndOf="@+id/textViewUsername"
         android:layout_below="@+id/imageViewVMMC"
         android:paddingTop="128dp"
         android:maxLines="1" />
@@ -38,22 +38,22 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/activity_date"
-        android:id="@+id/textViewActivityDate"
+        android:text="@string/phone"
+        android:id="@+id/textViewPhone"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewName" />
+        android:layout_below="@+id/textViewUsername" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/activity_date"
+        android:id="@+id/phone"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewName"
-        android:layout_below="@+id/textViewName"
+        android:layout_toEndOf="@+id/textViewPhone"
+        android:layout_below="@+id/textViewUsername"
         android:maxLines="1" />
 
     <TextView
@@ -64,7 +64,7 @@
         android:text="@string/location"
         android:id="@+id/textViewLocation"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewActivityDate" />
+        android:layout_below="@+id/textViewPhone" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -77,29 +77,28 @@
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewLocation"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewActivityDate" />
-
+        android:layout_below="@+id/textViewPhone" />
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/group_type"
-        android:id="@+id/textViewGroupType"
+        android:text="@string/Usergroup"
+        android:id="@+id/textViewUsergroup"
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewLocation" />
 
     <Spinner
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/group_type"
+        android:id="@+id/user_type"
         android:textSize="@dimen/font_size_small"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewGroupType"
+        android:layout_toEndOf="@+id/textViewUsergroup"
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewLocation" />
 
@@ -108,22 +107,22 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/males"
-        android:id="@+id/textViewMales"
+        android:text="@string/first_name"
+        android:id="@+id/textViewFirstName"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewGroupType" />
+        android:layout_below="@+id/textViewUsergroup" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/males"
+        android:id="@+id/first_name"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewGroupType"
-        android:layout_below="@+id/textViewGroupType"
+        android:layout_toEndOf="@+id/textViewFirstName"
+        android:layout_below="@+id/textViewFirstName"
         android:maxLines="1" />
 
     <TextView
@@ -131,22 +130,22 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/females"
-        android:id="@+id/textViewFemales"
+        android:text="@string/last_name"
+        android:id="@+id/textViewLastName"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewMales" />
+        android:layout_below="@+id/textViewFirstName" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/females"
+        android:id="@+id/last_name"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewMales"
-        android:layout_below="@+id/textViewMales"
+        android:layout_toEndOf="@+id/textViewLastName"
+        android:layout_below="@+id/textViewFirstName"
         android:maxLines="1" />
 
     <TextView
@@ -154,50 +153,88 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/messages"
-        android:id="@+id/textViewMessages"
+        android:text="@string/email"
+        android:id="@+id/textViewEmail"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewFemales" />
+        android:layout_below="@+id/textViewLastName" />
 
     <EditText
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/messages"
+        android:id="@+id/email"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewFemales"
-        android:layout_below="@+id/textViewFemales"
+        android:layout_toEndOf="@+id/textViewEmail"
+        android:layout_below="@+id/textViewLastName"
         android:maxLines="1" />
 
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/Region"
+        android:id="@+id/textViewRegion"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewEmail" />
 
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/region"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewRegion"
+        android:layout_below="@+id/textViewEmail"
+        android:maxLines="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/is_blocked"
+        android:id="@+id/textViewIsBlocked"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewRegion" />
 
     <!--
-        <Button
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:textSize="@dimen/font_size_small"
-            android:text="@string/btn_label_add"
-            android:id="@+id/btnAddPerson"
-            android:paddingTop="12dp"
-            android:layout_below="@+id/phone_number"
-            android:layout_alignEnd="@+id/phone_number"
-            android:layout_marginTop="32dp" />
-    -->
 
-    <Button
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/font_size_small"
-        android:text="@string/btn_label_client"
-        android:id="@+id/btnClient"
-        android:paddingTop="12dp"
-        android:layout_alignStart="@+id/textViewMessages"
-        android:layout_below="@+id/textViewMessages"
-        android:layout_marginTop="32dp" />
+
+
+   <EditText
+       android:layout_width="wrap_content"
+       android:layout_height="wrap_content"
+       android:textSize="@dimen/font_size_small"
+       android:id="@+id/is_blocked"
+       android:layout_marginLeft="200dp"
+       android:layout_marginRight="50dp"
+       android:layout_alignParentEnd="true"
+       android:layout_alignParentStart="true"
+       android:layout_toEndOf="@+id/textViewIsBlocked"
+       android:layout_below="@+id/textViewRegion"
+       android:maxLines="1" />
+
+
+   <!--
+       <Button
+           android:layout_width="wrap_content"
+           android:layout_height="wrap_content"
+           android:textSize="@dimen/font_size_small"
+           android:text="@string/btn_label_add"
+           android:id="@+id/btnAddPerson"
+           android:paddingTop="12dp"
+           android:layout_below="@+id/phone_number"
+           android:layout_alignEnd="@+id/phone_number"
+           android:layout_marginTop="32dp" />
+   -->
 
 
     <Button
@@ -206,9 +243,39 @@
         android:textSize="@dimen/font_size_small"
         android:text="@string/btn_label_update"
         android:id="@+id/btnUpdate"
-        android:layout_below="@+id/textViewMessages"
-        android:layout_alignEnd="@+id/messages"
+        android:layout_below="@+id/textViewIsBlocked"
+        android:layout_alignEnd="@+id/user_type"
+        android:paddingTop="12dp"
         android:layout_marginTop="32dp" />
 
+    <RadioGroup
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/radioGroup"
+        android:textSize="@dimen/font_size_small"
+        android:layout_toEndOf="@+id/textViewIsBlocked"
+        android:layout_below="@+id/textViewRegion"
+        android:orientation="horizontal"
+        android:paddingTop="12dp" >
+
+        <RadioButton
+            android:layout_width="75sp"
+            android:id="@+id/radioButton1"
+            android:layout_height="wrap_content"
+            android:text="No"
+            android:textAlignment="viewStart" />
+
+        <RadioButton
+            android:layout_width="75sp"
+            android:id="@+id/radioButton2"
+            android:layout_height="wrap_content"
+            android:text="Yes"
+            android:textAlignment="textEnd" />
+
+    </RadioGroup>
 
 </RelativeLayout>

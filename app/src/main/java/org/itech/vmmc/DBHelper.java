@@ -166,6 +166,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
     // user table column names
     private static final String USER_ID = "id";
+    private static final String USER_TIMESTAMP = "timestamp";
     private static final String USER_USERNAME = "username";
     private static final String USER_PASSWORD = "password";
     private static final String USER_EMAIL = "email";
@@ -175,7 +176,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String USER_PHONE = "phone";
     private static final String USER_REGION_ID = "region_id";
     private static final String USER_USER_TYPE_ID = "user_type_id";
-    private static final String USER_LOCALE = "locale";
+    private static final String USER_LOCATION_ID = "location_id";
     private static final String USER_MODIFIED_BY = "modified_by";
     private static final String USER_CREATED_BY = "created_by";
     private static final String USER_IS_BLOCKED = "is_blocked";
@@ -391,6 +392,7 @@ public class DBHelper extends SQLiteOpenHelper{
             //try { db.execSQL("delete from user;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_USER_TABLE = "CREATE TABLE IF NOT EXISTS user(" +
                     "id integer primary key  autoincrement  not null  unique, " +
+                    "timestamp datetime default current_timestamp, " +
                     "username varchar, " +
                     "password varchar, " +
                     "email varchar, " +
@@ -400,7 +402,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     "phone varchar, " +
                     "region_id int, " +
                     "user_type_id int, " +
-                    "locale varchar, " +
+                    "location_id int, " +
                     "modified_by int, " +
                     "created_by int, " +
                     "is_blocked int, " +
@@ -408,6 +410,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "timestamp_created datetime default '0000-00-00', " +
                     "timestamp_last_login datetime default '0000-00-00');";
             db.execSQL(CREATE_USER_TABLE);
+//            db.execSQL("insert into user values (1,\"A\", \"B\", \"N\", \"A\", \"P\", \"dob\", \"G\", 1.1, 2.2, 0 );");
+            db.execSQL("insert into user (first_name, last_name, user_type_id, email, username, password, region_id) values('sync', 'sync', 1, 'a@', 'sync@', 'password', 1);");
 
             //try { db.execSQL("delete from client;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_CLIENT_TABLE = "CREATE TABLE IF NOT EXISTS client_table(" +
@@ -563,31 +567,44 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLGroupTypeTable(this._context, this).execute();
         new getMySQLGroupActivityTable(this._context, this).execute();
 
+        Log.d(LOG, "DBHelper after sync: _username: " + MainActivity._username );
+
+        if (MainActivity._username == "sync@"){
+            User _user = new User();
+            _user.set_username(MainActivity._username);
+            _user.set_password(MainActivity._password);
+            _user.set_email(MainActivity._username);
+            _user.set_user_type_id(1);
+            _user.set_region_id(1);
+            this.addUser(_user);
+
+        }
+
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 
-    public User getUser(String username, String password){
+    public User getUser(String username, String phone){
         User _user = null;
         Log.d(LOG, "DBHelper.getUser");
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] tableColumns = new String[] {
-                USER_ID, USER_USERNAME, USER_PASSWORD, USER_EMAIL, USER_FIRST_NAME, USER_LAST_NAME, USER_NATIONAL_ID, USER_PHONE, USER_REGION_ID, USER_USER_TYPE_ID, USER_LOCALE, USER_MODIFIED_BY, USER_CREATED_BY, USER_IS_BLOCKED, USER_TIMESTAMP_UPDATED, USER_TIMESTAMP_CREATED, USER_TIMESTAMP_LAST_LOGIN
+                USER_ID, USER_TIMESTAMP, USER_USERNAME, USER_PASSWORD, USER_EMAIL, USER_FIRST_NAME, USER_LAST_NAME, USER_NATIONAL_ID, USER_PHONE, USER_REGION_ID, USER_USER_TYPE_ID, USER_LOCATION_ID, USER_MODIFIED_BY, USER_CREATED_BY, USER_IS_BLOCKED, USER_TIMESTAMP_UPDATED, USER_TIMESTAMP_CREATED, USER_TIMESTAMP_LAST_LOGIN
         };
 
         String whereClause = "trim(" +
                 USER_USERNAME + ") like ? and trim(" +
-                USER_PASSWORD + ") like ? "
+                USER_PHONE + ") like ? "
                 ;
 
-        String[] whereArgs = new String[]{ username, password };
+        String[] whereArgs = new String[]{ username, phone };
 
         Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
             Log.d(LOG, "getUser  "
-                    + cursor.getString(1)
-                    + cursor.getString(2)
+                    + cursor.getString(2) + ", "
+                    + cursor.getString(8)
             );
             _user = new User(
                     parseInt(cursor.getString(0)),
@@ -598,15 +615,16 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(5),
                     cursor.getString(6),
                     cursor.getString(7),
-                    parseInt(cursor.getString(8)),
+                    cursor.getString(8),
                     parseInt(cursor.getString(9)),
-                    cursor.getString(10),
+                    parseInt(cursor.getString(10)),
                     parseInt(cursor.getString(11)),
                     parseInt(cursor.getString(12)),
                     parseInt(cursor.getString(13)),
-                    cursor.getString(14),
+                    parseInt(cursor.getString(14)),
                     cursor.getString(15),
-                    cursor.getString(16)
+                    cursor.getString(16),
+                    cursor.getString(17)
             );
 
             cursor.close();
@@ -616,6 +634,41 @@ public class DBHelper extends SQLiteOpenHelper{
             cursor.close();
             return _user;
         }
+    }
+
+    public boolean addUser(User user) {
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        //values.put(PERSON_ID, person.get_id());
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+        values.put( USER_TIMESTAMP, oTimestamp.toString());
+        values.put( USER_USERNAME, user.get_username());
+        values.put( USER_PASSWORD, user.get_password());
+        values.put( USER_EMAIL, user.get_email());
+        values.put( USER_FIRST_NAME, user.get_first_name());
+        values.put( USER_LAST_NAME, user.get_last_name());
+        values.put( USER_NATIONAL_ID, user.get_national_id());
+        values.put( USER_PHONE, user.get_phone());
+        values.put( USER_REGION_ID, user.get_region_id());
+        values.put( USER_USER_TYPE_ID, user.get_user_type_id());
+        values.put( USER_LOCATION_ID, user.get_location_id());
+        values.put( USER_MODIFIED_BY, user.get_modified_by());
+        values.put( USER_CREATED_BY, user.get_created_by());
+        values.put( USER_IS_BLOCKED, user.get_is_blocked());
+        values.put( USER_TIMESTAMP_UPDATED, user.get_timestamp_updated());
+        values.put( USER_TIMESTAMP_CREATED, user.get_timestamp_created());
+        values.put( USER_TIMESTAMP_LAST_LOGIN, user.get_timestamp_last_login());
+
+        try {
+            db.insert(TABLE_USER, null, values);
+        } catch (Exception ex) {
+            // db.close();
+            Log.d(LOG, "addUser catch " + ex.toString());
+            return false;
+        }
+        return true;
     }
 
     public ArrayList<String> getUserPerms(String username){
@@ -1371,6 +1424,92 @@ public class DBHelper extends SQLiteOpenHelper{
         return returnQuestion;
     }
 
+    public List<String> getAllUserIDs(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> _ID = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                USER_ID, USER_TIMESTAMP, USER_USERNAME, USER_PASSWORD, USER_EMAIL, USER_FIRST_NAME, USER_LAST_NAME, USER_NATIONAL_ID, USER_PHONE, USER_REGION_ID, USER_USER_TYPE_ID, USER_LOCATION_ID, USER_MODIFIED_BY, USER_CREATED_BY, USER_IS_BLOCKED, USER_TIMESTAMP_UPDATED, USER_TIMESTAMP_CREATED, USER_TIMESTAMP_LAST_LOGIN
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = USER_USERNAME;
+
+        Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllPersonIDs  "
+//                                + cursor.getString(1) + " "
+//                                + cursor.getString(2) + " "
+//                                + cursor.getString(3) + " "
+//                                + cursor.getString(5) + " "
+//                );
+                _ID.add(cursor.getString(2).trim() + ", " + cursor.getString(5).trim() + " " + cursor.getString(6).trim() + ", " + cursor.getString(8).trim());
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(_ID);
+        _ID.clear();;
+        _ID.addAll(noDups);
+
+        // convert to array
+//        String[] stringArrayPersonID = new String[ personID.size() ];
+//        personID.toArray(stringArrayPersonID);
+
+        return _ID;
+    }
+
+    public List<String> getAllUserPhoneNumbers(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> _phone_numbers = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                USER_ID, USER_TIMESTAMP, USER_USERNAME, USER_PASSWORD, USER_EMAIL, USER_FIRST_NAME, USER_LAST_NAME, USER_NATIONAL_ID, USER_PHONE, USER_REGION_ID, USER_USER_TYPE_ID, USER_LOCATION_ID, USER_MODIFIED_BY, USER_CREATED_BY, USER_IS_BLOCKED, USER_TIMESTAMP_UPDATED, USER_TIMESTAMP_CREATED, USER_TIMESTAMP_LAST_LOGIN
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = USER_PHONE;
+
+        Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllPersonIDs  "
+//                                + cursor.getString(1) + " "
+//                                + cursor.getString(2) + " "
+//                                + cursor.getString(3) + " "
+//                                + cursor.getString(5) + " "
+//                );
+                _phone_numbers.add(cursor.getString(8).trim());
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(_phone_numbers);
+        _phone_numbers.clear();;
+        _phone_numbers.addAll(noDups);
+
+        // convert to array
+//        String[] stringArrayPersonID = new String[ _phone_numbers.size() ];
+//        _phone_numbers.toArray(stringArrayPersonID);
+
+        return _phone_numbers;
+    }
+
     public List<String> getAllPersonIDs(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> personID = new ArrayList<String>();
@@ -1451,8 +1590,8 @@ public class DBHelper extends SQLiteOpenHelper{
         _ID.addAll(noDups);
 
         // convert to array
-//        String[] stringArrayPersonID = new String[ personID.size() ];
-//        personID.toArray(stringArrayPersonID);
+//        String[] stringArrayPersonID = new String[ _ID.size() ];
+//        _ID.toArray(stringArrayPersonID);
 
         return _ID;
     }
@@ -1737,6 +1876,52 @@ public class DBHelper extends SQLiteOpenHelper{
         return statusTypes;
     }
 
+    public List<String> getAllUserTypes(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> userTypes = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                USER_TYPE_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = USER_TYPE_NAME;
+
+        Cursor cursor = db.query(TABLE_USER_TYPE, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllFacilityNames  "
+//                                + cursor.getString(0)
+//                );
+                userTypes.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(userTypes);
+        userTypes.clear();;
+        userTypes.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ userTypes.size() ];
+        userTypes.toArray(stringArrayNames);
+
+        return userTypes;
+    }
+
+    public List<String> getUserStatusTypes(){
+
+        User _user = new User(this, MainActivity._username + ":" + MainActivity._password);
+        return _user.userStatusList;
+    }
+
     public Status getStatus( String status_id ) {
         Status status = null;
         SQLiteDatabase db = this.getReadableDatabase();
@@ -1946,6 +2131,49 @@ public class DBHelper extends SQLiteOpenHelper{
             cursor.close();
             // db.close();
             return interactionType;
+        }
+    }
+
+    public UserType getUserType( String user_type_id ) {
+        UserType userType = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getUserType: " + user_type_id);
+
+        String[] tableColumns = new String[] {
+                USER_TYPE_ID, USER_TYPE_NAME
+        };
+
+        String whereClause = "trim(" +
+                USER_TYPE_ID + ") like ? or trim(" +
+                USER_TYPE_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getUserType whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                user_type_id, user_type_id };  // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getUserType whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_USER_TYPE, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getUserType  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            userType = new UserType(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            // db.close();
+            return userType;
+        } else {
+            cursor.close();
+            // db.close();
+            return userType;
         }
     }
 
@@ -3416,6 +3644,64 @@ public class DBHelper extends SQLiteOpenHelper{
         return clientList;
     }
 
+    public List<User> getAllLikeUsers(String index) {
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<User> _List = new ArrayList<User>();
+        String parts[] = index.split(":", 2);
+
+        String[] tableColumns = new String[] {
+                USER_ID, USER_TIMESTAMP, USER_USERNAME, USER_PASSWORD, USER_EMAIL, USER_FIRST_NAME, USER_LAST_NAME, USER_NATIONAL_ID, USER_PHONE, USER_REGION_ID, USER_USER_TYPE_ID, USER_LOCATION_ID, USER_MODIFIED_BY, USER_CREATED_BY, USER_IS_BLOCKED, USER_TIMESTAMP_UPDATED, USER_TIMESTAMP_CREATED, USER_TIMESTAMP_LAST_LOGIN
+        };
+
+        String whereClause = "1=1 and trim(" +
+                USER_USERNAME + ") like ? and trim(" +
+                USER_PHONE + ") like ? ";
+
+        Log.d(LOG, "getUser whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                "%" + parts[0] + "%", "%" + parts[1] + "%" };
+
+        Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllClients: loop: "
+//                        + cursor1.getString(1) + ":"
+//                        + cursor1.getString(2) + ":"
+//                        + cursor1.getString(3) + ":"
+//                        + cursor1.getString(4) + ":"
+//                        + cursor1.getString(5) + ":"
+//                        + cursor1.getString(6) + ":"
+//                        + cursor1.getString(7) + ":" );
+                User _user = new User();
+                _user.set_id(parseInt(cursor.getString(0)));
+                _user.set_timestamp(cursor.getString(1));
+                _user.set_username(cursor.getString(2));
+                _user.set_password(cursor.getString(3));
+                _user.set_email(cursor.getString(4));
+                _user.set_first_name(cursor.getString(5));
+                _user.set_last_name(cursor.getString(6));
+                _user.set_national_id(cursor.getString(7));
+                _user.set_phone(cursor.getString(8));
+                _user.set_region_id(parseInt(cursor.getString(9)));
+                _user.set_user_type_id(parseInt(cursor.getString(10)));
+                _user.set_location_id(parseInt(cursor.getString(11)));
+                _user.set_modified_by(parseInt(cursor.getString(12)));
+                _user.set_created_by(parseInt(cursor.getString(13)));
+                _user.set_is_blocked(parseInt(cursor.getString(14)));
+                _user.set_timestamp_updated(cursor.getString(15));
+                _user.set_timestamp_created(cursor.getString(16));
+                _user.set_timestamp_last_login(cursor.getString(17));
+
+                _List.add(_user);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+//        // db.close();
+        return _List;
+    }
+
     public List<Interaction> getAllInteractions() {
         List<Interaction> interactionList = new ArrayList<Interaction>();
         // Select All Query
@@ -4609,9 +4895,10 @@ public class DBHelper extends SQLiteOpenHelper{
     public List<Booking> getAllLikeBookings(String index) {
         SQLiteDatabase db = this.getReadableDatabase();
         List<Booking> _List = new ArrayList<Booking>();
+
         IndexParts indexParts = new IndexParts(index);
 
-        String[] tableColumns = new String[] {
+    String[] tableColumns = new String[] {
                 BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
         };
 
@@ -4625,7 +4912,13 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getBooking whereClause: " + whereClause);
 
         String[] whereArgs = new String [] {
-                "%" + indexParts.get_first_name() + "%", "%" + indexParts.get_last_name() + "%", "%" + indexParts.get_national_id() + "%", "%" + indexParts.get_phone() + "%", "%" + indexParts.get_projected_date() + "%" };
+                "%" + indexParts.get_first_name() + "%",
+                "%" + indexParts.get_last_name() + "%",
+                "%" + indexParts.get_national_id() + "%",
+                "%" + indexParts.get_phone() + "%",
+                "%" + indexParts.get_projected_date() + "%" };
+
+        Log.d(LOG, "getBooking whereArgs: " + whereArgs.toString());
 
         Cursor cursor = db.query(TABLE_BOOKING, tableColumns, whereClause, whereArgs, null, null, null);
 

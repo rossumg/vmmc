@@ -251,6 +251,27 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //            }
 //        });
 
+        Button btnClient = (Button) _view.findViewById(R.id.btnClient);
+        btnClient.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                Log.d(LOG, "Client button: " +
+//                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+                      " <");
+
+                Fragment fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
+                if (fragment == null) {
+                    fragment = AddEditClientFragment.newInstance();
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditClientFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditClientFragment.TAG).commit();
+                }
+
+//                Toast.makeText(getActivity(), "Person button", Toast.LENGTH_LONG).show();
+            }
+        });
+
         Button btnUpdateFacilitator = (Button) _view.findViewById(R.id.btnUpdate);
         btnUpdateFacilitator.setOnClickListener(new View.OnClickListener() {
             @Override

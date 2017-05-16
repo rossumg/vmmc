@@ -36,20 +36,20 @@ public class IndexParts {
             }
             case 2: {
                 _name = parts[0];
-                nationalId = parts[1];
+                nationalId = parts[1].toString();
                 break;
             }
             case 3: {
                 _name = parts[0];
-                nationalId = parts[1];
-                phoneNumber = parts[2];
+                nationalId = parts[1].toString();
+                phoneNumber = parts[2].toString();
                 break;
             }
             case 4: {
                 _name = parts[0];
-                nationalId = parts[1];
-                phoneNumber = parts[2];
-                projectedDate = parts[3];
+                nationalId = parts[1].toString();
+                phoneNumber = parts[2].toString();
+                projectedDate = parts[3].toString();
                 break;
             }
         }
@@ -65,8 +65,8 @@ public class IndexParts {
                 break;
             }
             case 2: {
-                firstName = nameParts[0];
-                lastName = nameParts[1];
+                firstName = nameParts[0].toString();
+                lastName = nameParts[1].toString();
                 break;
             }
         }
@@ -76,15 +76,15 @@ public class IndexParts {
         return firstName.toString();
     }
     public String get_last_name () {
-        return lastName;
+        return lastName.toString();
     }
     public String get_national_id () {
-        return nationalId;
+        return nationalId.toString();
     }
     public String get_phone () {
-        return phoneNumber;
+        return phoneNumber.toString();
     }
     public String get_projected_date () {
-        return projectedDate;
+        return projectedDate.toString();
     }
 }
