@@ -167,7 +167,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
             int i = 0;
             do {
-                Log.d(LOG, "DBHelper.doTestDB:_user.userPerms: gnr: redo user_to_acl " + _user.userPerms.get(i));
+//                Log.d(LOG, "DBHelper.doTestDB:_user.userPerms: gnr: redo user_to_acl " + _user.userPerms.get(i));
             } while(i++ < _user.userPerms.size()-1);
 
             if (_user.userPerms.contains("edit_group")) {

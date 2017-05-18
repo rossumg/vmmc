@@ -17,8 +17,11 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -457,8 +460,19 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         final Spinner sSpinner = (Spinner) view.findViewById(R.id.status);
 
+        List<String> statusNames = new ArrayList<String>();
+        statusNames.addAll(dbHelp.getUserStatusTypes());
+        if(_client == null) {
+            _status = dbHelp.getStatus("Pending");
+        } else {
+            _client.set_status_id(_status.get_id());
+            _status = dbHelp.getStatus(String.valueOf(_client.get_status_id()));
+        }
+        statusNames.add(0, _status.get_name().toString());
 
-        final List<String> statusNames = dbHelp.getUserStatusTypes();
+        Set<String> noDups = new LinkedHashSet<>(statusNames);
+        statusNames.clear();;
+        statusNames.addAll(noDups);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, statusNames);
 //        {
@@ -499,15 +513,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //                return v;
 //            }
 //        };
-
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         sSpinner.setAdapter(dataAdapter);
-        if(_client == null) {
-            _status = dbHelp.getStatus("Pending");
-        } else {
-            _client.set_status_id(_status.get_id());
-            _status = dbHelp.getStatus(String.valueOf(_client.get_status_id()));
-        }
+
         String compareValue = _status.get_name();
         if (!compareValue.equals(null)) {
             int spinnerPosition = dataAdapter.getPosition(compareValue);

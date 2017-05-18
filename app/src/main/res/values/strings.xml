@@ -146,6 +146,9 @@
     <string name="displayUserTitle">Display Users</string>
     <string name="email">Email</string>
     <string name="is_blocked">Is Blocked</string>
+    <string name="Oshana">Oshana</string>
+    <string name="Zambezi">Zambezi</string>
+    <string name="password">Password</string>
 
 
 </resources>

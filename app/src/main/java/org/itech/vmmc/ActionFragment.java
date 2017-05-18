@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,7 +45,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
             // fragment is attached to one) that an item has been selected.
             Log.d(LOG, "actionFragment onItemClick: " + mAdapter.getItem(position).toString());
 
-
+//            getFragmentManager().popBackStack();
 
             if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.GEOLOCATION))) {
 
@@ -202,15 +203,22 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditUserTitle))) {
                 Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditUserTitle) + " btn");
-                Fragment fragment;
-                fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);
-                if (fragment == null) {
-                    fragment = AddEditUserFragment.newInstance();
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+
+                DBHelper dbHelp = new DBHelper(getActivity());
+                if (dbHelp.getUserAccess("edit_user")) {
+                    Fragment fragment;
+                    fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);
+                    if (fragment == null) {
+                        fragment = AddEditUserFragment.newInstance();
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).commit();
+                    }
+                    MainActivity.currentFragmentId = "AddEditUser";
+
                 } else {
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).commit();
+                    Toast.makeText(view.getContext(), "Permission Denied", Toast.LENGTH_LONG).show();
                 }
-                MainActivity.currentFragmentId = "AddEditGroupActivity";
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.SYNC))) {
                 Log.d(LOG, "SYNC btn");
@@ -252,8 +260,6 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //                    dbHelp.uploadDBData();
                     Log.d(LOG, "actionFragment call sync: _username: " + MainActivity._username );
                     dbHelp.doSyncDB();
-
-
                 }
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.TEST))) {
@@ -261,9 +267,6 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 dbHelp.doTestDB();
 
             } else {} // do nothing
-
-
-
 //            int pToA_id = Integer.parseInt(mAdapter.getItem(position).toString().substring(0, mAdapter.getItem(position).toString().indexOf(")")));
 //            PersonToAssessments pToADB = dbHelp.getPersonToAssessments( pToA_id);
 

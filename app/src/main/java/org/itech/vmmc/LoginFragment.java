@@ -3,10 +3,8 @@ package org.itech.vmmc;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
-import android.content.DialogInterface;
 import android.os.AsyncTask;
 import android.os.Bundle;
-import android.text.InputType;
 import android.text.TextUtils;
 import android.util.Log;
 import android.view.KeyEvent;
@@ -301,35 +299,36 @@ public class LoginFragment extends Fragment {
                 Toast.makeText(getView().getContext(), getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
             } else {
 //                Toast.makeText(getView().getContext(), getString(R.string.sync_reminder), Toast.LENGTH_SHORT).show();
-                if(MainActivity._pass.equals("")) {
-
-                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
-                    builder.setTitle("Sync Password");
-
-                    final EditText input = new EditText(getActivity());
-                    // Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
-                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
-                    builder.setView(input);
-
-                    // Set up the buttons
-                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            MainActivity._pass = input.getText().toString();
-                            Log.d(LOG, "_pass: " + MainActivity._pass);
-                            DBHelper dbHelp = new DBHelper(getActivity());
-                            dbHelp.doSyncDB();
-                        }
-                    });
-                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                        @Override
-                        public void onClick(DialogInterface dialog, int which) {
-                            dialog.cancel();
-                        }
-                    });
-
-                    builder.show();
-                }
+// uncomment to show sync on login, gnr
+//                if(MainActivity._pass.equals("")) {
+//
+//                    AlertDialog.Builder builder = new AlertDialog.Builder(getActivity());
+//                    builder.setTitle("Sync Password");
+//
+//                    final EditText input = new EditText(getActivity());
+//                     Specify the type of input expected; this, for example, sets the input as a password, and will mask the text
+//                    input.setInputType(InputType.TYPE_CLASS_TEXT | InputType.TYPE_TEXT_VARIATION_PASSWORD);
+//                    builder.setView(input);
+//
+//                     Set up the buttons
+//                    builder.setPositiveButton("OK", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            MainActivity._pass = input.getText().toString();
+//                            Log.d(LOG, "_pass: " + MainActivity._pass);
+//                            DBHelper dbHelp = new DBHelper(getActivity());
+//                            dbHelp.doSyncDB();
+//                        }
+//                    });
+//                    builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                        @Override
+//                        public void onClick(DialogInterface dialog, int which) {
+//                            dialog.cancel();
+//                        }
+//                    });
+//
+//                    builder.show();
+//                }
             }
         }
     }

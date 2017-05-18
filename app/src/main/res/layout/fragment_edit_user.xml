@@ -61,10 +61,33 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
+        android:text="@string/password"
+        android:id="@+id/textViewPassword"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewPhone" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/password"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewPassword"
+        android:layout_below="@+id/textViewPhone"
+        android:maxLines="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
         android:text="@string/location"
         android:id="@+id/textViewLocation"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewPhone" />
+        android:layout_below="@+id/textViewPassword" />
 
     <Spinner
         android:layout_width="wrap_content"
@@ -77,7 +100,7 @@
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewLocation"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewPhone" />
+        android:layout_below="@+id/textViewPassword" />
 
     <TextView
         android:layout_width="wrap_content"
@@ -122,7 +145,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewFirstName"
-        android:layout_below="@+id/textViewFirstName"
+        android:layout_below="@+id/textViewUsergroup"
         android:maxLines="1" />
 
     <TextView
@@ -182,18 +205,37 @@
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewEmail" />
 
-    <EditText
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:textSize="@dimen/font_size_small"
-        android:id="@+id/region"
+    <RadioGroup
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/region_radio_group"
+        android:textSize="@dimen/font_size_small"
         android:layout_toEndOf="@+id/textViewRegion"
         android:layout_below="@+id/textViewEmail"
-        android:maxLines="1" />
+        android:orientation="horizontal"
+        android:paddingTop="12dp" >
+
+        <RadioButton
+            android:layout_width="100sp"
+            android:id="@+id/radioButtonRegion1"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_small"
+            android:text="@string/Oshana"
+            android:textAlignment="viewStart" />
+
+        <RadioButton
+            android:layout_width="125sp"
+            android:id="@+id/radioButtonRegion2"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_small"
+            android:text="@string/Zambezi"
+            android:textAlignment="textEnd" />
+
+    </RadioGroup>
 
     <TextView
         android:layout_width="wrap_content"
@@ -205,37 +247,37 @@
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewRegion" />
 
-    <!--
+    <RadioGroup
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_width="fill_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/is_blocked_radio_group"
+        android:textSize="@dimen/font_size_small"
+        android:layout_toEndOf="@+id/textViewIsBlocked"
+        android:layout_below="@+id/textViewRegion"
+        android:orientation="horizontal"
+        android:paddingTop="12dp" >
 
+        <RadioButton
+            android:layout_width="100sp"
+            android:id="@+id/radioButtonNo"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_small"
+            android:text="No"
+            android:textAlignment="viewStart" />
 
+        <RadioButton
+            android:layout_width="100sp"
+            android:id="@+id/radioButtonYes"
+            android:layout_height="wrap_content"
+            android:textSize="@dimen/font_size_small"
+            android:text="Yes"
+            android:textAlignment="textEnd" />
 
-   <EditText
-       android:layout_width="wrap_content"
-       android:layout_height="wrap_content"
-       android:textSize="@dimen/font_size_small"
-       android:id="@+id/is_blocked"
-       android:layout_marginLeft="200dp"
-       android:layout_marginRight="50dp"
-       android:layout_alignParentEnd="true"
-       android:layout_alignParentStart="true"
-       android:layout_toEndOf="@+id/textViewIsBlocked"
-       android:layout_below="@+id/textViewRegion"
-       android:maxLines="1" />
-
-
-   <!--
-       <Button
-           android:layout_width="wrap_content"
-           android:layout_height="wrap_content"
-           android:textSize="@dimen/font_size_small"
-           android:text="@string/btn_label_add"
-           android:id="@+id/btnAddPerson"
-           android:paddingTop="12dp"
-           android:layout_below="@+id/phone_number"
-           android:layout_alignEnd="@+id/phone_number"
-           android:layout_marginTop="32dp" />
-   -->
-
+    </RadioGroup>
 
     <Button
         android:layout_width="wrap_content"
@@ -248,34 +290,47 @@
         android:paddingTop="12dp"
         android:layout_marginTop="32dp" />
 
-    <RadioGroup
-        android:layout_marginLeft="200dp"
-        android:layout_marginRight="50dp"
-        android:layout_alignParentEnd="true"
-        android:layout_alignParentStart="true"
-        android:layout_width="fill_parent"
+    <!--
+
+<EditText
+     android:layout_width="wrap_content"
+     android:layout_height="wrap_content"
+     android:textSize="@dimen/font_size_small"
+     android:id="@+id/region"
+     android:layout_marginLeft="200dp"
+     android:layout_marginRight="50dp"
+     android:layout_alignParentEnd="true"
+     android:layout_alignParentStart="true"
+     android:layout_toEndOf="@+id/textViewRegion"
+     android:layout_below="@+id/textViewEmail"
+     android:maxLines="1" />
+
+<EditText
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:textSize="@dimen/font_size_small"
+    android:id="@+id/is_blocked"
+    android:layout_marginLeft="200dp"
+    android:layout_marginRight="50dp"
+    android:layout_alignParentEnd="true"
+    android:layout_alignParentStart="true"
+    android:layout_toEndOf="@+id/textViewIsBlocked"
+    android:layout_below="@+id/textViewRegion"
+    android:maxLines="1" />
+
+
+
+    <Button
+        android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:id="@+id/radioGroup"
         android:textSize="@dimen/font_size_small"
-        android:layout_toEndOf="@+id/textViewIsBlocked"
-        android:layout_below="@+id/textViewRegion"
-        android:orientation="horizontal"
-        android:paddingTop="12dp" >
+        android:text="@string/btn_label_add"
+        android:id="@+id/btnAddPerson"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/phone_number"
+        android:layout_alignEnd="@+id/phone_number"
+        android:layout_marginTop="32dp" />
+-->
 
-        <RadioButton
-            android:layout_width="75sp"
-            android:id="@+id/radioButton1"
-            android:layout_height="wrap_content"
-            android:text="No"
-            android:textAlignment="viewStart" />
-
-        <RadioButton
-            android:layout_width="75sp"
-            android:id="@+id/radioButton2"
-            android:layout_height="wrap_content"
-            android:text="Yes"
-            android:textAlignment="textEnd" />
-
-    </RadioGroup>
 
 </RelativeLayout>

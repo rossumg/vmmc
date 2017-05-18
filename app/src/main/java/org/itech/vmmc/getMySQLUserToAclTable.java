@@ -96,8 +96,6 @@ class getMySQLUserToAclTable extends AsyncTask<String, String, String> {
                     String created_by = _rec.getString("created_by");
                     created_by = created_by.replace("'","''");
 
-
-
                     Log.d(LOG, "getMySQLUserToAclTable:doInBackground: " + user_id + " " + acl_id );
                     String _insert =
                             "insert or replace into user_to_acl "

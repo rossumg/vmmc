@@ -30,7 +30,7 @@ class getMySQLUserTable extends AsyncTask<String, String, String> {
     getMySQLUserTable(Context context, DBHelper dbhelp) {
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
-        this._db.execSQL("delete from user");
+//        this._db.execSQL("delete from user");
     }
 
         @Override

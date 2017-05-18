@@ -11,6 +11,8 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -48,12 +50,21 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
     private static UserType _userType;
     private static TextView _username;
     private static TextView _phone;
+    private static TextView _password;
     private static TextView _firstName;
     private static TextView _lastName;
     private static TextView _email;
     private static TextView _RegionId;
     private static TextView _IsBlocked;
     private static TextView _timestamp;
+    private static RadioGroup _rg_region;
+    private static RadioButton _rb_region;
+    private static RadioGroup _rg_is_blocked;
+    private static RadioButton _rb_is_blocked;
+    private static RadioButton _rb_region1;
+    private static RadioButton _rb_region2;
+    private static RadioButton _rb_yes;
+    private static RadioButton _rb_no;
     private static VMMCLocation _location;
 
 
@@ -123,39 +134,12 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
         Log.d(LOG, "EG Phone: " + _phone);
 
         dbHelp = new DBHelper(getActivity());
-        _user = dbHelp.getUser(_username, _phone);
+        _user = dbHelp.getUser(_username, "%", _phone);
 
-        if (_user == null) {
-            _user = new User();
-        }
-
-//        if (!nationalId.equals("") || !phoneNumber.equals("")) {
-//            _user = new User();
-//            _user = dbHelp.getUser(firstName, lastName, nationalId, phoneNumber, projectedDate);
-//            _user = dbHelp.getUser(nationalId, phoneNumber);
-//        }
-//        if (_user != null) {
-//            Log.d(LOG, "EBF _user != null ");
-//            Log.d(LOG, "EBF _user != null " + _user.get_username());
-//        } else { // defaults
-//            Log.d(LOG, "EBF _user is equal null ");
-//            should check for more info like person frag, GNR
-//            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
-//            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(nationalId, phoneNumber);
-            }
-//            _user.set_username(_user.get_first_username());
-//            _user.set_last_username(_user.get_last_username());
-//            _user.set_national_id(_user.get_national_id());
-//            _user.set_phone(_user.get_phone());
-//            _userType = dbHelp.getUserType("3");
-//        }
-
-//        _user_type = new Status(String.valueOf(_user.get_user_type_id()));
-//        _location = new VMMCLocation(String.valueOf(_user.get_loc_id()));
-//        _institution = new Institution(String.valueOf(_user.get_institution_id()));
-//    }
+       if (_user == null) {
+           _user = new User();
+       }
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
@@ -167,10 +151,25 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
             _username.setText(_user.get_username());
             _phone = (TextView) _view.findViewById(R.id.phone);
             _phone.setText(_user.get_phone());
+            _password = (TextView) _view.findViewById(R.id.password);
+            _password.setText(_user.get_password());
+            _firstName = (TextView) _view.findViewById(R.id.first_name);
+            _firstName.setText(_user.get_first_name());
+            _lastName = (TextView) _view.findViewById(R.id.last_name);
+            _lastName.setText(_user.get_last_name());
+            _email = (TextView) _view.findViewById(R.id.email);
+            _email.setText(_user.get_email());
+
+
         }
 
+        loadRegionRadio(_view );
+        loadIsBlockedRadio(_view );
         loadLocationDropdown(_view );
         loadUserTypeDropdown(_view );
+
+
+
 
         Button btnUpdate = (Button) _view.findViewById(R.id.btnUpdate);
         btnUpdate.setOnClickListener(new View.OnClickListener() {
@@ -185,6 +184,8 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                 String sUsername = _username.getText().toString();
                 _phone = (TextView) _view.findViewById(R.id.phone);
                 String sPhone = _phone.getText().toString();
+                _password = (TextView) _view.findViewById(R.id.password);
+                String sPassword = _password.getText().toString();
                 _firstName = (TextView) _view.findViewById(R.id.first_name);
                 String sFirstName = _firstName.getText().toString();
                 _lastName = (TextView) _view.findViewById(R.id.last_name);
@@ -192,16 +193,15 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                 _email = (TextView) _view.findViewById(R.id.email);
                 String sEmail = _email.getText().toString();
 
-                // region and is_blocked
-               int iRegionId = 0;
-               int iIsBlocked = 0;
+               int iRegionId = _user.get_region_id();
+               int iIsBlocked = _user.get_is_blocked();
 
               Spinner utSpinner = (Spinner) _view.findViewById(R.id.user_type);
-              String sUserType  = utSpinner.getSelectedItem().toString();
+//              String sUserType  = utSpinner.getSelectedItem().toString();
               UserType _userType = dbHelp.getUserType( utSpinner.getSelectedItem().toString());
 
               Spinner lSpinner = (Spinner) _view.findViewById(R.id.vmmclocation);
-              String sLocationText  = lSpinner.getSelectedItem().toString();
+//              String sLocationText  = lSpinner.getSelectedItem().toString();
               VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
                 Log.d(LOG, "UpdateUser button: " +
@@ -211,11 +211,12 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                 if(sUsername.matches("") ) complete = false;
 
                 if(complete) {
-                    User lookupUser = dbHelp.getUser(sUsername, sPhone );
+                    User lookupUser = dbHelp.getUser(sUsername, "%", sPhone );
 
                     if (lookupUser != null) {
                         lookupUser.set_username(sUsername);
                         lookupUser.set_phone(sPhone);
+                        lookupUser.set_password(sPassword);
                         lookupUser.set_user_type_id(_userType.get_id());
                         lookupUser.set_location_id(_location.get_id());
                         lookupUser.set_first_name(sFirstName);
@@ -224,13 +225,16 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                         lookupUser.set_region_id(iRegionId);
                         lookupUser.set_is_blocked(iIsBlocked);
 
-                        Log.d(LOG, "UpdateUser update: " + _username.getText() + ", " +  "<");
+                        Log.d(LOG, "UpdateUser update:0 " + _username.getText() + ", " + _firstName.getText()  + "<");
+                        Log.d(LOG, "UpdateUser update:1 " + sUsername + ", " + iRegionId + ", " + iIsBlocked + "<");
+                        Log.d(LOG, "UpdateUser update:2 " + lookupUser.get_username() + ", " + lookupUser.get_first_name() + ", " + lookupUser.get_is_blocked() + "<");
                         if(dbHelp.updateUser(lookupUser))
                             Toast.makeText(getActivity(), "User Updated", Toast.LENGTH_LONG).show();
                     } else {
                         User user = new User();
                         user.set_username(sUsername);
                         user.set_phone(sPhone);
+                        user.set_password(sPassword);
                         user.set_user_type_id(_userType.get_id());
                         user.set_location_id(_location.get_id());
                         user.set_first_name(sFirstName);
@@ -312,6 +316,78 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
         // TODO: Update argument type and username
         public void onFragmentInteraction(int position);
 
+    }
+
+    public void loadRegionRadio(View view ) {
+        Log.d(LOG, "loadRegionRadio: ");
+
+        _rg_region = (RadioGroup) _view.findViewById(R.id.region_radio_group);
+        _rb_region1 = (RadioButton) _view.findViewById(R.id.radioButtonRegion1);
+        _rb_region2 = (RadioButton) _view.findViewById(R.id.radioButtonRegion2);
+
+        if (_user.get_region_id() == 1 ) {
+            _rb_region1.setChecked(true);
+            _rb_region2.setChecked(false);
+        } else {
+            _rb_region1.setChecked(false);
+            _rb_region2.setChecked(true);
+        }
+
+        _rb_region1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_region.getCheckedRadioButtonId();
+                _rb_region=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "Oshana:_rb_region: " + _rb_region.getText() );
+                _user.set_region_id(1);
+            }
+        });
+
+        _rb_region2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_region.getCheckedRadioButtonId();
+                _rb_region=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "Zambezi:_rb_region: " + _rb_region.getText() );
+                _user.set_region_id(2);
+            }
+        });
+    }
+
+    public void loadIsBlockedRadio(final View view ) {
+        Log.d(LOG, "loadIsBlockedRadio: ");
+
+        _rg_is_blocked = (RadioGroup) _view.findViewById(R.id.is_blocked_radio_group);
+        _rb_yes = (RadioButton) _view.findViewById(R.id.radioButtonYes);
+        _rb_no = (RadioButton) _view.findViewById(R.id.radioButtonNo);
+
+        if (_user.get_is_blocked() == 1 ) {
+            _rb_no.setChecked(false);
+            _rb_yes.setChecked(true);
+        } else {
+            _rb_no.setChecked(true);
+            _rb_yes.setChecked(false);
+        }
+
+        _rb_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_is_blocked.getCheckedRadioButtonId();
+                _rb_is_blocked=(RadioButton) view.findViewById(selectedId);
+                Log.d(LOG, "yes:_rb_is_blocked: " + _rb_is_blocked.getText() );
+                _user.set_is_blocked(1);
+            }
+        });
+
+        _rb_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_is_blocked.getCheckedRadioButtonId();
+                _rb_is_blocked=(RadioButton) view.findViewById(selectedId);
+                Log.d(LOG, "no:_rb_is_blocked: " + _rb_is_blocked.getText() );
+                _user.set_is_blocked(0);
+            }
+        });
     }
 
     public void loadUserTypeDropdown(View view ) {
