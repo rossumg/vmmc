@@ -142,6 +142,10 @@ if (!empty($_POST)) {
 	    $response = getUser();
 	  break;
 
+	  case 'putUser':
+	    $response = putUser();
+	  break;
+
 	  case 'getUserType':
 	    $response = getUserType();
 	  break;
@@ -2127,6 +2131,7 @@ function getUser(){
    $query = " 
 select
 u.id,
+u.timestamp,
 u.username,
 u.password,
 u.email,
@@ -2136,7 +2141,7 @@ u.national_id,
 u.phone,
 u.region_id,
 u.user_type_id,
-u.locale,
+u.location_id,
 u.modified_by,
 u.created_by,
 u.is_blocked,
@@ -2192,6 +2197,7 @@ where 1=1
 	$post["id"] = $row["id"];
 
 	$post["username"] = $row["username"];
+	$post["timestamp"] = $row["timestamp"];
 	$post["password"] = $row["password"];
 	$post["email"] = $row["email"];
 	$post["first_name"] = $row["first_name"];
@@ -2200,7 +2206,7 @@ where 1=1
 	$post["phone"] = $row["phone"];
 	$post["region_id"] = $row["region_id"];
 	$post["user_type_id"] = $row["user_type_id"];
-	$post["locale"] = $row["locale"];
+	$post["location_id"] = $row["location_id"];
 	$post["modified_by"] = $row["modified_by"];
 	$post["created_by"] = $row["created_by"];
 	$post["is_blocked"] = $row["is_blocked"];
@@ -2372,6 +2378,71 @@ where 1=1
    }
 }
 
+function putUser(){
+
+    global $db;
+
+    $post = array();
+    //$post = $_POST['recs'];
+
+    file_put_contents('php_debug.log', 'putUser()0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("post['datatable']: ", $_POST['datatable'], "END");
+    var_dump('$_POST: ', $_POST, "END");
+    var_dump('$_POST num ', $_POST['num_recs'], "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    for($i = 0; $i < $_POST['num_recs']; $i++){
+
+        $recsKey = 'recs'.$i;
+        $rec = explode(',', $_POST[$recsKey]);
+
+        $timestamp	= $rec[0];
+	$username	= $rec[1];
+	$password	= $rec[2];
+	$email		= $rec[3];
+	$first_name	= $rec[4];
+	$last_name	= $rec[5];
+	$national_id	= $rec[6];
+	$phone		= $rec[7];
+	$region_id	= $rec[8];
+	$user_type_id	= $rec[9];
+	$location_id	= $rec[10];
+	$modified_by	= $rec[11];
+	$created_by	= $rec[12];
+	$is_blocked	= $rec[13];
+	$timestamp_updated	= $rec[14];
+	$timestamp_created	= $rec[15];
+	$timestamp_last_login	= $rec[16];
+
+        file_put_contents('php_debug.log', 'putUser()1 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump( $name, $activity_date);
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+	$row = selectUser( 
+		$id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login );
+
+        file_put_contents('php_debug.log', 'putUser()2 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump( $timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+        if(!$row) {
+            insertUser( 
+		$id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login );
+
+        } elseif ($row[timestamp] < $timestamp) {
+		updateUser( 
+		$id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login );
+        }
+    }
+
+    file_put_contents('php_debug.log', 'putUser() DONE >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump( $first_name, $last_name);
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    $response["success"] = 1;
+    die(json_encode($response));
+}
+
 function putGroupActivity(){
 
     global $db;
@@ -2421,7 +2492,7 @@ function putGroupActivity(){
         }
     }
 
-    file_put_contents('php_debug.log', 'putInteraction() DONE >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    file_put_contents('php_debug.log', 'putGroupActivity() DONE >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $first_name, $last_name);
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
@@ -3551,6 +3622,210 @@ and activity_date=:wactivity_date
         // continue?
     }
 }
+
+function selectUser(
+	$id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login ) {
+
+       global $db;
+
+   file_put_contents('php_debug.log', 'selectUser1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+       var_dump("params=", $timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, 
+		$name, $activity_date, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+      $query = "
+select
+id,
+timestamp,
+username,
+password,
+email,
+first_name,
+last_name,
+national_id,
+phone,
+region_id,
+user_type_id,
+location_id,
+modified_by,
+created_by,
+is_blocked,
+timestamp_updated,
+timestamp_created,
+timestamp_last_login
+from user
+where 1=1 
+and username = :username
+and phone = :phone
+	";
+
+   file_put_contents('php_debug.log', 'selectUser2>'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("query=", $query, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   try {
+
+	   
+      $stmt = $db->prepare($query);
+
+      // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+      $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+      $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
+         
+      file_put_contents('php_debug.log', 'selectUser3a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+      var_dump("queryString=", $stmt->queryString, "END");
+      $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+      
+      $result = $stmt->execute();
+      $row = $stmt->fetch();
+
+   } catch (PDOException $ex) {
+	    //die
+      file_put_contents('php_debug.log', 'selectUser exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+      var_dump("exception=", $ex, "END");
+      $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+      return null;
+   }
+   
+   file_put_contents('php_debug.log', 'selectUser3b >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("row=", $row, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+   
+   return $row;
+}
+
+function insertUser( 
+	$id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login ) {
+
+    global $db;
+    
+    file_put_contents('php_debug.log', 'insertUser0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump($name, $activity_date);
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $insert = "
+insert into user (timestamp, username, password, email, first_name, last_name, national_id, phone, region_id, user_type_id, location_id, modified_by, created_by, is_blocked, timestamp_updated, timestamp_created, timestamp_last_login)
+values (:timestamp, :username, :password, :email, :first_name, :last_name, :national_id, :phone, :region_id, :user_type_id, :location_id, :modified_by, :created_by, :is_blocked, :timestamp_updated, :timestamp_created, :timestamp_last_login)
+	";
+    
+    file_put_contents('php_debug.log', 'insertUser1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("insert=", $insert, "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    try {
+        $stmt = $db->prepare($insert);
+        $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+	$stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+	$stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
+	$stmt->bindParam(':email', $email, PDO::PARAM_STR, strlen($email));
+	$stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
+	$stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
+	$stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
+	$stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
+	$stmt->bindParam(':region_id', $region_id, PDO::PARAM_STR, strlen($region_id));
+	$stmt->bindParam(':user_type_id', $user_type_id, PDO::PARAM_STR, strlen($user_type_id));
+	$stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
+	$stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_STR, strlen($modified_by));
+	$stmt->bindParam(':created_by', $created_by, PDO::PARAM_STR, strlen($created_by));
+	$stmt->bindParam(':is_blocked', $is_blocked, PDO::PARAM_STR, strlen($is_blocked));
+	$stmt->bindParam(':timestamp_updated', $timestamp_updated, PDO::PARAM_STR, strlen($timestamp_updated));
+	$stmt->bindParam(':timestamp_created', $timestamp_created, PDO::PARAM_STR, strlen($timestamp_created));
+	$stmt->bindParam(':timestamp_last_login', $timestamp_last_login, PDO::PARAM_STR, strlen($timestamp_last_login));
+        $result = $stmt->execute();
+    
+        file_put_contents('php_debug.log', 'insertUser2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("insert result=", $result, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    }
+    catch (PDOException $ex) {
+        //die
+        file_put_contents('php_debug.log', 'insertUser exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("exception=", $ex, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+        // continue?
+    }
+}
+
+
+function updateUser( 
+	$id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login ) {
+
+    global $db;
+    
+    file_put_contents('php_debug.log', 'updateUser0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump($name, $activity_date);
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $update = "
+update user set
+timestamp=:timestamp,
+username=:username,
+password=:password,
+email=:email,
+first_name=:first_name,
+last_name=:last_name,
+national_id=:national_id,
+phone=:phone,
+region_id=:region_id,
+user_type_id=:user_type_id,
+location_id=:location_id,
+modified_by=:modified_by,
+created_by=:created_by,
+is_blocked=:is_blocked,
+timestamp_updated=:timestamp_updated,
+timestamp_created=:timestamp_created,
+timestamp_last_login=:timestamp_last_login
+where 1=1
+and username=:wusername
+and phone=:wphone
+	";
+    
+    file_put_contents('php_debug.log', 'updateUser1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("update=", $update, "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    try {
+        $stmt = $db->prepare($update);
+
+	$stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+	$stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+	$stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
+	$stmt->bindParam(':email', $email, PDO::PARAM_STR, strlen($email));
+	$stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
+	$stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
+	$stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
+	$stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
+	$stmt->bindParam(':region_id', $region_id, PDO::PARAM_STR, strlen($region_id));
+	$stmt->bindParam(':user_type_id', $user_type_id, PDO::PARAM_STR, strlen($user_type_id));
+	$stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
+	$stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_STR, strlen($modified_by));
+	$stmt->bindParam(':created_by', $created_by, PDO::PARAM_STR, strlen($created_by));
+	$stmt->bindParam(':is_blocked', $is_blocked, PDO::PARAM_STR, strlen($is_blocked));
+	$stmt->bindParam(':timestamp_updated', $timestamp_updated, PDO::PARAM_STR, strlen($timestamp_updated));
+	$stmt->bindParam(':timestamp_created', $timestamp_created, PDO::PARAM_STR, strlen($timestamp_created));
+	$stmt->bindParam(':timestamp_last_login', $timestamp_last_login, PDO::PARAM_STR, strlen($timestamp_last_login));
+	$stmt->bindParam(':wusername', $username, PDO::PARAM_STR, strlen($username));
+	$stmt->bindParam(':wphone', $phone, PDO::PARAM_STR, strlen($phone));
+
+        $result = $stmt->execute();
+    
+        file_put_contents('php_debug.log', 'updateUser2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("update result=", $result, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    }
+    catch (PDOException $ex) {
+        //die
+        file_put_contents('php_debug.log', 'updateUser exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("exception=", $ex, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+        // continue?
+    }
+}
+
+
 
 ?> 
 

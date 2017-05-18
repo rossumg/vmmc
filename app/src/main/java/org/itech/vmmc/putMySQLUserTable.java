@@ -62,7 +62,7 @@ class putMySQLUserTable extends AsyncTask<String, String, String> {
             int i = 0;
             String[] recs = new String[userList.size()];
             for (User user: userList) {
-                Log.d(LOG, "putMySQLUserTable loop: " + user.get_username()  );
+                Log.d(LOG, "putMySQLUserTable loop: " + user.get_timestamp() + ":" + user.get_username()  );
                 recs[i] =
                         user.get_timestamp() + "," +
                         user.get_username() + "," +
