@@ -1685,6 +1685,7 @@ f.timestamp,
 f.first_name,
 f.last_name,
 f.national_id,
+f.phone,
 f.facilitator_type_id,
 f.note,
 f.location_id,
@@ -2798,7 +2799,8 @@ function getInstitution(){
    $query = " 
 select
 i.id,
-i.name
+i.name,
+i.region_id
 from institution i
 where 1=1 
    ";
@@ -2847,6 +2849,7 @@ where 1=1
         $post = array();
 	$post["id"] = $row["id"];
 	$post["name"] = $row["name"];
+	$post["region_id"] = $row["region_id"];
 	array_push($response["posts"], $post);
       }
 

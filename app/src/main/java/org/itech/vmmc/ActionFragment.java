@@ -201,6 +201,18 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 }
                 MainActivity.currentFragmentId = "AddEditGroupActivity";
 
+            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.displayPendingFollowup))) {
+                Log.d(LOG, "ActionFragment " + getResources().getString(R.string.displayPendingFollowup) + " btn");
+                Fragment fragment;
+                fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
+//                if (fragment == null) {
+                    fragment = DisplayFragment.newInstance("displayPendingFollowup", "");
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+//                } else {
+//                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).commit();
+//                }
+                MainActivity.currentFragmentId = "DisplayFragment";
+
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditUserTitle))) {
                 Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditUserTitle) + " btn");
 
@@ -343,14 +355,15 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //        actions.add(getResources().getString(R.string.UPLOAD));
 //        actions.add(getResources().getString(R.string.DOWNLOAD));
 
-        actions.add(getResources().getString(R.string.TEST));
+//        actions.add(getResources().getString(R.string.TEST));
         actions.add(getResources().getString(R.string.SYNC));
         actions.add(getResources().getString(R.string.addEditPerson));
         actions.add(getResources().getString(R.string.addEditFacilitatorTitle));
         actions.add(getResources().getString(R.string.addEditClient));
         actions.add(getResources().getString(R.string.addEditBooking));
-        actions.add(getResources().getString(R.string.addEditInteraction));
+//        actions.add(getResources().getString(R.string.addEditInteraction));
         actions.add(getResources().getString(R.string.addEditGroupActivity));
+        actions.add(getResources().getString(R.string.addEditPendingFollowup));
         actions.add(getResources().getString(R.string.addEditUserTitle));
 
         String[] _stringArray = new String[ actions.size() ];

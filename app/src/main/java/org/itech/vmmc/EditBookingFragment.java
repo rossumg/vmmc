@@ -221,6 +221,11 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _client.set_phone(_booking.get_phone());
             _status = dbHelp.getStatus("Pending");
             _client.set_status_id(_status.get_id());
+            GroupActivity _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+            _client.set_group_activity_name(_groupActivity.get_name());
+            _client.set_group_activity_date(_groupActivity.get_activity_date());
+            Institution _institution = dbHelp.getInstitution("1");
+            _client.set_institution_id(_institution.get_id());
             dbHelp.addClient( _client );
         } else {
             _status = dbHelp.getStatus( (String.valueOf(_client.get_status_id())));

@@ -15,7 +15,8 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
-import android.widget.Spinner;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -56,6 +57,10 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
     private static TextView _phone_number;
     private static TextView _dob;
     private static TextView _gender;
+    private static RadioGroup _rg_gender;
+    private static RadioButton _rb_gender;
+    private static RadioButton _rb_gender_male;
+    private static RadioButton _rb_gender_female;
 
     private EditText et_dob;
 
@@ -178,9 +183,9 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _phone_number.setText(_person.get_phone());
             _dob = (TextView) _view.findViewById(dob);
             _dob.setText(_person.get_dob());
-            _gender = (TextView) _view.findViewById(R.id.gender);
-            _gender.setText(_person.get_gender());
         }
+
+        loadGenderRadio(_view);
 
         et_dob = (EditText) _view.findViewById(R.id.dob);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
@@ -226,7 +231,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                 String sAddress = _address.getText().toString();
                 String sPhoneNumber = _phone_number.getText().toString();
                 String sDOB = _dob.getText().toString();
-                String sGender = _gender.getText().toString();
+                String sGender = _person.get_gender();
 
                 Log.d(LOG, "UpdatePerson button2: " +
                         sFirstName + sLastName + sPhoneNumber + sDOB + "<");
@@ -329,7 +334,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         _address = (TextView) _view.findViewById(R.id.address); _address.setText("");
         _phone_number = (TextView) _view.findViewById(R.id.phone_number); _phone_number.setText("");
         _dob = (TextView) _view.findViewById(dob); _dob.setText("");
-        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
+
 
         if(_person != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
@@ -344,8 +349,6 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _phone_number.setText(_person.get_phone());
             _dob = (TextView) _view.findViewById(dob);
             _dob.setText(_person.get_dob());
-            _gender = (TextView) _view.findViewById(R.id.gender);
-            _gender.setText(_person.get_gender());
         }
     }
 
@@ -366,7 +369,41 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
 
     }
 
+    public void loadGenderRadio(View view ) {
+        Log.d(LOG, "loadRegionRadio: ");
 
+        _rg_gender = (RadioGroup) _view.findViewById(R.id.gender_radio_group);
+        _rb_gender_male = (RadioButton) _view.findViewById(R.id.radioButtonMale);
+        _rb_gender_female = (RadioButton) _view.findViewById(R.id.radioButtonFemale);
+
+        if (_person.get_gender().equals("M") ) {
+            _rb_gender_male.setChecked(true);
+            _rb_gender_female.setChecked(false);
+        } else {
+            _rb_gender_male.setChecked(false);
+            _rb_gender_female.setChecked(true);
+        }
+
+        _rb_gender_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_gender.getCheckedRadioButtonId();
+                _rb_gender=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_gender: " + _rb_gender.getText() );
+                _person.set_gender("M");
+            }
+        });
+
+        _rb_gender_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_gender.getCheckedRadioButtonId();
+                _rb_gender=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_gender: " + _rb_gender.getText() );
+                _person.set_gender("F");
+            }
+        });
+    }
 
     public void loadPersonIDDropdown(View view) {
 
@@ -389,32 +426,4 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         });
 
     }
-
-
-
-    public void loadAssessmentTypeDropdown(View view) {
-        Spinner dropdown = (Spinner) view.findViewById(R.id.assessment_type);
-        dropdown.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String item = parent.getItemAtPosition(position).toString();
-                //Toast.makeText(parent.getContext(), "Selected: " + item, Toast.LENGTH_LONG).show();
-                Log.d(LOG, "assessment_type item selected: " + item);
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
-            }
-        });
-
-
-//        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
-//
-//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-//        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_item);
-//        dropdown.setAdapter(dataAdapter);
-
-    }
-
 }

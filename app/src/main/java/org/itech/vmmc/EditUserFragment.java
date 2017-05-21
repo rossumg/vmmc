@@ -11,6 +11,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
 import android.widget.Spinner;
@@ -57,12 +58,11 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
     private static TextView _RegionId;
     private static TextView _IsBlocked;
     private static TextView _timestamp;
-    private static RadioGroup _rg_region;
-    private static RadioButton _rb_region;
+    private static CheckBox _cb_region;
     private static RadioGroup _rg_is_blocked;
     private static RadioButton _rb_is_blocked;
-    private static RadioButton _rb_region1;
-    private static RadioButton _rb_region2;
+    private static CheckBox _cb_region1;
+    private static CheckBox _cb_region2;
     private static RadioButton _rb_yes;
     private static RadioButton _rb_no;
     private static VMMCLocation _location;
@@ -163,7 +163,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
         }
 
-        loadRegionRadio(_view );
+        loadRegionCheck(_view );
         loadIsBlockedRadio(_view );
         loadLocationDropdown(_view );
         loadUserTypeDropdown(_view );
@@ -318,38 +318,49 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
     }
 
-    public void loadRegionRadio(View view ) {
+    public void loadRegionCheck(View view ) {
         Log.d(LOG, "loadRegionRadio: ");
 
-        _rg_region = (RadioGroup) _view.findViewById(R.id.region_radio_group);
-        _rb_region1 = (RadioButton) _view.findViewById(R.id.radioButtonRegion1);
-        _rb_region2 = (RadioButton) _view.findViewById(R.id.radioButtonRegion2);
+        _cb_region1 = (CheckBox) _view.findViewById(R.id.cb_Region1);
+        _cb_region2 = (CheckBox) _view.findViewById(R.id.cb_Region2);
 
-        if (_user.get_region_id() == 1 ) {
-            _rb_region1.setChecked(true);
-            _rb_region2.setChecked(false);
-        } else {
-            _rb_region1.setChecked(false);
-            _rb_region2.setChecked(true);
+        if (_user.get_region_id() == 0 ) {
+            _cb_region1.setChecked(false);
+            _cb_region2.setChecked(false);
+        } else if (_user.get_region_id() == 1){
+            _cb_region1.setChecked(true);
+            _cb_region2.setChecked(false);
+        } else if (_user.get_region_id() == 2){
+            _cb_region1.setChecked(false);
+            _cb_region2.setChecked(true);
+        } else if (_user.get_region_id() == 3){
+            _cb_region1.setChecked(true);
+            _cb_region2.setChecked(true);
         }
 
-        _rb_region1.setOnClickListener(new View.OnClickListener() {
+        _cb_region1.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int selectedId=_rg_region.getCheckedRadioButtonId();
-                _rb_region=(RadioButton) _view.findViewById(selectedId);
-                Log.d(LOG, "Oshana:_rb_region: " + _rb_region.getText() );
-                _user.set_region_id(1);
+                _cb_region=(CheckBox) _view.findViewById(R.id.cb_Region1);
+                if(_cb_region.isChecked()) {
+                    _user.set_region_id(_user.get_region_id()+1);
+                } else {
+                    _user.set_region_id(_user.get_region_id()-1);
+                }
+                Log.d(LOG, "region: " + _user.get_region_id());
             }
         });
 
-        _rb_region2.setOnClickListener(new View.OnClickListener() {
+        _cb_region2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                int selectedId=_rg_region.getCheckedRadioButtonId();
-                _rb_region=(RadioButton) _view.findViewById(selectedId);
-                Log.d(LOG, "Zambezi:_rb_region: " + _rb_region.getText() );
-                _user.set_region_id(2);
+                _cb_region=(CheckBox) _view.findViewById(R.id.cb_Region2);
+                if(_cb_region.isChecked()) {
+                    _user.set_region_id(_user.get_region_id()+2);
+                }else {
+                    _user.set_region_id(_user.get_region_id()-2);
+                }
+                Log.d(LOG, "region: " + _user.get_region_id());
             }
         });
     }

@@ -51,7 +51,6 @@ class getMySQLFacilitatorTable extends AsyncTask<String, String, String> {
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
-        Log.d(LOG, "getMySQLFacilitatorTable username/password: " + username + " " + password);
         String datatable = "getFacilitator";
         try {
             URL url = null;

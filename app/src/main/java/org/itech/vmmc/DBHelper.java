@@ -250,6 +250,7 @@ public class DBHelper extends SQLiteOpenHelper{
     // institution table column names
     private static final String INSTITUTION_ID          = "id";
     private static final String INSTITUTION_NAME        = "name";
+    private static final String INSTITUTION_REGION_ID = "region_id";
 
     // group_type table column names
     private static final String GROUP_TYPE_ID          = "id";
@@ -464,7 +465,8 @@ public class DBHelper extends SQLiteOpenHelper{
             //try { db.execSQL("delete from region;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_INSTITUTION_TABLE = "CREATE TABLE IF NOT EXISTS institution(" +
                     "id integer primary key  autoincrement  not null  unique, " +
-                    "name varchar)";
+                    "name varchar, " +
+                    "region_id int)";
             db.execSQL(CREATE_INSTITUTION_TABLE);
 
             //try { db.execSQL("delete from constituency;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
@@ -2391,6 +2393,59 @@ public class DBHelper extends SQLiteOpenHelper{
             // db.close();
             return institution;
         }
+    }
+
+    public List<PendingFollowup> getAllPendingFollowups() {
+
+        List<PendingFollowup> _List = new ArrayList<PendingFollowup>();
+        // Select All Query
+        String selectQuery =
+                "select \n" +
+                        "c.first_name, \n" +
+                        "c.last_name, \n" +
+                        "c.national_id, \n" +
+                        "round(julianday('now')-julianday(b.projected_date)) as difference,\n" +
+                        "p.dob,\n" +
+                        "l.name as location,\n" +
+                        "p.address,\n" +
+                        "p.phone\n" +
+                        "from client_table c\n" +
+                        "join status_type s on s.id = c.status_id\n" +
+                        "join booking b on \n" +
+                        "  c.first_name = b.first_name and\n" +
+                        "  c.last_name = b.last_name and\n" +
+                        "  c.national_id = b.national_id and\n" +
+                        "  c.phone = b.phone\n" +
+                        "join person p on \n" +
+                        "  c.first_name = p.first_name and\n" +
+                        "  c.last_name = p.last_name and\n" +
+                        "  c.national_id = p.national_id and\n" +
+                        "  c.phone = p.phone\n" +
+                        "join location l on c.loc_id = l.id\n" +
+                        "where s.name = 'Pending'\n" +
+                        "order by difference desc ";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                PendingFollowup pendingFollowup = new PendingFollowup();
+                pendingFollowup.set_first_name(cursor.getString(0));
+                pendingFollowup.set_last_name(cursor.getString(1));
+                pendingFollowup.set_national_id(cursor.getString(2));
+                pendingFollowup.set_difference(parseInt(cursor.getString(3)));
+                pendingFollowup.set_dob(cursor.getString(4));
+                pendingFollowup.set_location(cursor.getString(5));
+                pendingFollowup.set_address(cursor.getString(6));
+                pendingFollowup.set_phone(cursor.getString(7));
+                // Adding person to list
+                _List.add(pendingFollowup);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        // db.close();
+
+        return _List;
     }
 
     public List<GeoLocations> getAllGeoLocations() {

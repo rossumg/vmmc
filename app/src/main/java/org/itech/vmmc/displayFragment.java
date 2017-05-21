@@ -41,6 +41,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     List<Facilitator> facilitators = new ArrayList<Facilitator>();
     List<Interaction> interactions = new ArrayList<Interaction>();
     List<GroupActivity> group_activities = new ArrayList<GroupActivity>();
+    List<PendingFollowup> pending_followups = new ArrayList<PendingFollowup>();
     List<User> users = new ArrayList<User>();
 
     @Override
@@ -90,6 +91,13 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 Log.d(LOG, "DisplayFragment editUser: " + parts[0] + " " + parts[1]);
                 fragment = EditUserFragment.newInstance("editUser", parts[0] + ":" + parts[1]);
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditUserFragment.TAG).addToBackStack("EditUser").commit();
+
+            }  else if (displayType == "displayPendingFollowup" )  {
+                String parts[] = mAdapter.getItem(position).toString().split(", ", 4);
+                String nameParts[] = parts[1].split(" ", 2);
+                Log.d(LOG, "DisplayFragment editBooking: " + parts[0] + " " + parts[1] + " " + parts[2] + " " + parts[3]);
+                fragment = EditBookingFragment.newInstance("editBooking", nameParts[0] + " " + nameParts[1] + ":" + "%" + ":" + parts[3] + ":" + "%");
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
             }
         }
     }
@@ -232,6 +240,19 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             mAdapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
+        } else if (displayType == "displayPendingFollowup") {
+            pending_followups = dbHelp.getAllPendingFollowups();
+            String[] _stringArray = new String[pending_followups.size()];
+            int i = 0;
+            for (PendingFollowup _rec : pending_followups) {
+                _stringArray[i] =
+                        _rec.get_difference() + ", " + _rec.get_first_name() + " " + _rec.get_last_name() + ", " + _rec.get_location() + ", " + _rec.get_phone();
+                i++;
+            }
+
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
         } else if (displayType == "displayUser") {
             users = dbHelp.getAllLikeUsers(mParam2);
             String[] _stringArray = new String[users.size()];
@@ -333,6 +354,8 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             getActivity().setTitle(getResources().getString(R.string.displayGroupActivityTitle));
         } else if(displayType == "displayUser" ) {
                 getActivity().setTitle(getResources().getString(R.string.displayUserTitle) );
+        } else if(displayType == "displayPendingFollowup" ) {
+            getActivity().setTitle(getResources().getString(R.string.displayPendingFollowup) );
         } else if(displayType == "" ) {
 //
         }

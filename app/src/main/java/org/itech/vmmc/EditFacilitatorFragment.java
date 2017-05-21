@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -189,7 +190,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
             _facilitator.set_phone(person.get_phone());
             _facilitatorType = dbHelp.getFacilitatorType("3");
             _location = dbHelp.getLocation("1");
-            _institution = dbHelp.getInstitution("3");
+            _institution = dbHelp.getInstitution("1");
         }
 
 //        _facilitator_type = new Status(String.valueOf(_facilitator.get_facilitator_type_id()));
@@ -295,9 +296,8 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
                 VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
-                Spinner iSpinner = (Spinner) _view.findViewById(R.id.institution);
-//                String sInstitutionText  = iSpinner.getSelectedItem().toString();
-                Institution _institution = dbHelp.getInstitution( iSpinner.getSelectedItem().toString());
+                EditText _institutioinEditText = (EditText) _view.findViewById(R.id.institution);
+                Institution _institution = dbHelp.getInstitution( _institutioinEditText.getText().toString());
 
                 Log.d(LOG, "UpdateFacilitator button: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
@@ -325,7 +325,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                         Log.d(LOG, "UpdateFacilitator update: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.updateFacilitator(lookupFacilitator))
-                            Toast.makeText(getActivity(), "Facilitator Updated", Toast.LENGTH_LONG).show();
+                            Toast.makeText(getActivity(), "Recruiter Updated", Toast.LENGTH_LONG).show();
                     } else {
                         Facilitator facilitator = new Facilitator();
                         facilitator.set_first_name(sFirstName.toString());
@@ -339,7 +339,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                         Log.d(LOG, "UpdateFacilitator add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addFacilitator(facilitator))
-                            Toast.makeText(getActivity(), "Facilitator Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Recruiter Saved", Toast.LENGTH_LONG).show();;
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
@@ -569,7 +569,34 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         });
     }
 
-    public void loadInstitutionDropdown(View view ) {
+    public void loadInstitutionDropdown(View view) {
+
+        List<String> _institutionNames = dbHelp.getAllInstitutionNames();
+        // convert to array
+        String[] stringArrayNames = new String[ _institutionNames.size() ];
+        _institutionNames.toArray(stringArrayNames);
+
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.institution);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayNames);
+        dropdown.setThreshold(1);
+        dropdown.setAdapter(dataAdapter);
+
+        if (_facilitator == null) {
+            _institution = dbHelp.getInstitution("1"); // Default
+        } else {
+            _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
+        }
+        dropdown.setText(_institution.get_name());
+
+        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                _institution = dbHelp.getInstitution(dropdown.getText().toString());
+                _facilitator.set_institution_id(_institution.get_id());
+            }
+        });
+    }
+
+    public void loadInstitutionDropdown1(View view ) {
         Log.d(LOG, "loadInstitutionDropdown: " );
 
         final Spinner iSpinner = (Spinner) view.findViewById(R.id.institution);

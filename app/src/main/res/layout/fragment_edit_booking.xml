@@ -151,7 +151,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/facilitator"
+        android:text="@string/facilitator_short"
         android:id="@+id/textViewFacilitator"
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewStatus" />

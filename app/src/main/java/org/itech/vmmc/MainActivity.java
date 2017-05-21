@@ -311,7 +311,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 6:
+            case 99:
                 fragment = getFragmentManager().findFragmentByTag(AddEditInteractionFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditInteractionFragment.newInstance();
@@ -323,7 +323,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 7:
+            case 6:
                 fragment = getFragmentManager().findFragmentByTag(AddEditGroupActivityFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditGroupActivityFragment.newInstance();
@@ -332,6 +332,14 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditGroupActivityFragment.TAG).commit();
                 }
                 currentFragmentId = "AddEditGroupActivity";
+
+                break;
+
+            case 7:
+                fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
+                fragment = DisplayFragment.newInstance("displayPendingFollowup", "");
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                MainActivity.currentFragmentId = "DisplayFragment";
 
                 break;
         }

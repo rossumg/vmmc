@@ -92,14 +92,17 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
                     _id = _id.replace("'", "''");
                     String _name = _rec.getString("name");
                     _name = _name.replace("'", "''");
+                    String _region_id = _rec.getString("region_id");
+                    _region_id = _region_id.replace("'", "''");
 
                     Log.d(LOG, "getMySQLInstitutionTable:doInBackground: " + _name );
                     String _insert =
                             "insert into institution "
-                                    + "(id, name) "
+                                    + "(id, name, region_id) "
                                     + " values("
                                     + "'" + _id + "'" + ","
-                                    + "'" + _name + "'" + ");";
+                                    + "'" + _name + "'" + ","
+                                    + "'" + _region_id + "'" + ");";
 
                     try {
                         int incr = (int) ((i / (float) num_recs) * 100);

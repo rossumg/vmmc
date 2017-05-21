@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
@@ -180,8 +181,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _client.set_national_id(nationalId);
             _client.set_phone(phoneNumber);
             _status = dbHelp.getStatus("Pending");
-            _location = dbHelp.getLocation("Surrey(1)");
-            _institution = dbHelp.getInstitution("Other");
+            _location = dbHelp.getLocation("1");
+            _institution = dbHelp.getInstitution("1");
             _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
         } else {
             _client.set_first_name(firstName);
@@ -303,9 +304,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
                 VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
-                Spinner iSpinner = (Spinner) _view.findViewById(R.id.institution);
-//                String sInstitutionText  = iSpinner.getSelectedItem().toString();
-                Institution _institution = dbHelp.getInstitution( iSpinner.getSelectedItem().toString());
+                EditText _institutioinEditText = (EditText) _view.findViewById(R.id.institution);
+                Institution _institution = dbHelp.getInstitution( _institutioinEditText.getText().toString());
 
                 Spinner gaSpinner = (Spinner) _view.findViewById(R.id.group_activity);
 //                String sGroupActivityText  = gaSpinner.getSelectedItem().toString();
@@ -630,7 +630,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         lSpinner.setAdapter(dataAdapter);
         if (_client == null) {
-            _location = dbHelp.getLocation("Surrey(1)");
+            _location = dbHelp.getLocation("1"); // Default
         } else {
             _client.set_loc_id(_location.get_id());
             _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
@@ -657,7 +657,34 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         });
     }
 
-    public void loadInstitutionDropdown(View view ) {
+    public void loadInstitutionDropdown(View view) {
+
+        List<String> _institutionNames = dbHelp.getAllInstitutionNames();
+        // convert to array
+        String[] stringArrayNames = new String[ _institutionNames.size() ];
+        _institutionNames.toArray(stringArrayNames);
+
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.institution);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayNames);
+        dropdown.setThreshold(1);
+        dropdown.setAdapter(dataAdapter);
+
+        if (_client == null) {
+            _institution = dbHelp.getInstitution("1"); // Default
+        } else {
+            _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
+        }
+        dropdown.setText(_institution.get_name());
+
+        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                _institution = dbHelp.getInstitution(dropdown.getText().toString());
+                _client.set_institution_id(_institution.get_id());
+            }
+        });
+    }
+
+    public void loadInstitutionDropdown1(View view ) {
         Log.d(LOG, "loadInstitutionDropdown: " );
 
         final Spinner iSpinner = (Spinner) view.findViewById(R.id.institution);
