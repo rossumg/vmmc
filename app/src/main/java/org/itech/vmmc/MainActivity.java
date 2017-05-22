@@ -176,6 +176,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         }
 
         Log.d(LOG, "Main Loop: " + position);
+        getFragmentManager().popBackStack();
         Fragment fragment;
         switch(position) {
 

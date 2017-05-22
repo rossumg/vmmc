@@ -45,7 +45,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
             // fragment is attached to one) that an item has been selected.
             Log.d(LOG, "actionFragment onItemClick: " + mAdapter.getItem(position).toString());
 
-//            getFragmentManager().popBackStack();
+            getFragmentManager().popBackStack();
 
             if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.GEOLOCATION))) {
 

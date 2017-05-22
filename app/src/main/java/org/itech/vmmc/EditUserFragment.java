@@ -248,7 +248,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                             Toast.makeText(getActivity(), "User Saved", Toast.LENGTH_LONG).show();;
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Must enter userusername", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Must enter username", Toast.LENGTH_LONG).show();
                 }
             }
         });
