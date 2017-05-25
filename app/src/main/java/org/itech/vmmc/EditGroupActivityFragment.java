@@ -441,10 +441,10 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         gtSpinner.setAdapter(dataAdapter);
         _groupActivityType = dbHelp.getGroupActivityType(String.valueOf(_groupActivity.get_group_type_id()));
         if (_groupActivityType == null) {
-            _groupActivityType = dbHelp.getGroupActivityType("Natural Group");
+            _groupActivityType = dbHelp.getGroupActivityType("School");
         }
         String compareValue = _groupActivityType.get_name();
-        if (!compareValue.equals(null)) {
+        if (compareValue != null) {
             int spinnerPosition = dataAdapter.getPosition(compareValue);
             gtSpinner.setSelection(spinnerPosition);
         }
@@ -482,7 +482,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         lSpinner.setAdapter(dataAdapter);
         _location = dbHelp.getLocation(String.valueOf(_groupActivity.get_location_id()));
         if (_location == null) {
-            _location = dbHelp.getLocation("Surrey(1)");
+            _location = dbHelp.getLocation("Okaku");
         }
         String compareValue = _location.get_name();
         if (!compareValue.equals(null)) {

@@ -670,8 +670,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         dropdown.setAdapter(dataAdapter);
 
         if (_client == null) {
-            _institution = dbHelp.getInstitution("1"); // Default
+            _institution = dbHelp.getInstitution("IUM"); // Default
         } else {
+            _client.set_institution_id(_institution.get_id());
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
         }
         dropdown.setText(_institution.get_name());

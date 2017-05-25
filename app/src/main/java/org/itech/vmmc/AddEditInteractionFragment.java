@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -435,6 +436,33 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
         // TODO: Update argument type and name
         public void onFragmentInteraction(int position);
 
+    }
+
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG, "interaction fragment:onResume: pop " );
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+                    Log.d(LOG, "interaction fragment:onResume: pop: handle back " );
+                    getFragmentManager().popBackStack();
+                    Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
+                    if (fragment == null) {
+                        fragment = ActionFragment.newInstance("main", "");
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
+                    }
+                    MainActivity.currentFragmentId = "Action";
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public void loadFacilitatorAutoComplete(View view) {

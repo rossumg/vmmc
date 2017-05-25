@@ -1137,15 +1137,16 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "DBHelper.getUserAccess");
         SQLiteDatabase db = this.getReadableDatabase();
         User _user = new User(this, MainActivity._username + ":" + MainActivity._password);
+
         boolean _permission = false;
         int i = 0;
-
         do {
-            UserType _userType = getUserType(Integer.toString(_user.get_user_type_id()));
-            if(_user.userPerms.size() == 0) { return false; }
-//            Log.d(LOG, "_user.userPerms: " + _user.userPerms.get(i));
-            if (_user.userPerms.get(i).equalsIgnoreCase(acl) || (_userType.get_name().equalsIgnoreCase("admin"))){ _permission = true; }
+            if(_user.userPerms.size() == 0 ) { _permission = false; break; }
+            else if (_user.userPerms.get(i).equalsIgnoreCase(acl)) { _permission = true; }
         } while(i++ < _user.userPerms.size()-1);
+
+        UserType _userType = getUserType(Integer.toString(_user.get_user_type_id()));
+        if(_userType.get_name().equalsIgnoreCase("admin")) { _permission = true; }
 
         return _permission;
     }

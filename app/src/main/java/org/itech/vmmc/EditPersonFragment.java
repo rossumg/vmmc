@@ -163,6 +163,10 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _person = dbHelp.getPerson(nationalId, phoneNumber);
         }
 
+        if (_person == null) {
+            _person = new Person();
+        }
+
     }
 
     @Override
@@ -376,6 +380,9 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         _rb_gender_male = (RadioButton) _view.findViewById(R.id.radioButtonMale);
         _rb_gender_female = (RadioButton) _view.findViewById(R.id.radioButtonFemale);
 
+        if(_person.get_gender() == null){
+            _person.set_gender("M"); // default
+        }
         if (_person.get_gender().equals("M") ) {
             _rb_gender_male.setChecked(true);
             _rb_gender_female.setChecked(false);

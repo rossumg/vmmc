@@ -297,7 +297,7 @@ public class LoginFragment extends Fragment {
             // Log.d(TAG, "Logged In?:" + MainActivity.LOGGED_IN);
             if (!MainActivity.LOGGED_IN){
                 Toast.makeText(getView().getContext(), getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();
-            } else {
+            } else { // auto sync
 //                Toast.makeText(getView().getContext(), getString(R.string.sync_reminder), Toast.LENGTH_SHORT).show();
 // uncomment to show sync on login, gnr
 //                if(MainActivity._pass.equals("")) {
@@ -389,6 +389,29 @@ public class LoginFragment extends Fragment {
         builder.setTitle(title);
         builder.setMessage(message);
         builder.show();
+    }
+
+    public void onResume() {
+        super.onResume();
+        Log.d(LOG, "login fragment:onResume: pop " );
+
+        getView().setFocusableInTouchMode(true);
+        getView().requestFocus();
+        getView().setOnKeyListener(new View.OnKeyListener() {
+            @Override
+            public boolean onKey(View v, int keyCode, KeyEvent event) {
+                if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
+//                     handle back button
+                    Log.d(LOG, "login fragment:onResume: pop: handle back " + MainActivity.LOGGED_IN );
+                    if(MainActivity.LOGGED_IN==false){
+                        getActivity().finish();
+                        System.exit(0);
+                    }
+                    return true;
+                }
+                return false;
+            }
+        });
     }
 
     public class UserLoginTask extends AsyncTask<Void, Void, Boolean> {

@@ -133,6 +133,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     @Override
     protected void onResume() {
         super.onResume();
+        Log.d(LOG, "mainActivity:onResume: pop " );
         //locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
@@ -163,6 +164,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         if (!MainActivity.LOGGED_IN) {
             position = 0;
         } else {
+
             DBHelper dbHelp = new DBHelper(this);
             User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
             int i = 0;
@@ -176,7 +178,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         }
 
         Log.d(LOG, "Main Loop: " + position);
+//        Log.d(LOG, "main pop before: " + position);
         getFragmentManager().popBackStack();
+//        Log.d(LOG, "main pop after: " + position);
         Fragment fragment;
         switch(position) {
 
@@ -289,6 +293,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
 
             case 4:
+
                 fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditClientFragment.newInstance();
