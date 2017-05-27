@@ -629,12 +629,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         lSpinner.setAdapter(dataAdapter);
-        if (_client == null) {
-            _location = dbHelp.getLocation("1"); // Default
-        } else {
-            _client.set_loc_id(_location.get_id());
-            _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
+
+        _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
+        if(_location == null) {
+            _location = dbHelp.getLocation("1");
         }
+        _client.set_loc_id(_location.get_id());
+
         String compareValue = _location.get_name();
         if (!compareValue.equals(null)) {
             int spinnerPosition = dataAdapter.getPosition(compareValue);

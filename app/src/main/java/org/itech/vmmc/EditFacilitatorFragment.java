@@ -164,25 +164,13 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         Log.d(LOG, "EFF PhoneNumber: " + phoneNumber);
 
         dbHelp = new DBHelper(getActivity());
+        _facilitator = dbHelp.getFacilitator(firstName, lastName, nationalId, phoneNumber);
 
-        if (!nationalId.equals("") || !phoneNumber.equals("")) {
-            _facilitator = new Facilitator();
-            //_facilitator = dbHelp.getFacilitator(firstName, lastName, nationalId, phoneNumber, projectedDate);
-            _facilitator = dbHelp.getFacilitator(nationalId, phoneNumber);
-        }
         if (_facilitator != null) {
-            Log.d(LOG, "EBF _facilitator != null ");
-            //Log.d(LOG, "EBF _facilitator != null " + _facilitator.get_first_name());
+            Log.d(LOG, "EBF _facilitator != null " + _facilitator.get_first_name());
         } else { // defaults
             Log.d(LOG, "EBF _facilitator is equal null ");
-//            should check for more info like person frag, GNR
-//            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
-//            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(nationalId, phoneNumber);
-//            }
-
-            Person person = dbHelp.getPerson(nationalId, phoneNumber);
+            Person person = dbHelp.getPerson(firstName, lastName, phoneNumber);
             _facilitator = new Facilitator();
             _facilitator.set_first_name(person.get_first_name());
             _facilitator.set_last_name(person.get_last_name());
@@ -282,11 +270,16 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                 java.util.Date utilDate = cal.getTime();
                 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
-                _first_name = (TextView) _view.findViewById(R.id.first_name); String sFirstName = _first_name.getText().toString();
-                _last_name = (TextView) _view.findViewById(R.id.last_name); String sLastName = _last_name.getText().toString();
-                _national_id = (TextView) _view.findViewById(R.id.national_id); String sNationalId = _national_id.getText().toString();
-                _phone = (TextView) _view.findViewById(R.id.phone_number); String sPhoneNumber = _phone.getText().toString();
-                _note = (TextView) _view.findViewById(R.id.note); String sNote = _note.getText().toString();
+                _first_name = (TextView) _view.findViewById(R.id.first_name);
+                String sFirstName = _first_name.getText().toString();
+                _last_name = (TextView) _view.findViewById(R.id.last_name);
+                String sLastName = _last_name.getText().toString();
+                _national_id = (TextView) _view.findViewById(R.id.national_id);
+                String sNationalId = _national_id.getText().toString();
+                _phone = (TextView) _view.findViewById(R.id.phone_number);
+                String sPhoneNumber = _phone.getText().toString();
+                _note = (TextView) _view.findViewById(R.id.note);
+                String sNote = _note.getText().toString();
 
                 Spinner ftSpinner = (Spinner) _view.findViewById(R.id.facilitator_type);
 //              String sStatusText  = sSpinner.getSelectedItem().toString();
@@ -581,11 +574,12 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         dropdown.setThreshold(1);
         dropdown.setAdapter(dataAdapter);
 
-        if (_facilitator == null) {
-            _institution = dbHelp.getInstitution("1"); // Default
-        } else {
-            _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
+        _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
+        if(_institution == null) {
+            _institution = dbHelp.getInstitution("1");
         }
+        _facilitator.set_institution_id(_institution.get_id());
+
         dropdown.setText(_institution.get_name());
 
         dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {

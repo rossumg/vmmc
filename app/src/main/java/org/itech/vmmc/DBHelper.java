@@ -499,13 +499,13 @@ public class DBHelper extends SQLiteOpenHelper{
             String CREATE_INTERACTION_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS interaction_type(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "name varchar);";
-                    db.execSQL(CREATE_INTERACTION_TYPE_TABLE);
+            db.execSQL(CREATE_INTERACTION_TYPE_TABLE);
 
             //try { db.execSQL("delete from facilitator_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_FACILITATOR_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS facilitator_type(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "name varchar);";
-                    db.execSQL(CREATE_FACILITATOR_TYPE_TABLE);
+            db.execSQL(CREATE_FACILITATOR_TYPE_TABLE);
 
             //try { db.execSQL("delete from status_type;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_STATUS_TYPE_TABLE = "CREATE TABLE IF NOT EXISTS status_type(" +
@@ -602,7 +602,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 USER_PHONE + ") like ? "
                 ;
 
-        String[] whereArgs = new String[]{ username, password, phone };
+        String[] whereArgs = new String[]{ username.replaceAll("'","''"), password, phone.replaceAll("'","''") };
 
         Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, null);
 
@@ -650,13 +650,13 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
         values.put( USER_TIMESTAMP, oTimestamp.toString());
-        values.put( USER_USERNAME, user.get_username());
+        values.put( USER_USERNAME, user.get_username().replaceAll("'","''"));
         values.put( USER_PASSWORD, user.get_password());
         values.put( USER_EMAIL, user.get_email());
         values.put( USER_FIRST_NAME, user.get_first_name());
         values.put( USER_LAST_NAME, user.get_last_name());
         values.put( USER_NATIONAL_ID, user.get_national_id());
-        values.put( USER_PHONE, user.get_phone());
+        values.put( USER_PHONE, user.get_phone().replaceAll("'","''"));
         values.put( USER_REGION_ID, user.get_region_id());
         values.put( USER_USER_TYPE_ID, user.get_user_type_id());
         values.put( USER_LOCATION_ID, user.get_location_id());
@@ -865,7 +865,7 @@ public class DBHelper extends SQLiteOpenHelper{
                             Booking.get_projected_date() + "," +
                             Booking.get_actual_date();
 
-                        Log.d(LOG, "loop: " + recs[i] + "<");
+            Log.d(LOG, "loop: " + recs[i] + "<");
             i++;
         }
     }
@@ -927,7 +927,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     person4.get_longitude() + " " +
                     person4.get_is_deleted());
         } else {
-          Log.d(LOG, "person 2 not found");
+            Log.d(LOG, "person 2 not found");
         }
 
 
@@ -1195,31 +1195,31 @@ public class DBHelper extends SQLiteOpenHelper{
         String whereClause = "";
         whereClause = whereClause + "and assessment_question_id = " + assessments_question_id + " ";
 
-    String query =
-            "select " +
-                    "dropdown_option " +
-                    "from question_dropdown_option " +
-                    "where  1=1 " +
-                    whereClause;
+        String query =
+                "select " +
+                        "dropdown_option " +
+                        "from question_dropdown_option " +
+                        "where  1=1 " +
+                        whereClause;
 
 //    Log.d(LOG, "Query: " + query);
-    Cursor cursor = db.rawQuery(query, null);
+        Cursor cursor = db.rawQuery(query, null);
 
-    // looping through all rows and adding to list
-    if (cursor.moveToFirst()) {
-        do {
-            String dropdownOptions = "";
-            dropdownOptions =
-                    cursor.getString(0);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                String dropdownOptions = "";
+                dropdownOptions =
+                        cursor.getString(0);
 
-            // Adding object to list
-            dropdownOptionsList.add(dropdownOptions);
-        } while (cursor.moveToNext());
-    }
-    cursor.close();
-    // db.close();
-    // return list
-    return dropdownOptionsList;
+                // Adding object to list
+                dropdownOptionsList.add(dropdownOptions);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        // db.close();
+        // return list
+        return dropdownOptionsList;
     }
 
     public List<String> getReadableAssessments(String person_id, String national_id, String facility_name, String assessment_type, String from_date, String to_date) {
@@ -1363,11 +1363,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 String readableRecentAssessment = "";
                 readableRecentAssessment =
                         cursor.getString(0) + ") " +
-                        cursor.getString(1) + " " +
-                        cursor.getString(2) + "\r\n\t" +
-                        cursor.getString(4) + " " +
-                        cursor.getString(5) + "\r\n\t" +
-                        cursor.getString(3);
+                                cursor.getString(1) + " " +
+                                cursor.getString(2) + "\r\n\t" +
+                                cursor.getString(4) + " " +
+                                cursor.getString(5) + "\r\n\t" +
+                                cursor.getString(3);
 
                 // Adding object to list
                 readableRecentAssessmentsList.add(readableRecentAssessment);
@@ -1748,29 +1748,29 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public List<String> getAllAssessmentTypes(){
-            SQLiteDatabase db = this.getReadableDatabase();
-            List<String> assessmentTypes = new ArrayList<String>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> assessmentTypes = new ArrayList<String>();
 
-            String[] tableColumns = new String[] {
-                    ASSESSMENTS_ASSESSMENT_TYPE
-            };
+        String[] tableColumns = new String[] {
+                ASSESSMENTS_ASSESSMENT_TYPE
+        };
 
-            String whereClause = "1=1 ";
+        String whereClause = "1=1 ";
 
-            String[] whereArgs = new String[]{};
+        String[] whereArgs = new String[]{};
 
-            String orderBy = ASSESSMENTS_ASSESSMENT_ID;
+        String orderBy = ASSESSMENTS_ASSESSMENT_ID;
 
-            Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, orderBy);
+        Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, orderBy);
 
-            if (cursor.moveToFirst()) {
-                do {
+        if (cursor.moveToFirst()) {
+            do {
 //                Log.d(LOG, "getAllFacilityNames  "
 //                                + cursor.getString(0)
 //                );
-                    assessmentTypes.add(cursor.getString(0));
-                } while (cursor.moveToNext());
-            }
+                assessmentTypes.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
 
         cursor.close();
         // db.close();
@@ -2454,9 +2454,9 @@ public class DBHelper extends SQLiteOpenHelper{
         List<GeoLocations> geoLocationsList = new ArrayList<GeoLocations>();
         // Select All Query
         String selectQuery = "SELECT  * FROM " + TABLE_GEOLOCATIONS;
-         SQLiteDatabase db = this.getReadableDatabase();
+        SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
-         // looping through all rows and adding to list
+        // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
                 GeoLocations geoLocations = new GeoLocations();
@@ -2466,7 +2466,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 geoLocations.set_created_at(cursor.getString(4));
                 geoLocations.set_username(cursor.getString(5));
                 geoLocations.set_password(cursor.getString(6));
-                 // Adding person to list
+                // Adding person to list
                 geoLocationsList.add(geoLocations);
             } while (cursor.moveToNext());
         }
@@ -2500,7 +2500,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public String[] getAllPersonPhoneNumbers() {
-      return getAllPhoneNumbers();
+        return getAllPhoneNumbers();
     }
 
     public String[] getAllPhoneNumbers(){
@@ -2690,7 +2690,7 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public String[] getAllPersonNationalIDs() {
-      return getAllNationalIDs();
+        return getAllNationalIDs();
     }
 
     public String[] getAllNationalIDs(){
@@ -2798,7 +2798,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 editPageObject.set_answer(cursor.getString(4));
                 editPageObject.set_dropdown_tablename("");
 
-                        // Adding object to list
+                // Adding object to list
                 editPageList.add(editPageObject);
             } while (cursor.moveToNext());
 
@@ -2903,9 +2903,9 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor != null)
             cursor.moveToFirst();
         Log.d(LOG, "getAssessments  "
-                        + cursor.getString(0) + " "
-                        + cursor.getString(1) + " "
-                        + cursor.getString(2) + " "
+                + cursor.getString(0) + " "
+                + cursor.getString(1) + " "
+                + cursor.getString(2) + " "
         );
 
         Assessments assessments = new Assessments(
@@ -3117,12 +3117,12 @@ public class DBHelper extends SQLiteOpenHelper{
         String[] tableColumns = new String[] {
                 ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
         };
-            // use assess_id to update
-            ContentValues cv = new ContentValues();
-            cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
-            String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assess_id;
-            db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
-            // db.close();
+        // use assess_id to update
+        ContentValues cv = new ContentValues();
+        cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
+        String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assess_id;
+        db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
+        // db.close();
     }
 
     public void insertAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question, String answer) {
@@ -3225,15 +3225,15 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor cursor = db.query(TABLE_PERSON_TO_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
-        Log.d(LOG, "getPersonToAssessments  "
-                        + cursor.getString(0) + " "
-                        + cursor.getString(1) + " "
-                        + cursor.getString(2) + " "
-                        + cursor.getString(3) + " "
-                        + cursor.getString(4) + " "
-                        + cursor.getString(5) + " "
-                        + cursor.getString(6) + " "
-        );
+            Log.d(LOG, "getPersonToAssessments  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+                    + cursor.getString(2) + " "
+                    + cursor.getString(3) + " "
+                    + cursor.getString(4) + " "
+                    + cursor.getString(5) + " "
+                    + cursor.getString(6) + " "
+            );
             person_to_assessments = new PersonToAssessments(
                     parseInt(cursor.getString(0)),
                     parseInt(cursor.getString(1)),
@@ -3365,7 +3365,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
         client.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
-        Log.d(LOG, "updateClient timestamp: " + client.get_timestamp());
+
         values.put(CLIENT_TIMESTAMP, client.get_timestamp());
         values.put(CLIENT_FIRST_NAME, client.get_first_name());
         values.put(CLIENT_LAST_NAME, client.get_last_name());
@@ -3395,10 +3395,10 @@ public class DBHelper extends SQLiteOpenHelper{
 //                client.get_first_name(), client.get_last_name(), client._national_id, client.get_phone()};
 
         String updateWhereClause = "1=1 and " +
-                CLIENT_FIRST_NAME + " = '" + values.get(CLIENT_FIRST_NAME) + "' and " +
-                CLIENT_LAST_NAME + " = '" + values.get(CLIENT_LAST_NAME) + "' and " +
-                CLIENT_NATIONAL_ID + " = '" + values.get(CLIENT_NATIONAL_ID) + "' and " +
-                CLIENT_PHONE + " = '" + values.get(CLIENT_PHONE) + "'";
+                CLIENT_FIRST_NAME + " = '" + values.get(CLIENT_FIRST_NAME).toString().replaceAll("'","''") + "' and " +
+                CLIENT_LAST_NAME + " = '" + values.get(CLIENT_LAST_NAME).toString().replaceAll("'","''") + "' and " +
+                CLIENT_NATIONAL_ID + " = '" + values.get(CLIENT_NATIONAL_ID).toString().replaceAll("'","''") + "' and " +
+                CLIENT_PHONE + " = '" + values.get(CLIENT_PHONE).toString().replaceAll("'","''") + "'";
 
         db.update(TABLE_CLIENT, values, updateWhereClause, null);
         // db.close();
@@ -3453,15 +3453,15 @@ public class DBHelper extends SQLiteOpenHelper{
         Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
         values.put(INTERACTION_TIMESTAMP, oTimestamp.toString());
 
-        values.put(INTERACTION_FAC_FIRST_NAME, interaction.get_fac_first_name());
-        values.put(INTERACTION_FAC_LAST_NAME, interaction.get_fac_last_name());
-        values.put(INTERACTION_FAC_NATIONAL_ID, interaction.get_fac_national_id());
-        values.put(INTERACTION_FAC_PHONE,  interaction.get_fac_phone());
+        values.put(INTERACTION_FAC_FIRST_NAME, interaction.get_fac_first_name().replaceAll("'","''"));
+        values.put(INTERACTION_FAC_LAST_NAME, interaction.get_fac_last_name().replaceAll("'","''"));
+        values.put(INTERACTION_FAC_NATIONAL_ID, interaction.get_fac_national_id().replaceAll("'","''"));
+        values.put(INTERACTION_FAC_PHONE,  interaction.get_fac_phone().replaceAll("'","''"));
 
-        values.put(INTERACTION_PERSON_FIRST_NAME, interaction.get_person_first_name());
-        values.put(INTERACTION_PERSON_LAST_NAME, interaction.get_person_last_name());
-        values.put(INTERACTION_PERSON_NATIONAL_ID, interaction.get_person_national_id());
-        values.put(INTERACTION_PERSON_PHONE,  interaction.get_person_phone());
+        values.put(INTERACTION_PERSON_FIRST_NAME, interaction.get_person_first_name().replaceAll("'","''"));
+        values.put(INTERACTION_PERSON_LAST_NAME, interaction.get_person_last_name().replaceAll("'","''"));
+        values.put(INTERACTION_PERSON_NATIONAL_ID, interaction.get_person_national_id().replaceAll("'","''"));
+        values.put(INTERACTION_PERSON_PHONE,  interaction.get_person_phone().replaceAll("'","''"));
 
         values.put(INTERACTION_DATE, interaction.get_interaction_date() );
         values.put(INTERACTION_FOLLOWUP_DATE, interaction.get_followup_date() );
@@ -3533,11 +3533,11 @@ public class DBHelper extends SQLiteOpenHelper{
         Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
         values.put(PERSON_TIMESTAMP, oTimestamp.toString());
 
-        values.put(PERSON_FIRST_NAME, person.get_first_name());
-        values.put(PERSON_LAST_NAME, person.get_last_name());
-        values.put(PERSON_NATIONAL_ID, person.get_national_id());
+        values.put(PERSON_FIRST_NAME, person.get_first_name().replaceAll("'","''"));
+        values.put(PERSON_LAST_NAME, person.get_last_name().replaceAll("'","''"));
+        values.put(PERSON_NATIONAL_ID, person.get_national_id().replaceAll("'","''"));
         values.put(PERSON_ADDRESS,  person.get_address());
-        values.put(PERSON_PHONE,  person.get_phone());
+        values.put(PERSON_PHONE,  person.get_phone().replaceAll("'","''"));
         values.put(PERSON_DOB,  person.get_dob());
         values.put(PERSON_GENDER,  person.get_gender());
         values.put(PERSON_LATITUDE,  person.get_latitude());
@@ -3573,27 +3573,13 @@ public class DBHelper extends SQLiteOpenHelper{
 
         String[] whereArgs = new String [] {
                 first_name, last_name, national_id, phone };
+//                first_name, last_name, national_id, phone };
 
         Log.d(LOG, "getClient whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":" + whereArgs[3] + ":");
 
         Cursor cursor = db.query(TABLE_CLIENT, tableColumns, whereClause, whereArgs, null, null, null);
 
         if (cursor.moveToFirst()) {
-            Log.d(LOG, "getClient  "
-                    + cursor.getString(0) + " "
-                    + cursor.getString(1) + " "
-                    + cursor.getString(2) + " "
-                    + cursor.getString(3) + " "
-                    + cursor.getString(4) + " "
-                    + cursor.getString(5) + " "
-                    + cursor.getString(6) + " "
-                    + cursor.getString(7) + " "
-                    + cursor.getString(8) + " "
-                    + cursor.getString(9) + " "
-                    + cursor.getString(10) + " "
-                    + cursor.getString(11) + " "
-                    + cursor.getString(12) + " "
-            );
 
             client = new Client(
                     parseInt(cursor.getString(0)),
@@ -4007,9 +3993,9 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getAllLikeInteractions whereClause: " + whereClause);
 
         String[] whereArgs = new String [] {
-        "%" + facIndexParts.get_first_name() + "%", "%" + facIndexParts.get_last_name() + "%", "%" + facIndexParts.get_national_id() + "%", "%" +facIndexParts.get_phone() +
-        "%", "%" + personIndexParts.get_first_name() + "%", "%" + personIndexParts.get_last_name() + "%", "%" + personIndexParts.get_national_id() + "%", "%" +personIndexParts.get_phone() +
-        "%", "%" + _interactionDate + "%", "%" + _followupDate
+                "%" + facIndexParts.get_first_name() + "%", "%" + facIndexParts.get_last_name() + "%", "%" + facIndexParts.get_national_id() + "%", "%" +facIndexParts.get_phone() +
+                "%", "%" + personIndexParts.get_first_name() + "%", "%" + personIndexParts.get_last_name() + "%", "%" + personIndexParts.get_national_id() + "%", "%" +personIndexParts.get_phone() +
+                "%", "%" + _interactionDate + "%", "%" + _followupDate
         };
 
         Log.d(LOG, "getAllLikeInteractions whereArgs: " + whereArgs[0]);
@@ -4269,22 +4255,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
         };
 
-//        String whereClause = "1=1 and trim(" +
-//                CLIENT_FIRST_NAME + ") like ? or trim(" +
-//                CLIENT_LAST_NAME + ") like ? or trim(" +
-//                CLIENT_NATIONAL_ID + ") like ? or trim(" +
-//                CLIENT_PHONE + ") like ? ";
-
-//        Log.d(LOG, "updatePerson whereClause: " + whereClause);
-
-//        String[] whereArgs = new String[]{
-//                client.get_first_name(), client.get_last_name(), client._national_id, client.get_phone()};
-
         String updateWhereClause = "1=1 and " +
-                FACILITATOR_FIRST_NAME + " = '" + values.get(FACILITATOR_FIRST_NAME) + "' and " +
-                FACILITATOR_LAST_NAME + " = '" + values.get(FACILITATOR_LAST_NAME) + "' and " +
-                FACILITATOR_NATIONAL_ID + " = '" + values.get(FACILITATOR_NATIONAL_ID) + "' and " +
-                FACILITATOR_PHONE + " = '" + values.get(FACILITATOR_PHONE) + "'";
+                FACILITATOR_FIRST_NAME + " = '" + values.get(FACILITATOR_FIRST_NAME).toString().replaceAll("'","''") + "' and " +
+                FACILITATOR_LAST_NAME + " = '" + values.get(FACILITATOR_LAST_NAME).toString().replaceAll("'","''") + "' and " +
+                FACILITATOR_NATIONAL_ID + " = '" + values.get(FACILITATOR_NATIONAL_ID).toString().replaceAll("'","''") + "' and " +
+                FACILITATOR_PHONE + " = '" + values.get(FACILITATOR_PHONE).toString().replaceAll("'","''") + "'";
 
         db.update(TABLE_FACILITATOR, values, updateWhereClause, null);
         // db.close();
@@ -4316,19 +4291,6 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor cursor = db.query(TABLE_FACILITATOR, tableColumns, whereClause, whereArgs, null, null, null);
         cursor.moveToFirst();
         if (cursor.moveToFirst()) {
-//            Log.d(LOG, "getFacilitator  "
-//                            + cursor.getString(0) + " "
-//                            + cursor.getString(1) + " "
-//                            + cursor.getString(2) + " "
-//                            + cursor.getString(3) + " "
-//                            + cursor.getString(4) + " "
-//                            + cursor.getString(5) + " "
-//                            + cursor.getString(6) + " "
-//                    + cursor.getString(7) + " "
-//                    + cursor.getString(8) + " "
-//                    + cursor.getString(9) + " "
-//                    + cursor.getString(10) + " "
-//            );
 
             facilitator = new Facilitator(
                     parseInt(cursor.getString(0)),
@@ -4422,7 +4384,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
 
-        values.put(GROUP_ACTIVITY_NAME, groupActivity.get_name());
+        values.put(GROUP_ACTIVITY_NAME, groupActivity.get_name().replaceAll("'","''"));
         values.put(GROUP_ACTIVITY_TIMESTAMP, oTimestamp.toString());
         values.put(GROUP_ACTIVITY_LOCATION_ID, groupActivity.get_location_id());
         values.put(GROUP_ACTIVITY_ACTIVITY_DATE, groupActivity.get_activity_date());
@@ -4800,18 +4762,18 @@ public class DBHelper extends SQLiteOpenHelper{
             Log.d(LOG, "updateBooking 2 updateWhereClause: " + updateWhereClause);
             Log.d(LOG, "updateBooking 2 updateWhereClause: " +
                     values.get(BOOKING_ID) + " " +
-                            values.get(BOOKING_TIMESTAMP) + " " +
-                            values.get(BOOKING_FIRST_NAME) + " " +
-                            values.get(BOOKING_LAST_NAME) + " " +
-                            values.get(BOOKING_NATIONAL_ID) + " " +
-                            values.get(BOOKING_PHONE) + " " +
-                            values.get(BOOKING_FAC_FIRST_NAME) + " " +
-                            values.get(BOOKING_FAC_LAST_NAME) + " " +
-                            values.get(BOOKING_FAC_NATIONAL_ID) + " " +
-                            values.get(BOOKING_FAC_PHONE) + " " +
-                            values.get(BOOKING_LOCATION_ID) + " " +
-                            values.get(BOOKING_PROJECTED_DATE) + " " +
-                            values.get(BOOKING_ACTUAL_DATE)
+                    values.get(BOOKING_TIMESTAMP) + " " +
+                    values.get(BOOKING_FIRST_NAME) + " " +
+                    values.get(BOOKING_LAST_NAME) + " " +
+                    values.get(BOOKING_NATIONAL_ID) + " " +
+                    values.get(BOOKING_PHONE) + " " +
+                    values.get(BOOKING_FAC_FIRST_NAME) + " " +
+                    values.get(BOOKING_FAC_LAST_NAME) + " " +
+                    values.get(BOOKING_FAC_NATIONAL_ID) + " " +
+                    values.get(BOOKING_FAC_PHONE) + " " +
+                    values.get(BOOKING_LOCATION_ID) + " " +
+                    values.get(BOOKING_PROJECTED_DATE) + " " +
+                    values.get(BOOKING_ACTUAL_DATE)
             );
             db.update(TABLE_BOOKING, values, updateWhereClause, null);
             // db.close();
@@ -4950,33 +4912,33 @@ public class DBHelper extends SQLiteOpenHelper{
         Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
         Log.d(LOG, "getPerson:where:  " + whereClause + " " + whereArgs);
         if (cursor.moveToFirst()) {
-        Log.d(LOG, "getPerson  "
-                        + cursor.getString(0) + " "
-                        + cursor.getString(1) + " "
-                        + cursor.getString(2) + " "
-                        + cursor.getString(3) + " "
-                        + cursor.getString(4) + " "
-                        + cursor.getString(5) + " "
-                        + cursor.getString(6) + " "
-                        + cursor.getString(7) + " "
-                        + cursor.getString(8) + " "
-                        + cursor.getString(9) + " "
-                        + cursor.getString(10) + " "
-        );
+            Log.d(LOG, "getPerson  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+                    + cursor.getString(2) + " "
+                    + cursor.getString(3) + " "
+                    + cursor.getString(4) + " "
+                    + cursor.getString(5) + " "
+                    + cursor.getString(6) + " "
+                    + cursor.getString(7) + " "
+                    + cursor.getString(8) + " "
+                    + cursor.getString(9) + " "
+                    + cursor.getString(10) + " "
+            );
 
-        person = new Person(
-                parseInt(cursor.getString(0)),
-                cursor.getString(1),
-                cursor.getString(2),
-                cursor.getString(3),
-                cursor.getString(4),
-                cursor.getString(5),
-                cursor.getString(6),
-                cursor.getString(7),
-                parseFloat(cursor.getString(8)),
-                parseFloat(cursor.getString(9)),
-                parseInt(cursor.getString(10))
-        );
+            person = new Person(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1),
+                    cursor.getString(2),
+                    cursor.getString(3),
+                    cursor.getString(4),
+                    cursor.getString(5),
+                    cursor.getString(6),
+                    cursor.getString(7),
+                    parseFloat(cursor.getString(8)),
+                    parseFloat(cursor.getString(9)),
+                    parseInt(cursor.getString(10))
+            );
             cursor.close();
             // db.close();
             return person;
@@ -5121,7 +5083,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         IndexParts indexParts = new IndexParts(index);
 
-    String[] tableColumns = new String[] {
+        String[] tableColumns = new String[] {
                 BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
         };
 
@@ -5247,51 +5209,44 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
 
-     public boolean updatePerson(Person person) {
-         SQLiteDatabase db = this.getWritableDatabase();
+    public boolean updatePerson(Person person) {
+        SQLiteDatabase db = this.getWritableDatabase();
 
-         ContentValues values = new ContentValues();
-         //values.put(PERSON_ID, person.get_id());
-         Calendar calendar = Calendar.getInstance();
-         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
-         DateFormat df = new android.text.format.DateFormat();
-         person.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
-         Log.d(LOG, "updatePerson timestamp: " + person.get_timestamp());
-         values.put(PERSON_TIMESTAMP, person.get_timestamp());
-         values.put(PERSON_FIRST_NAME, person.get_first_name());
-         values.put(PERSON_LAST_NAME, person.get_last_name());
-         values.put(PERSON_NATIONAL_ID, person.get_national_id());
-         values.put(PERSON_ADDRESS,  person.get_address());
-         values.put(PERSON_PHONE,  person.get_phone());
-         values.put(PERSON_DOB,  person.get_dob());
-         values.put(PERSON_GENDER,  person.get_gender());
-         values.put(PERSON_LATITUDE,  person.get_latitude());
-         values.put(PERSON_LONGITUDE,  person.get_longitude());
-         values.put(PERSON_IS_DELETED,  person.get_is_deleted());
+        ContentValues values = new ContentValues();
+        //values.put(PERSON_ID, person.get_id());
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
+        DateFormat df = new android.text.format.DateFormat();
+        person.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        Log.d(LOG, "updatePerson timestamp: " + person.get_timestamp());
+        values.put(PERSON_TIMESTAMP, person.get_timestamp());
+        values.put(PERSON_FIRST_NAME, person.get_first_name());
+        values.put(PERSON_LAST_NAME, person.get_last_name());
+        values.put(PERSON_NATIONAL_ID, person.get_national_id());
+        values.put(PERSON_ADDRESS,  person.get_address());
+        values.put(PERSON_PHONE,  person.get_phone());
+        values.put(PERSON_DOB,  person.get_dob());
+        values.put(PERSON_GENDER,  person.get_gender());
+        values.put(PERSON_LATITUDE,  person.get_latitude());
+        values.put(PERSON_LONGITUDE,  person.get_longitude());
+        values.put(PERSON_IS_DELETED,  person.get_is_deleted());
 
-         String[] tableColumns = new String[]{
-                 PERSON_ID, PERSON_TIMESTAMP, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
-         };
+        String[] tableColumns = new String[]{
+                PERSON_ID, PERSON_TIMESTAMP, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
+        };
 
-         String whereClause = "1=1 and trim(" +
-                 PERSON_FIRST_NAME + ") like ? or trim(" +
-                 PERSON_LAST_NAME + ") like ? or trim(" +
-                 PERSON_PHONE + ") like ? ";
 
-         Log.d(LOG, "updatePerson whereClause: " + whereClause);
+        String updateWhereClause = "1=1 and " +
+                PERSON_FIRST_NAME + " = '" + values.get(PERSON_FIRST_NAME).toString().replaceAll("'","''") + "' and " +
+                PERSON_LAST_NAME + " = '" + values.get(PERSON_LAST_NAME).toString().replaceAll("'","''") + "' and " +
+                PERSON_PHONE + " = '" + values.get(PERSON_PHONE).toString().replaceAll("'","''") + "'";
 
-         String[] whereArgs = new String[]{
-                 person.get_first_name(), person.get_last_name(), person.get_phone()};
+        Log.d(LOG, "updatePerson updateWhereClause: " + updateWhereClause);
 
-             String updateWhereClause = "1=1 and " +
-                     PERSON_FIRST_NAME + " = '" + values.get(PERSON_FIRST_NAME) + "' and " +
-                     PERSON_LAST_NAME + " = '" + values.get(PERSON_LAST_NAME) + "' and " +
-                     PERSON_PHONE + " = '" + values.get(PERSON_PHONE) + "'";
-
-             db.update(TABLE_PERSON, values, updateWhereClause, null);
-             // db.close();
-             return true;
-     }
+        db.update(TABLE_PERSON, values, updateWhereClause, null);
+        // db.close();
+        return true;
+    }
 
     public boolean deletePerson(Person person) {
         SQLiteDatabase db = this.getWritableDatabase();
@@ -5565,3 +5520,4 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
 } // class
+

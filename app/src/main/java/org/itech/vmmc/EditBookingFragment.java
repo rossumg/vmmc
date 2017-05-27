@@ -192,14 +192,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             Log.d(LOG, "EBF _booking is equal null ");
             _location = dbHelp.getLocation("1"); // Default
 
-//            should check for more info like person frag, GNR
-//            if (!firstName.equals("") && !lastName.equals("") && !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(firstName, lastName, phoneNumber);
-//            } else if (!nationalId.equals("") || !phoneNumber.equals("")) {
-//                _person = dbHelp.getPerson(nationalId, phoneNumber);
-//            }
-
-//            Person person = dbHelp.getPerson(nationalId, phoneNumber);
             Person person = dbHelp.getPerson(firstName, lastName, phoneNumber);
             _booking = new Booking();
             _booking.set_first_name(person.get_first_name());
@@ -211,9 +203,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         }
 
         _client = dbHelp.getClient(_booking.get_first_name(), _booking.get_last_name(), _booking.get_national_id(), _booking.get_phone());
-//        Log.d(LOG, "EBF build _client0 " + _booking.get_first_name() + _booking.get_last_name() + _booking.get_national_id() + _booking.get_phone());
         if(_client == null) {
-//            Log.d(LOG, "EBF build _client1 " + _booking.get_first_name() + _booking.get_last_name() + _booking.get_national_id() + _booking.get_phone());
             _client = new Client();
             _client.set_first_name(_booking.get_first_name());
             _client.set_last_name(_booking.get_last_name());
@@ -358,7 +348,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 //                String sGender = _gender.getText().toString();
 
                 Log.d(LOG, "UpdateBooking button2: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() + " <");
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _actual_date.getText() + " <");
 
                 DisplayParts displayParts = new DisplayParts(sFacilitator);
                 Log.d(LOG, "UpdateBooking button3: " +
