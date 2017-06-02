@@ -106,6 +106,7 @@ public class LoginFragment extends Fragment {
         DBHelper dbHelp = new DBHelper(getActivity());
 
         this._dbHelp = dbHelp;
+
         Log.d(LOG, "LoginFragment.onCreate1");
 
 //        final TelephonyManager tm = (TelephonyManager) getActivity().getSystemService(Context.TELEPHONY_SERVICE);
@@ -281,6 +282,7 @@ public class LoginFragment extends Fragment {
                     MainActivity.LOGGED_IN = true;
                     MainActivity._username = email; // referred to as username in db, email in pop-up
                     MainActivity._password = password;
+                    MainActivity.USER_OBJ = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
                     Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
                     if (fragment == null) {
                         fragment = ActionFragment.newInstance("main", "");

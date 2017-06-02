@@ -247,8 +247,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //            }
 //        }); gnr: direct to edit frag
 
-        Button btnBooking = (Button) _view.findViewById(R.id.btnBooking);
-        btnBooking.setOnClickListener(new View.OnClickListener() {
+        Button btnBookingDisplay = (Button) _view.findViewById(R.id.btnBooking);
+        btnBookingDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
 
@@ -263,6 +263,24 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 Fragment fragment;
                 fragment = DisplayFragment.newInstance("displayBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "");
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayBooking").commit();
+            }
+        });
+
+        Button btnBooking = (Button) _view.findViewById(R.id.btnBooking);
+        btnBooking.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+
+                java.util.Calendar cal = java.util.Calendar.getInstance();
+                java.util.Date utilDate = cal.getTime();
+                java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
+
+                Log.d(LOG, "Booking button: " +
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+
+                Fragment fragment = EditBookingFragment.newInstance("editBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "%" );
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
             }
         });
 

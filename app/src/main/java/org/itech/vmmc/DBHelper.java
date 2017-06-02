@@ -122,6 +122,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String TABLE_CLIENT      = "client_table";
     private static final String TABLE_FACILITATOR = "facilitator";
     private static final String TABLE_LOCATION    = "location";
+    private static final String TABLE_ADDRESS     = "address";
     private static final String TABLE_REGION      = "region";
     private static final String TABLE_CONSTITUENCY = "constituency";
     private static final String TABLE_BOOKING      = "booking";
@@ -140,7 +141,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String PERSON_FIRST_NAME  = "first_name";
     private static final String PERSON_LAST_NAME   = "last_name";
     private static final String PERSON_NATIONAL_ID = "national_id";
-    private static final String PERSON_ADDRESS     = "address";
+    private static final String PERSON_ADDRESS     = "address_id";
     private static final String PERSON_PHONE       = "phone";
     private static final String PERSON_DOB         = "dob";
     private static final String PERSON_GENDER      = "gender";
@@ -247,6 +248,11 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String LOCATION_NAME = "name";
     private static final String LOCATION_REGION_ID = "region_id";
 
+    // address table column names
+    private static final String ADDRESS_ID   = "id";
+    private static final String ADDRESS_NAME = "name";
+    private static final String ADDRESS_REGION_ID = "region_id";
+
     // institution table column names
     private static final String INSTITUTION_ID          = "id";
     private static final String INSTITUTION_NAME        = "name";
@@ -320,13 +326,13 @@ public class DBHelper extends SQLiteOpenHelper{
                     "first_name varchar, " +
                     "last_name varchar, " +
                     "national_id varchar, " +
-                    "address varchar, " +
+                    "address_id int, " +
                     "phone varchar, " +
                     "dob date, " +
                     "gender varchar, " +
                     "latitude real default 0.0, " +
                     "longitude real default 0.0, " +
-                    "is_deleted inti, " +
+                    "is_deleted int, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_PERSON_TABLE);
 
@@ -456,6 +462,13 @@ public class DBHelper extends SQLiteOpenHelper{
                     "region_id int)";
             db.execSQL(CREATE_LOCATION_TABLE);
 
+            //try { db.execSQL("delete from location;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
+            String CREATE_ADDRESS_TABLE = "CREATE TABLE IF NOT EXISTS address(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "name varchar, " +
+                    "region_id int)";
+            db.execSQL(CREATE_ADDRESS_TABLE);
+
             //try { db.execSQL("delete from region;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
             String CREATE_REGION_TABLE = "CREATE TABLE IF NOT EXISTS region(" +
                     "id integer primary key  autoincrement  not null  unique, " +
@@ -555,6 +568,7 @@ public class DBHelper extends SQLiteOpenHelper{
         new putMySQLUserTable(this).execute();
         new getMySQLRegionTable(this._context, this).execute();
         new getMySQLLocationTable(this._context, this).execute();
+        new getMySQLAddressTable(this._context, this).execute();
         new getMySQLFacilitatorTypeTable(this._context, this).execute();
         new getMySQLStatusTypeTable(this._context, this).execute();
         new getMySQLInstitutionTable(this._context, this).execute();
@@ -896,16 +910,16 @@ public class DBHelper extends SQLiteOpenHelper{
 
         SQLiteDatabase db = this.getWritableDatabase();
         // db.execSQL("delete from person ");
-        Person person0 = new Person("A","B", "n1","a","12","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person0);
-        Person person1 = new Person("C","D", "n2","a","34","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person1);
-        Person person2 = new Person("E","F", "n3","a","56","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person2);
+        Person person0 = new Person("A","B", "n1",1,"12","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person0);
+        Person person1 = new Person("C","D", "n2",1,"34","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person1);
+        Person person2 = new Person("E","F", "n3",1,"56","0000-00-00","g",1.100000023841858,2.200000047683716,0); addPerson(person2);
 
         Person person3 = getPerson("A","B", "p");
         Log.d(LOG, "debugFragment:load_person:personAB: " +
                 person3.get_first_name() + " " +
                 person3.get_last_name() + " " +
                 person3.get_national_id() + " " +
-                person3.get_address() + " " +
+                person3.get_address_id() + " " +
                 person3.get_phone() + " " +
                 person3.get_dob() + " " +
                 person3.get_gender() + " " +
@@ -919,7 +933,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     person4.get_first_name() + " " +
                     person4.get_last_name() + " " +
                     person4.get_national_id() + " " +
-                    person4.get_address() + " " +
+                    person4.get_address_id() + " " +
                     person4.get_phone() + " " +
                     person4.get_dob() + " " +
                     person4.get_gender() + " " +
@@ -2313,6 +2327,89 @@ public class DBHelper extends SQLiteOpenHelper{
         }
     }
 
+    public List<String> getAllAddressNames(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> addressNames = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                ADDRESS_NAME
+        };
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = ADDRESS_ID;
+
+        Cursor cursor = db.query(TABLE_ADDRESS, tableColumns, whereClause, whereArgs, null, null, orderBy);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllAddressNames  "
+//                                + cursor.getString(0)
+//                );
+                addressNames.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(addressNames);
+        addressNames.clear();;
+        addressNames.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ addressNames.size() ];
+        addressNames.toArray(stringArrayNames);
+
+        return addressNames;
+    }
+
+    public Address getAddress( String address_id ) {
+        Address address = null;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Log.d(LOG, "getAddress: " + address_id);
+
+        String[] tableColumns = new String[] {
+                ADDRESS_ID, ADDRESS_NAME
+        };
+
+        String whereClause = "trim(" +
+                ADDRESS_ID + ") like ? or trim(" +
+                ADDRESS_NAME + ") like ? "
+                ;
+
+        Log.d(LOG, "getLocaction whereClause: " + whereClause);
+
+        String[] whereArgs = new String [] {
+                address_id, address_id }; // gnr: looks strange because method finds rec using either id or name
+
+        Log.d(LOG, "getLocaction whereArgs:" + whereArgs[0] );
+
+        Cursor cursor = db.query(TABLE_ADDRESS, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getLocaction  "
+                    + cursor.getString(0) + " "
+                    + cursor.getString(1) + " "
+            );
+
+            address = new Address(
+                    parseInt(cursor.getString(0)),
+                    cursor.getString(1)
+            );
+            cursor.close();
+            // db.close();
+            return address;
+        } else {
+            cursor.close();
+            // db.close();
+            return address;
+        }
+    }
+
     public List<String> getAllInstitutionNames(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> institutionNames = new ArrayList<String>();
@@ -2408,7 +2505,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "round(julianday('now')-julianday(b.projected_date)) as difference,\n" +
                         "p.dob,\n" +
                         "l.name as location,\n" +
-                        "p.address,\n" +
+                        "a.name,\n" +
                         "p.phone\n" +
                         "from client_table c\n" +
                         "join status_type s on s.id = c.status_id\n" +
@@ -2423,8 +2520,14 @@ public class DBHelper extends SQLiteOpenHelper{
                         "  c.national_id = p.national_id and\n" +
                         "  c.phone = p.phone\n" +
                         "join location l on c.loc_id = l.id\n" +
+                        "join address a on p.address_id = a.id\n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3\n" +
                         "where s.name = 'Pending'\n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "order by difference desc ";
+
+//        Log.d(LOG, "getAllPendingFollowups:select: " + selectQuery.toString());
+
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
@@ -3536,7 +3639,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(PERSON_FIRST_NAME, person.get_first_name().replaceAll("'","''"));
         values.put(PERSON_LAST_NAME, person.get_last_name().replaceAll("'","''"));
         values.put(PERSON_NATIONAL_ID, person.get_national_id().replaceAll("'","''"));
-        values.put(PERSON_ADDRESS,  person.get_address());
+        values.put(PERSON_ADDRESS,  person.get_address_id());
         values.put(PERSON_PHONE,  person.get_phone().replaceAll("'","''"));
         values.put(PERSON_DOB,  person.get_dob());
         values.put(PERSON_GENDER,  person.get_gender());
@@ -4817,7 +4920,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
-                    cursor.getString(4),
+                    parseInt(cursor.getString(4)),
                     cursor.getString(5),
                     cursor.getString(6),
                     cursor.getString(7),
@@ -4877,7 +4980,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
-                    cursor.getString(4),
+                    parseInt(cursor.getString(4)),
                     cursor.getString(5),
                     cursor.getString(6),
                     cursor.getString(7),
@@ -4931,7 +5034,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(1),
                     cursor.getString(2),
                     cursor.getString(3),
-                    cursor.getString(4),
+                    parseInt(cursor.getString(4)),
                     cursor.getString(5),
                     cursor.getString(6),
                     cursor.getString(7),
@@ -4967,7 +5070,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 person.set_first_name(cursor.getString(2));
                 person.set_last_name(cursor.getString(3));
                 person.set_national_id(cursor.getString(4));
-                person.set_address(cursor.getString(5));
+                person.set_address_id(parseInt(cursor.getString(5)));
                 person.set_phone(cursor.getString(6));
                 person.set_dob(cursor.getString(7));
                 person.set_gender(cursor.getString(8));
@@ -5023,7 +5126,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 person.set_first_name(cursor.getString(2));
                 person.set_last_name(cursor.getString(3));
                 person.set_national_id(cursor.getString(4));
-                person.set_address(cursor.getString(5));
+                person.set_address_id(parseInt(cursor.getString(5)));
                 person.set_phone(cursor.getString(6));
                 person.set_dob(cursor.getString(7));
                 person.set_gender(cursor.getString(8));
@@ -5223,7 +5326,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(PERSON_FIRST_NAME, person.get_first_name());
         values.put(PERSON_LAST_NAME, person.get_last_name());
         values.put(PERSON_NATIONAL_ID, person.get_national_id());
-        values.put(PERSON_ADDRESS,  person.get_address());
+        values.put(PERSON_ADDRESS,  person.get_address_id());
         values.put(PERSON_PHONE,  person.get_phone());
         values.put(PERSON_DOB,  person.get_dob());
         values.put(PERSON_GENDER,  person.get_gender());

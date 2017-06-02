@@ -11,7 +11,7 @@ public class Person {
     String _first_name;
     String _last_name;
     String _national_id;
-    String _address;
+    int _address_id;
     String _phone;
     String _dob;
     String _gender;
@@ -25,13 +25,13 @@ public class Person {
 
     }
 
-    public Person(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _address, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
+    public Person(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, int _address_id, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
-        this._address = _address;
+        this._address_id = _address_id;
         this._phone = _phone;
         this._dob = _dob;
         this._gender = _gender;
@@ -40,12 +40,12 @@ public class Person {
         this._is_deleted = _is_deleted;
     }
 
-    public Person(int _id, String _first_name, String _last_name, String _national_id, String _address, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
+    public Person(int _id, String _first_name, String _last_name, String _national_id, int _address_id, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
         this._id = _id;
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
-        this._address = _address;
+        this._address_id = _address_id;
         this._phone = _phone;
         this._dob = _dob;
         this._gender = _gender;
@@ -54,11 +54,11 @@ public class Person {
         this._is_deleted = _is_deleted;
     }
 
-    public Person(String _first_name, String _last_name, String _national_id, String _address, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
+    public Person(String _first_name, String _last_name, String _national_id, int _address_id, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
-        this._address = _address;
+        this._address_id = _address_id;
         this._phone = _phone;
         this._dob = _dob;
         this._gender = _gender;
@@ -67,12 +67,12 @@ public class Person {
         this._is_deleted = _is_deleted;
     }
 
-    public Person(String _timestamp, String _first_name, String _last_name, String _national_id, String _address, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
+    public Person(String _timestamp, String _first_name, String _last_name, String _national_id, int _address_id, String _phone, String _dob, String _gender, double _latitude, double _longitude, int _is_deleted) {
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
-        this._address = _address;
+        this._address_id = _address_id;
         this._phone = _phone;
         this._dob = _dob;
         this._gender = _gender;
@@ -121,12 +121,12 @@ public class Person {
         this._national_id = _national_id;
     }
 
-    public String get_address() {
-        return _address;
+    public int get_address_id() {
+        return _address_id;
     }
 
-    public void set_address(String _address) {
-        this._address = _address;
+    public void set_address_id(int _address_id) {
+        this._address_id = _address_id;
     }
 
     public String get_phone() {

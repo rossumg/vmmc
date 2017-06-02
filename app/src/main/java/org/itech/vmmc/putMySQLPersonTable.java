@@ -67,7 +67,7 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
                         person.get_first_name() + "," +
                         person.get_last_name() + "," +
                         person.get_national_id() + "," +
-                        person.get_address() + "," +
+                        person.get_address_id() + "," +
                         person.get_phone() + "," +
                         person.get_dob() + "," +
                         person.get_gender() + "," +

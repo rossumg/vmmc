@@ -94,8 +94,8 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
                     String last_name = person_rec.getString("last_name");
                     last_name = last_name.replace("'","''");
                     String national_id = person_rec.getString("national_id");
-                    String address = person_rec.getString("address");
-                    address = address.replace("'","''");
+                    String address_id = person_rec.getString("address_id");
+                    address_id = address_id.replace("'","''");
                     String phone = person_rec.getString("phone");
                     phone = phone.replace("'","''");
                     String dob = person_rec.getString("dob");
@@ -108,14 +108,14 @@ class getMySQLPersonTable extends AsyncTask<String, String, String> {
                     Log.d(LOG, "getMYSQLPersonTable:doInBackground: " + first_name + ":" + last_name + ":" + phone);
                     String personInsert =
                             "insert or replace into person "
-                                    + "(timestamp, first_name, last_name, national_id, address, phone, dob, gender, latitude, longitude, is_deleted) "
+                                    + "(timestamp, first_name, last_name, national_id, address_id, phone, dob, gender, latitude, longitude, is_deleted) "
                                     + " values("
                                     // + person_id + ","
                                     + "'" + timestamp + "'" + ","
                                     + "'" + first_name + "'" + ","
                                     + "'" + last_name + "'" + ","
                                     + "'" + national_id + "'" + ","
-                                    + "'" + address + "'" + ","
+                                    + "'" + address_id + "'" + ","
                                     + "'" + phone + "'" + ","
                                     + "'" + dob + "'" + ","
                                     + "'" + gender + "'" + ","

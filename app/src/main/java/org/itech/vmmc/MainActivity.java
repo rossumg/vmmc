@@ -61,6 +61,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static final String TAG_SUCCESS = "success";
     public static final String TAG_MESSAGE = "message";
     public static SQLiteDatabase db;
+    public static User USER_OBJ;
     public static String _user = "rossumg";
     public static String _pass = "";
     public static String _username = "";

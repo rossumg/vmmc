@@ -17,6 +17,7 @@ import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
 import android.widget.RadioGroup;
+import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
@@ -53,7 +54,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
     private static TextView _first_name;
     private static TextView _last_name;
     private static TextView _national_id;
-    private static TextView _address;
+    private static Address _address;
     private static TextView _phone_number;
     private static TextView _dob;
     private static TextView _gender;
@@ -181,14 +182,13 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _last_name.setText(_person.get_last_name());
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_person.get_national_id());
-            _address = (TextView) _view.findViewById(R.id.address);
-            _address.setText(_person.get_address());
             _phone_number = (TextView) _view.findViewById(R.id.phone_number);
             _phone_number.setText(_person.get_phone());
             _dob = (TextView) _view.findViewById(dob);
             _dob.setText(_person.get_dob());
         }
 
+        loadAddressDropdown(_view );
         loadGenderRadio(_view);
 
         et_dob = (EditText) _view.findViewById(R.id.dob);
@@ -232,7 +232,11 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                 String sFirstName = _first_name.getText().toString();
                 String sLastName = _last_name.getText().toString();
                 String sNationalId = _national_id.getText().toString();
-                String sAddress = _address.getText().toString();
+
+                Spinner aSpinner = (Spinner) _view.findViewById(R.id.address);
+//              String sAddressText  = aSpinner.getSelectedItem().toString();
+                Address _address = dbHelp.getAddress( aSpinner.getSelectedItem().toString());
+
                 String sPhoneNumber = _phone_number.getText().toString();
                 String sDOB = _dob.getText().toString();
                 String sGender = _person.get_gender();
@@ -253,7 +257,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                         lookupPerson.set_first_name(sFirstName);
                         lookupPerson.set_last_name(sLastName);
                         lookupPerson.set_national_id(sNationalId);
-                        lookupPerson.set_address(sAddress);
+                        lookupPerson.set_address_id(_address.get_id());
                         lookupPerson.set_phone(sPhoneNumber);
                         lookupPerson.set_dob(sDOB);
                         lookupPerson.set_gender(sGender);
@@ -265,7 +269,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                         person.set_first_name(sFirstName.toString());
                         person.set_last_name(sLastName);
                         person.set_national_id(sNationalId);
-                        person.set_address(sAddress);
+                        person.set_address_id(_address.get_id());
                         person.set_phone(sPhoneNumber);
                         person.set_dob(sDOB);
                         person.set_gender(sGender);
@@ -335,7 +339,6 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
         _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
         _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
-        _address = (TextView) _view.findViewById(R.id.address); _address.setText("");
         _phone_number = (TextView) _view.findViewById(R.id.phone_number); _phone_number.setText("");
         _dob = (TextView) _view.findViewById(dob); _dob.setText("");
 
@@ -347,8 +350,6 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
             _last_name.setText(_person.get_last_name());
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_person.get_national_id());
-            _address = (TextView) _view.findViewById(R.id.address);
-            _address.setText(_person.get_address());
             _phone_number = (TextView) _view.findViewById(R.id.phone_number);
             _phone_number.setText(_person.get_phone());
             _dob = (TextView) _view.findViewById(dob);
@@ -371,6 +372,45 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         // TODO: Update argument type and name
         public void onFragmentInteraction(int position);
 
+    }
+
+    public void loadAddressDropdown(View view ) {
+        Log.d(LOG, "loadAddressDropdown: " );
+
+        final Spinner lSpinner = (Spinner) view.findViewById(R.id.address);
+        final List<String> addressNames = dbHelp.getAllAddressNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, addressNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        lSpinner.setAdapter(dataAdapter);
+
+        _address = dbHelp.getAddress(String.valueOf(_person.get_address_id()));
+        if(_address == null) {
+            _address = dbHelp.getAddress("1");
+        }
+        _person.set_address_id(_address.get_id());
+
+        String compareValue = _address.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            lSpinner.setSelection(spinnerPosition);
+        }
+
+        lSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String addressText  = lSpinner.getSelectedItem().toString();
+                _address = dbHelp.getAddress(addressText);
+//                _client.set_loc_id(_location.get_id());
+                Log.d(LOG, "address: " + _address.get_id() + _address.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
     }
 
     public void loadGenderRadio(View view ) {

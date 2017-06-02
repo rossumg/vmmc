@@ -154,6 +154,7 @@
     <string name="displayPendingFollowup">Display Pending/Followup</string>
     <string name="facilitator_short">Recruiter</string>
     <string name="addEditPendingFollowup">Pending/Followup</string>
+    <string name="constituency">Constituency</string>
 
 
 </resources>
