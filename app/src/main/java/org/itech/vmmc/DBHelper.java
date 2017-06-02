@@ -1563,13 +1563,14 @@ public class DBHelper extends SQLiteOpenHelper{
                 PERSON_ID, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
         };
 
-        String whereClause = "1=1 ";
+        String selectQuery =
+                "select p.* from " + TABLE_PERSON + " p\n" +
+                        "join address a on p.address_id = a.id \n" +
+                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
-        String[] whereArgs = new String[]{};
-
-        String orderBy = PERSON_FIRST_NAME + "," + PERSON_LAST_NAME + "," + PERSON_NATIONAL_ID;
-
-        Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, orderBy);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -1579,7 +1580,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //                                + cursor.getString(3) + " "
 //                                + cursor.getString(5) + " "
 //                );
-                personID.add(cursor.getString(1).trim() + " " + cursor.getString(2).trim() + ", " + cursor.getString(3).trim() + ", " + cursor.getString(5).trim());
+                personID.add(cursor.getString(2).trim() + " " + cursor.getString(3).trim() + ", " + cursor.getString(4).trim() + ", " + cursor.getString(6).trim());
             } while (cursor.moveToNext());
         }
 
@@ -1692,13 +1693,16 @@ public class DBHelper extends SQLiteOpenHelper{
                 GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
-        String whereClause = "1=1 ";
+        String selectQuery =
+                "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
+                        "join location l on ga.location_id = l.id \n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
-        String[] whereArgs = new String[]{};
+        Log.d(LOG, "getAllLikeGroupActivitieyIDs selectQuery: " + selectQuery);
 
-        String orderBy = GROUP_ACTIVITY_ACTIVITY_DATE;
-
-        Cursor cursor = db.query(TABLE_GROUP_ACTIVITY, tableColumns, whereClause, whereArgs, null, null, orderBy);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -1730,7 +1734,13 @@ public class DBHelper extends SQLiteOpenHelper{
     public List<GroupActivity> getAllGroupActivities() {
         List<GroupActivity> groupActivityList = new ArrayList<GroupActivity>();
         // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_GROUP_ACTIVITY;
+//        String selectQuery = "SELECT  * FROM " + TABLE_GROUP_ACTIVITY;
+        String selectQuery =
+                "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
+                "join location l on ga.location_id = l.id \n" +
+                "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                "where 1=1 \n" +
+                "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
         // looping through all rows and adding to list
@@ -1963,10 +1973,9 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public List<String> getUserStatusTypes(){
 
-        User _user = new User(this, MainActivity._username + ":" + MainActivity._password);
-        if(_user.userStatusList.size() == 0) {
+        if(MainActivity.USER_OBJ.userStatusList.size() == 0) {
             List<String> _statusList = Arrays.asList();
-            switch (_user.get_user_type_id()) {
+            switch (MainActivity.USER_OBJ.get_user_type_id()) {
                 case 1: // admin
                     _statusList = Arrays.asList("MC Completed", "Clinically Deferred", "Pending", "Refused", "Lost");
                     break;
@@ -1979,7 +1988,7 @@ public class DBHelper extends SQLiteOpenHelper{
             }
             return _statusList;
         } else {
-            return _user.userStatusList;
+            return MainActivity.USER_OBJ.userStatusList;
         }
     }
 
@@ -2252,13 +2261,19 @@ public class DBHelper extends SQLiteOpenHelper{
                 LOCATION_NAME
         };
 
+        String selectQuery =
+                "select l." + LOCATION_NAME + " from " + TABLE_LOCATION + " l\n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+
         String whereClause = "1=1 ";
 
         String[] whereArgs = new String[]{};
 
         String orderBy = LOCATION_ID;
 
-        Cursor cursor = db.query(TABLE_LOCATION, tableColumns, whereClause, whereArgs, null, null, orderBy);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -2335,13 +2350,13 @@ public class DBHelper extends SQLiteOpenHelper{
                 ADDRESS_NAME
         };
 
-        String whereClause = "1=1 ";
+        String selectQuery =
+                "select a.name from " + TABLE_ADDRESS + " a\n" +
+                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
-        String[] whereArgs = new String[]{};
-
-        String orderBy = ADDRESS_ID;
-
-        Cursor cursor = db.query(TABLE_ADDRESS, tableColumns, whereClause, whereArgs, null, null, orderBy);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -3903,22 +3918,21 @@ public class DBHelper extends SQLiteOpenHelper{
                 CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
         };
 
-        String whereClause = "1=1 and trim(" +
-                CLIENT_FIRST_NAME + ") like ? and trim(" +
-                CLIENT_LAST_NAME + ") like ? and trim(" +
-                CLIENT_NATIONAL_ID + ") like ? and trim(" +
-                CLIENT_PHONE + ") like ? ";
-
-        Log.d(LOG, "getClient whereClause: " + whereClause);
+        String selectQuery =
+                "select c.* from " + TABLE_CLIENT + " c\n" +
+                        "join location l on c.loc_id = l.id \n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and trim(c." + CLIENT_FIRST_NAME + ") like ? " +
+                        "and trim(c." + CLIENT_LAST_NAME + ") like ? " +
+                        "and trim(c." + CLIENT_NATIONAL_ID + ") like ? " +
+                        "and trim(c." +   CLIENT_PHONE + ") like ? ";
 
         String[] whereArgs = new String [] {
                 "%" + indexParts.get_first_name() + "%", "%" + indexParts.get_last_name() + "%", "%" + indexParts.get_national_id() + "%", "%" +indexParts.get_phone() + "%" };
 
-        Cursor cursor = db.query(TABLE_CLIENT, tableColumns, whereClause, whereArgs, null, null, null);
-//        Cursor cursor1 = null;
-//        cursor1 = db.rawQuery(selectQuery, null);
-// GNR: very odd behavior, had to add following moveToFirst only for getAllClients, not getAllPersons or getAllBookings
-//        cursor1.moveToFirst();
+        Cursor cursor = db.rawQuery(selectQuery, whereArgs);
 
         if (cursor.moveToFirst()) {
             do {
@@ -4149,28 +4163,30 @@ public class DBHelper extends SQLiteOpenHelper{
         List<GroupActivity> _List = new ArrayList<GroupActivity>();
         Log.d(LOG, "getAllLikeGroupActivities:index: " + index);
 
-
         String parts[] = index.split(":",2);
         String _name = parts[0];
         String _date = parts[1];
 
         String[] tableColumns = new String[] {
-                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
-        String whereClause = "1=1 and trim(" +
-                GROUP_ACTIVITY_NAME + ") like ? and trim(" +
-                GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
-
-        Log.d(LOG, "getAllLikeInteractions whereClause: " + whereClause);
+        String selectQuery =
+                "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
+                        "join location l on ga.location_id = l.id \n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and trim(ga." + GROUP_ACTIVITY_NAME + ") like ? \n" +
+                        "and trim(ga." + GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
 
         String[] whereArgs = new String [] {
                 "%" +_name + "%", "%" + _date + "%"
         };
 
-        Log.d(LOG, "getAllLikeInteractions whereArgs: " + whereArgs[0]);
+        Log.d(LOG, "getAllLikeInteractions selectQuery: " + selectQuery);
 
-        Cursor cursor = db.query(TABLE_GROUP_ACTIVITY, tableColumns, whereClause, whereArgs, null, null, null);
+        Cursor cursor = db.rawQuery(selectQuery, whereArgs);
 
         if (cursor.moveToFirst()) {
             do {
@@ -4184,8 +4200,8 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(7) + ":" );
                 GroupActivity group_activity = new GroupActivity();
                 group_activity.set_id(parseInt(cursor.getString(0)));
-                group_activity.set_name(cursor.getString(1));
-                group_activity.set_timestamp(cursor.getString(2));
+                group_activity.set_timestamp(cursor.getString(1));
+                group_activity.set_name(cursor.getString(2));
                 group_activity.set_location_id(parseInt(cursor.getString(3)));
                 group_activity.set_activity_date(cursor.getString(4));
                 group_activity.set_group_type_id(parseInt(cursor.getString(5)));
@@ -4261,16 +4277,21 @@ public class DBHelper extends SQLiteOpenHelper{
                 FACILITATOR_TYPE_ID, FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
         };
 
-        String whereClause = "1=1 and trim(" +
-                FACILITATOR_FIRST_NAME + ") like ? and trim(" +
-                FACILITATOR_LAST_NAME + ") like ? and trim(" +
-                FACILITATOR_NATIONAL_ID + ") like ? and trim(" +
-                FACILITATOR_PHONE + ") like ? ";
+        String selectQuery =
+                "select f.* from " + TABLE_FACILITATOR + " f\n" +
+                        "join location l on f.location_id = l.id \n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and trim(f." + FACILITATOR_FIRST_NAME + ") like ? \n" +
+                        "and trim(f." + FACILITATOR_LAST_NAME + ") like ? \n" +
+                        "and trim(f." + FACILITATOR_NATIONAL_ID + ") like ? \n" +
+                        "and trim(f." + FACILITATOR_PHONE + ") like ? ";
 
         String[] whereArgs = new String [] {
                 "%" + indexParts.get_first_name() + "%", "%" + indexParts.get_last_name() + "%", "%" + indexParts.get_national_id() + "%", "%" +indexParts.get_phone() + "%" };
 
-        Cursor cursor = db.query(TABLE_FACILITATOR, tableColumns, whereClause, whereArgs, null, null, null);
+        Cursor cursor = db.rawQuery(selectQuery, whereArgs);
 
         if (cursor.moveToFirst()) {
             do {
@@ -5101,20 +5122,21 @@ public class DBHelper extends SQLiteOpenHelper{
                 PERSON_ID, PERSON_TIMESTAMP, PERSON_FIRST_NAME, PERSON_LAST_NAME, PERSON_NATIONAL_ID, PERSON_ADDRESS, PERSON_PHONE, PERSON_DOB, PERSON_GENDER, PERSON_LATITUDE, PERSON_LONGITUDE, PERSON_IS_DELETED
         };
 
-        String whereClause = "1=1 and trim(" +
-                PERSON_FIRST_NAME + ") like ? and trim(" +
-                PERSON_LAST_NAME + ") like ? and trim(" +
-                PERSON_NATIONAL_ID + ") like ? and trim(" +
-                PERSON_PHONE + ") like ? ";
-
-        Log.d(LOG, "getAllLikePersons whereClause: " + whereClause);
+        String selectQuery =
+                "select p.* from " + TABLE_PERSON + " p\n" +
+                        "join address a on p.address_id = a.id \n" +
+                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and trim(p." + PERSON_FIRST_NAME + ") like ? \n" +
+                        "and trim(p." + PERSON_LAST_NAME + ") like ? \n" +
+                        "and trim(p." + PERSON_NATIONAL_ID + ") like ? \n" +
+                        "and trim(p." + PERSON_PHONE + ") like ? ";
 
         String[] whereArgs = new String [] {
                 "%" + indexParts.get_first_name() + "%", "%" + indexParts.get_last_name() + "%", "%" + indexParts.get_national_id() + "%", "%" +indexParts.get_phone() + "%" };
 
-        Log.d(LOG, "getAllLikePersons whereArgs:" + whereArgs[0] + ":" + whereArgs[1] + ":" + whereArgs[2] + ":");
-
-        Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, null);
+        Cursor cursor = db.rawQuery(selectQuery, whereArgs);
 
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
@@ -5190,14 +5212,17 @@ public class DBHelper extends SQLiteOpenHelper{
                 BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
         };
 
-        String whereClause = "1=1 and trim(" +
-                BOOKING_FIRST_NAME + ") like ? and trim(" +
-                BOOKING_LAST_NAME + ") like ? and trim(" +
-                BOOKING_NATIONAL_ID + ") like ? and trim(" +
-                BOOKING_PHONE + ") like ? and trim(" +
-                BOOKING_PROJECTED_DATE + ") like ? ";
-
-        Log.d(LOG, "getBooking whereClause: " + whereClause);
+        String selectQuery =
+                "select b.* from " + TABLE_BOOKING + " b\n" +
+                        "join location l on b.location_id = l.id \n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and trim(b." + BOOKING_FIRST_NAME + ") like ? \n" +
+                        "and trim(b." + BOOKING_LAST_NAME + ") like ? \n" +
+                        "and trim(b." + BOOKING_NATIONAL_ID + ") like ? \n" +
+                        "and trim(b." + BOOKING_PHONE + ") like ? \n" +
+                        "and trim(b." + BOOKING_PROJECTED_DATE + ") like ? ";
 
         String[] whereArgs = new String [] {
                 "%" + indexParts.get_first_name() + "%",
@@ -5208,7 +5233,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         Log.d(LOG, "getBooking whereArgs: " + whereArgs.toString());
 
-        Cursor cursor = db.query(TABLE_BOOKING, tableColumns, whereClause, whereArgs, null, null, null);
+        Cursor cursor = db.rawQuery(selectQuery, whereArgs);
 
         if (cursor.moveToFirst()) {
             do {

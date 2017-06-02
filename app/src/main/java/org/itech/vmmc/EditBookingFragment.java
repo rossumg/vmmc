@@ -21,8 +21,11 @@ import android.widget.TextView;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Calendar;
+import java.util.LinkedHashSet;
 import java.util.List;
+import java.util.Set;
 
 
 /**
@@ -548,7 +551,19 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         Log.d(LOG, "loadStatusDropdown: " );
 
         final Spinner pSpinner = (Spinner) view.findViewById(R.id.status);
-        final List<String> statusNames = dbHelp.getAllStatusTypes();
+        List<String> statusNames = new ArrayList<String>();
+
+        statusNames.addAll(dbHelp.getUserStatusTypes());
+        if(_client == null) {
+            _status = dbHelp.getStatus("Pending");
+        } else {
+            _client.set_status_id(_status.get_id());
+            _status = dbHelp.getStatus(String.valueOf(_client.get_status_id()));
+        }
+        statusNames.add(0, _status.get_name().toString());
+        Set<String> noDups = new LinkedHashSet<>(statusNames);
+        statusNames.clear();;
+        statusNames.addAll(noDups);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, statusNames);
 //        {

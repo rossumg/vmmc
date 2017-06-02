@@ -282,7 +282,11 @@ public class LoginFragment extends Fragment {
                     MainActivity.LOGGED_IN = true;
                     MainActivity._username = email; // referred to as username in db, email in pop-up
                     MainActivity._password = password;
-                    MainActivity.USER_OBJ = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
+
+                    if(!MainActivity._username.equals("sync@")) {
+                        MainActivity.USER_OBJ = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
+                    }
+
                     Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
                     if (fragment == null) {
                         fragment = ActionFragment.newInstance("main", "");

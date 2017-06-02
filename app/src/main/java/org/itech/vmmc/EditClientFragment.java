@@ -477,8 +477,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         Log.d(LOG, "loadStatusDropdown: " );
 
         final Spinner sSpinner = (Spinner) view.findViewById(R.id.status);
-
         List<String> statusNames = new ArrayList<String>();
+
         statusNames.addAll(dbHelp.getUserStatusTypes());
         if(_client == null) {
             _status = dbHelp.getStatus("Pending");
