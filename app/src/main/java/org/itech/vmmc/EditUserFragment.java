@@ -49,22 +49,22 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
     private static User _user;
     private static UserType _userType;
-    private static TextView _username;
-    private static TextView _phone;
-    private static TextView _password;
-    private static TextView _firstName;
-    private static TextView _lastName;
-    private static TextView _email;
-    private static TextView _RegionId;
-    private static TextView _IsBlocked;
-    private static TextView _timestamp;
-    private static CheckBox _cb_region;
-    private static RadioGroup _rg_is_blocked;
-    private static RadioButton _rb_is_blocked;
-    private static CheckBox _cb_region1;
-    private static CheckBox _cb_region2;
-    private static RadioButton _rb_yes;
-    private static RadioButton _rb_no;
+    private  TextView _username;
+    private  TextView _phone;
+    private  TextView _password;
+    private  TextView _firstName;
+    private  TextView _lastName;
+    private  TextView _email;
+    private  TextView _RegionId;
+    private  TextView _IsBlocked;
+    private  TextView _timestamp;
+    private  CheckBox _cb_region;
+    private  RadioGroup _rg_is_blocked;
+    private  RadioButton _rb_is_blocked;
+    private  CheckBox _cb_region1;
+    private  CheckBox _cb_region2;
+    private  RadioButton _rb_yes;
+    private  RadioButton _rb_no;
     private static VMMCLocation _location;
 
 

@@ -292,15 +292,15 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                 EditText _institutioinEditText = (EditText) _view.findViewById(R.id.institution);
                 Institution _institution = dbHelp.getInstitution( _institutioinEditText.getText().toString());
 
-                Log.d(LOG, "UpdateFacilitator button: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
-                        _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
+//                Log.d(LOG, "UpdateFacilitator button: " +
+//                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+//                        _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
 
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
                 if(sLastName.matches("") ) complete = false;
                 if(sPhoneNumber.matches("") ) complete = false;
-//                if(sProjectedDate.matches("") ) complete = false;
+                if(_institution == null ) complete = false;
 
                 if(complete) {
 
@@ -335,7 +335,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                             Toast.makeText(getActivity(), "Recruiter Saved", Toast.LENGTH_LONG).show();;
                     }
                 } else {
-                    Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Must enter First Name, Last Name, Phone Number and Institution", Toast.LENGTH_LONG).show();
                 }
             }
         });

@@ -364,16 +364,16 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //        actions.add(getResources().getString(R.string.DOWNLOAD));
 
 //        actions.add(getResources().getString(R.string.TEST));
-        actions.add(getResources().getString(R.string.loginTitle));
-        actions.add(getResources().getString(R.string.SYNC));
-        actions.add(getResources().getString(R.string.addEditPerson));
-        actions.add(getResources().getString(R.string.addEditFacilitatorTitle));
-        actions.add(getResources().getString(R.string.addEditClient));
-        actions.add(getResources().getString(R.string.addEditBooking));
+//        actions.add(getResources().getString(R.string.loginTitle));
+//        actions.add(getResources().getString(R.string.SYNC));
+//        actions.add(getResources().getString(R.string.addEditPerson));
+//        actions.add(getResources().getString(R.string.addEditFacilitatorTitle));
+//        actions.add(getResources().getString(R.string.addEditClient));
+//        actions.add(getResources().getString(R.string.addEditBooking));
 //        actions.add(getResources().getString(R.string.addEditInteraction));
-        actions.add(getResources().getString(R.string.addEditGroupActivity));
-        actions.add(getResources().getString(R.string.displayPendingFollowup));
-        actions.add(getResources().getString(R.string.addEditUserTitle));
+//        actions.add(getResources().getString(R.string.addEditGroupActivity));
+//        actions.add(getResources().getString(R.string.displayPendingFollowup));
+//        actions.add(getResources().getString(R.string.addEditUserTitle));
 
         String[] _stringArray = new String[ actions.size() ];
         actions.toArray(_stringArray);
@@ -387,7 +387,9 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                              Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_action, container, false);
 
-        getActivity().setTitle(getResources().getString(R.string.actionsTitle));
+        getActivity().setTitle(getResources().getString(R.string.homeTitle));
+        TextView tv = (TextView) view.findViewById(R.id.textViewHomeVersion);
+        tv.setText(tv.getText() + MainActivity._version);
 
         // Set the adapter
         mListView = (AbsListView) view.findViewById(android.R.id.list);
@@ -419,7 +421,8 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 
     public void onResume() {
         super.onResume();
-        Log.d(LOG, "action:onResume: pop " );
+        Log.d(LOG, "action:onResume: :pop" );
+
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();
         getView().setOnKeyListener(new View.OnKeyListener() {
@@ -428,6 +431,17 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 if (event.getAction() == KeyEvent.ACTION_UP && keyCode == KeyEvent.KEYCODE_BACK){
 //                     handle back button
                     Log.d(LOG, "action fragment:onResume: pop: handle back " );
+//                    getFragmentManager().popBackStack();
+//                    getFragmentManager().popBackStackImmediate(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
+//                    Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
+//                    if (fragment == null) {
+//                        fragment = ActionFragment.newInstance("main", "");
+//                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+//                    } else {
+//                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
+//                    }
+//                    MainActivity.currentFragmentId = "Action";
+
                     return true;
                 }
                 return false;

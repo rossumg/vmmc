@@ -12,10 +12,12 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.Spinner;
 import android.widget.TextView;
+import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -50,18 +52,23 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
     private static GroupActivity _groupActivity;
     private static GroupActivityType _groupActivityType;
-    private static TextView _name;
-    private static TextView _timestamp;
+    private  TextView _name;
+    private  TextView _timestamp;
     private static VMMCLocation _location;
 
-    private static TextView _activity_date;
-    private static TextView _group_type_id;
+    private  TextView _activity_date;
+    private  TextView _group_type_id;
 
-    private static TextView _males;
-    private static TextView _females;
-    private static TextView _messages;
-    private static TextView _latitude;
-    private static TextView _longitude;
+    private  NumberPicker _males;
+    private  NumberPicker _females;
+    private  TextView _messages;
+    private  CheckBox _cb_message1;
+    private  CheckBox _cb_message2;
+    private  CheckBox _cb_message3;
+    private  CheckBox _cb_message4;
+    private  CheckBox _cb_message5;
+    private  TextView _latitude;
+    private  TextView _longitude;
 
     private EditText et_activity_date;
 
@@ -178,12 +185,10 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
             _activity_date.setText(_groupActivity.get_activity_date());
 //            _group_type_id = (TextView) _view.findViewById(R.id.group_type);
 //            _group_type_id.setText(_groupActivity.get_group_type_id());
-            _males = (TextView) _view.findViewById(R.id.males);
-            _males.setText(String.valueOf(_groupActivity.get_males()));
-            _females = (TextView) _view.findViewById(R.id.females);
-            _females.setText(String.valueOf(_groupActivity.get_females()));
-            _messages = (TextView) _view.findViewById(R.id.messages);
-            _messages.setText(_groupActivity.get_messages());
+            _males = (NumberPicker) _view.findViewById(R.id.males);
+            _females = (NumberPicker) _view.findViewById(R.id.females);
+//            _messages = (TextView) _view.findViewById(R.id.messages);
+//            _messages.setText(_groupActivity.get_messages());
 //            _latitude = (TextView) _view.findViewById(R.id.latitude);
 //            _latitude.setText(String.valueOf(_groupActivity.get_latitude()));
 //            _longitude = (TextView) _view.findViewById(R.id.longitude);
@@ -192,6 +197,37 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
         loadLocationDropdown(_view );
         loadGroupActivityTypeDropdown(_view );
+        loadMessages(_view );
+
+        String[] nums = new String[41];
+        for(int i=0; i<nums.length; i++)
+            nums[i] = Integer.toString(i);
+
+        _males.setDisplayedValues(nums);
+        _males.setMinValue(0);
+        _males.setMaxValue(40);
+        _males.setWrapSelectorWheel(true);
+        _males.setValue(_groupActivity.get_males());
+
+        _females.setDisplayedValues(nums);
+        _females.setMinValue(0);
+        _females.setMaxValue(40);
+        _females.setWrapSelectorWheel(true);
+        _females.setValue(_groupActivity.get_females());
+
+        _males.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
+                _males.setValue(newVal);
+            }
+        });
+
+        _females.setOnValueChangedListener(new NumberPicker.OnValueChangeListener() {
+            @Override
+            public void onValueChange(NumberPicker picker, int oldVal, int newVal){
+                _females.setValue(newVal);
+            }
+        });
 
         et_activity_date = (EditText) _view.findViewById(R.id.activity_date);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
@@ -249,12 +285,12 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                 String sName = _name.getText().toString();
                 _activity_date = (TextView) _view.findViewById(R.id.activity_date);
                 String sActivityDate = _activity_date.getText().toString();
-                _males = (TextView) _view.findViewById(R.id.males);
-                Integer iMales = Integer.valueOf(_males.getText().toString());
-                _females = (TextView) _view.findViewById(R.id.females);
-                Integer iFemales = Integer.valueOf(_females.getText().toString());
-                _messages = (TextView) _view.findViewById(R.id.messages);
-                String sMessages = _messages.getText().toString();
+                _males = (NumberPicker) _view.findViewById(R.id.males);
+                Integer iMales = _males.getValue();
+                _females = (NumberPicker) _view.findViewById(R.id.females);
+                Integer iFemales = _females.getValue();
+//                _messages = (TextView) _view.findViewById(R.id.messages);
+//                String sMessages = _messages.getText().toString();
 
               Spinner gtSpinner = (Spinner) _view.findViewById(R.id.group_type);
 //              String gtGroupType  = gtSpinner.getSelectedItem().toString();
@@ -264,8 +300,28 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
                 VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
+                _cb_message1=(CheckBox) _view.findViewById(R.id.cb_message1);
+                if(_cb_message1.isChecked()) _groupActivity.set_messages("1");
+                else _groupActivity.set_messages("0");
+
+                _cb_message2=(CheckBox) _view.findViewById(R.id.cb_message2);
+                if(_cb_message2.isChecked()) _groupActivity.set_messages(_groupActivity.get_messages() + ":1");
+                else _groupActivity.set_messages(_groupActivity.get_messages() + ":0");
+
+                _cb_message3=(CheckBox) _view.findViewById(R.id.cb_message3);
+                if(_cb_message3.isChecked()) _groupActivity.set_messages(_groupActivity.get_messages() + ":1");
+                else _groupActivity.set_messages(_groupActivity.get_messages() + ":0");
+
+                _cb_message4=(CheckBox) _view.findViewById(R.id.cb_message4);
+                if(_cb_message4.isChecked()) _groupActivity.set_messages(_groupActivity.get_messages() + ":1");
+                else _groupActivity.set_messages(_groupActivity.get_messages() + ":0");
+
+                _cb_message5=(CheckBox) _view.findViewById(R.id.cb_message5);
+                if(_cb_message5.isChecked()) _groupActivity.set_messages(_groupActivity.get_messages() + ":1");
+                else _groupActivity.set_messages(_groupActivity.get_messages() + ":0");
+
                 Log.d(LOG, "UpdateGroupActivity button: " +
-                        _name.getText() + ", " + _activity_date.getText() + ", " + _males.getText() + ", " + _females.getText() + " <");
+                        _name.getText() + ", " + _activity_date.getText() + ", " + _males.getValue() + ", " + _females.getValue() + ", " + _groupActivity.get_messages() + " <");
 
                 boolean complete = true;
                 if(sName.matches("") ) complete = false;
@@ -280,7 +336,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         lookupGroupActivity.set_location_id(_location.get_id());
                         lookupGroupActivity.set_males(iMales);
                         lookupGroupActivity.set_females(iFemales);
-                        lookupGroupActivity.set_messages(sMessages);
+                        lookupGroupActivity.set_messages(_groupActivity.get_messages());
                         Log.d(LOG, "UpdateGroupActivity update: " +
                                 _name.getText() + ", " +  _activity_date.getText() + ", " + iMales.toString() + ", " + iFemales.toString() +"<");
                         if(dbHelp.updateGroupActivity(lookupGroupActivity))
@@ -293,7 +349,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         groupActivity.set_location_id(_location.get_id());
                         groupActivity.set_males(iMales);
                         groupActivity.set_females(iFemales);
-                        groupActivity.set_messages(sMessages);
+                        groupActivity.set_messages(_groupActivity.get_messages());
                         Log.d(LOG, "UpdateGroupActivity add: " +
                                 _name.getText() + ", " +  " <");
                         if(dbHelp.addGroupActivity(groupActivity))
@@ -390,6 +446,58 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         // TODO: Update argument type and name
         public void onFragmentInteraction(int position);
 
+    }
+
+    public void loadMessages(View view ) {
+        Log.d(LOG, "loadMessages: " + _groupActivity.get_messages());
+        _cb_message1 = (CheckBox) _view.findViewById(R.id.cb_message1);
+        _cb_message2 = (CheckBox) _view.findViewById(R.id.cb_message2);
+        _cb_message3 = (CheckBox) _view.findViewById(R.id.cb_message3);
+        _cb_message4 = (CheckBox) _view.findViewById(R.id.cb_message4);
+        _cb_message5 = (CheckBox) _view.findViewById(R.id.cb_message5);
+
+        String _messages[] = _groupActivity.get_messages().split(":",5);
+
+        if (_messages[0].equals("0") ) _cb_message1.setChecked(false);
+        else _cb_message1.setChecked(true);
+        if (_messages[1].equals("0") ) _cb_message2.setChecked(false);
+        else _cb_message2.setChecked(true);
+        if (_messages[2].equals("0") ) _cb_message3.setChecked(false);
+        else _cb_message3.setChecked(true);
+        if (_messages[3].equals("0") ) _cb_message4.setChecked(false);
+        else _cb_message4.setChecked(true);
+        if (_messages[4].equals("0") ) _cb_message5.setChecked(false);
+        else _cb_message5.setChecked(true);
+
+        _cb_message1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        _cb_message2.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        _cb_message3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        _cb_message4.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
+
+        _cb_message5.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+            }
+        });
     }
 
     public void loadGroupActivityTypeDropdown(View view ) {

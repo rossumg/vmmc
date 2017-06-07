@@ -1694,7 +1694,7 @@ public class DBHelper extends SQLiteOpenHelper{
         };
 
         String selectQuery =
-                "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
+                "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga \n" +
                         "join location l on ga.location_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
@@ -1733,17 +1733,28 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public List<GroupActivity> getAllGroupActivities() {
         List<GroupActivity> groupActivityList = new ArrayList<GroupActivity>();
-        // Select All Query
-//        String selectQuery = "SELECT  * FROM " + TABLE_GROUP_ACTIVITY;
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        String[] tableColumns = new String[] {
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+        };
+
+        String selectQueryAll = "select * from " + TABLE_GROUP_ACTIVITY;
+
         String selectQuery =
                 "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
-                "join location l on ga.location_id = l.id \n" +
-                "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
-                "where 1=1 \n" +
-                "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
+                        "join location l on ga.location_id = l.id \n" +
+                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and trim(ga." + GROUP_ACTIVITY_NAME + ") like ? \n" +
+                        "and trim(ga." + GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
+
+        String[] whereArgs = new String [] {
+                "%", "%" };
+
+        Cursor cursor = db.rawQuery(selectQueryAll, null);
+
         if (cursor.moveToFirst()) {
             do {
                 GroupActivity groupActivity = new GroupActivity();
@@ -1760,6 +1771,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 groupActivity.set_latitude(parseFloat(cursor.getString(10)));
 
                 Log.d(LOG, "getAllGroupActivities loop: " + groupActivity.get_name() );
+                Log.d(LOG, "getAllGroupActivities loop: " + cursor.getString(0) + "," + cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3) );
 
                 // Adding groupActivity to list
                 groupActivityList.add(groupActivity);
@@ -2433,13 +2445,19 @@ public class DBHelper extends SQLiteOpenHelper{
                 INSTITUTION_NAME
         };
 
+        String selectQuery =
+                "select i.name from " + TABLE_INSTITUTION + " i\n" +
+                        "join user u on i.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+
         String whereClause = "1=1 ";
 
         String[] whereArgs = new String[]{};
 
         String orderBy = INSTITUTION_ID;
 
-        Cursor cursor = db.query(TABLE_INSTITUTION, tableColumns, whereClause, whereArgs, null, null, orderBy);
+        Cursor cursor = db.rawQuery(selectQuery, null);
 
         if (cursor.moveToFirst()) {
             do {
@@ -4184,11 +4202,12 @@ public class DBHelper extends SQLiteOpenHelper{
                 "%" +_name + "%", "%" + _date + "%"
         };
 
-        Log.d(LOG, "getAllLikeInteractions selectQuery: " + selectQuery);
+        Log.d(LOG, "getAllLikeGroupActivities selectQuery: " + selectQuery);
+        Log.d(LOG, "getAllLikeGroupActivities whereArgs: " + whereArgs[0] + ", " + whereArgs[1]);
 
-        Cursor cursor = db.rawQuery(selectQuery, whereArgs);
+        Cursor cursor1 = db.rawQuery(selectQuery, whereArgs);
 
-        if (cursor.moveToFirst()) {
+        if (cursor1.moveToFirst()) {
             do {
 //                Log.d(LOG, "getAllClients: loop: "
 //                        + cursor1.getString(1) + ":"
@@ -4199,23 +4218,23 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(6) + ":"
 //                        + cursor1.getString(7) + ":" );
                 GroupActivity group_activity = new GroupActivity();
-                group_activity.set_id(parseInt(cursor.getString(0)));
-                group_activity.set_timestamp(cursor.getString(1));
-                group_activity.set_name(cursor.getString(2));
-                group_activity.set_location_id(parseInt(cursor.getString(3)));
-                group_activity.set_activity_date(cursor.getString(4));
-                group_activity.set_group_type_id(parseInt(cursor.getString(5)));
-                group_activity.set_males(parseInt(cursor.getString(6)));
-                group_activity.set_females(parseInt(cursor.getString(7)));
-                group_activity.set_messages(cursor.getString(8));
-                group_activity.set_latitude(parseFloat(cursor.getString(9)));
-                group_activity.set_longitude(parseFloat(cursor.getString(10)));
+                group_activity.set_id(parseInt(cursor1.getString(0)));
+                group_activity.set_timestamp(cursor1.getString(1));
+                group_activity.set_name(cursor1.getString(2));
+                group_activity.set_location_id(parseInt(cursor1.getString(3)));
+                group_activity.set_activity_date(cursor1.getString(4));
+                group_activity.set_group_type_id(parseInt(cursor1.getString(5)));
+                group_activity.set_males(parseInt(cursor1.getString(6)));
+                group_activity.set_females(parseInt(cursor1.getString(7)));
+                group_activity.set_messages(cursor1.getString(8));
+                group_activity.set_latitude(parseFloat(cursor1.getString(9)));
+                group_activity.set_longitude(parseFloat(cursor1.getString(10)));
 
                 // Adding person to list
                 _List.add(group_activity);
-            } while (cursor.moveToNext());
+            } while (cursor1.moveToNext());
         }
-        cursor.close();
+        cursor1.close();
 //        // db.close();
         return _List;
     }

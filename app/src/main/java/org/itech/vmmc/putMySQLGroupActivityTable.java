@@ -56,12 +56,12 @@ class putMySQLGroupActivityTable extends AsyncTask<String, String, String> {
             data += "&" + URLEncoder.encode("password", "UTF-8") + "=" + URLEncoder.encode(password, "UTF-8");
             data += "&" + URLEncoder.encode("datatable", "UTF-8") + "=" + URLEncoder.encode(datatable, "UTF-8");
 
-            List<GroupActivity> groupActiviyList = dbhelp.getAllGroupActivities();
-            Log.d(LOG, "putMySQLGroupActivityTable build rec: " + groupActiviyList.size() );
-            data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(groupActiviyList.size()), "UTF-8");
+            List<GroupActivity> groupActivityList = dbhelp.getAllGroupActivities();
+            Log.d(LOG, "putMySQLGroupActivityTable build rec: " + groupActivityList.size() );
+            data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(groupActivityList.size()), "UTF-8");
             int i = 0;
-            String[] recs = new String[groupActiviyList.size()];
-            for (GroupActivity groupActivity: groupActiviyList) {
+            String[] recs = new String[groupActivityList.size()];
+            for (GroupActivity groupActivity: groupActivityList) {
                 Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_males() + groupActivity.get_females() + groupActivity.get_messages() );
                 recs[i] =
                                 groupActivity.get_name() + "," +

@@ -91,7 +91,7 @@
     <string name="show_info">Show Info</string>
     <string name="download">Download</string>
     <string name="download_complete">Download Complete</string>
-    <string name="sync_complete">Sync Complete</string>
+    <string name="sync_complete">Sync Initiated</string>
 
     <string name="upload">Upload</string>
     <string name="error">There was an error</string>
@@ -155,6 +155,14 @@
     <string name="facilitator_short">Recruiter</string>
     <string name="addEditPendingFollowup">Pending/Followup</string>
     <string name="constituency">Constituency</string>
+    <string name="homeTitle">Home</string>
+    <string name="homeVersion">Version:</string>
+
+    <string name="groupActivityMessage1">Role of VMMC in public health</string>
+    <string name="groupActivityMessage2">Role of VMMC in HIV prevention</string>
+    <string name="groupActivityMessage3">Limitations of VMMC</string>
+    <string name="groupActivityMessage4">Who can get circumcised (target population)</string>
+    <string name="groupActivityMessage5">Surgery procedure (pre and post)</string>
 
 
 </resources>
