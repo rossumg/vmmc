@@ -456,6 +456,10 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         _cb_message4 = (CheckBox) _view.findViewById(R.id.cb_message4);
         _cb_message5 = (CheckBox) _view.findViewById(R.id.cb_message5);
 
+
+        if (_groupActivity.get_messages() == null) {
+            _groupActivity.set_messages("0:0:0:0:0"); // default
+        }
         String _messages[] = _groupActivity.get_messages().split(":",5);
 
         if (_messages[0].equals("0") ) _cb_message1.setChecked(false);

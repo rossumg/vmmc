@@ -18,6 +18,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.widget.EditText;
+import android.widget.Toast;
 
 import java.util.UUID;
 
@@ -54,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "1.03";
+    public static String _version = "1.04";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -355,14 +356,28 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
 
             case 8:
-                fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);
-                if (fragment == null) {
-                    fragment = AddEditUserFragment.newInstance();
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).addToBackStack(currentFragmentId).commit();
+                final DBHelper userDBHelp = new DBHelper(this);
+                if (userDBHelp.getUserAccess("edit_user")) {
+                    fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);
+                    if (fragment == null) {
+                        fragment = AddEditUserFragment.newInstance();
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).addToBackStack(currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).commit();
+                    }
+                    currentFragmentId = "AddEditUser";
                 } else {
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditUserFragment.TAG).commit();
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+
+                    fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
+                    if (fragment == null) {
+                        fragment = ActionFragment.newInstance("main", "");
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).addToBackStack(currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
+                    }
+                    currentFragmentId = "Action";
                 }
-                currentFragmentId = "AddEditUser";
 
                 break;
         }
