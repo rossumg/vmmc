@@ -13,6 +13,7 @@ public class GroupActivity {
     int _location_id;
     String _activity_date;
     int group_type_id;
+    int institution_id;
     int males;
     int females;
     String messages;
@@ -27,13 +28,14 @@ public class GroupActivity {
         this._activity_date = parts[1];
     }
 
-    public GroupActivity(int _id, String _name, String _timestamp, int _location_id, String _activity_date, int group_type_id, int males, int females, String messages, float _latitude, float _longitude) {
+    public GroupActivity(int _id, String _name, String _timestamp, int _location_id, String _activity_date, int group_type_id, int institution_id, int males, int females, String messages, float _latitude, float _longitude) {
         this._id = _id;
         this._name = _name;
         this._timestamp = _timestamp;
         this._location_id = _location_id;
         this._activity_date = _activity_date;
         this.group_type_id = group_type_id;
+        this.institution_id = institution_id;
         this.males = males;
         this.females = females;
         this.messages = messages;
@@ -41,12 +43,13 @@ public class GroupActivity {
         this._longitude = _longitude;
     }
 
-    public GroupActivity(String _name, String _timestamp, int _location_id, String _activity_date, int group_type_id, int males, int females, String messages, float _latitude, float _longitude) {
+    public GroupActivity(String _name, String _timestamp, int _location_id, String _activity_date, int group_type_id, int institution_id, int males, int females, String messages, float _latitude, float _longitude) {
         this._name = _name;
         this._timestamp = _timestamp;
         this._location_id = _location_id;
         this._activity_date = _activity_date;
         this.group_type_id = group_type_id;
+        this.institution_id = institution_id;
         this.males = males;
         this.females = females;
         this.messages = messages;
@@ -100,6 +103,14 @@ public class GroupActivity {
 
     public void set_group_type_id(int group_type_id) {
         this.group_type_id = group_type_id;
+    }
+
+    public int get_institution_id() {
+        return institution_id;
+    }
+
+    public void set_institution_id(int institution_id) {
+        this.institution_id = institution_id;
     }
 
     public int get_males() {

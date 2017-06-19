@@ -55,9 +55,11 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
     private  TextView _name;
     private  TextView _timestamp;
     private static VMMCLocation _location;
+    private static Institution _institution;
 
     private  TextView _activity_date;
     private  TextView _group_type_id;
+    private  TextView _institution_id;
 
     private  NumberPicker _males;
     private  NumberPicker _females;
@@ -196,6 +198,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         }
 
         loadLocationDropdown(_view );
+        loadInstitutionDropdown(_view );
         loadGroupActivityTypeDropdown(_view );
         loadMessages(_view );
 
@@ -300,6 +303,9 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
                 VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
+                EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
+                Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
+
                 _cb_message1=(CheckBox) _view.findViewById(R.id.cb_message1);
                 if(_cb_message1.isChecked()) _groupActivity.set_messages("1");
                 else _groupActivity.set_messages("0");
@@ -333,6 +339,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                     if (lookupGroupActivity != null) {
                         lookupGroupActivity.set_name(sName);
                         lookupGroupActivity.set_group_type_id(_groupActivityType.get_id());
+                        lookupGroupActivity.set_institution_id(_institution.get_id());
                         lookupGroupActivity.set_location_id(_location.get_id());
                         lookupGroupActivity.set_males(iMales);
                         lookupGroupActivity.set_females(iFemales);
@@ -346,6 +353,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         groupActivity.set_name(sName.toString());
                         groupActivity.set_activity_date(sActivityDate.toString());
                         groupActivity.set_group_type_id(_groupActivityType.get_id());
+                        groupActivity.set_institution_id(_institution.get_id());
                         groupActivity.set_location_id(_location.get_id());
                         groupActivity.set_males(iMales);
                         groupActivity.set_females(iFemales);
@@ -614,6 +622,34 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadInstitutionDropdown(View view) {
+
+        List<String> _institutionNames = dbHelp.getAllInstitutionNames();
+        // convert to array
+        String[] stringArrayNames = new String[ _institutionNames.size() ];
+        _institutionNames.toArray(stringArrayNames);
+
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.institution);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayNames);
+        dropdown.setThreshold(1);
+        dropdown.setAdapter(dataAdapter);
+
+        _institution = dbHelp.getInstitution(String.valueOf(_groupActivity.get_institution_id()));
+        if(_institution == null) {
+            _institution = dbHelp.getInstitution("1");
+        }
+        _groupActivity.set_institution_id(_institution.get_id());
+
+        dropdown.setText(_institution.get_name());
+
+        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                _institution = dbHelp.getInstitution(dropdown.getText().toString());
+                _groupActivity.set_institution_id(_institution.get_id());
             }
         });
     }

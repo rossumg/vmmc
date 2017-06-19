@@ -62,13 +62,14 @@ class putMySQLGroupActivityTable extends AsyncTask<String, String, String> {
             int i = 0;
             String[] recs = new String[groupActivityList.size()];
             for (GroupActivity groupActivity: groupActivityList) {
-                Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_males() + groupActivity.get_females() + groupActivity.get_messages() );
+                Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_institution_id() + ", " + groupActivity.get_males() + ", " + groupActivity.get_females() + groupActivity.get_messages() );
                 recs[i] =
                                 groupActivity.get_name() + "," +
                                 groupActivity.get_timestamp() + "," +
                                 groupActivity.get_location_id() + "," +
                                 groupActivity.get_activity_date() + "," +
                                 groupActivity.get_group_type_id() + "," +
+                                groupActivity.get_institution_id() + "," +
                                 groupActivity.get_males() + "," +
                                 groupActivity.get_females() + "," +
                                 groupActivity.get_messages() + "," +

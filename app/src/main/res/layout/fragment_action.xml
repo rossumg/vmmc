@@ -24,7 +24,7 @@
         android:layout_above="@+id/textViewHomeVersion"
         android:layout_centerHorizontal="true"
         android:layout_margin="4dp"
-        android:src="@drawable/vmmc"
+        android:src="@drawable/itech"
         android:adjustViewBounds="true" />
 
     <ListView android:id="@android:id/list" android:layout_width="match_parent"

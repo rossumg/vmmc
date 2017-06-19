@@ -237,6 +237,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String GROUP_ACTIVITY_LOCATION_ID = "location_id";
     private static final String GROUP_ACTIVITY_ACTIVITY_DATE = "activity_date";
     private static final String GROUP_ACTIVITY_GROUP_TYPE_ID  = "group_type_id";
+    private static final String GROUP_ACTIVITY_INSTITUTION_ID   = "institution_id";
     private static final String GROUP_ACTIVITY_MALES  = "males";
     private static final String GROUP_ACTIVITY_FEMALES  = "females";
     private static final String GROUP_ACTIVITY_MESSAGES        = "messages";
@@ -362,6 +363,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     "location_id int, " +
                     "activity_date date, " +
                     "group_type_id int, " +
+                    "institution_id int, " +
                     "males int, " +
                     "females int, " +
                     "messages varchar, " +
@@ -1690,7 +1692,7 @@ public class DBHelper extends SQLiteOpenHelper{
         List<String> _ID = new ArrayList<String>();
 
         String[] tableColumns = new String[] {
-                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_INSTITUTION_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
         String selectQuery =
@@ -1736,7 +1738,7 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getReadableDatabase();
 
         String[] tableColumns = new String[] {
-                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_INSTITUTION_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
         String selectQueryAll = "select * from " + TABLE_GROUP_ACTIVITY;
@@ -1764,14 +1766,15 @@ public class DBHelper extends SQLiteOpenHelper{
                 groupActivity.set_location_id(parseInt(cursor.getString(3)));
                 groupActivity.set_activity_date(cursor.getString(4));
                 groupActivity.set_group_type_id(parseInt(cursor.getString(5)));
-                groupActivity.set_males(parseInt(cursor.getString(6)));
-                groupActivity.set_females(parseInt(cursor.getString(7)));
-                groupActivity.set_messages(cursor.getString(8));
-                groupActivity.set_longitude(parseFloat(cursor.getString(9)));
-                groupActivity.set_latitude(parseFloat(cursor.getString(10)));
+                groupActivity.set_institution_id(parseInt(cursor.getString(6)));
+                groupActivity.set_males(parseInt(cursor.getString(7)));
+                groupActivity.set_females(parseInt(cursor.getString(8)));
+                groupActivity.set_messages(cursor.getString(9));
+                groupActivity.set_longitude(parseFloat(cursor.getString(10)));
+                groupActivity.set_latitude(parseFloat(cursor.getString(11)));
 
                 Log.d(LOG, "getAllGroupActivities loop: " + groupActivity.get_name() );
-                Log.d(LOG, "getAllGroupActivities loop: " + cursor.getString(0) + "," + cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3) );
+                Log.d(LOG, "getAllGroupActivities loop: " + cursor.getString(0) + "," + cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3) + "," + cursor.getString(6) );
 
                 // Adding groupActivity to list
                 groupActivityList.add(groupActivity);
@@ -4186,7 +4189,7 @@ public class DBHelper extends SQLiteOpenHelper{
         String _date = parts[1];
 
         String[] tableColumns = new String[] {
-                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_INSTITUTION_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
         String selectQuery =
@@ -4224,11 +4227,12 @@ public class DBHelper extends SQLiteOpenHelper{
                 group_activity.set_location_id(parseInt(cursor1.getString(3)));
                 group_activity.set_activity_date(cursor1.getString(4));
                 group_activity.set_group_type_id(parseInt(cursor1.getString(5)));
-                group_activity.set_males(parseInt(cursor1.getString(6)));
-                group_activity.set_females(parseInt(cursor1.getString(7)));
-                group_activity.set_messages(cursor1.getString(8));
-                group_activity.set_latitude(parseFloat(cursor1.getString(9)));
-                group_activity.set_longitude(parseFloat(cursor1.getString(10)));
+                group_activity.set_institution_id(parseInt(cursor1.getString(6)));
+                group_activity.set_males(parseInt(cursor1.getString(7)));
+                group_activity.set_females(parseInt(cursor1.getString(8)));
+                group_activity.set_messages(cursor1.getString(9));
+                group_activity.set_latitude(parseFloat(cursor1.getString(10)));
+                group_activity.set_longitude(parseFloat(cursor1.getString(11)));
 
                 // Adding person to list
                 _List.add(group_activity);
@@ -4532,6 +4536,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(GROUP_ACTIVITY_LOCATION_ID, groupActivity.get_location_id());
         values.put(GROUP_ACTIVITY_ACTIVITY_DATE, groupActivity.get_activity_date());
         values.put(GROUP_ACTIVITY_GROUP_TYPE_ID,  groupActivity.get_group_type_id());
+        values.put(GROUP_ACTIVITY_INSTITUTION_ID,  groupActivity.get_institution_id());
         values.put(GROUP_ACTIVITY_MALES,  groupActivity.get_males());
         values.put(GROUP_ACTIVITY_FEMALES,  groupActivity.get_females());
         values.put(GROUP_ACTIVITY_MESSAGES,  groupActivity.get_messages());
@@ -4562,6 +4567,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(GROUP_ACTIVITY_LOCATION_ID, groupActivity.get_location_id());
         values.put(GROUP_ACTIVITY_ACTIVITY_DATE, groupActivity.get_activity_date());
         values.put(GROUP_ACTIVITY_GROUP_TYPE_ID,  groupActivity.get_group_type_id());
+        values.put(GROUP_ACTIVITY_INSTITUTION_ID,  groupActivity.get_institution_id());
         values.put(GROUP_ACTIVITY_MALES,  groupActivity.get_males());
         values.put(GROUP_ACTIVITY_FEMALES,  groupActivity.get_females());
         values.put(GROUP_ACTIVITY_MESSAGES,  groupActivity.get_messages());
@@ -4569,7 +4575,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(GROUP_ACTIVITY_LONGITUDE,  groupActivity.get_longitude());
 
         String[] tableColumns = new String[]{
-                GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+                GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_INSTITUTION_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
         String whereClause = "1=1 and trim(" +
@@ -4596,7 +4602,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getGroupActivity: " + name + ", " + activity_date  );
 
         String[] tableColumns = new String[] {
-                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
+                GROUP_ACTIVITY_ID, GROUP_ACTIVITY_NAME, GROUP_ACTIVITY_TIMESTAMP, GROUP_ACTIVITY_LOCATION_ID, GROUP_ACTIVITY_ACTIVITY_DATE, GROUP_ACTIVITY_GROUP_TYPE_ID, GROUP_ACTIVITY_INSTITUTION_ID, GROUP_ACTIVITY_MALES, GROUP_ACTIVITY_FEMALES, GROUP_ACTIVITY_MESSAGES, GROUP_ACTIVITY_LATITUDE, GROUP_ACTIVITY_LONGITUDE
         };
 
         String whereClause = "1=1 and trim(" +
@@ -4636,9 +4642,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(5)),
                     parseInt(cursor.getString(6)),
                     parseInt(cursor.getString(7)),
-                    cursor.getString(8),
-                    parseFloat(cursor.getString(9)),
-                    parseFloat(cursor.getString(10))
+                    parseInt(cursor.getString(8)),
+                    cursor.getString(9),
+                    parseFloat(cursor.getString(10)),
+                    parseFloat(cursor.getString(11))
             );
             cursor.close();
             // db.close();

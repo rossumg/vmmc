@@ -289,8 +289,8 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
                 VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
-                EditText _institutioinEditText = (EditText) _view.findViewById(R.id.institution);
-                Institution _institution = dbHelp.getInstitution( _institutioinEditText.getText().toString());
+                EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
+                Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
 
 //                Log.d(LOG, "UpdateFacilitator button: " +
 //                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +

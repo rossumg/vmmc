@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "1.04";
+    public static String _version = "1.05";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -407,25 +407,35 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             getFragmentManager().popBackStack();
             currentFragmentId = getFragmentManager().getBackStackEntryAt(count-1).getName();
         } else {
-            Log.d("Back!", "onBackPressed:exit: " + count + ", " + currentFragmentId);
+//            Log.d("Back!", "onBackPressed:exit: " + count + ", " + currentFragmentId);
+//
+//            AlertDialog.Builder builder = new AlertDialog.Builder(this);
+//            builder.setTitle("Confirm exit");
+//             Set up the buttons
+//            builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    MainActivity.super.onBackPressed();
+//                }
+//            });
+//            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+//                @Override
+//                public void onClick(DialogInterface dialog, int which) {
+//                    dialog.cancel();
+//                }
+//            });
+//
+//            builder.show();
 
-            AlertDialog.Builder builder = new AlertDialog.Builder(this);
-            builder.setTitle("Confirm exit");
-            // Set up the buttons
-            builder.setPositiveButton("Exit", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    MainActivity.super.onBackPressed();
-                }
-            });
-            builder.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
-                @Override
-                public void onClick(DialogInterface dialog, int which) {
-                    dialog.cancel();
-                }
-            });
-
-            builder.show();
+            Fragment fragment;
+            fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
+            if (fragment == null) {
+                fragment = ActionFragment.newInstance("main", "");
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).addToBackStack(currentFragmentId).commit();
+            } else {
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
+            }
+            currentFragmentId = "Action";
         }
 
     }

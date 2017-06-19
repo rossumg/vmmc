@@ -98,6 +98,8 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
                     activity_date = activity_date.replace("'","''");
                     String group_type_id = _rec.getString("group_type_id");
                     group_type_id = group_type_id.replace("'","''");
+                    String institution_id = _rec.getString("institution_id");
+                    institution_id = institution_id.replace("'","''");
                     String males = _rec.getString("males");
                     males = males.replace("'","''");
                     String females = _rec.getString("females");
@@ -113,7 +115,7 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
                     Log.d(LOG, "getMySQLGroupActivityTable:doInBackground: " + timestamp + ", " + name + ", " + activity_date );
                     String _insert =
                             "insert or replace into group_activity "
-                                    + "(timestamp, name, location_id, activity_date, group_type_id, males, females, messages, latitude, longitude) "
+                                    + "(timestamp, name, location_id, activity_date, group_type_id, institution_id, males, females, messages, latitude, longitude) "
                                     + " values("
                                     // + person_id + ","
 //                                    + "'" + _person_id + "'" + ","
@@ -122,6 +124,7 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
                                     + "'" + location_id + "'" + ","
                                     + "'" + activity_date + "'" + ","
                                     + "'" + group_type_id + "'" + ","
+                                    + "'" + institution_id + "'" + ","
                                     + "'" + males + "'" + ","
                                     + "'" + females + "'" + ","
                                     + "'" + messages + "'" + ","
