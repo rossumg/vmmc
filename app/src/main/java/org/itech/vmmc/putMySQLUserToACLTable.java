@@ -13,6 +13,7 @@ import java.util.List;
 
 import static org.itech.vmmc.MainActivity.LOG;
 
+
 /**
  * Created by rossumg on 9/28/2015.
  */
