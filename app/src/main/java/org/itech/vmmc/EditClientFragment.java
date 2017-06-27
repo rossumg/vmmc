@@ -256,13 +256,19 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 java.util.Date utilDate = cal.getTime();
                 java.sql.Date sqlDate = new java.sql.Date(utilDate.getTime());
 
-                Log.d(LOG, "Booking button: " +
+                Log.d(LOG, "Booking button:test " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
                         _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
 
+                Person person = dbHelp.getPerson(_first_name.toString(), _last_name.toString(), _phone.toString());
+                Log.d(LOG, "Booking button: " +  ", " + person.get_first_name() + "< " + person.get_last_name() + " <");
                 Fragment fragment;
-                fragment = DisplayFragment.newInstance("displayBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "");
-                getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayBooking").commit();
+                if (person != null) {
+                    fragment = DisplayFragment.newInstance("displayBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "");
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayBooking").commit();
+                } else {
+                    Toast.makeText(getActivity(), "Person not defined", Toast.LENGTH_LONG).show();
+                }
             }
         });
 
@@ -279,8 +285,14 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
                         _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
 
-                Fragment fragment = EditBookingFragment.newInstance("editBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "%" );
-                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
+                Person person = dbHelp.getPerson(_first_name.toString(), _last_name.toString(), _phone.toString());
+                Fragment fragment;
+                if (person != null) {
+                    fragment = EditBookingFragment.newInstance("editBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "%");
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
+                } else {
+                    Toast.makeText(getActivity(), "Person not defined", Toast.LENGTH_LONG).show();
+                }
             }
         });
 

@@ -305,6 +305,9 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
                 EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
                 Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
+                if (_institution == null) {
+                    _institution = dbHelp.getInstitution( "IUM" ); // default
+                }
 
                 _cb_message1=(CheckBox) _view.findViewById(R.id.cb_message1);
                 if(_cb_message1.isChecked()) _groupActivity.set_messages("1");
