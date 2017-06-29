@@ -5257,7 +5257,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 "%" + indexParts.get_phone() + "%",
                 "%" + indexParts.get_projected_date() + "%" };
 
-        Log.d(LOG, "getBooking whereArgs: " + whereArgs.toString());
+        Log.d(LOG, "getAllLikeBookings whereArgs: " + whereArgs[0].toString());
 
         Cursor cursor = db.rawQuery(selectQuery, whereArgs);
 

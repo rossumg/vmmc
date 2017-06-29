@@ -285,7 +285,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
                         _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
 
-                Person person = dbHelp.getPerson(_first_name.toString(), _last_name.toString(), _phone.toString());
+                Person person = dbHelp.getPerson(_first_name.getText().toString(), _last_name.getText().toString(), _phone.getText().toString());
                 Fragment fragment;
                 if (person != null) {
                     fragment = EditBookingFragment.newInstance("editBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "%");
