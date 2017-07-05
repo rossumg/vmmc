@@ -215,6 +215,9 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String CLIENT_INSTITUTION_ID    = "institution_id";
     private static final String CLIENT_GROUP_ACTIVITY_NAME    = "group_activity_name";
     private static final String CLIENT_GROUP_ACTIVITY_DATE    = "group_activity_date";
+    private static final String CLIENT_ADDRESS_ID    = "address_id";
+    private static final String CLIENT_DOB    = "dob";
+    private static final String CLIENT_GENDER    = "gender";
 
     // facilitator table column names
     private static final String FACILITATOR_ID          = "id";
@@ -437,6 +440,9 @@ public class DBHelper extends SQLiteOpenHelper{
                     "institution_id int, " +
                     "group_activity_name varchar, " +
                     "group_activity_date varchar, " +
+                    "address_id int, " +
+                    "dob date, " +
+                    "gender varchar, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_CLIENT_TABLE);
 
@@ -1600,6 +1606,52 @@ public class DBHelper extends SQLiteOpenHelper{
 
         return personID;
     }
+
+    public List<String> getAllClientIDs(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> clientID = new ArrayList<String>();
+
+        String[] tableColumns = new String[]{
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+        };
+
+        String selectQuery =
+                "select c.* from " + TABLE_CLIENT + " c\n" +
+                        "join address a on c.address_id = a.id \n" +
+                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "where 1=1 \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllPersonIDs  "
+//                                + cursor.getString(1) + " "
+//                                + cursor.getString(2) + " "
+//                                + cursor.getString(3) + " "
+//                                + cursor.getString(5) + " "
+//                );
+                clientID.add(cursor.getString(2).trim() + " " + cursor.getString(3).trim() + ", " + ", " + cursor.getString(5).trim());
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(clientID);
+        clientID.clear();;
+        clientID.addAll(noDups);
+
+        // convert to array
+//        String[] stringArrayPersonID = new String[ personID.size() ];
+//        personID.toArray(stringArrayPersonID);
+
+        return clientID;
+    }
+
+
 
     public List<String> getAllFacilitatorIDs(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -3486,6 +3538,9 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
         values.put(CLIENT_GROUP_ACTIVITY_NAME,  client.get_group_activity_name());
         values.put(CLIENT_GROUP_ACTIVITY_DATE,  client.get_group_activity_date());
+        values.put(CLIENT_ADDRESS_ID,  client.get_address_id());
+        values.put(CLIENT_DOB,  client.get_dob());
+        values.put(CLIENT_GENDER,  client.get_gender());
 
         try {
             db.insert(TABLE_CLIENT, null, values);
@@ -3517,9 +3572,12 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
         values.put(CLIENT_GROUP_ACTIVITY_NAME,  client.get_group_activity_name());
         values.put(CLIENT_GROUP_ACTIVITY_DATE,  client.get_group_activity_date());
+        values.put(CLIENT_ADDRESS_ID,  client.get_address_id());
+        values.put(CLIENT_DOB,  client.get_dob());
+        values.put(CLIENT_GENDER,  client.get_gender());
 
         String[] tableColumns = new String[]{
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
 //        String whereClause = "1=1 and trim(" +
@@ -3699,7 +3757,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3733,7 +3791,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseFloat(cursor.getString(9)),
                     parseInt(cursor.getString(10)),
                     cursor.getString(11),
-                    cursor.getString(12)
+                    cursor.getString(12),
+                    parseInt(cursor.getString(13)),
+                    cursor.getString(14),
+                    cursor.getString(15)
             );
             cursor.close();
             // db.close();
@@ -3795,7 +3856,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseFloat(cursor.getString(9)),
                     parseInt(cursor.getString(10)),
                     cursor.getString(11),
-                    cursor.getString(12)
+                    cursor.getString(12),
+                    parseInt(cursor.getString(13)),
+                    cursor.getString(14),
+                    cursor.getString(15)
             );
             cursor.close();
             // db.close();
@@ -3936,7 +4000,7 @@ public class DBHelper extends SQLiteOpenHelper{
         IndexParts indexParts = new IndexParts(index);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
         String selectQuery =
@@ -3979,6 +4043,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_institution_id(parseInt(cursor.getString(10)));
                 client.set_group_activity_name(cursor.getString(11));
                 client.set_group_activity_date(cursor.getString(12));
+                client.set_address_id(parseInt(cursor.getString(13)));
+                client.set_dob(cursor.getString(14));
+                client.set_gender(cursor.getString(15));
 
                 // Adding person to list
                 clientList.add(client);

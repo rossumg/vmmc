@@ -114,10 +114,17 @@ class getMySQLClientTable extends AsyncTask<String, String, String> {
                     String group_activity_date = _rec.getString("group_activity_date");
                     group_activity_date = group_activity_date.replace("'", "''");
 
+                    String address_id = _rec.getString("address_id");
+                    address_id = address_id.replace("'", "''");
+                    String dob = _rec.getString("dob");
+                    dob = dob.replace("'", "''");
+                    String gender = _rec.getString("gender");
+                    gender = gender.replace("'", "''");
+
                     Log.d(LOG, "getMySQLClientTable:doInBackground: " + timestamp + ", " + first_name + ", " + last_name + ", " + national_id + ", " + phone + ", " + status_id );
                     String _insert =
                             "insert or replace into client_table "
-                                    + "(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date) "
+                                    + "(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date, address_id, dob, gender) "
                                     + " values("
                                     // + person_id + ","
 //                                    + "'" + _person_id + "'" + ","
@@ -132,7 +139,10 @@ class getMySQLClientTable extends AsyncTask<String, String, String> {
                                     + "'" + longitude + "'" + ","
                                     + "'" + institution_id + "'" + ","
                                     + "'" + group_activity_name + "'" + ","
-                                    + "'" + group_activity_date + "'"
+                                    + "'" + group_activity_date + "'" + ","
+                                    + "'" + address_id + "'" + ","
+                                    + "'" + dob + "'" + ","
+                                    + "'" + gender + "'"
                                     + ");";
 
                     try {

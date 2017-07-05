@@ -166,19 +166,25 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         dbHelp = new DBHelper(getActivity());
         _facilitator = dbHelp.getFacilitator(firstName, lastName, nationalId, phoneNumber);
 
-        if (_facilitator != null) {
-            Log.d(LOG, "EBF _facilitator != null " + _facilitator.get_first_name());
-        } else { // defaults
+        if (_facilitator == null) { // use defaults
             Log.d(LOG, "EBF _facilitator is equal null ");
-            Person person = dbHelp.getPerson(firstName, lastName, phoneNumber);
             _facilitator = new Facilitator();
-            _facilitator.set_first_name(person.get_first_name());
-            _facilitator.set_last_name(person.get_last_name());
-            _facilitator.set_national_id(person.get_national_id());
-            _facilitator.set_phone(person.get_phone());
+            _facilitator.set_first_name(firstName);
+            _facilitator.set_last_name(lastName);
+            _facilitator.set_national_id(nationalId);
+            _facilitator.set_phone(phoneNumber);
             _facilitatorType = dbHelp.getFacilitatorType("3");
             _location = dbHelp.getLocation("1");
             _institution = dbHelp.getInstitution("1");
+        } else {
+            Log.d(LOG, "EBF _facilitator != null " + _facilitator.get_first_name());
+            _facilitator.set_first_name(firstName);
+            _facilitator.set_last_name(lastName);
+            _facilitator.set_national_id(nationalId);
+            _facilitator.set_phone(phoneNumber);
+            _facilitatorType = dbHelp.getFacilitatorType(String.valueOf(_facilitator.get_facilitator_type_id()));
+            _location = dbHelp.getLocation((String.valueOf(_facilitator.get_location_id())));
+            _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
         }
 
 //        _facilitator_type = new Status(String.valueOf(_facilitator.get_facilitator_type_id()));

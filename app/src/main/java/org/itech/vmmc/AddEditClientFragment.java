@@ -264,23 +264,23 @@ public class AddEditClientFragment extends Fragment implements AdapterView.OnIte
                     Log.d(LOG, "EditClient button name/all: " + paramName + paramNationalID + paramPhoneNumber + paramProjectedDate);
                 }
 
-                boolean complete = false;
-                if (nationalIdDropdown.getText().toString().equals("")) {
-                    Log.d(LOG, "EditClient button nationalID is empty: ");
-                } else {
-                    paramNationalID = nationalIdDropdown.getText().toString();
-                    complete = true;
-                    Log.d(LOG, "EditClient button nationalID: " + paramNationalID);
-                }
-
-                if (phoneNumberDropdown.getText().toString().equals("")) {
-                    Log.d(LOG, "EditClient button phoneNumber is empty: ");
-                } else {
-                    paramPhoneNumber = phoneNumberDropdown.getText().toString();
-                    complete = true;
-                    Log.d(LOG, "EditClient button phoneNumber: " + paramPhoneNumber);
-                }
-
+                boolean complete = true;
+//                if (nationalIdDropdown.getText().toString().equals("")) {
+//                    Log.d(LOG, "EditClient button nationalID is empty: ");
+//                } else {
+//                    paramNationalID = nationalIdDropdown.getText().toString();
+//                    complete = true;
+//                    Log.d(LOG, "EditClient button nationalID: " + paramNationalID);
+//                }
+//
+//                if (phoneNumberDropdown.getText().toString().equals("")) {
+//                    Log.d(LOG, "EditClient button phoneNumber is empty: ");
+//                } else {
+//                    paramPhoneNumber = phoneNumberDropdown.getText().toString();
+//                    complete = true;
+//                    Log.d(LOG, "EditClient button phoneNumber: " + paramPhoneNumber);
+//                }
+//
                 if (complete || !paramName.toString().equals("")  ) {
                     Fragment fragment;
                     fragment = EditClientFragment.newInstance("editClient", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
@@ -370,7 +370,9 @@ public class AddEditClientFragment extends Fragment implements AdapterView.OnIte
     private Client Client;
     public void loadClientNameDropdown(View view) {
 
-        List<String> ClientIDs = dbHelp.getAllPersonIDs();
+//        List<String> ClientIDs = dbHelp.getAllPersonIDs();
+        List<String> ClientIDs = dbHelp.getAllClientIDs();
+
         // convert to array
         String[] stringArrayClientID = new String[ ClientIDs.size() ];
         ClientIDs.toArray(stringArrayClientID);

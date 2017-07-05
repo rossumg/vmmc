@@ -13,7 +13,6 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.ListAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.util.Calendar;
@@ -93,9 +92,9 @@ public class AddEditFacilitatorFragment extends Fragment implements AdapterView.
 
         loadFacilitatorNameDropdown(view);
 //        loadAssessmentTypeDropdown(view);
-        loadNationalIDDropdown(view);
+//        loadNationalIDDropdown(view);
 //        loadFacilityDropdown(view);
-        loadPhoneNumberDropdown(view);
+//        loadPhoneNumberDropdown(view);
 
         final ClearableAutoCompleteTextView nameDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
         final ClearableAutoCompleteTextView nationalIdDropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.national_id);
@@ -371,7 +370,8 @@ public class AddEditFacilitatorFragment extends Fragment implements AdapterView.
     private Facilitator Facilitator;
     public void loadFacilitatorNameDropdown(View view) {
 
-        List<String> FacilitatorIDs = dbHelp.getAllPersonIDs();
+//        List<String> FacilitatorIDs = dbHelp.getAllPersonIDs();
+        List<String> FacilitatorIDs = dbHelp.getAllFacilitatorIDs();
         // convert to array
         String[] stringArrayFacilitatorID = new String[ FacilitatorIDs.size() ];
         FacilitatorIDs.toArray(stringArrayFacilitatorID);
@@ -391,7 +391,7 @@ public class AddEditFacilitatorFragment extends Fragment implements AdapterView.
                 String national_id =  parts[1].trim();
                 String phone_number = parts[2].trim();
 //                String projected_date = parts[3].trim();
-                Log.d(LOG, "Facilitator person selected: " + name + "." + national_id + "." + phone_number + "." );
+                Log.d(LOG, "Facilitator client selected: " + name + "." + national_id + "." + phone_number + "." );
 
 //                Facilitator = dbHelp.getFacilitator(national_id, phone_number, projected_date);
 //                Log.d(LOG, "Facilitator_id selected: " + Facilitator.get_id());
@@ -433,33 +433,4 @@ public class AddEditFacilitatorFragment extends Fragment implements AdapterView.
 
     }
 
-    private Assessments assessment = null;
-    public void loadAssessmentTypeDropdown(View view) {
-        final Spinner dropdown = (Spinner) view.findViewById(R.id.assessment_type);
-        dropdown.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String assessmentTypeText  = dropdown.getSelectedItem().toString();
-                Log.d(LOG, "assessmentTypeText: " + assessmentTypeText + "<");
-                // because of the all option, not available in create
-                if(!assessmentTypeText.equals("")) {
-                    assessment = dbHelp.getAssessments(assessmentTypeText);
-                } else assessment = null;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
-            }
-        });
-
-        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
-        String all = "";
-        assessmentTypes.add(0,all);
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(dataAdapter);
-
-    }
 }

@@ -178,7 +178,7 @@ public class AddEditUserFragment extends Fragment implements AdapterView.OnItemS
                 Log.d(LOG, "EditUser button: ");
 
                 String paramName = "";
-                String paramActivityDate = "";
+                String paramPhone = "";
                 Log.d(LOG, "EditUser button name: " + usernameDropdown.getText().toString() + "<");
 
                 if (usernameDropdown.getText().toString().equals("")) {
@@ -189,7 +189,7 @@ public class AddEditUserFragment extends Fragment implements AdapterView.OnItemS
 
                     paramName = usernameDropdown.getText().toString();
                     String parts[] = {};
-                    parts = paramName.split(", ",2);
+                    parts = paramName.split(", ",3);
 
                     switch( parts.length)  {
                         case 0: {
@@ -202,12 +202,18 @@ public class AddEditUserFragment extends Fragment implements AdapterView.OnItemS
                         }
                         case 2: {
                             paramName = parts[0];
-                            paramActivityDate = parts[1];
+                            paramPhone = parts[1];
+                            break;
+                        }
+
+                        case 3: {
+                            paramName = parts[0];
+                            paramPhone = parts[2];
                             break;
                         }
                     }
 
-                    Log.d(LOG, "EditUser button name/all: " + paramName + paramActivityDate);
+                    Log.d(LOG, "EditUser button name/all: " + paramName + paramPhone);
                 }
 
                 boolean complete = true;
@@ -229,7 +235,7 @@ public class AddEditUserFragment extends Fragment implements AdapterView.OnItemS
 
                 if (complete || !paramName.toString().equals("")  ) {
                     Fragment fragment;
-                    fragment = EditUserFragment.newInstance("editUser", paramName + ":" + paramActivityDate);
+                    fragment = EditUserFragment.newInstance("editUser", paramName + ":" + paramPhone);
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditUserFragment.TAG).addToBackStack("EditUser").commit();
                 } else {
                     Toast.makeText(getActivity(), "Must enter Name", Toast.LENGTH_LONG).show();

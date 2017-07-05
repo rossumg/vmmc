@@ -109,7 +109,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
         String params = _editUserRecordParam.toString();
         String parts[] = {};
-        parts = params.split(":", 2);
+        parts = params.split(":", 3);
 
         String _username = "";
         String _phone = "";
@@ -126,6 +126,12 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
             case 2: {
                 _username = parts[0];
                 _phone = parts[1];
+                break;
+            }
+
+            case 3: {
+                _username = parts[0];
+                _phone = parts[2];
                 break;
             }
         }

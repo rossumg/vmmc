@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -308,15 +307,14 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
                     Log.d(LOG, "EditBooking button projectedDate: " + paramProjectedDate);
                 }
 
-                if (complete && !paramProjectedDate.toString().equals("") ||
-                        !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
-
-                    Fragment fragment;
-                    fragment = EditBookingFragment.newInstance("editBooking", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
+//                if (complete && !paramProjectedDate.toString().equals("") || !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
+                if (paramName.toString().equals("")) {
+                    Toast.makeText(getActivity(), "Must enter client", Toast.LENGTH_LONG).show();
                 } else {
-                    Toast.makeText(getActivity(), "Must enter Name or ID or Phone and Date", Toast.LENGTH_LONG).show();
-                }
+                   Fragment fragment;
+                   fragment = EditBookingFragment.newInstance("editBooking", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
+                   getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
+               }
             }
         });
 
@@ -398,10 +396,11 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
     private Booking booking;
     public void loadBookingNameDropdown(View view) {
 
-        List<String> bookingIDs = dbHelp.getAllPersonIDs();
+//        List<String> bookingIDs = dbHelp.getAllPersonIDs();
+        List<String> clientIDs = dbHelp.getAllClientIDs();
         // convert to array
-        String[] stringArrayBookingID = new String[ bookingIDs.size() ];
-        bookingIDs.toArray(stringArrayBookingID);
+        String[] stringArrayBookingID = new String[ clientIDs.size() ];
+        clientIDs.toArray(stringArrayBookingID);
 
         final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayBookingID);
@@ -418,7 +417,7 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
                 String national_id =  parts[1].trim();
                 String phone_number = parts[2].trim();
 //                String projected_date = parts[3].trim();
-                Log.d(LOG, "booking person selected: " + name + "." + national_id + "." + phone_number + "." );
+                Log.d(LOG, "booking client selected: " + name + "." + national_id + "." + phone_number + "." );
 
 //                booking = dbHelp.getBooking(national_id, phone_number, projected_date);
 //                Log.d(LOG, "booking_id selected: " + booking.get_id());
@@ -460,33 +459,4 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
 
     }
 
-    private Assessments assessment = null;
-    public void loadAssessmentTypeDropdown(View view) {
-        final Spinner dropdown = (Spinner) view.findViewById(R.id.assessment_type);
-        dropdown.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String assessmentTypeText  = dropdown.getSelectedItem().toString();
-                Log.d(LOG, "assessmentTypeText: " + assessmentTypeText + "<");
-                // because of the all option, not available in create
-                if(!assessmentTypeText.equals("")) {
-                    assessment = dbHelp.getAssessments(assessmentTypeText);
-                } else assessment = null;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
-            }
-        });
-
-        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
-        String all = "";
-        assessmentTypes.add(0,all);
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(dataAdapter);
-
-    }
 }

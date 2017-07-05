@@ -74,7 +74,10 @@ class putMySQLClientTable extends AsyncTask<String, String, String> {
                                 client.get_longitude()   + "," +
                                 client.get_institution_id()   + "," +
                                 client.get_group_activity_name()   + "," +
-                                client.get_group_activity_date();
+                                client.get_group_activity_date()   + "," +
+                                client.get_address_id()   + "," +
+                                client.get_dob()   + "," +
+                                client.get_gender();
 
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
                 i++;

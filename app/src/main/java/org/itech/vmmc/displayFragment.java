@@ -260,8 +260,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             String[] _stringArray = new String[users.size()];
             int i = 0;
             for (User _rec : users) {
-                _stringArray[i] =
-                        _rec.get_username() + ", " + _rec.get_phone();
+                _stringArray[i] = _rec.get_username() + ", " + _rec.get_phone();
                 i++;
             }
 

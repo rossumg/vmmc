@@ -1,6 +1,7 @@
 package org.itech.vmmc;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
@@ -12,17 +13,23 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.itech.vmmc.R.id.dob;
 
 
 /**
@@ -56,6 +63,18 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
     private static TextView _last_name;
     private static TextView _national_id;
     private static TextView _phone;
+
+    private static Address _address;
+    private static TextView _phone_number;
+    private static TextView _dob;
+    private static TextView _gender;
+    private static RadioGroup _rg_gender;
+    private static RadioButton _rb_gender;
+    private static RadioButton _rb_gender_male;
+    private static RadioButton _rb_gender_female;
+
+    private EditText et_dob;
+
     private static TextView _status_id;
     private static TextView _location_id;
     private static TextView _institution_id;
@@ -220,12 +239,16 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_client.get_phone());
             _phone.setInputType(InputType.TYPE_NULL);
+            _dob = (TextView) _view.findViewById(dob);
+            _dob.setText(_client.get_dob());
         }
 
         loadStatusDropdown(_view );
         loadLocationDropdown(_view );
         loadInstitutionDropdown(_view );
         loadGroupActivityDropdown(_view);
+        loadAddressDropdown(_view );
+        loadGenderRadio(_view);
 
 //        Button btnBooking = (Button) _view.findViewById(R.id.btnBooking);
 //        btnBooking.setOnClickListener(new View.OnClickListener() {
@@ -246,6 +269,28 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //                Toast.makeText(getActivity(), "Booking button", Toast.LENGTH_LONG).show();
 //            }
 //        }); gnr: direct to edit frag
+
+        et_dob = (EditText) _view.findViewById(R.id.dob);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_dob_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_dob.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "EBF: onDateSet: " + et_dob.getText());
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog dob_date_picker_dialog = hold_dob_date_picker_dialog;
+
+        et_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                dob_date_picker_dialog.show();
+            }
+        });
 
         Button btnBookingDisplay = (Button) _view.findViewById(R.id.btnBooking);
         btnBookingDisplay.setOnClickListener(new View.OnClickListener() {
@@ -296,21 +341,21 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             }
         });
 
-        Button btnPerson = (Button) _view.findViewById(R.id.btnPerson);
-        btnPerson.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                Log.d(LOG, "Person button: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
-                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
-
-                Fragment fragment = EditPersonFragment.newInstance("editPerson", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText());
-                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditPersonFragment.TAG).addToBackStack("EditPerson").commit();
-
+//        Button btnPerson = (Button) _view.findViewById(R.id.btnPerson);
+//        btnPerson.setOnClickListener(new View.OnClickListener() {
+//            @Override
+//            public void onClick(View v) {
+//
+//                Log.d(LOG, "Person button: " +
+//                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+//                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+//
+//                Fragment fragment = EditPersonFragment.newInstance("editPerson", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText());
+//                getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditPersonFragment.TAG).addToBackStack("EditPerson").commit();
+//
 //                Toast.makeText(getActivity(), "Person button", Toast.LENGTH_LONG).show();
-            }
-        });
+//            }
+//        });
 
         Button btnUpdateClient = (Button) _view.findViewById(R.id.btnUpdate);
         btnUpdateClient.setOnClickListener(new View.OnClickListener() {
@@ -342,6 +387,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 String parts[] = gaSpinner.getSelectedItem().toString().split(", ",2);
                 GroupActivity _groupActivity = dbHelp.getGroupActivity( parts[0], parts[1]);
 
+                Spinner aSpinner = (Spinner) _view.findViewById(R.id.address);
+//              String sAddressText  = aSpinner.getSelectedItem().toString();
+                Address _address = dbHelp.getAddress( aSpinner.getSelectedItem().toString());
+
+                String sDOB = _dob.getText().toString();
+                String sGender = _client.get_gender();
+
 
                 Log.d(LOG, "UpdateClient button: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
@@ -367,6 +419,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         lookupClient.set_institution_id(_institution.get_id());
                         lookupClient.set_group_activity_name(_groupActivity.get_name());
                         lookupClient.set_group_activity_date(_groupActivity.get_activity_date());
+                        lookupClient.set_address_id(_address.get_id());
+                        lookupClient.set_dob(sDOB);
+                        lookupClient.set_gender(sGender);
                         Log.d(LOG, "UpdateClient update: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.updateClient(lookupClient))
@@ -382,6 +437,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         client.set_institution_id(_institution.get_id());
                         client.set_group_activity_name(_groupActivity.get_name());
                         client.set_group_activity_date(_groupActivity.get_activity_date());
+                        client.set_address_id(_address.get_id());
+                        client.set_dob(sDOB);
+                        client.set_gender(sGender);
                         Log.d(LOG, "UpdateClient add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addClient(client))
@@ -753,5 +811,84 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             }
         });
     }
+
+    public void loadAddressDropdown(View view ) {
+        Log.d(LOG, "loadAddressDropdown: " );
+
+        final Spinner lSpinner = (Spinner) view.findViewById(R.id.address);
+        final List<String> addressNames = dbHelp.getAllAddressNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, addressNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        lSpinner.setAdapter(dataAdapter);
+
+        _address = dbHelp.getAddress(String.valueOf(_client.get_address_id()));
+        if(_address == null) {
+            _address = dbHelp.getAddress("1");
+        }
+        _client.set_address_id(_address.get_id());
+
+        String compareValue = _address.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            lSpinner.setSelection(spinnerPosition);
+        }
+
+        lSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String addressText  = lSpinner.getSelectedItem().toString();
+                _address = dbHelp.getAddress(addressText);
+//                _client.set_loc_id(_location.get_id());
+                Log.d(LOG, "address: " + _address.get_id() + _address.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadGenderRadio(View view ) {
+        Log.d(LOG, "loadRegionRadio: ");
+
+        _rg_gender = (RadioGroup) _view.findViewById(R.id.gender_radio_group);
+        _rb_gender_male = (RadioButton) _view.findViewById(R.id.radioButtonMale);
+        _rb_gender_female = (RadioButton) _view.findViewById(R.id.radioButtonFemale);
+
+        if(_client.get_gender() == null){
+            _client.set_gender("M"); // default
+        }
+        if (_client.get_gender().equals("M") ) {
+            _rb_gender_male.setChecked(true);
+            _rb_gender_female.setChecked(false);
+        } else {
+            _rb_gender_male.setChecked(false);
+            _rb_gender_female.setChecked(true);
+        }
+
+        _rb_gender_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_gender.getCheckedRadioButtonId();
+                _rb_gender=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_gender: " + _rb_gender.getText() );
+                _client.set_gender("M");
+            }
+        });
+
+        _rb_gender_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_gender.getCheckedRadioButtonId();
+                _rb_gender=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_gender: " + _rb_gender.getText() );
+                _client.set_gender("F");
+            }
+        });
+    }
+
 }
 

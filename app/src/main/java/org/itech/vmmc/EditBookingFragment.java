@@ -15,7 +15,6 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
-import android.widget.MultiAutoCompleteTextView;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -195,12 +194,13 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             Log.d(LOG, "EBF _booking is equal null ");
             _location = dbHelp.getLocation("1"); // Default
 
-            Person person = dbHelp.getPerson(firstName, lastName, phoneNumber);
+//            Person person = dbHelp.getPerson(firstName, lastName, phoneNumber);
+            Client client = dbHelp.getClient(firstName, lastName, "", phoneNumber);
             _booking = new Booking();
-            _booking.set_first_name(person.get_first_name());
-            _booking.set_last_name(person.get_last_name());
-            _booking.set_national_id(person.get_national_id());
-            _booking.set_phone(person.get_phone());
+            _booking.set_first_name(client.get_first_name());
+            _booking.set_last_name(client.get_last_name());
+            _booking.set_national_id(client.get_national_id());
+            _booking.set_phone(client.get_phone());
             _booking.set_projected_date(projectedDate);
             //Log.d(LOG, "EBF _booking is equal null " + _booking.get_first_name());
         }
@@ -258,10 +258,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _projected_date.setText(_booking.get_projected_date());
             _actual_date = (EditText) _view.findViewById(R.id.actual_date);
             _actual_date.setText(_booking.get_actual_date());
-//            _dob = (TextView) _view.findViewById(R.id.dob);
-//            _dob.setText(_person.get_dob());
-//            _gender = (TextView) _view.findViewById(R.id.gender);
-//            _gender.setText(_person.get_gender());
         }
 
         loadFacilitatorAutoComplete(_view );
@@ -380,7 +376,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         lookupBooking.set_location_id(String.valueOf(_location.get_id()));
                         lookupBooking.set_projected_date(sProjectedDate);
                         lookupBooking.set_actual_date(sActualDate);
-//                        lookupPerson.set_gender(sGender);
                         Log.d(LOG, "UpdateBooking update: " +
                                 _first_name.getText() + " " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.updateBooking(lookupBooking))
@@ -470,10 +465,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _projected_date.setText(_booking.get_projected_date());
             _actual_date = (TextView) _view.findViewById(R.id.actual_date);
             _actual_date.setText(_booking.get_actual_date());
-//            _dob = (TextView) _view.findViewById(R.id.dob);
-//            _dob.setText(_person.get_dob());
-//            _gender = (TextView) _view.findViewById(R.id.gender);
-//            _gender.setText(_person.get_gender());
+
         }
     }
 
@@ -493,31 +485,9 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
     }
 
-    public void loadPersonIDDropdown(View view) {
-
-        List<String> personIDs = dbHelp.getAllPersonIDs();
-        // convert to array
-        String[] stringArrayPersonID = new String[ personIDs.size() ];
-        personIDs.toArray(stringArrayPersonID);
-
-        final MultiAutoCompleteTextView dropdown = (MultiAutoCompleteTextView) view.findViewById(R.id.search);
-        dropdown.setTokenizer(new MultiAutoCompleteTextView.CommaTokenizer());
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayPersonID);
-        dropdown.setThreshold(1);
-        dropdown.setAdapter(dataAdapter);
-
-        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
-                String text = dropdown.getText().toString();
-                Log.d(LOG, "name selected: " + text);
-            }
-        });
-    }
-
     private Booking booking;
     public void loadFacilitatorAutoComplete(View view) {
 
-//        List<String> facilitatorIDs = dbHelp.getAllPersonIDs();
         List<String> facilitatorIDs = dbHelp.getAllFacilitatorIDs();
         // convert to array
         String[] stringArrayFacilitatorID = new String[ facilitatorIDs.size() ];
