@@ -79,6 +79,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static float lng = 0;
 
     public static String deviceId = "";
+    public static GroupActivity gGroupActivity = null;
+    public static Facilitator gFacilitator = null;
 
 //    public static ArrayList<String> _CREDENTIALS = new ArrayList<String>();
 

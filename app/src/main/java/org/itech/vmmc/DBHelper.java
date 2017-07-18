@@ -4354,8 +4354,11 @@ public class DBHelper extends SQLiteOpenHelper{
                 facilitator.set_latitude(parseFloat(cursor.getString(9)));
                 facilitator.set_longitude(parseFloat(cursor.getString(10)));
                 facilitator.set_institution_id(parseInt(cursor.getString(11)));
+                facilitator.set_address_id(parseInt(cursor.getString(12)));
+                facilitator.set_dob(cursor.getString(13));
+                facilitator.set_gender(cursor.getString(14));
 
-                // Adding person to list
+                // Adding facilitator to list
                 facilitatorList.add(facilitator);
             } while (cursor.moveToNext());
         }
@@ -4413,6 +4416,9 @@ public class DBHelper extends SQLiteOpenHelper{
                 facilitator.set_latitude(parseFloat(cursor.getString(9)));
                 facilitator.set_longitude(parseFloat(cursor.getString(10)));
                 facilitator.set_institution_id(parseInt(cursor.getString(11)));
+                facilitator.set_address_id(parseInt(cursor.getString(12)));
+                facilitator.set_dob(cursor.getString(13));
+                facilitator.set_gender(cursor.getString(14));
 
                 // Adding person to list
                 facilitatorList.add(facilitator);
@@ -4440,6 +4446,9 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(FACILITATOR_LATITUDE,  facilitator.get_latitude());
         values.put(FACILITATOR_LONGITUDE,  facilitator.get_longitude());
         values.put(FACILITATOR_INSTITUTION_ID,  facilitator.get_institution_id());
+        values.put(FACILITATOR_ADDRESS_ID,  facilitator.get_address_id());
+        values.put(FACILITATOR_DOB,  facilitator.get_dob());
+        values.put(FACILITATOR_GENDER,  facilitator.get_gender());
 
         try {
             db.insert(TABLE_FACILITATOR, null, values);
@@ -4470,6 +4479,9 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(FACILITATOR_LATITUDE,  facilitator.get_latitude());
         values.put(FACILITATOR_LONGITUDE,  facilitator.get_longitude());
         values.put(FACILITATOR_INSTITUTION_ID,  facilitator.get_institution_id());
+        values.put(FACILITATOR_ADDRESS_ID,  facilitator.get_address_id());
+        values.put(FACILITATOR_DOB,  facilitator.get_dob());
+        values.put(FACILITATOR_GENDER,  facilitator.get_gender());
 
         String[] tableColumns = new String[]{
                 FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
@@ -4492,7 +4504,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getFacilitator: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
         String[] tableColumns = new String[] {
-                FACILITATOR_TYPE_ID, FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID
+                FACILITATOR_TYPE_ID, FACILITATOR_TIMESTAMP, FACILITATOR_FIRST_NAME, FACILITATOR_LAST_NAME, FACILITATOR_NATIONAL_ID, FACILITATOR_PHONE, FACILITATOR_FACILITATOR_TYPE_ID, FACILITATOR_NOTE, FACILITATOR_LOCATION_ID, FACILITATOR_LATITUDE, FACILITATOR_LONGITUDE, FACILITATOR_INSTITUTION_ID, FACILITATOR_ADDRESS_ID, FACILITATOR_DOB, FACILITATOR_GENDER
         };
 
         String whereClause = "1=1 and trim(" +

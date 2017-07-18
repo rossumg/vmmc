@@ -140,6 +140,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
         dbHelp = new DBHelper(getActivity());
         _groupActivity = dbHelp.getGroupActivity(_name, _date);
+        MainActivity.gGroupActivity = _groupActivity;
 
         if (_groupActivity == null) {
             _groupActivity = new GroupActivity();
@@ -350,6 +351,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         Log.d(LOG, "UpdateGroupActivity update: " +
                                 _name.getText() + ", " +  _activity_date.getText() + ", " + iMales.toString() + ", " + iFemales.toString() +"<");
                         if(dbHelp.updateGroupActivity(lookupGroupActivity))
+                            MainActivity.gGroupActivity = lookupGroupActivity;
                             Toast.makeText(getActivity(), "GroupActivity Updated", Toast.LENGTH_LONG).show();
                     } else {
                         GroupActivity groupActivity = new GroupActivity();
@@ -364,6 +366,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         Log.d(LOG, "UpdateGroupActivity add: " +
                                 _name.getText() + ", " +  " <");
                         if(dbHelp.addGroupActivity(groupActivity))
+                            MainActivity.gGroupActivity = groupActivity;
                             Toast.makeText(getActivity(), "GroupActivity Saved", Toast.LENGTH_LONG).show();;
                     }
                 } else {

@@ -202,6 +202,11 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _booking.set_national_id(client.get_national_id());
             _booking.set_phone(client.get_phone());
             _booking.set_projected_date(projectedDate);
+            _booking.set_fac_first_name(MainActivity.gFacilitator.get_first_name());
+            _booking.set_fac_last_name(MainActivity.gFacilitator.get_last_name());
+            _booking.set_fac_national_id("");
+            _booking.set_fac_phone(MainActivity.gFacilitator.get_phone());
+
             //Log.d(LOG, "EBF _booking is equal null " + _booking.get_first_name());
         }
 

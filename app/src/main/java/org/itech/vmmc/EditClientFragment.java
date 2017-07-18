@@ -202,7 +202,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _status = dbHelp.getStatus("Pending");
             _location = dbHelp.getLocation("1");
             _institution = dbHelp.getInstitution("1");
-            _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+            if(MainActivity.gGroupActivity == null) {
+                _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+            } else {
+                _groupActivity = MainActivity.gGroupActivity;
+            }
+            _address = dbHelp.getAddress("1");
+            _client.set_gender("M");
         } else {
             _client.set_first_name(firstName);
             _client.set_last_name(lastName);
@@ -212,6 +218,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
             _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+            _address = dbHelp.getAddress(String.valueOf(_client.get_address_id()));
+
         }
 
 //        Log.d(LOG, "ECF _client.GroupActivityName: " + _client.get_group_activity_name());
