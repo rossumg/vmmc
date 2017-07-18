@@ -19,11 +19,14 @@ public class Facilitator {
     float _latitude;
     float _longitude;
     int _institution_id;
+    int _address_id;
+    String _dob;
+    String _gender;
 
     public Facilitator() {
     }
 
-    public Facilitator(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _facilitator_type_id, String _note, int _location_id, float _latitude, float _longitude, int _institution_id) {
+    public Facilitator(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _facilitator_type_id, String _note, int _location_id, float _latitude, float _longitude, int _institution_id, int _address_id, String _dob, String _gender) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -36,9 +39,12 @@ public class Facilitator {
         this._latitude = _latitude;
         this._longitude = _longitude;
         this._institution_id = _institution_id;
+        this._address_id = _address_id;
+        this._dob = _dob;
+        this._gender = _gender;
     }
 
-    public Facilitator(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _facilitator_type_id, String _note, int _location_id, float _latitude, float _longitude, int _institution_id) {
+    public Facilitator(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _facilitator_type_id, String _note, int _location_id, float _latitude, float _longitude, int _institution_id, int _address_id, String _dob, String _gender) {
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
@@ -50,6 +56,9 @@ public class Facilitator {
         this._latitude = _latitude;
         this._longitude = _longitude;
         this._institution_id = _institution_id;
+        this._address_id = _address_id;
+        this._dob = _dob;
+        this._gender = _gender;
     }
 
     public int get_id() {
@@ -146,5 +155,29 @@ public class Facilitator {
 
     public void set_institution_id(int _institution_id) {
         this._institution_id = _institution_id;
+    }
+
+    public int get_address_id() {
+        return _address_id;
+    }
+
+    public void set_address_id(int _address_id) {
+        this._address_id = _address_id;
+    }
+
+    public String get_dob() {
+        return _dob;
+    }
+
+    public void set_dob(String _dob) {
+        this._dob = _dob;
+    }
+
+    public String get_gender() {
+        return _gender;
+    }
+
+    public void set_gender(String _gender) {
+        this._gender = _gender;
     }
 }

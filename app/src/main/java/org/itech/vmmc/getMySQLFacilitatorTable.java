@@ -109,11 +109,17 @@ class getMySQLFacilitatorTable extends AsyncTask<String, String, String> {
                     longitude = longitude.replace("'", "''");
                     String institution_id = _rec.getString("institution_id");
                     institution_id = institution_id.replace("'", "''");
+                    String address_id = _rec.getString("address_id");
+                    address_id = address_id.replace("'","''");
+                    String dob = _rec.getString("dob");
+                    dob = dob.replace("'","''");
+                    String gender = _rec.getString("gender");
+                    gender = gender.replace("'","''");
 
                     Log.d(LOG, "getMySQLFacilitatorTable:doInBackground: " + timestamp + ", " + first_name + ", " + last_name + ", " + national_id + ", " + phone + ", " + note );
                     String _insert =
                             "insert or replace into facilitator "
-                                    + "(timestamp, first_name, last_name, national_id, phone, facilitator_type_id, note, location_id, latitude, longitude, institution_id) "
+                                    + "(timestamp, first_name, last_name, national_id, phone, facilitator_type_id, note, location_id, latitude, longitude, institution_id, address_id, dob, gender) "
                                     + " values("
                                     // + person_id + ","
 //                                    + "'" + _person_id + "'" + ","
@@ -127,7 +133,11 @@ class getMySQLFacilitatorTable extends AsyncTask<String, String, String> {
                                     + "'" + location_id + "'" + ","
                                     + "'" + latitude + "'" + ","
                                     + "'" + longitude + "'" + ","
-                                    + "'" + institution_id + "'" +
+                                    + "'" + institution_id + "'" + ","
+                                    + "'" + address_id + "'" + ","
+                                    + "'" + dob + "'" + ","
+                                    + "'" + gender + "'" +
+
                                     ");";
 
                     try {

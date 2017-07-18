@@ -14,12 +14,16 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static org.itech.vmmc.R.id.dob;
 
 
 /**
@@ -57,11 +61,15 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
     private static TextView _facilitator_type_id;
     private static TextView _location_id;
     private static TextView _institution_id;
-//    private static TextView _projected_date;
-//    private static TextView _actual_date;
+    private static Address _address;
+    private static TextView _dob;
+    private static TextView _gender;
+    private static RadioGroup _rg_gender;
+    private static RadioButton _rb_gender;
+    private static RadioButton _rb_gender_male;
+    private static RadioButton _rb_gender_female;
 
-
-//    private EditText et_projected_date;
+    private EditText et_dob;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -212,6 +220,8 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
             _phone.setInputType(InputType.TYPE_NULL);
             _note = (TextView) _view.findViewById(R.id.note);
             _note.setText(_facilitator.get_note());
+            _dob = (TextView) _view.findViewById(dob);
+            _dob.setText(_facilitator.get_dob());
 //            _projected_date = (EditText) _view.findViewById(R.id.projected_date);
 //            _projected_date.setText(_facilitator.get_projected_date());
 //            _dob = (TextView) _view.findViewById(R.id.dob);
@@ -223,6 +233,8 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         loadFacilitatorTypeDropdown(_view );
         loadLocationDropdown(_view );
         loadInstitutionDropdown(_view );
+        loadAddressDropdown(_view );
+        loadGenderRadio(_view);
 
 //        et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
 //        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
@@ -628,6 +640,84 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadAddressDropdown(View view ) {
+        Log.d(LOG, "loadAddressDropdown: " );
+
+        final Spinner lSpinner = (Spinner) view.findViewById(R.id.address);
+        final List<String> addressNames = dbHelp.getAllAddressNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, addressNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        lSpinner.setAdapter(dataAdapter);
+
+        _address = dbHelp.getAddress(String.valueOf(_facilitator.get_address_id()));
+        if(_address == null) {
+            _address = dbHelp.getAddress("1");
+        }
+        _facilitator.set_address_id(_address.get_id());
+
+        String compareValue = _address.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            lSpinner.setSelection(spinnerPosition);
+        }
+
+        lSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String addressText  = lSpinner.getSelectedItem().toString();
+                _address = dbHelp.getAddress(addressText);
+//                _client.set_loc_id(_location.get_id());
+                Log.d(LOG, "address: " + _address.get_id() + _address.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadGenderRadio(View view ) {
+        Log.d(LOG, "loadRegionRadio: ");
+
+        _rg_gender = (RadioGroup) _view.findViewById(R.id.gender_radio_group);
+        _rb_gender_male = (RadioButton) _view.findViewById(R.id.radioButtonMale);
+        _rb_gender_female = (RadioButton) _view.findViewById(R.id.radioButtonFemale);
+
+        if(_facilitator.get_gender() == null){
+            _facilitator.set_gender("M"); // default
+        }
+        if (_facilitator.get_gender().equals("M") ) {
+            _rb_gender_male.setChecked(true);
+            _rb_gender_female.setChecked(false);
+        } else {
+            _rb_gender_male.setChecked(false);
+            _rb_gender_female.setChecked(true);
+        }
+
+        _rb_gender_male.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_gender.getCheckedRadioButtonId();
+                _rb_gender=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_gender: " + _rb_gender.getText() );
+                _facilitator.set_gender("M");
+            }
+        });
+
+        _rb_gender_female.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_gender.getCheckedRadioButtonId();
+                _rb_gender=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_gender: " + _rb_gender.getText() );
+                _facilitator.set_gender("F");
             }
         });
     }

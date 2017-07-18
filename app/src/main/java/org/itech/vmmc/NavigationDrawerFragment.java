@@ -128,12 +128,12 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 //        items.add(new NavigationItem(getResources().getString(R.string.actionsTitle)));
 //        items.add(new NavigationItem(getResources().getString(R.string.debugTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.SYNC)));
-        items.add(new NavigationItem(getResources().getString(R.string.addEditPersonTitle)));
+//        items.add(new NavigationItem(getResources().getString(R.string.addEditPersonTitle)));
+        items.add(new NavigationItem(getResources().getString(R.string.addEditGroupActivity)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditFacilitatorTitle)));
-        items.add(new NavigationItem(getResources().getString(R.string.addEditClientTitle)));
+//        items.add(new NavigationItem(getResources().getString(R.string.addEditClientTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditBookingTitle)));
 //        items.add(new NavigationItem(getResources().getString(R.string.addEditInteractionTitle)));
-        items.add(new NavigationItem(getResources().getString(R.string.addEditGroupActivity)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditPendingFollowup)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditUserTitle)));
 

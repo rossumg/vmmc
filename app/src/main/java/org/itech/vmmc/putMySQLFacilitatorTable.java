@@ -73,7 +73,10 @@ class putMySQLFacilitatorTable extends AsyncTask<String, String, String> {
                                 facilitator.get_location_id() + "," +
                                 facilitator.get_latitude() + "," +
                                 facilitator.get_longitude()   + "," +
-                                facilitator.get_institution_id();
+                                facilitator.get_institution_id() + "," +
+                                facilitator.get_address_id() + "," +
+                                facilitator.get_dob() + "," +
+                                facilitator.get_gender();
 
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
                 i++;

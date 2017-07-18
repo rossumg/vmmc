@@ -270,7 +270,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 2:
+            case 92:
                 fragment = getFragmentManager().findFragmentByTag(AddEditPersonFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditPersonFragment.newInstance();
@@ -294,7 +294,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 4:
+            case 94:
                 fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditClientFragment.newInstance();
@@ -306,7 +306,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 5:
+            case 4:
                 fragment = getFragmentManager().findFragmentByTag(AddEditBookingFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditBookingFragment.newInstance();
@@ -330,7 +330,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 6:
+            case 2:
                 fragment = getFragmentManager().findFragmentByTag(AddEditGroupActivityFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditGroupActivityFragment.newInstance();
@@ -342,7 +342,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 7:
+            case 5:
                 fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
                 getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("DisplayFragment"));
                 if (fragment == null) {
@@ -355,7 +355,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
                 break;
 
-            case 8:
+            case 6:
                 final DBHelper userDBHelp = new DBHelper(this);
                 if (userDBHelp.getUserAccess("edit_user")) {
                     fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);

@@ -232,6 +232,9 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String FACILITATOR_LATITUDE    = "latitude";
     private static final String FACILITATOR_LONGITUDE   = "longitude";
     private static final String FACILITATOR_INSTITUTION_ID = "institution_id";
+    private static final String FACILITATOR_ADDRESS_ID    = "address_id";
+    private static final String FACILITATOR_DOB    = "dob";
+    private static final String FACILITATOR_GENDER    = "gender";
 
     // group_activity table column names
     private static final String GROUP_ACTIVITY_ID          = "id";
@@ -460,6 +463,9 @@ public class DBHelper extends SQLiteOpenHelper{
                     "latitude real default 0.0, " +
                     "longitude real default 0.0, " +
                     "institution_id int, " +
+                    "address_id int, " +
+                    "dob date, " +
+                    "gender varchar, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_FACILITATOR_TABLE);
 
@@ -4518,7 +4524,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(8)),
                     parseFloat(cursor.getString(9)),
                     parseFloat(cursor.getString(10)),
-                    parseInt(cursor.getString(11))
+                    parseInt(cursor.getString(11)),
+                    parseInt(cursor.getString(12)),
+                    cursor.getString(13),
+                    cursor.getString(14)
             );
             cursor.close();
             // db.close();
@@ -4579,7 +4588,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(8)),
                     parseFloat(cursor.getString(9)),
                     parseFloat(cursor.getString(10)),
-                    parseInt(cursor.getString(11))
+                    parseInt(cursor.getString(11)),
+                    parseInt(cursor.getString(12)),
+                    cursor.getString(13),
+                    cursor.getString(14)
             );
             cursor.close();
             // db.close();
