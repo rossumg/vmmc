@@ -104,11 +104,17 @@ class getMySQLBookingTable extends AsyncTask<String, String, String> {
                     String projected_date = _rec.getString("projected_date"); projected_date = projected_date.replace("'","''");
                     String actual_date = _rec.getString("actual_date");
 
+                    String consent = _rec.getString("consent");
+                    int procedure_type_id  = _rec.getInt("procedure_type_id");
+                    int followup_id  = _rec.getInt("followup_id");
+                    String contact = _rec.getString("contact");
+                    String alt_contact = _rec.getString("alt_contact");
+
                     Log.d(LOG, "getMYSQLBookingTable:doInBackground: " + first_name + ":" + last_name + ":" + phone);
 
                     String BookingInsert =
                             "insert or replace into Booking "
-                                    + "(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, projected_date, actual_date )"
+                                    + "(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, projected_date, actual_date, consent, procedure_type_id, followup_id, contact, alt_contact )"
                                     + " values("
                                     // + Booking_id + ","
                                     + "'" + timestamp + "'" + ","
@@ -122,7 +128,12 @@ class getMySQLBookingTable extends AsyncTask<String, String, String> {
                                     + "'" + fac_phone + "'" + ","
                                     + "'" + location_id + "'" + ","
                                     + "'" + projected_date + "'" + ","
-                                    + "'" + actual_date + "'" + ");";
+                                    + "'" + actual_date + "'" + ","
+                                    + "'" + consent + "'" + ","
+                                    + "'" + procedure_type_id + "'" + ","
+                                    + "'" + followup_id + "'" + ","
+                                    + "'" + contact + "'" + ","
+                                    + "'" + alt_contact + "'" + ");";
 
                     try {
                         // no longer used
