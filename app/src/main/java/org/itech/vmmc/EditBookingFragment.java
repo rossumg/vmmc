@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -79,6 +78,9 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
     private EditText et_projected_date;
     private EditText et_actual_date;
+
+    private static TextView _latitude;
+    private static TextView _longitude;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -275,16 +277,16 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         if(_booking != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_booking.get_first_name());
-            _first_name.setInputType(InputType.TYPE_NULL);
+//            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_booking.get_last_name());
-            _last_name.setInputType(InputType.TYPE_NULL);
+//            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_booking.get_national_id());
-            _national_id.setInputType(InputType.TYPE_NULL);
+//            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_booking.get_phone());
-            _phone.setInputType(InputType.TYPE_NULL);
+//            _phone.setInputType(InputType.TYPE_NULL);
             _facilitator = (TextView) _view.findViewById(R.id.facilitator);
 
             if(_booking.get_fac_first_name() == null &&
@@ -304,6 +306,22 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _contact.setText(_booking.get_contact());
             _alt_contact = (TextView) _view.findViewById(R.id.altContact);
             _alt_contact.setText(_booking.get_alt_contact());
+
+            Log.d(LOG, "ECF MainActivity.lat: " + MainActivity.lat);
+            Log.d(LOG, "ECF MainActivity.lng: " + MainActivity.lng);
+
+            _latitude = (TextView) _view.findViewById(R.id.latitude);
+            if(_booking.get_latitude() == 0){
+                _latitude.setText(String.valueOf(MainActivity.lat));
+            } else {
+                _latitude.setText(String.valueOf(_booking.get_latitude()));
+            }
+            _longitude = (TextView) _view.findViewById(R.id.longitude);
+            if(_booking.get_latitude() == 0){
+                _longitude.setText(String.valueOf(MainActivity.lng));
+            } else {
+                _longitude.setText(String.valueOf(_booking.get_longitude()));
+            }
         }
 
         loadFacilitatorAutoComplete(_view );
@@ -406,6 +424,9 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
                 String sConsent = _booking.get_consent();
 
+                _latitude = (TextView) _view.findViewById(R.id.latitude); Float fLatitude = Float.valueOf(_latitude.getText().toString());
+                _longitude = (TextView) _view.findViewById(R.id.longitude); Float fLongitude = Float.valueOf(_longitude.getText().toString());
+
                 Log.d(LOG, "UpdateBooking button2: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " +
                         _actual_date.getText() + ", " +
@@ -439,6 +460,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         lookupBooking.set_fac_national_id(displayParts.get_national_id());
                         lookupBooking.set_fac_phone(displayParts.get_phone());
                         lookupBooking.set_location_id(_location.get_id());
+                        lookupBooking.set_latitude(fLatitude);
+                        lookupBooking.set_longitude(fLongitude);
                         lookupBooking.set_projected_date(sProjectedDate);
                         lookupBooking.set_actual_date(sActualDate);
 
@@ -462,6 +485,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         booking.set_fac_national_id(displayParts.get_national_id());
                         booking.set_fac_phone(displayParts.get_phone());
                         booking.set_location_id(_location.get_id());
+                        booking.set_latitude(fLatitude);
+                        booking.set_longitude(fLongitude);
                         booking.set_projected_date(sProjectedDate);
                         booking.set_actual_date(sActualDate);
                         booking.set_consent(sConsent);

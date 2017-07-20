@@ -96,8 +96,8 @@
     <string name="upload">Upload</string>
     <string name="error">There was an error</string>
     <string name="test">Test</string>
-    <string name="projected_date">Projected Date</string>
-    <string name="actual_date">Actual Date</string>
+    <string name="projected_date">Booking Date</string>
+    <string name="actual_date">Date of MC</string>
     <string name="btn_label_display">Display</string>
     <string name="displayTitle">Display</string>
     <string name="status">Status</string>

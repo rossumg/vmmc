@@ -73,9 +73,11 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
                                 booking.get_fac_national_id() + "," +
                                 booking.get_fac_phone() + "," +
                                 booking.get_location_id() + "," +
-                                booking.get_projected_date() + "," +
+                                booking.get_latitude() + "," +
+                                booking.get_longitude()   + "," +
 //                        Double.toString(Booking.get_latitude()) + "," +
 //                        Double.toString(Booking.get_longitude()) + "," +
+                                booking.get_projected_date() + "," +
                                 booking.get_actual_date() + "," +
 
                                 booking.get_consent() + "," +

@@ -20,6 +20,8 @@ public class Booking {
     String _fac_phone;
 
     int    _location_id;
+    float _latitude;
+    float _longitude;
     String _projected_date;
     String _actual_date;
 
@@ -29,9 +31,9 @@ public class Booking {
     String _contact;
     String _alt_contact;
 
-    public Booking(){}
+    public Booking() {}
 
-    public Booking(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _location_id, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _contact, String _alt_contact) {
+    public Booking(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _location_id, float _latitude, float _longitude, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _contact, String _alt_contact) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -43,6 +45,8 @@ public class Booking {
         this._fac_national_id = _fac_national_id;
         this._fac_phone = _fac_phone;
         this._location_id = _location_id;
+        this._latitude = _latitude;
+        this._longitude = _longitude;
         this._projected_date = _projected_date;
         this._actual_date = _actual_date;
         this._consent = _consent;
@@ -52,7 +56,7 @@ public class Booking {
         this._alt_contact = _alt_contact;
     }
 
-    public Booking(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _location_id, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _contact, String _alt_contact) {
+    public Booking(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _location_id, float _latitude, float _longitude, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _contact, String _alt_contact) {
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
@@ -63,6 +67,8 @@ public class Booking {
         this._fac_national_id = _fac_national_id;
         this._fac_phone = _fac_phone;
         this._location_id = _location_id;
+        this._latitude = _latitude;
+        this._longitude = _longitude;
         this._projected_date = _projected_date;
         this._actual_date = _actual_date;
         this._consent = _consent;
@@ -126,6 +132,22 @@ public class Booking {
 
     public void set_location_id(int _location_id) {
         this._location_id = _location_id;
+    }
+
+    public float get_latitude() {
+        return _latitude;
+    }
+
+    public void set_latitude(float _latitude) {
+        this._latitude = _latitude;
+    }
+
+    public float get_longitude() {
+        return _longitude;
+    }
+
+    public void set_longitude(float _longitude) {
+        this._longitude = _longitude;
     }
 
     public String get_projected_date() {

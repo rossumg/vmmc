@@ -165,6 +165,9 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String BOOKING_FAC_PHONE       = "fac_phone";
 
     private static final String BOOKING_LOCATION_ID     = "location_id";
+    private static final String BOOKING_LATITUDE        = "latitude";
+    private static final String BOOKING_LONGITUDE       = "longitude";
+
     private static final String BOOKING_PROJECTED_DATE  = "projected_date";
     private static final String BOOKING_ACTUAL_DATE     = "actual_date";
 
@@ -376,6 +379,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     "fac_national_id varchar, " +
                     "fac_phone varchar, " +
                     "location_id int, " +
+                    "latitude real default 0.0, " +
+                    "longitude real default 0.0, " +
                     "projected_date date, " +
                     "actual_date date, " +
                     "consent varchar, " +
@@ -4964,7 +4969,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //        String sProjectedDate = df.format(VMMC_DATE_TIME_FORMAT, projected_date).toString();
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_CONTACT, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_CONTACT, BOOKING_ALT_CONTACT
         };
 
         String whereClause = "1=1 and trim(" +
@@ -5012,13 +5017,15 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(8),
                     cursor.getString(9),
                     parseInt(cursor.getString(10)),
-                    cursor.getString(11),
-                    cursor.getString(12),
+                    parseFloat(cursor.getString(11)),
+                    parseFloat(cursor.getString(12)),
                     cursor.getString(13),
-                    parseInt(cursor.getString(14)),
-                    parseInt(cursor.getString(15)),
-                    cursor.getString(16),
-                    cursor.getString(17)
+                    cursor.getString(14),
+                    cursor.getString(15),
+                    parseInt(cursor.getString(16)),
+                    parseInt(cursor.getString(17)),
+                    cursor.getString(18),
+                    cursor.getString(19)
 //                    parseFloat(cursor.getString(9)),
 //                    parseInt(cursor.getString(10))
             );
@@ -5139,6 +5146,10 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(BOOKING_FAC_NATIONAL_ID, booking.get_fac_national_id());
         values.put(BOOKING_FAC_PHONE, booking.get_fac_phone());
         values.put(BOOKING_LOCATION_ID, booking.get_location_id());
+
+        values.put(BOOKING_LATITUDE, booking.get_latitude());
+        values.put(BOOKING_LONGITUDE, booking.get_longitude());
+
         values.put(BOOKING_PROJECTED_DATE,  booking.get_projected_date());
         values.put(BOOKING_ACTUAL_DATE,  booking.get_projected_date());
 
@@ -5170,7 +5181,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "updateBooking timestamp: " + booking.get_timestamp());
 
         String[] tableColumns = new String[]{
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
         };
 
         String whereClause = "1=1 and trim(" +
@@ -5213,6 +5224,10 @@ public class DBHelper extends SQLiteOpenHelper{
             values.put(BOOKING_FAC_NATIONAL_ID, booking.get_fac_national_id());
             values.put(BOOKING_FAC_PHONE, booking.get_fac_phone());
             values.put(BOOKING_LOCATION_ID, booking.get_location_id());
+
+            values.put(BOOKING_LATITUDE, booking.get_latitude());
+            values.put(BOOKING_LONGITUDE, booking.get_longitude());
+
             values.put(BOOKING_PROJECTED_DATE,  booking.get_projected_date());
             values.put(BOOKING_ACTUAL_DATE,  booking.get_actual_date());
 
@@ -5238,6 +5253,8 @@ public class DBHelper extends SQLiteOpenHelper{
                     values.get(BOOKING_FAC_NATIONAL_ID) + " " +
                     values.get(BOOKING_FAC_PHONE) + " " +
                     values.get(BOOKING_LOCATION_ID) + " " +
+                    values.get(BOOKING_LATITUDE) + " " +
+                    values.get(BOOKING_LONGITUDE) + " " +
                     values.get(BOOKING_PROJECTED_DATE) + " " +
                     values.get(BOOKING_ACTUAL_DATE) + " " +
                     values.get(BOOKING_CONSENT) + " " +
@@ -5536,14 +5553,16 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_fac_national_id(cursor.getString(8));
                 booking.set_fac_phone(cursor.getString(9));
                 booking.set_location_id(parseInt(cursor.getString(10)));
-                booking.set_projected_date(cursor.getString(11));
-                booking.set_actual_date(cursor.getString(12));
+                booking.set_latitude(parseFloat(cursor.getString(11)));
+                booking.set_longitude(parseFloat(cursor.getString(12)));
+                booking.set_projected_date(cursor.getString(13));
+                booking.set_actual_date(cursor.getString(14));
 
-                booking.set_consent(cursor.getString(13));
-                booking.set_procedure_type_id(parseInt(cursor.getString(14)));
-                booking.set_followup_id(parseInt(cursor.getString(15)));
-                booking.set_contact(cursor.getString(16));
-                booking.set_alt_contact(cursor.getString(17));
+                booking.set_consent(cursor.getString(15));
+                booking.set_procedure_type_id(parseInt(cursor.getString(16)));
+                booking.set_followup_id(parseInt(cursor.getString(17)));
+                booking.set_contact(cursor.getString(18));
+                booking.set_alt_contact(cursor.getString(19));
 
                 // Adding booking to list
                 _List.add(booking);
@@ -5562,7 +5581,7 @@ public class DBHelper extends SQLiteOpenHelper{
         IndexParts indexParts = new IndexParts(index);
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_CONTACT, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_CONTACT, BOOKING_ALT_CONTACT
         };
 
         String selectQuery =
@@ -5602,14 +5621,16 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_fac_national_id(cursor.getString(8));
                 booking.set_fac_phone(cursor.getString(9));
                 booking.set_location_id(parseInt(cursor.getString(10)));
-                booking.set_projected_date(cursor.getString(11));
-                booking.set_actual_date(cursor.getString(12));
+                booking.set_latitude(parseFloat(cursor.getString(11)));
+                booking.set_longitude(parseFloat(cursor.getString(12)));
+                booking.set_projected_date(cursor.getString(13));
+                booking.set_actual_date(cursor.getString(14));
 
-                booking.set_consent(cursor.getString(13));
-                booking.set_procedure_type_id(parseInt(cursor.getString(14)));
-                booking.set_followup_id(parseInt(cursor.getString(15)));
-                booking.set_contact(cursor.getString(16));
-                booking.set_alt_contact(cursor.getString(17));
+                booking.set_consent(cursor.getString(15));
+                booking.set_procedure_type_id(parseInt(cursor.getString(16)));
+                booking.set_followup_id(parseInt(cursor.getString(17)));
+                booking.set_contact(cursor.getString(18));
+                booking.set_alt_contact(cursor.getString(19));
 
                 // Adding booking to list
                 _List.add(booking);
