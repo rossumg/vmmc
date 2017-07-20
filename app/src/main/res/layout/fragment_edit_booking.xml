@@ -329,13 +329,36 @@
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewProcedureType" />
 
+    <!--<TextView-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:layout_marginLeft="10dp"-->
+        <!--android:textSize="@dimen/font_size_small"-->
+        <!--android:text="@string/contact"-->
+        <!--android:id="@+id/textViewContact"-->
+        <!--android:paddingTop="12dp"-->
+        <!--android:layout_below="@+id/textViewFollowup" />-->
+
+    <!--<EditText-->
+        <!--android:layout_width="wrap_content"-->
+        <!--android:layout_height="wrap_content"-->
+        <!--android:textSize="@dimen/font_size_small"-->
+        <!--android:id="@+id/contact"-->
+        <!--android:layout_marginLeft="200dp"-->
+        <!--android:layout_marginRight="50dp"-->
+        <!--android:layout_alignParentEnd="true"-->
+        <!--android:layout_alignParentStart="true"-->
+        <!--android:layout_toEndOf="@+id/textViewContact"-->
+        <!--android:layout_below="@+id/textViewFollowup"-->
+        <!--android:maxLines="1" />-->
+
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/contact"
-        android:id="@+id/textViewContact"
+        android:text="@string/followup_date"
+        android:id="@+id/textViewFollowupDate"
         android:paddingTop="12dp"
         android:layout_below="@+id/textViewFollowup" />
 
@@ -343,12 +366,12 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textSize="@dimen/font_size_small"
-        android:id="@+id/contact"
+        android:id="@+id/followup_date"
         android:layout_marginLeft="200dp"
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
-        android:layout_toEndOf="@+id/textViewContact"
+        android:layout_toEndOf="@+id/textViewFollowupDate"
         android:layout_below="@+id/textViewFollowup"
         android:maxLines="1" />
 
@@ -360,7 +383,7 @@
         android:text="@string/altContact"
         android:id="@+id/textViewAltContact"
         android:paddingTop="12dp"
-        android:layout_below="@+id/textViewContact" />
+        android:layout_below="@+id/textViewFollowupDate" />
 
     <EditText
         android:layout_width="wrap_content"
@@ -372,7 +395,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewAltContact"
-        android:layout_below="@+id/textViewContact"
+        android:layout_below="@+id/textViewFollowupDate"
         android:maxLines="1" />
 
     <TextView

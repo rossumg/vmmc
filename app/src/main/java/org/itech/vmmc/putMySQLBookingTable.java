@@ -83,7 +83,8 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
                                 booking.get_consent() + "," +
                                 booking.get_procedure_type_id() + "," +
                                 booking.get_followup_id() + "," +
-                                booking.get_contact() + "," +
+                                booking.get_followup_date() + "," +
+//                                booking.get_contact() + "," +
                                 booking.get_alt_contact();
 
                         Log.d(LOG, "loop: " + recs[i] + "<");

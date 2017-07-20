@@ -174,7 +174,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String BOOKING_CONSENT           = "consent";
     private static final String BOOKING_PROCEDURE_TYPE_ID = "procedure_type_id";
     private static final String BOOKING_FOLLOWUP_ID       = "followup_id";
-    private static final String BOOKING_CONTACT           = "contact";
+    private static final String BOOKING_FOLLOWUP_DATE       = "followup_date";
     private static final String BOOKING_ALT_CONTACT       = "alt_contact";
 
 
@@ -386,7 +386,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     "consent varchar, " +
                     "procedure_type_id integer, " +
                     "followup_id integer, " +
-                    "contact varchar, " +
+                    "followup_date date, " +
                     "alt_contact varchar, " +
                     "constraint name_constraint unique (first_name, last_name, national_id, phone, projected_date) );";
             db.execSQL(CREATE_BOOKING_TABLE);
@@ -1751,7 +1751,7 @@ public class DBHelper extends SQLiteOpenHelper{
         List<String> _ID = new ArrayList<String>();
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String whereClause = "1=1 ";
@@ -4969,7 +4969,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //        String sProjectedDate = df.format(VMMC_DATE_TIME_FORMAT, projected_date).toString();
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_CONTACT, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String whereClause = "1=1 and trim(" +
@@ -4991,19 +4991,10 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
         if (cursor.moveToFirst()) {
-//            Log.d(LOG, "getBooking  "
-//                    + cursor.getString(0) + " "
-//                    + cursor.getString(1) + " "
-//                    + cursor.getString(2) + " "
-//                    + cursor.getString(3) + " "
-//                    + cursor.getString(4) + " "
-//                    + cursor.getString(5) + " "
-//                    + cursor.getString(6) + " "
-//                    + cursor.getString(7) + " "
-//                    + cursor.getString(8) + " "
-//                    + cursor.getString(9) + " "
-//                    + cursor.getString(10) + " "
-//            );
+            Log.d(LOG, "getBooking **************** "
+                    + cursor.getString(18) + " "
+                    + cursor.getString(19) + " "
+            );
 
             booking = new Booking(
                     parseInt(cursor.getString(0)),
@@ -5033,7 +5024,7 @@ public class DBHelper extends SQLiteOpenHelper{
             // db.close();
             return booking;
         } else {
-            cursor.close();
+//            cursor.close();
             // db.close();
             return booking;
         }
@@ -5156,7 +5147,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(BOOKING_CONSENT,  booking.get_consent());
         values.put(BOOKING_PROCEDURE_TYPE_ID,  booking.get_procedure_type_id());
         values.put(BOOKING_FOLLOWUP_ID,  booking.get_followup_id());
-        values.put(BOOKING_CONTACT,  booking.get_contact());
+        values.put(BOOKING_FOLLOWUP_DATE,  booking.get_followup_id());
         values.put(BOOKING_ALT_CONTACT,  booking.get_alt_contact());
 
         try {
@@ -5181,7 +5172,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "updateBooking timestamp: " + booking.get_timestamp());
 
         String[] tableColumns = new String[]{
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String whereClause = "1=1 and trim(" +
@@ -5234,7 +5225,7 @@ public class DBHelper extends SQLiteOpenHelper{
             values.put(BOOKING_CONSENT,  booking.get_consent());
             values.put(BOOKING_PROCEDURE_TYPE_ID,  booking.get_procedure_type_id());
             values.put(BOOKING_FOLLOWUP_ID,  booking.get_followup_id());
-            values.put(BOOKING_CONTACT,  booking.get_contact());
+            values.put(BOOKING_FOLLOWUP_DATE,  booking.get_followup_date());
             values.put(BOOKING_ALT_CONTACT,  booking.get_alt_contact());
 
             cursor.close();
@@ -5260,7 +5251,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     values.get(BOOKING_CONSENT) + " " +
                     values.get(BOOKING_PROCEDURE_TYPE_ID) + " " +
                     values.get(BOOKING_FOLLOWUP_ID) + " " +
-                    values.get(BOOKING_CONTACT) + " " +
+                    values.get(BOOKING_FOLLOWUP_DATE) + " " +
                     values.get(BOOKING_ALT_CONTACT)
             );
             db.update(TABLE_BOOKING, values, updateWhereClause, null);
@@ -5561,7 +5552,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_consent(cursor.getString(15));
                 booking.set_procedure_type_id(parseInt(cursor.getString(16)));
                 booking.set_followup_id(parseInt(cursor.getString(17)));
-                booking.set_contact(cursor.getString(18));
+                booking.set_followup_date(cursor.getString(18));
+
                 booking.set_alt_contact(cursor.getString(19));
 
                 // Adding booking to list
@@ -5581,7 +5573,7 @@ public class DBHelper extends SQLiteOpenHelper{
         IndexParts indexParts = new IndexParts(index);
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_CONTACT, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String selectQuery =
@@ -5629,8 +5621,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_consent(cursor.getString(15));
                 booking.set_procedure_type_id(parseInt(cursor.getString(16)));
                 booking.set_followup_id(parseInt(cursor.getString(17)));
-                booking.set_contact(cursor.getString(18));
-                booking.set_alt_contact(cursor.getString(19));
+
+                booking.set_alt_contact(cursor.getString(18));
 
                 // Adding booking to list
                 _List.add(booking);
