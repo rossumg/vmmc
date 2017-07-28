@@ -2785,14 +2785,14 @@ public class DBHelper extends SQLiteOpenHelper{
             );
 
             institution = new Institution(
-                    parseInt(cursor.getString(0)),
-                    cursor.getString(1)
+                    parseInt(cursor.getString(0)), cursor.getString(1)
             );
             cursor.close();
             // db.close();
             return institution;
-        } else {
+        } else { //do not return null for autocomplete in case junk typed in
             cursor.close();
+            institution = new Institution(1, "IUM"); //default
             // db.close();
             return institution;
         }
@@ -2808,10 +2808,10 @@ public class DBHelper extends SQLiteOpenHelper{
                         "c.last_name, \n" +
                         "c.national_id, \n" +
                         "round(julianday('now')-julianday(b.projected_date)) as difference,\n" +
-                        "p.dob,\n" +
+                        "c.dob,\n" +
                         "l.name as location,\n" +
                         "a.name,\n" +
-                        "p.phone\n" +
+                        "c.phone\n" +
                         "from client_table c\n" +
                         "join status_type s on s.id = c.status_id\n" +
                         "join booking b on \n" +
@@ -2819,13 +2819,8 @@ public class DBHelper extends SQLiteOpenHelper{
                         "  c.last_name = b.last_name and\n" +
                         "  c.national_id = b.national_id and\n" +
                         "  c.phone = b.phone\n" +
-                        "join person p on \n" +
-                        "  c.first_name = p.first_name and\n" +
-                        "  c.last_name = p.last_name and\n" +
-                        "  c.national_id = p.national_id and\n" +
-                        "  c.phone = p.phone\n" +
                         "join location l on c.loc_id = l.id\n" +
-                        "join address a on p.address_id = a.id\n" +
+                        "join address a on c.address_id = a.id\n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3\n" +
                         "where s.name = 'Pending'\n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
@@ -4029,7 +4024,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + national_id + ", " + phone_number );
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
         String whereClause = "1=1 and trim(" +
@@ -4126,6 +4121,10 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_institution_id(parseInt(cursor1.getString(10)));
                 client.set_group_activity_name(cursor1.getString(11));
                 client.set_group_activity_date(cursor1.getString(12));
+
+                client.set_address_id(parseInt(cursor1.getString(13)));
+                client.set_dob(cursor1.getString(14));
+                client.set_gender(cursor1.getString(15));
 
                 // Adding person to list
                 clientList.add(client);

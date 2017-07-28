@@ -197,7 +197,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         dbHelp = new DBHelper(getActivity());
 
         _booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
-        Log.d(LOG, "after getBooking _booking.get_followup_date: " + _booking.get_followup_date());
+//        Log.d(LOG, "after getBooking _booking.get_followup_date: " + _booking.get_followup_date());
 
 //        if (!nationalId.equals("") || !phoneNumber.equals("")) {
 //            _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);

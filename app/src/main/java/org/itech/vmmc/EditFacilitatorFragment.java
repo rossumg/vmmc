@@ -647,42 +647,6 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         });
     }
 
-    public void loadInstitutionDropdown1(View view ) {
-        Log.d(LOG, "loadInstitutionDropdown: " );
-
-        final Spinner iSpinner = (Spinner) view.findViewById(R.id.institution);
-        final List<String> institutionNames = dbHelp.getAllInstitutionNames();
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, institutionNames);
-
-        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
-        iSpinner.setAdapter(dataAdapter);
-        _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
-        if (_institution == null) {
-            _institution = dbHelp.getInstitution("3"); // Default
-        }
-        String compareValue = _institution.get_name();
-        if (!compareValue.equals(null)) {
-            int spinnerPosition = dataAdapter.getPosition(compareValue);
-            iSpinner.setSelection(spinnerPosition);
-        }
-
-        iSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String institutionText  = iSpinner.getSelectedItem().toString();
-                _institution = dbHelp.getInstitution(institutionText);
-                _facilitator.set_institution_id(_institution.get_id());
-                Log.d(LOG, "institution: " + _institution.get_id() + _institution.get_name());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
-            }
-        });
-    }
-
     public void loadAddressDropdown(View view ) {
         Log.d(LOG, "loadAddressDropdown: " );
 
