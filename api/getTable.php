@@ -170,6 +170,10 @@ if (!empty($_POST)) {
 	    $response = getLocation();
 	  break;
 
+	  case 'getAddress':
+	    $response = getAddress();
+	  break;
+
 	  case 'getClient':
 	    $response = getClient();
 	  break;
@@ -180,6 +184,14 @@ if (!empty($_POST)) {
 
 	  case 'getFacilitatorType':
 	    $response = getFacilitatorType();
+	  break;
+
+	  case 'getProcedureType':
+	    $response = getProcedureType();
+	  break;
+
+	  case 'getFollowup':
+	    $response = getFollowup();
 	  break;
 
 	  case 'getStatusType':
@@ -280,22 +292,25 @@ function putClient(){
         $institution_id =  $rec[9];
         $group_activity_name =  $rec[10];
         $group_activity_date =  $rec[11];
+        $address_id     =  $rec[12];
+        $dob            =  $rec[13];
+        $gender         =  $rec[14];
 
         file_put_contents('php_debug.log', 'putClient()1 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $first_name, $last_name);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-        $row = selectClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date );
+        $row = selectClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender );
 
         file_put_contents('php_debug.log', 'putClient() recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $timestamp, '==', $row[timestamp], $first_name, $last_name);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
         if(!$row) {
-            insertClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date );
+            insertClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender );
 
         } elseif ($row[timestamp] < $timestamp) {
-            updateClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date);
+            updateClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender );
         }
     }
 
@@ -336,22 +351,25 @@ function putFacilitator(){
         $latitude =        $rec[8];
         $longitude =       $rec[9];
         $institution_id =  $rec[10];
+        $address_id     =  $rec[11];
+        $dob            =  $rec[12];
+        $gender         =  $rec[13];
 
         file_put_contents('php_debug.log', 'putFacilitator()1 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-        var_dump( $first_name, $last_name);
+        var_dump( $first_name, $last_name, $timestamp, $address_id, $dob, $gender);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-        $row = selectFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id );
+        $row = selectFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender );
 
         file_put_contents('php_debug.log', 'putFacilitator() recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $timestamp, '==', $row[timestamp], $first_name, $last_name);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
         if(!$row) {
-            insertFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id );
+            insertFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender );
 
         } elseif ($row[timestamp] < $timestamp) {
-            updateFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id );
+            updateFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender );
         }
     }
 
@@ -363,12 +381,12 @@ function putFacilitator(){
     die(json_encode($response));
 }
 
-function selectFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id){
+function selectFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender){
 
        global $db;
 
    file_put_contents('php_debug.log', 'selectFacilitator1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-       var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, "END");
+       var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender, "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
       $query = "
@@ -383,7 +401,10 @@ note,
 location_id,
 latitude,
 longitude,
-institution_id
+institution_id,
+address_id,
+dob,
+gender
 from facilitator
 where 1=1
 -- and timestamp <= :timestamp
@@ -408,7 +429,7 @@ and phone = :phone
       $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
       $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
       // $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
-      // $stmt->bindParam(':address', $address, PDO::PARAM_STR, strlen($address));
+      // $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
       $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
       // $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
       // $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
@@ -439,7 +460,7 @@ and phone = :phone
    return $row;
 }
 
-function insertFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id){
+function insertFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender){
     global $db;
     
     file_put_contents('php_debug.log', 'insertFacilitator0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -448,8 +469,8 @@ function insertFacilitator( $timestamp, $first_name, $last_name, $national_id, $
     
     $insert = "
 insert into facilitator 
-(timestamp, first_name, last_name, national_id, phone, facilitator_type_id, note, location_id, latitude, longitude, institution_id)
-values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator_type_id, :note, :location_id, :latitude, :longitude, :institution_id )
+(timestamp, first_name, last_name, national_id, phone, facilitator_type_id, note, location_id, latitude, longitude, institution_id, address_id, dob, gender)
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator_type_id, :note, :location_id, :latitude, :longitude, :institution_id, :address_id, :dob, :gender )
 	";
     
     file_put_contents('php_debug.log', 'insertFacilitator1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -469,6 +490,9 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator
         $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
         $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
         $stmt->bindParam(':institution_id', $institution_id, PDO::PARAM_STR, strlen($institution_id));
+        $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
+        $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
+        $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
         $result = $stmt->execute();
     
         file_put_contents('php_debug.log', 'insertFacilitator2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -486,7 +510,7 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator
 }
 
 
-function updateFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id){
+function updateFacilitator( $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender){
     global $db;
     
     file_put_contents('php_debug.log', 'updateFacilitator0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -505,7 +529,10 @@ note=:note,
 location_id=:location_id,
 latitude=:latitude,
 longitude=:longitude,
-institution_id=:institution_id
+institution_id=:institution_id,
+address_id=:address_id,
+dob=:dob,
+gender=:gender
 where 1=1
 and timestamp<:wtimestamp
 and first_name=:wfirst_name
@@ -531,6 +558,9 @@ and phone=:wphone
         $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
         $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
         $stmt->bindParam(':institution_id', $institution_id, PDO::PARAM_STR, strlen($institution_id));
+        $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
+        $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
+        $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
         $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
         $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
         $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -552,9 +582,7 @@ and phone=:wphone
     }
 }
 
-
-
-function selectClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date){
+function selectClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender){
 
        global $db;
 
@@ -575,7 +603,10 @@ latitude,
 longitude,
 institution_id,
 group_activity_name,
-group_activity_date
+group_activity_date,
+address_id,
+dob,
+gender
 from client
 where 1=1
 -- and timestamp <= :timestamp
@@ -600,7 +631,7 @@ and phone = :phone
       $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
       $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
       // $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
-      // $stmt->bindParam(':address', $address, PDO::PARAM_STR, strlen($address));
+      // $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
       $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
       // $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
       // $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
@@ -631,7 +662,7 @@ and phone = :phone
    return $row;
 }
 
-function insertClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date){
+function insertClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender){
     global $db;
     
     file_put_contents('php_debug.log', 'insertClient0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -640,8 +671,8 @@ function insertClient( $timestamp, $first_name, $last_name, $national_id, $phone
     
     $insert = "
 insert into client 
-(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date)
-values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, :loc_id, :latitude, :longitude, :institution_id, :group_activity_name, :group_activity_date )
+(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date, address_id, dob, gender)
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, :loc_id, :latitude, :longitude, :institution_id, :group_activity_name, :group_activity_date, :address_id, :dob, :gender )
 	";
     
     file_put_contents('php_debug.log', 'insertClient1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -662,6 +693,9 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, 
         $stmt->bindParam(':institution_id', $institution_id, PDO::PARAM_STR, strlen($institution_id));
         $stmt->bindParam(':group_activity_name', $group_activity_name, PDO::PARAM_STR, strlen($group_activity_name));
         $stmt->bindParam(':group_activity_date', $group_activity_date, PDO::PARAM_STR, strlen($group_activity_date));
+        $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
+        $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
+        $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
         $result = $stmt->execute();
     
         file_put_contents('php_debug.log', 'insertClient2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -679,7 +713,7 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, 
 }
 
 
-function updateClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date){
+function updateClient( $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender){
     global $db;
     
     file_put_contents('php_debug.log', 'updateClient0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -699,7 +733,10 @@ latitude=:latitude,
 longitude=:longitude,
 institution_id=:institution_id,
 group_activity_name=:group_activity_name,
-group_activity_date=:group_activity_date
+group_activity_date=:group_activity_date,
+address_id=:address_id,
+dob=:dob,
+gender=:gender
 where 1=1
 and timestamp<:wtimestamp
 and first_name=:wfirst_name
@@ -726,6 +763,9 @@ and phone=:wphone
         $stmt->bindParam(':institution_id', $institution_id, PDO::PARAM_STR, strlen($institution_id));
         $stmt->bindParam(':group_activity_name', $group_activity_name, PDO::PARAM_STR, strlen($group_activity_name));
         $stmt->bindParam(':group_activity_date', $group_activity_date, PDO::PARAM_STR, strlen($group_activity_date));
+        $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
+        $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
+        $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
         $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
         $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
         $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -747,7 +787,7 @@ and phone=:wphone
     }
 }
 
-function insertPerson( $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted){
+function insertPerson( $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted){
     global $db;
     
     file_put_contents('php_debug.log', 'insertPerson0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -756,8 +796,8 @@ function insertPerson( $timestamp, $first_name, $last_name, $national_id, $addre
     
     $insert = "
 insert into person 
-(timestamp, first_name, last_name, national_id, address, phone, dob, gender, latitude, longitude, is_deleted)
-values ( :timestamp, :first_name, :last_name, :national_id, :address, :phone, :dob, :gender, :latitude, :longitude, :is_deleted )
+(timestamp, first_name, last_name, national_id, address_id, phone, dob, gender, latitude, longitude, is_deleted)
+values ( :timestamp, :first_name, :last_name, :national_id, :address_id, :phone, :dob, :gender, :latitude, :longitude, :is_deleted )
 	";
     
     file_put_contents('php_debug.log', 'insertPerson1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -770,7 +810,7 @@ values ( :timestamp, :first_name, :last_name, :national_id, :address, :phone, :d
         $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
         $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
         $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
-        $stmt->bindParam(':address', $address, PDO::PARAM_STR, strlen($address));
+        $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
         $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
         $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
         $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
@@ -794,17 +834,18 @@ values ( :timestamp, :first_name, :last_name, :national_id, :address, :phone, :d
     }
 }
 
-function insertBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $projected_date, $actual_date){
-    global $db;
+function insertBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $alt_contact){
     
+    global $db;
+
     file_put_contents('php_debug.log', 'insertBooking0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
     var_dump($first_name, $last_name, $projected_date, '<');
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
     
     $insert = "
 insert into booking 
-(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, projected_date, actual_date )
-values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :location_id, :projected_date, :actual_date )
+(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, latitude, longitude, projected_date, actual_date, consent, procedure_type_id, followup_id, followup_date, alt_contact )
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :location_id, :latitude, :longitude, :projected_date, :actual_date, :consent, :procedure_type_id, :followup_id, :followup_date, :alt_contact )
 	";
     
     file_put_contents('php_debug.log', 'insertBooking1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -823,8 +864,16 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_n
 	$stmt->bindParam(':fac_national_id', $fac_national_id, PDO::PARAM_STR, strlen($fac_national_id));
 	$stmt->bindParam(':fac_phone', $fac_phone, PDO::PARAM_STR, strlen($fac_phone));
 	$stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
+	$stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
+	$stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
 	$stmt->bindParam(':projected_date', $projected_date, PDO::PARAM_STR, strlen($projected_date));
 	$stmt->bindParam(':actual_date', $actual_date, PDO::PARAM_STR, strlen($actual_date));
+
+	$stmt->bindParam(':consent', $consent, PDO::PARAM_STR, strlen($consent));
+	$stmt->bindParam(':procedure_type_id', $procedure_type_id, PDO::PARAM_STR, strlen($procedure_type_id));
+	$stmt->bindParam(':followup_id', $followup_id, PDO::PARAM_STR, strlen($followup_id));
+	$stmt->bindParam(':followup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
+	$stmt->bindParam(':alt_contact', $alt_contact, PDO::PARAM_STR, strlen($alt_contact));
 
         $result = $stmt->execute();
     
@@ -842,7 +891,7 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_n
     }
 }
 
-function updatePerson( $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted){
+function updatePerson( $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted){
     global $db;
     
     file_put_contents('php_debug.log', 'updatePerson0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -855,7 +904,7 @@ timestamp=:timestamp,
 first_name=:first_name,
 last_name=:last_name,
 national_id=:national_id,
-address=:address,
+address_id=:address_id,
 phone=:phone,
 dob=:dob,
 gender=:gender,
@@ -880,7 +929,7 @@ and phone=:wphone
         $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
         $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
         $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
-        $stmt->bindParam(':address', $address, PDO::PARAM_STR, strlen($address));
+        $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
         $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
         $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
         $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
@@ -908,11 +957,12 @@ and phone=:wphone
     }
 }
 
-function updateBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $projected_date, $actual_date){
+function updateBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact){
+
     global $db;
     
     file_put_contents('php_debug.log', 'updateBooking0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-    var_dump($first_name, $last_name);
+    var_dump($first_name, $last_name, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contract);
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
     
     $update = "
@@ -927,8 +977,15 @@ fac_last_name=:fac_last_name,
 fac_national_id=:fac_national_id,
 fac_phone=:fac_phone,
 location_id=:location_id,
+latitude=:latitude,
+longitude=:longitude,
 projected_date=:projected_date,
-actual_date=:actual_date
+actual_date=:actual_date,
+consent=:consent,
+procedure_type_id=:procedure_type_id,
+followup_id=:followup_id,
+followup_date=:followup_date,
+alt_contact=:alt_contact
 where 1=1
 and timestamp<:wtimestamp
 and first_name=:wfirst_name
@@ -955,8 +1012,17 @@ and projected_date=:wprojected_date
         $stmt->bindParam(':fac_national_id', $fac_national_id, PDO::PARAM_STR, strlen($fac_national_id));
         $stmt->bindParam(':fac_phone', $fac_phone, PDO::PARAM_STR, strlen($fac_phone));
 	$stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
+	$stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
+	$stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
 	$stmt->bindParam(':projected_date', $projected_date, PDO::PARAM_STR, strlen($projected_date));
 	$stmt->bindParam(':actual_date', $actual_date, PDO::PARAM_STR, strlen($actual_date));
+
+	$stmt->bindParam(':consent', $consent, PDO::PARAM_STR, strlen($consent));
+	$stmt->bindParam(':procedure_type_id', $procedure_type_id, PDO::PARAM_STR, strlen($procedure_type_id));
+	$stmt->bindParam(':followup_id', $followup_id, PDO::PARAM_STR, strlen($followup_id));
+	$stmt->bindParam(':followup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
+	$stmt->bindParam(':alt_contact', $alt_contact, PDO::PARAM_STR, strlen($alt_contact));
+
         $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
         $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
         $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -1001,7 +1067,7 @@ function putPerson(){
         $first_name =  $rec[1];
         $last_name =   $rec[2];
         $national_id = $rec[3];
-        $address =     $rec[4];
+        $address_id =  $rec[4];
         $phone =       $rec[5];
         $dob =         $rec[6];
         $gender =      $rec[7];
@@ -1013,16 +1079,16 @@ function putPerson(){
         var_dump( $first_name, $last_name, $dob);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-        $row = selectPerson( $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
+        $row = selectPerson( $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
 
         file_put_contents('php_debug.log', 'putPerson() recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $timestamp, '==', $row[timestamp], $first_name, $last_name, $dob);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
         if(!$row) {
-            insertPerson( $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
+            insertPerson( $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
         } elseif ($row[timestamp] < $timestamp) {
-	    updatePerson( $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
+	    updatePerson( $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
 	}
     }
 
@@ -1062,24 +1128,30 @@ function putBooking(){
         $fac_national_id = $rec[7];
         $fac_phone =       $rec[8];
         $location_id =     $rec[9];
-        $projected_date =  $rec[10];
-        $actual_date =     $rec[11];
+        $latitude =        $rec[10];
+        $longitude =       $rec[11];
+        $projected_date =  $rec[12];
+        $actual_date =     $rec[13];
+        $consent =         $rec[14];
+        $procedure_type_id = $rec[15];
+        $followup_id =     $rec[16];
+        $followup_date =   $rec[17];
+        $alt_contact =     $rec[18];
 
         file_put_contents('php_debug.log', 'putBooking1() recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-        var_dump( $first_name, $last_name);
+        var_dump( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-	$row = selectBooking( 
-		$timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $projected_date, $actual_date);
+	$row = selectBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
 
         file_put_contents('php_debug.log', 'putBooking() recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $timestamp, '==', $row[timestamp], $first_name, $last_name);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
         if(!$row) {
-            insertBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $projected_date, $actual_date);
+               insertBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
         } elseif ($row[timestamp] < $timestamp) {
-	    updateBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $projected_date, $actual_date);
+	       updateBooking( $timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
 	}
     }
 
@@ -1134,11 +1206,11 @@ function putGeoLocations(){
     die(json_encode($response));
 }
 
-function selectPerson($timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted){
+function selectPerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted){
        global $db;
 
    file_put_contents('php_debug.log', 'selectPerson1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-     var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted, "END");
+     var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted, "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
       $query = "
@@ -1147,7 +1219,7 @@ timestamp,
 first_name,
 last_name,
 national_id,
-address,
+address_id,
 phone,
 dob,
 gender,
@@ -1160,7 +1232,7 @@ where 1=1
 and first_name = :first_name
 and last_name = :last_name
 -- and national_id = :national_id
--- and address = :address
+-- and address_id = :address_id
 and phone = :phone
 -- and dob =:dob
 -- and gender =:gender
@@ -1182,7 +1254,7 @@ and phone = :phone
       $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
       $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
       // $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
-      // $stmt->bindParam(':address', $address, PDO::PARAM_STR, strlen($address));
+      // $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
       $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
       // $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
       // $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
@@ -1213,12 +1285,12 @@ and phone = :phone
    return $row;
 }
 
-function selectBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $projected_date, $actual_date) {
+function selectBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact) {
        global $db;
        
 
    file_put_contents('php_debug.log', 'selectBooking1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-     var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $address, $phone, $dob, $gender, $latitude, $longitude, $is_deleted, "END");
+     var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $followup_date, "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
       $query = "
@@ -1233,8 +1305,15 @@ fac_last_name,
 fac_national_id,
 fac_phone,
 location_id,
+latitude,
+longitude,
 projected_date,
-actual_date
+actual_date,
+consent,
+procedure_type_id,
+followup_id,
+followup_date,
+alt_contact
 from booking
 where 1=1
 -- and timestamp <= :timestamp
@@ -1260,7 +1339,7 @@ and projected_date = :projected_date
       $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
       $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
       // $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
-      // $stmt->bindParam(':address', $address, PDO::PARAM_STR, strlen($address));
+      // $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
       $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
       $stmt->bindParam(':projected_date', $projected_date, PDO::PARAM_STR, strlen($projected_date));
       // $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
@@ -1598,7 +1677,7 @@ p.timestamp,
 p.first_name,
 p.last_name,
 ifnull(p.national_id, 'not available') as national_id,
-p.address,
+p.address_id,
 p.phone,
 p.dob,
 p.gender,
@@ -1656,7 +1735,7 @@ where 1=1
 	$post["first_name"] = $row["first_name"];
 	$post["last_name"] = $row["last_name"];
 	$post["national_id"] = $row["national_id"];
-	$post["address"] = $row["address"];
+	$post["address_id"] = $row["address_id"];
 	$post["phone"] = $row["phone"];
 	$post["dob"] = $row["dob"];
 	$post["gender"] = $row["gender"];
@@ -1691,7 +1770,10 @@ f.note,
 f.location_id,
 f.latitude,
 f.longitude,
-f.institution_id
+f.institution_id,
+f.address_id,
+f.dob,
+f.gender
 from facilitator f
 where 1=1 
    ";
@@ -1751,6 +1833,9 @@ where 1=1
 	$post["latitude"] = $row["latitude"];
 	$post["longitude"] = $row["longitude"];
 	$post["institution_id"] = $row["institution_id"];
+	$post["address_id"] = $row["address_id"];
+	$post["dob"] = $row["dob"];
+	$post["gender"] = $row["gender"];
 	array_push($response["posts"], $post);
       }
 
@@ -1779,8 +1864,15 @@ b.fac_last_name,
 ifnull(b.fac_national_id, 'not available') as fac_national_id,
 b.fac_phone,
 b.location_id,
+b.latitude,
+b.longitude,
 b.projected_date,
-b.actual_date
+b.actual_date,
+b.consent,
+b.procedure_type_id,
+b.followup_id,
+b.followup_date,
+b.alt_contact
 from booking b
 where 1=1 
    ";
@@ -1838,8 +1930,15 @@ where 1=1
 	$post["fac_national_id"] = $row["fac_national_id"];
 	$post["fac_phone"] = $row["fac_phone"];
 	$post["location_id"] = $row["location_id"];
+	$post["latitude"] = $row["latitude"];
+	$post["longitude"] = $row["longitude"];
 	$post["projected_date"] = $row["projected_date"];
 	$post["actual_date"] = $row["actual_date"];
+	$post["consent"] = $row["consent"];
+	$post["procedure_type_id"] = $row["procedure_type_id"];
+	$post["followup_id"] = $row["followup_id"];
+	$post["followup_date"] = $row["followup_date"];
+	$post["alt_contact"] = $row["alt_contact"];
 	array_push($response["posts"], $post);
       }
 
@@ -2291,6 +2390,75 @@ where 1=1
    }
 }
 
+function getAddress(){
+
+   global $db;
+
+   file_put_contents('php_debug.log', 'getAddress()0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   //var_dump("_POST=", $_POST, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   $query = " 
+select
+a.id,
+a.name,
+a.region_id
+from address a
+where 1=1 
+   ";
+
+   file_put_contents('php_debug.log', 'getAddress()1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("query=", $query, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $query_params = array();
+
+    try {
+        $stmt   = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    }
+    catch (PDOException $ex) {
+        // For testing, you could use a die and message. 
+        //die("Failed to run query: " . $ex->getMessage());
+        
+        //or just use this use this one to product JSON data:
+        $response["success"] = 0;
+        $response["message"] = "Database Error.";
+
+   file_put_contents('php_debug.log', 'getAddress() exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("response=", $response, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+        die(json_encode($response));
+    }
+
+   file_put_contents('php_debug.log', 'getAddress()2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("result=", $result, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   $rows = $stmt->fetchAll();
+
+   file_put_contents('php_debug.log', 'getAddress()2a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   //var_dump("rows=", $rows, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   if ($rows) {
+      $response["success"] = 1;
+      $response["number_records"] = count($rows);
+      $response["posts"] = array();
+
+      foreach($rows as $row) { 
+        $post = array();
+	$post["id"] = $row["id"];
+	$post["name"] = $row["name"];
+	$post["region_id"] = $row["region_id"];
+	array_push($response["posts"], $post);
+      }
+
+      die(json_encode($response));
+   }
+}
+
 function getClient(){
 
    global $db;
@@ -2313,7 +2481,10 @@ c.latitude,
 c.longitude,
 c.institution_id,
 c.group_activity_name,
-c.group_activity_date
+c.group_activity_date,
+c.address_id,
+c.dob,
+c.gender
 from client c
 where 1=1 
    ";
@@ -2372,6 +2543,9 @@ where 1=1
 	$post["institution_id"] = $row["institution_id"];
 	$post["group_activity_name"] = $row["group_activity_name"];
 	$post["group_activity_date"] = $row["group_activity_date"];
+	$post["address_id"] = $row["address_id"];
+	$post["dob"] = $row["dob"];
+	$post["gender"] = $row["gender"];
 	array_push($response["posts"], $post);
       }
 
@@ -2466,18 +2640,19 @@ function putGroupActivity(){
         $location_id =      $rec[2];
         $activity_date =       $rec[3];
         $group_type_id =     $rec[4];
-        $males =           $rec[5];
-        $females =       $rec[6];
-        $messages =        $rec[7];
-        $latitude =        $rec[8];
-        $longitude =        $rec[9];
+        $institution_id =     $rec[5];
+        $males =           $rec[6];
+        $females =       $rec[7];
+        $messages =        $rec[8];
+        $latitude =        $rec[9];
+        $longitude =        $rec[10];
 
         file_put_contents('php_debug.log', 'putGroupActivity()1 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $name, $activity_date);
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
 	$row = selectGroupActivity( 
-		$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude );
+		$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude );
 
         file_put_contents('php_debug.log', 'putGroupActivity()2 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump( $timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
@@ -2485,11 +2660,11 @@ function putGroupActivity(){
 
         if(!$row) {
             insertGroupActivity( 
-		$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude );
+		$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude );
 
         } elseif ($row[timestamp] < $timestamp) {
 		updateGroupActivity( 
-		$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude );
+		$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude );
         }
     }
 
@@ -2517,6 +2692,7 @@ ga.timestamp,
 ga.location_id,
 ga.activity_date,
 ga.group_type_id,
+ga.institution_id,
 ga.males,
 ga.females,
 ga.messages,
@@ -2574,6 +2750,7 @@ where 1=1
 	$post["location_id"] = $row["location_id"];
 	$post["activity_date"] = $row["activity_date"];
 	$post["group_type_id"] = $row["group_type_id"];
+	$post["institution_id"] = $row["institution_id"];
 	$post["males"] = $row["males"];
 	$post["females"] = $row["females"];
 	$post["messages"] = $row["messages"];
@@ -2634,6 +2811,140 @@ where 1=1
    $rows = $stmt->fetchAll();
 
    file_put_contents('php_debug.log', 'getFacilitatorType()2a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   //var_dump("rows=", $rows, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   if ($rows) {
+      $response["success"] = 1;
+      $response["number_records"] = count($rows);
+      $response["posts"] = array();
+
+      foreach($rows as $row) { 
+        $post = array();
+	$post["id"] = $row["id"];
+	$post["name"] = $row["name"];
+	array_push($response["posts"], $post);
+      }
+
+      die(json_encode($response));
+   }
+}
+
+function getProcedureType(){
+
+   global $db;
+
+   file_put_contents('php_debug.log', 'getProcedureType()0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   //var_dump("_POST=", $_POST, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   $query = " 
+select
+p.id,
+p.name
+from procedure_type p
+where 1=1 
+   ";
+
+   file_put_contents('php_debug.log', 'getProcedureType()1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("query=", $query, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $query_params = array();
+
+    try {
+        $stmt   = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    }
+    catch (PDOException $ex) {
+        // For testing, you could use a die and message. 
+        //die("Failed to run query: " . $ex->getMessage());
+        
+        //or just use this use this one to product JSON data:
+        $response["success"] = 0;
+        $response["message"] = "Database Error.";
+
+   file_put_contents('php_debug.log', 'getProcedureType() exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("response=", $response, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+        die(json_encode($response));
+    }
+
+   file_put_contents('php_debug.log', 'getProcedureType()2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("result=", $result, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   $rows = $stmt->fetchAll();
+
+   file_put_contents('php_debug.log', 'getProcedureType()2a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   //var_dump("rows=", $rows, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   if ($rows) {
+      $response["success"] = 1;
+      $response["number_records"] = count($rows);
+      $response["posts"] = array();
+
+      foreach($rows as $row) { 
+        $post = array();
+	$post["id"] = $row["id"];
+	$post["name"] = $row["name"];
+	array_push($response["posts"], $post);
+      }
+
+      die(json_encode($response));
+   }
+}
+
+function getFollowup(){
+
+   global $db;
+
+   file_put_contents('php_debug.log', 'getFollowup()0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   //var_dump("_POST=", $_POST, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   $query = " 
+select
+f.id,
+f.name
+from followup f
+where 1=1 
+   ";
+
+   file_put_contents('php_debug.log', 'getFollowup()1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("query=", $query, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $query_params = array();
+
+    try {
+        $stmt   = $db->prepare($query);
+        $result = $stmt->execute($query_params);
+    }
+    catch (PDOException $ex) {
+        // For testing, you could use a die and message. 
+        //die("Failed to run query: " . $ex->getMessage());
+        
+        //or just use this use this one to product JSON data:
+        $response["success"] = 0;
+        $response["message"] = "Database Error.";
+
+   file_put_contents('php_debug.log', 'getFollowup() exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("response=", $response, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+        die(json_encode($response));
+    }
+
+   file_put_contents('php_debug.log', 'getFollowup()2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("result=", $result, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   $rows = $stmt->fetchAll();
+
+   file_put_contents('php_debug.log', 'getFollowup()2a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
    //var_dump("rows=", $rows, "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
@@ -3457,12 +3768,12 @@ and interaction_date=:winteraction_date
 }
 
 function selectGroupActivity(
-	$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude) {
+	$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude) {
 
        global $db;
 
    file_put_contents('php_debug.log', 'selectGroupActivity1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-   var_dump("params=", $id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude, "END");
+   var_dump("params=", $id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude, "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
       $query = "
@@ -3473,6 +3784,7 @@ timestamp,
 location_id,
 activity_date,
 group_type_id,
+institution_id,
 males,
 females,
 messages,
@@ -3519,7 +3831,7 @@ and activity_date = :activity_date
 }
 
 function insertGroupActivity( 
-	$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude) {
+	$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude) {
 
     global $db;
     
@@ -3528,8 +3840,8 @@ function insertGroupActivity(
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
     
     $insert = "
-insert into group_activity (name, timestamp, location_id, activity_date, group_type_id, males, females, messages, latitude, longitude)
-values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :males, :females, :messages, :latitude, :longitude)
+insert into group_activity (name, timestamp, location_id, activity_date, group_type_id, institution_id, males, females, messages, latitude, longitude)
+values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :institution_id, :males, :females, :messages, :latitude, :longitude)
 	";
     
     file_put_contents('php_debug.log', 'insertGroupActivity1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -3543,6 +3855,7 @@ values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :males,
         $stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
         $stmt->bindParam(':activity_date', $activity_date, PDO::PARAM_STR, strlen($activity_date));
         $stmt->bindParam(':group_type_id', $group_type_id, PDO::PARAM_STR, strlen($group_type_id));
+        $stmt->bindParam(':institution_id', $institution_id, PDO::PARAM_STR, strlen($institution_id));
         $stmt->bindParam(':males', $males, PDO::PARAM_STR, strlen($males));
         $stmt->bindParam(':females', $females, PDO::PARAM_STR, strlen($females));
         $stmt->bindParam(':messages', $messages, PDO::PARAM_STR, strlen($messages));
@@ -3566,7 +3879,7 @@ values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :males,
 
 
 function updateGroupActivity( 
-	$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $males, $females, $messages, $latitude, $longitude) {
+	$id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude) {
     global $db;
     
     file_put_contents('php_debug.log', 'updateGroupActivity0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
@@ -3580,6 +3893,7 @@ timestamp=:timestamp,
 location_id=:location_id,
 activity_date=:activity_date,
 group_type_id=:group_type_id,
+institution_id=:institution_id,
 males=:males,
 females=:females,
 messages=:messages,
@@ -3602,6 +3916,7 @@ and activity_date=:wactivity_date
         $stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
         $stmt->bindParam(':activity_date', $activity_date, PDO::PARAM_STR, strlen($activity_date));
         $stmt->bindParam(':group_type_id', $group_type_id, PDO::PARAM_STR, strlen($group_type_id));
+        $stmt->bindParam(':institution_id', $institution_id, PDO::PARAM_STR, strlen($institution_id));
         $stmt->bindParam(':males', $males, PDO::PARAM_STR, strlen($males));
         $stmt->bindParam(':females', $females, PDO::PARAM_STR, strlen($females));
         $stmt->bindParam(':messages', $messages, PDO::PARAM_STR, strlen($messages));
