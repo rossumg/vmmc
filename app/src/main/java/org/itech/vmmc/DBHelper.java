@@ -364,6 +364,8 @@ public class DBHelper extends SQLiteOpenHelper{
     public JSONObject institutionTableInfo = new JSONObject();
     public JSONObject groupActivityTableInfo = new JSONObject();
     public JSONObject groupTypeTableInfo = new JSONObject();
+    public JSONObject followupTableInfo = new JSONObject();
+    public JSONObject procedureTypeTableInfo = new JSONObject();
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -392,29 +394,6 @@ public class DBHelper extends SQLiteOpenHelper{
                     + PERSON_IS_DELETED
                     + "']"
             );
-
-            JSONArray bookingTableFields = new JSONArray("['"
-                    + BOOKING_ID + "','"
-                    + BOOKING_TIMESTAMP + "','"
-                    + BOOKING_FIRST_NAME + "','"
-                    + BOOKING_LAST_NAME + "','"
-                    + BOOKING_NATIONAL_ID + "','"
-                    + BOOKING_PHONE + "','"
-                    + BOOKING_FAC_FIRST_NAME + "','"
-                    + BOOKING_FAC_LAST_NAME + "','"
-                    + BOOKING_FAC_NATIONAL_ID + "','"
-                    + BOOKING_FAC_PHONE + "','"
-                    + BOOKING_LOCATION_ID + "','"
-                    + BOOKING_LATITUDE + "','"
-                    + BOOKING_LONGITUDE + "','"
-                    + BOOKING_PROJECTED_DATE + "','"
-                    + BOOKING_ACTUAL_DATE + "','"
-                    + BOOKING_CONSENT + "','"
-                    + BOOKING_PROCEDURE_TYPE_ID + "','"
-                    + BOOKING_FOLLOWUP_ID + "','"
-                    + BOOKING_FOLLOWUP_DATE + "','"
-                    + BOOKING_ALT_CONTACT
-                    + "']");
 
             JSONArray userTableFields = new JSONArray("['"
                     + USER_ID + "','"
@@ -492,22 +471,6 @@ public class DBHelper extends SQLiteOpenHelper{
                     + FACILITATOR_GENDER
                     + "']");
 
-
-            JSONArray groupActivityTableFields = new JSONArray("['"
-                    + GROUP_ACTIVITY_ID + "','"
-                    + GROUP_ACTIVITY_NAME + "','"
-                    + GROUP_ACTIVITY_TIMESTAMP + "','"
-                    + GROUP_ACTIVITY_LOCATION_ID + "','"
-                    + GROUP_ACTIVITY_ACTIVITY_DATE + "','"
-                    + GROUP_ACTIVITY_GROUP_TYPE_ID + "','"
-                    + GROUP_ACTIVITY_INSTITUTION_ID + "','"
-                    + GROUP_ACTIVITY_MALES + "','"
-                    + GROUP_ACTIVITY_FEMALES + "','"
-                    + GROUP_ACTIVITY_MESSAGES + "','"
-                    + GROUP_ACTIVITY_LATITUDE + "','"
-                    + GROUP_ACTIVITY_LONGITUDE
-                    + "']");
-
             JSONArray locationTableFields = new JSONArray("['"
                     + LOCATION_ID + "','"
                     + LOCATION_NAME + "','"
@@ -520,17 +483,6 @@ public class DBHelper extends SQLiteOpenHelper{
                     + ADDRESS_REGION_ID
                     + "']");
 
-            JSONArray institutionTableFields = new JSONArray("['"
-                    + INSTITUTION_ID + "','"
-                    + INSTITUTION_NAME + "','"
-                    + INSTITUTION_REGION_ID
-                    + "']");
-
-            JSONArray groupTypeTableFields = new JSONArray("['"
-                    + GROUP_TYPE_ID + "','"
-                    + GROUP_TYPE_NAME
-                    + "']");
-
             JSONArray regionTableFields = new JSONArray("['"
                     + REGION_ID + "','"
                     + REGION_NAME
@@ -540,6 +492,29 @@ public class DBHelper extends SQLiteOpenHelper{
                     + CONSTITUENCY_ID + "','"
                     + CONSTITUENCY_NAME + "','"
                     + CONSTITUENCY_REGION_ID
+                    + "']");
+
+            JSONArray bookingTableFields = new JSONArray("['"
+                    + BOOKING_ID + "','"
+                    + BOOKING_TIMESTAMP + "','"
+                    + BOOKING_FIRST_NAME + "','"
+                    + BOOKING_LAST_NAME + "','"
+                    + BOOKING_NATIONAL_ID + "','"
+                    + BOOKING_PHONE + "','"
+                    + BOOKING_FAC_FIRST_NAME + "','"
+                    + BOOKING_FAC_LAST_NAME + "','"
+                    + BOOKING_FAC_NATIONAL_ID + "','"
+                    + BOOKING_FAC_PHONE + "','"
+                    + BOOKING_LOCATION_ID + "','"
+                    + BOOKING_LATITUDE + "','"
+                    + BOOKING_LONGITUDE + "','"
+                    + BOOKING_PROJECTED_DATE + "','"
+                    + BOOKING_ACTUAL_DATE + "','"
+                    + BOOKING_CONSENT + "','"
+                    + BOOKING_PROCEDURE_TYPE_ID + "','"
+                    + BOOKING_FOLLOWUP_ID + "','"
+                    + BOOKING_FOLLOWUP_DATE + "','"
+                    + BOOKING_ALT_CONTACT
                     + "']");
 
             JSONArray interactionTableFields = new JSONArray("['"
@@ -559,21 +534,6 @@ public class DBHelper extends SQLiteOpenHelper{
                     + INTERACTION_NOTE
                     + "']");
 
-            JSONArray interactionTypeTableFields = new JSONArray("['"
-                    + INTERACTION_TYPE_ID + "','"
-                    + INTERACTION_TYPE_NAME
-                    + "']");
-
-            JSONArray facilitatorTypeTableFields = new JSONArray("['"
-                    + FACILITATOR_TYPE_ID + "','"
-                    + FACILITATOR_TYPE_NAME
-                    + "']");
-
-            JSONArray statusTypeTableFields = new JSONArray("['"
-                    + STATUS_TYPE_ID + "','"
-                    + STATUS_TYPE_NAME
-                    + "']");
-
             JSONArray geolocationTableFields = new JSONArray("['"
                     + GEOLOCATION_ID + "','"
                     + GEOLOCATION_LAT + "','"
@@ -582,6 +542,57 @@ public class DBHelper extends SQLiteOpenHelper{
                     + GEOLOCATION_TIMESTAMP + "','"
                     + GEOLOCATION_USERNAME + "','"
                     + GEOLOCATION_PASSWORD
+                    + "']");
+
+            JSONArray facilitatorTypeTableFields = new JSONArray("['"
+                    + FACILITATOR_TYPE_ID + "','"
+                    + FACILITATOR_TYPE_NAME
+                    + "']");
+
+            JSONArray procedureTypeTableFields = new JSONArray("['"
+                    + PROCEDURE_TYPE_ID + "','"
+                    + PROCEDURE_TYPE_NAME
+                    + "']");
+
+            JSONArray followupTableFields = new JSONArray("['"
+                    + FOLLOWUP_ID + "','"
+                    + FOLLOWUP_NAME
+                    + "']");
+
+            JSONArray interactionTypeTableFields = new JSONArray("['"
+                    + INTERACTION_TYPE_ID + "','"
+                    + INTERACTION_TYPE_NAME
+                    + "']");
+
+            JSONArray statusTypeTableFields = new JSONArray("['"
+                    + STATUS_TYPE_ID + "','"
+                    + STATUS_TYPE_NAME
+                    + "']");
+
+            JSONArray institutionTableFields = new JSONArray("['"
+                    + INSTITUTION_ID + "','"
+                    + INSTITUTION_NAME + "','"
+                    + INSTITUTION_REGION_ID
+                    + "']");
+
+            JSONArray groupActivityTableFields = new JSONArray("['"
+                    + GROUP_ACTIVITY_ID + "','"
+                    + GROUP_ACTIVITY_NAME + "','"
+                    + GROUP_ACTIVITY_TIMESTAMP + "','"
+                    + GROUP_ACTIVITY_LOCATION_ID + "','"
+                    + GROUP_ACTIVITY_ACTIVITY_DATE + "','"
+                    + GROUP_ACTIVITY_GROUP_TYPE_ID + "','"
+                    + GROUP_ACTIVITY_INSTITUTION_ID + "','"
+                    + GROUP_ACTIVITY_MALES + "','"
+                    + GROUP_ACTIVITY_FEMALES + "','"
+                    + GROUP_ACTIVITY_MESSAGES + "','"
+                    + GROUP_ACTIVITY_LATITUDE + "','"
+                    + GROUP_ACTIVITY_LONGITUDE
+                    + "']");
+
+            JSONArray groupTypeTableFields = new JSONArray("['"
+                    + GROUP_TYPE_ID + "','"
+                    + GROUP_TYPE_NAME
                     + "']");
 
             //put table names in object
@@ -600,6 +611,8 @@ public class DBHelper extends SQLiteOpenHelper{
             interactionTableInfo.put("dataTable", TABLE_INTERACTION);
             geolocationTableInfo.put("dataTable", TABLE_GEOLOCATION);
             facilitatorTypeTableInfo.put("dataTable", TABLE_FACILITATOR_TYPE);
+            procedureTypeTableInfo.put("dataTable", TABLE_PROCEDURE_TYPE);
+            followupTableInfo.put("dataTable", TABLE_FOLLOWUP);
             interactionTypeTableInfo.put("dataTable", TABLE_INTERACTION_TYPE);
             statusTypeTableInfo.put("dataTable", TABLE_STATUS_TYPE);
             institutionTableInfo.put("dataTable", TABLE_INSTITUTION);
@@ -622,6 +635,8 @@ public class DBHelper extends SQLiteOpenHelper{
             interactionTableInfo.put("fields", interactionTableFields);
             geolocationTableInfo.put("fields", geolocationTableFields);
             facilitatorTypeTableInfo.put("fields", facilitatorTypeTableFields);
+            procedureTypeTableInfo.put("fields", procedureTypeTableFields);
+            followupTableInfo.put("fields", followupTableFields);
             interactionTypeTableInfo.put("fields", interactionTypeTableFields);
             statusTypeTableInfo.put("fields", statusTypeTableFields);
             institutionTableInfo.put("fields", institutionTableFields);
@@ -3121,6 +3136,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join address a on c.address_id = a.id\n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3\n" +
                         "where s.name = 'Pending'\n" +
+                        "and difference > 0\n" +
                         "and u.username = '" + MainActivity._username + "'\n" +
                         "order by difference desc ";
 
@@ -5916,8 +5932,12 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_actual_date(cursor.getString(14));
 
                 booking.set_consent(cursor.getString(15));
-                booking.set_procedure_type_id(parseInt(cursor.getString(16)));
-                booking.set_followup_id(parseInt(cursor.getString(17)));
+                try {
+                    booking.set_procedure_type_id(parseInt(cursor.getString(16)));
+                    booking.set_followup_id(parseInt(cursor.getString(17)));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikeBookings " +  e.toString());
+                }
 
                 booking.set_alt_contact(cursor.getString(18));
 

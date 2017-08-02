@@ -50,14 +50,17 @@ public class putMySQLTableVolley {
         if (MainActivity.jwt.equals("")) {
             attemptLogin();
         } else { //already had a web token. login unneeded attempt all puts
-            putTable(dbhelp.personTableInfo);
-            putTable(dbhelp.userTableInfo);
-            putTable(dbhelp.bookingTableInfo);
-            putTable(dbhelp.clientTableInfo);
-            putTable(dbhelp.facilitatorTableInfo);
-            putTable(dbhelp.interactionTableInfo);
-            putTable(dbhelp.groupActivityTableInfo);
+            putAllTablesVerified();
         }
+    }
+    public void putAllTablesVerified() {
+        putTable(dbhelp.personTableInfo);
+        putTable(dbhelp.userTableInfo);
+        putTable(dbhelp.bookingTableInfo);
+        putTable(dbhelp.clientTableInfo);
+        putTable(dbhelp.facilitatorTableInfo);
+        putTable(dbhelp.interactionTableInfo);
+        putTable(dbhelp.groupActivityTableInfo);
     }
 
     private void attemptLogin() {
@@ -77,12 +80,7 @@ public class putMySQLTableVolley {
                         MainActivity.jwt = response.getString("jwt");
                         Log.d(LOG, "Login success: " + MainActivity.jwt);
                         LOGGED_IN = true;
-                        putTable(dbhelp.userTableInfo);
-                        putTable(dbhelp.bookingTableInfo);
-                        putTable(dbhelp.clientTableInfo);
-                        putTable(dbhelp.facilitatorTableInfo);
-                        putTable(dbhelp.interactionTableInfo);
-                        putTable(dbhelp.groupActivityTableInfo);
+                        putAllTablesVerified();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -126,7 +124,7 @@ public class putMySQLTableVolley {
                             Log.d(LOG, "Server returned success for POST " + dataTable);
                             //LOGGED_IN = true;
                         } else {
-                            Log.d(LOG, "Server returned an error for POST " + dataTable);
+                            Log.d(LOG, "Server returned ERROR for POST " + dataTable);
                             MainActivity._pass = "";
                             MainActivity.jwt = "";
                             LOGGED_IN = false;

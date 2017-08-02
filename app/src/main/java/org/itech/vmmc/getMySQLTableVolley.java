@@ -50,24 +50,7 @@ public class getMySQLTableVolley {
         if (MainActivity.jwt.equals("")) {
             attemptLogin();
         } else { //already had a web token. login unneeded attempt all puts
-            getTable(dbhelp.personTableInfo);
-            getTable(dbhelp.regionTableInfo);
-            getTable(dbhelp.locationTableInfo);
-            getTable(dbhelp.addressTableInfo);
-            getTable(dbhelp.facilitatorTypeTableInfo);
-            getTable(dbhelp.statusTypeTableInfo);
-            getTable(dbhelp.institutionTableInfo);
-            getTable(dbhelp.interactionTypeTableInfo);
-            getTable(dbhelp.bookingTableInfo);
-            getTable(dbhelp.clientTableInfo);
-            getTable(dbhelp.facilitatorTableInfo);
-            getTable(dbhelp.interactionTableInfo);
-            getTable(dbhelp.userTableInfo);
-            getTable(dbhelp.userTypeTableInfo);
-            getTable(dbhelp.aclTableInfo);
-            getTable(dbhelp.userToAclTableInfo);
-            getTable(dbhelp.groupTypeTableInfo);
-            getTable(dbhelp.groupActivityTableInfo);
+            getAllTablesVerified();
         }
     }
 
@@ -88,24 +71,7 @@ public class getMySQLTableVolley {
                         MainActivity.jwt = response.getString("jwt");
                         Log.d(LOG, "Login success: " + MainActivity.jwt);
                         LOGGED_IN = true;
-                        getTable(dbhelp.personTableInfo);
-                        getTable(dbhelp.regionTableInfo);
-                        getTable(dbhelp.locationTableInfo);
-                        getTable(dbhelp.addressTableInfo);
-                        getTable(dbhelp.facilitatorTypeTableInfo);
-                        getTable(dbhelp.statusTypeTableInfo);
-                        getTable(dbhelp.institutionTableInfo);
-                        getTable(dbhelp.interactionTypeTableInfo);
-                        getTable(dbhelp.bookingTableInfo);
-                        getTable(dbhelp.clientTableInfo);
-                        getTable(dbhelp.facilitatorTableInfo);
-                        getTable(dbhelp.interactionTableInfo);
-                        getTable(dbhelp.userTableInfo);
-                        getTable(dbhelp.userTypeTableInfo);
-                        getTable(dbhelp.aclTableInfo);
-                        getTable(dbhelp.userToAclTableInfo);
-                        getTable(dbhelp.groupTypeTableInfo);
-                        getTable(dbhelp.groupActivityTableInfo);
+                        getAllTablesVerified();
                     }
                 } catch (JSONException e) {
                     e.printStackTrace();
@@ -144,8 +110,8 @@ public class getMySQLTableVolley {
                 public void onResponse(JSONObject response) {
                     try {
                         if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
-                            Log.d(LOG, "Server returned an error for GET "
-                                    + dataTable + ":" + response.getString(MainActivity.TAG_MESSAGE));
+                            Log.d(LOG, "Server returned ERROR for GET "
+                                    + dataTable + ": " + response.getString(MainActivity.TAG_MESSAGE));
                             if (response.getString(MainActivity.TAG_MESSAGE).contains("Invalid jwt")) {
                                 MainActivity.jwt = "";
                                 MainActivity._pass = "";
@@ -245,5 +211,30 @@ public class getMySQLTableVolley {
             return null;
         String encodedSQL = string.replace("'", "''");
         return encodedSQL;
+    }
+
+    public void getAllTablesVerified() {
+        getTable(dbhelp.personTableInfo);
+        getTable(dbhelp.userTableInfo);
+        getTable(dbhelp.userTypeTableInfo);
+        getTable(dbhelp.userToAclTableInfo);
+        getTable(dbhelp.aclTableInfo);
+        getTable(dbhelp.clientTableInfo);
+        getTable(dbhelp.facilitatorTableInfo);
+        getTable(dbhelp.locationTableInfo);
+        getTable(dbhelp.addressTableInfo);
+        getTable(dbhelp.regionTableInfo);
+        getTable(dbhelp.constituencyTableInfo);
+        getTable(dbhelp.bookingTableInfo);
+        getTable(dbhelp.interactionTableInfo);
+        getTable(dbhelp.geolocationTableInfo);
+        getTable(dbhelp.facilitatorTypeTableInfo);
+        getTable(dbhelp.procedureTypeTableInfo);
+        getTable(dbhelp.followupTableInfo);
+        getTable(dbhelp.interactionTypeTableInfo);
+        getTable(dbhelp.statusTypeTableInfo);
+        getTable(dbhelp.institutionTableInfo);
+        getTable(dbhelp.groupActivityTableInfo);
+        getTable(dbhelp.groupTypeTableInfo);
     }
 }
