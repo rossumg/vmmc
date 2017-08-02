@@ -96,8 +96,8 @@
     <string name="upload">Upload</string>
     <string name="error">There was an error</string>
     <string name="test">Test</string>
-    <string name="projected_date">Projected Date</string>
-    <string name="actual_date">Actual Date</string>
+    <string name="projected_date">Booking Date</string>
+    <string name="actual_date">Date of MC</string>
     <string name="btn_label_display">Display</string>
     <string name="displayTitle">Display</string>
     <string name="status">Status</string>
@@ -163,6 +163,13 @@
     <string name="groupActivityMessage3">Limitations of VMMC</string>
     <string name="groupActivityMessage4">Who can get circumcised (target population)</string>
     <string name="groupActivityMessage5">Surgery procedure (pre and post)</string>
+    <string name="consent">Consent</string>
+    <string name="no">No</string>
+    <string name="yes">Yes</string>
+    <string name="procedureType">Procedure</string>
+    <string name="followup">Followup</string>
+    <string name="contact">Contact</string>
+    <string name="altContact">Alt Contact</string>
 
 
 </resources>

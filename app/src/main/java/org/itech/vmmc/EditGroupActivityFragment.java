@@ -42,6 +42,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
     private static final String ARG_EDIT_GROUPACTIVITY_PARAM = "EXTRA_EDIT_GROUPACTIVITY_PARAM";
     private static final String ARG_EDIT_GROUPACTIVITY_RECORD_PARAM = "EXTRA_EDIT_GROUPACTIVITY_RECORD_PARAM";
+    private static final int MAX_PERSONS = 100;
 
     View _view;
 
@@ -140,6 +141,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
         dbHelp = new DBHelper(getActivity());
         _groupActivity = dbHelp.getGroupActivity(_name, _date);
+        MainActivity.gGroupActivity = _groupActivity;
 
         if (_groupActivity == null) {
             _groupActivity = new GroupActivity();
@@ -202,19 +204,19 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         loadGroupActivityTypeDropdown(_view );
         loadMessages(_view );
 
-        String[] nums = new String[41];
+        String[] nums = new String[MAX_PERSONS+1];
         for(int i=0; i<nums.length; i++)
             nums[i] = Integer.toString(i);
 
         _males.setDisplayedValues(nums);
         _males.setMinValue(0);
-        _males.setMaxValue(40);
+        _males.setMaxValue(MAX_PERSONS);
         _males.setWrapSelectorWheel(true);
         _males.setValue(_groupActivity.get_males());
 
         _females.setDisplayedValues(nums);
         _females.setMinValue(0);
-        _females.setMaxValue(40);
+        _females.setMaxValue(MAX_PERSONS);
         _females.setWrapSelectorWheel(true);
         _females.setValue(_groupActivity.get_females());
 
@@ -350,6 +352,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         Log.d(LOG, "UpdateGroupActivity update: " +
                                 _name.getText() + ", " +  _activity_date.getText() + ", " + iMales.toString() + ", " + iFemales.toString() +"<");
                         if(dbHelp.updateGroupActivity(lookupGroupActivity))
+                            MainActivity.gGroupActivity = lookupGroupActivity;
                             Toast.makeText(getActivity(), "GroupActivity Updated", Toast.LENGTH_LONG).show();
                     } else {
                         GroupActivity groupActivity = new GroupActivity();
@@ -364,6 +367,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                         Log.d(LOG, "UpdateGroupActivity add: " +
                                 _name.getText() + ", " +  " <");
                         if(dbHelp.addGroupActivity(groupActivity))
+                            MainActivity.gGroupActivity = groupActivity;
                             Toast.makeText(getActivity(), "GroupActivity Saved", Toast.LENGTH_LONG).show();;
                     }
                 } else {

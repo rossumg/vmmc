@@ -101,14 +101,22 @@ class getMySQLBookingTable extends AsyncTask<String, String, String> {
                     String fac_phone = _rec.getString("fac_phone"); fac_phone = fac_phone.replace("'","''");
 
                     String location_id = _rec.getString("location_id"); location_id = location_id.replace("'","''");
+                    String latitude = _rec.getString("latitude"); latitude = latitude.replace("'","''");
+                    String longitude = _rec.getString("longitude"); longitude = longitude.replace("'","''");
                     String projected_date = _rec.getString("projected_date"); projected_date = projected_date.replace("'","''");
                     String actual_date = _rec.getString("actual_date");
+
+                    String consent = _rec.getString("consent");
+                    int procedure_type_id  = _rec.getInt("procedure_type_id");
+                    int followup_id  = _rec.getInt("followup_id");
+                    String followup_date  = _rec.getString("followup_date");
+                    String alt_contact = _rec.getString("alt_contact");
 
                     Log.d(LOG, "getMYSQLBookingTable:doInBackground: " + first_name + ":" + last_name + ":" + phone);
 
                     String BookingInsert =
                             "insert or replace into Booking "
-                                    + "(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, projected_date, actual_date )"
+                                    + "(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, latitude, longitude, projected_date, actual_date, consent, procedure_type_id, followup_id, followup_date, alt_contact )"
                                     + " values("
                                     // + Booking_id + ","
                                     + "'" + timestamp + "'" + ","
@@ -121,8 +129,15 @@ class getMySQLBookingTable extends AsyncTask<String, String, String> {
                                     + "'" + fac_national_id + "'" + ","
                                     + "'" + fac_phone + "'" + ","
                                     + "'" + location_id + "'" + ","
+                                    + "'" + latitude + "'" + ","
+                                    + "'" + longitude + "'" + ","
                                     + "'" + projected_date + "'" + ","
-                                    + "'" + actual_date + "'" + ");";
+                                    + "'" + actual_date + "'" + ","
+                                    + "'" + consent + "'" + ","
+                                    + "'" + procedure_type_id + "'" + ","
+                                    + "'" + followup_id + "'" + ","
+                                    + "'" + followup_date + "'" + ","
+                                    + "'" + alt_contact + "'" + ");";
 
                     try {
                         // no longer used

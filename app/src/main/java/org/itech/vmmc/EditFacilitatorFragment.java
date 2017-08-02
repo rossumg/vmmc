@@ -1,10 +1,10 @@
 package org.itech.vmmc;
 
 import android.app.Activity;
+import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -12,6 +12,7 @@ import android.view.ViewGroup;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
+import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.MultiAutoCompleteTextView;
 import android.widget.RadioButton;
@@ -20,6 +21,7 @@ import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
@@ -173,6 +175,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 
         dbHelp = new DBHelper(getActivity());
         _facilitator = dbHelp.getFacilitator(firstName, lastName, nationalId, phoneNumber);
+        MainActivity.gFacilitator = _facilitator;
 
         if (_facilitator == null) { // use defaults
             Log.d(LOG, "EBF _facilitator is equal null ");
@@ -184,6 +187,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
             _facilitatorType = dbHelp.getFacilitatorType("3");
             _location = dbHelp.getLocation("1");
             _institution = dbHelp.getInstitution("1");
+            _address = dbHelp.getAddress("1");
         } else {
             Log.d(LOG, "EBF _facilitator != null " + _facilitator.get_first_name());
             _facilitator.set_first_name(firstName);
@@ -193,6 +197,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
             _facilitatorType = dbHelp.getFacilitatorType(String.valueOf(_facilitator.get_facilitator_type_id()));
             _location = dbHelp.getLocation((String.valueOf(_facilitator.get_location_id())));
             _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
+            _address = dbHelp.getAddress(String.valueOf(_facilitator.get_address_id()));
         }
 
 //        _facilitator_type = new Status(String.valueOf(_facilitator.get_facilitator_type_id()));
@@ -208,16 +213,16 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
         if(_facilitator != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_facilitator.get_first_name());
-            _first_name.setInputType(InputType.TYPE_NULL);
+//            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_facilitator.get_last_name());
-            _last_name.setInputType(InputType.TYPE_NULL);
+//            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_facilitator.get_national_id());
-            _national_id.setInputType(InputType.TYPE_NULL);
+//            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_facilitator.get_phone());
-            _phone.setInputType(InputType.TYPE_NULL);
+//            _phone.setInputType(InputType.TYPE_NULL);
             _note = (TextView) _view.findViewById(R.id.note);
             _note.setText(_facilitator.get_note());
             _dob = (TextView) _view.findViewById(dob);
@@ -257,6 +262,27 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //                projected_date_picker_dialog.show();
 //            }
 //        });
+        et_dob = (EditText) _view.findViewById(R.id.dob);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_dob_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_dob.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "EBF: onDateSet: " + et_dob.getText());
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog dob_date_picker_dialog = hold_dob_date_picker_dialog;
+
+        et_dob.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                dob_date_picker_dialog.show();
+            }
+        });
 
         Button btnClient = (Button) _view.findViewById(R.id.btnClient);
         btnClient.setOnClickListener(new View.OnClickListener() {
@@ -310,6 +336,13 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                 EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
                 Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
 
+                Spinner aSpinner = (Spinner) _view.findViewById(R.id.address);
+//              String sAddressText  = aSpinner.getSelectedItem().toString();
+                Address _address = dbHelp.getAddress( aSpinner.getSelectedItem().toString());
+
+                String sDOB = _dob.getText().toString();
+                String sGender = _facilitator.get_gender();
+
 //                Log.d(LOG, "UpdateFacilitator button: " +
 //                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
 //                        _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
@@ -320,7 +353,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                 if(sPhoneNumber.matches("") ) complete = false;
                 if(_institution == null ) complete = false;
 
-                if(complete) {
+                if(true) {
 
                     Facilitator lookupFacilitator = dbHelp.getFacilitator(sFirstName, sLastName, sNationalId, sPhoneNumber );
 
@@ -333,8 +366,11 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                         lookupFacilitator.set_note(sNote);
                         lookupFacilitator.set_location_id(_location.get_id());
                         lookupFacilitator.set_institution_id(_institution.get_id());
+                        lookupFacilitator.set_address_id(_address.get_id());
+                        lookupFacilitator.set_dob(sDOB);
+                        lookupFacilitator.set_gender(sGender);
                         Log.d(LOG, "UpdateFacilitator update: " +
-                                _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
+                                _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + ", " + _address.get_id() + ", " + _dob.getText().toString() + ", " + _facilitator.get_gender() +" <");
                         if(dbHelp.updateFacilitator(lookupFacilitator))
                             Toast.makeText(getActivity(), "Recruiter Updated", Toast.LENGTH_LONG).show();
                     } else {
@@ -347,6 +383,9 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                         facilitator.set_facilitator_type_id(_facilitatorType.get_id());
                         facilitator.set_location_id(_location.get_id());
                         facilitator.set_institution_id(_institution.get_id());
+                        facilitator.set_address_id(_address.get_id());
+                        facilitator.set_dob(sDOB);
+                        facilitator.set_gender(sGender);
                         Log.d(LOG, "UpdateFacilitator add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addFacilitator(facilitator))
@@ -604,42 +643,6 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
             public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
                 _institution = dbHelp.getInstitution(dropdown.getText().toString());
                 _facilitator.set_institution_id(_institution.get_id());
-            }
-        });
-    }
-
-    public void loadInstitutionDropdown1(View view ) {
-        Log.d(LOG, "loadInstitutionDropdown: " );
-
-        final Spinner iSpinner = (Spinner) view.findViewById(R.id.institution);
-        final List<String> institutionNames = dbHelp.getAllInstitutionNames();
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, institutionNames);
-
-        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
-        iSpinner.setAdapter(dataAdapter);
-        _institution = dbHelp.getInstitution(String.valueOf(_facilitator.get_institution_id()));
-        if (_institution == null) {
-            _institution = dbHelp.getInstitution("3"); // Default
-        }
-        String compareValue = _institution.get_name();
-        if (!compareValue.equals(null)) {
-            int spinnerPosition = dataAdapter.getPosition(compareValue);
-            iSpinner.setSelection(spinnerPosition);
-        }
-
-        iSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String institutionText  = iSpinner.getSelectedItem().toString();
-                _institution = dbHelp.getInstitution(institutionText);
-                _facilitator.set_institution_id(_institution.get_id());
-                Log.d(LOG, "institution: " + _institution.get_id() + _institution.get_name());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
             }
         });
     }

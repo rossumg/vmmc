@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -28,8 +27,6 @@ import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
-
-import static org.itech.vmmc.R.id.dob;
 
 
 /**
@@ -81,6 +78,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
     private static TextView _group_activity;
 //    private static TextView _projected_date;
 //    private static TextView _actual_date;
+    private static TextView _latitude;
+    private static TextView _longitude;
 
 
 //    private EditText et_projected_date;
@@ -202,7 +201,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _status = dbHelp.getStatus("Pending");
             _location = dbHelp.getLocation("1");
             _institution = dbHelp.getInstitution("1");
-            _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+            if(MainActivity.gGroupActivity == null) {
+                _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+            } else {
+                _groupActivity = MainActivity.gGroupActivity;
+            }
+            _address = dbHelp.getAddress("1");
+            _client.set_gender("M");
         } else {
             _client.set_first_name(firstName);
             _client.set_last_name(lastName);
@@ -212,6 +217,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
             _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+            _address = dbHelp.getAddress(String.valueOf(_client.get_address_id()));
+
         }
 
 //        Log.d(LOG, "ECF _client.GroupActivityName: " + _client.get_group_activity_name());
@@ -229,18 +236,34 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         if(_client != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_client.get_first_name());
-            _first_name.setInputType(InputType.TYPE_NULL);
+//            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_client.get_last_name());
-            _last_name.setInputType(InputType.TYPE_NULL);
+//            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_client.get_national_id());
-            _national_id.setInputType(InputType.TYPE_NULL);
+//            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_client.get_phone());
-            _phone.setInputType(InputType.TYPE_NULL);
-            _dob = (TextView) _view.findViewById(dob);
+//            _phone.setInputType(InputType.TYPE_NULL);
+            _dob = (TextView) _view.findViewById(R.id.dob);
             _dob.setText(_client.get_dob());
+
+            Log.d(LOG, "ECF MainActivity.lat: " + MainActivity.lat);
+            Log.d(LOG, "ECF MainActivity.lng: " + MainActivity.lng);
+
+            _latitude = (TextView) _view.findViewById(R.id.latitude);
+            if(_client.get_latitude() == 0){
+                _latitude.setText(String.valueOf(MainActivity.lat));
+            } else {
+                _latitude.setText(String.valueOf(_client.get_latitude()));
+            }
+            _longitude = (TextView) _view.findViewById(R.id.longitude);
+            if(_client.get_latitude() == 0){
+                _longitude.setText(String.valueOf(MainActivity.lng));
+            } else {
+                _longitude.setText(String.valueOf(_client.get_longitude()));
+            }
         }
 
         loadStatusDropdown(_view );
@@ -305,14 +328,14 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
                         _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
 
-                Person person = dbHelp.getPerson(_first_name.toString(), _last_name.toString(), _phone.toString());
-                Log.d(LOG, "Booking button: " +  ", " + person.get_first_name() + "< " + person.get_last_name() + " <");
+                Client client = dbHelp.getClient(_first_name.toString(), _last_name.toString(), "", _phone.toString());
+                Log.d(LOG, "Booking button: " +  ", " + client.get_first_name() + "< " + client.get_last_name() + " <");
                 Fragment fragment;
-                if (person != null) {
+                if (client != null) {
                     fragment = DisplayFragment.newInstance("displayBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "");
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack("DisplayBooking").commit();
                 } else {
-                    Toast.makeText(getActivity(), "Person not defined", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Client not defined", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -330,13 +353,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
                         _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
 
-                Person person = dbHelp.getPerson(_first_name.getText().toString(), _last_name.getText().toString(), _phone.getText().toString());
+                Client client = dbHelp.getClient(_first_name.getText().toString(), _last_name.getText().toString(), "", _phone.getText().toString());
                 Fragment fragment;
-                if (person != null) {
+                if (client != null) {
                     fragment = EditBookingFragment.newInstance("editBooking", _first_name.getText() + " " + _last_name.getText() + ":" + _national_id.getText() + ":" + _phone.getText() + ":" + "%");
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
                 } else {
-                    Toast.makeText(getActivity(), "Person not defined", Toast.LENGTH_LONG).show();
+                    Toast.makeText(getActivity(), "Client not defined", Toast.LENGTH_LONG).show();
                 }
             }
         });
@@ -393,7 +416,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
                 String sDOB = _dob.getText().toString();
                 String sGender = _client.get_gender();
-
+                _latitude = (TextView) _view.findViewById(R.id.latitude); Float fLatitude = Float.valueOf(_latitude.getText().toString());
+                _longitude = (TextView) _view.findViewById(R.id.longitude); Float fLongitude = Float.valueOf(_longitude.getText().toString());
 
                 Log.d(LOG, "UpdateClient button: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
@@ -416,6 +440,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         lookupClient.set_phone(sPhoneNumber);
                         lookupClient.set_status_id(_status.get_id());
                         lookupClient.set_loc_id(_location.get_id());
+                        lookupClient.set_latitude(fLatitude);
+                        lookupClient.set_longitude(fLongitude);
+                        lookupClient.set_loc_id(_location.get_id());
                         lookupClient.set_institution_id(_institution.get_id());
                         lookupClient.set_group_activity_name(_groupActivity.get_name());
                         lookupClient.set_group_activity_date(_groupActivity.get_activity_date());
@@ -434,6 +461,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         client.set_phone(sPhoneNumber);
                         client.set_status_id(_status.get_id());
                         client.set_loc_id(_location.get_id());
+                        client.set_latitude(fLatitude);
+                        client.set_longitude(fLongitude);
                         client.set_institution_id(_institution.get_id());
                         client.set_group_activity_name(_groupActivity.get_name());
                         client.set_group_activity_date(_groupActivity.get_activity_date());
@@ -770,44 +799,6 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
                 _institution = dbHelp.getInstitution(dropdown.getText().toString());
                 _client.set_institution_id(_institution.get_id());
-            }
-        });
-    }
-
-    public void loadInstitutionDropdown1(View view ) {
-        Log.d(LOG, "loadInstitutionDropdown: " );
-
-        final Spinner iSpinner = (Spinner) view.findViewById(R.id.institution);
-        final List<String> institutionNames = dbHelp.getAllInstitutionNames();
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, institutionNames);
-
-        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
-        iSpinner.setAdapter(dataAdapter);
-        if(_client == null) {
-            _institution = dbHelp.getInstitution("Other");
-        } else {
-            _client.set_institution_id(_institution.get_id());
-            _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
-        }
-        String compareValue = _institution.get_name();
-        if (!compareValue.equals(null)) {
-            int spinnerPosition = dataAdapter.getPosition(compareValue);
-            iSpinner.setSelection(spinnerPosition);
-        }
-
-        iSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String institutionText  = iSpinner.getSelectedItem().toString();
-                _institution = dbHelp.getInstitution(institutionText);
-//                _client.set_institution_id(_institution.get_id());
-                Log.d(LOG, "institution: " + _institution.get_id() + _institution.get_name());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
             }
         });
     }

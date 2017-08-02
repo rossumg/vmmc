@@ -324,6 +324,52 @@
 
     </RadioGroup>
 
+    <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_marginLeft="10dp"
+    android:textSize="@dimen/font_size_small"
+    android:text="@string/latitude"
+    android:id="@+id/textViewLatitude"
+    android:paddingTop="12dp"
+    android:layout_below="@+id/textViewGender" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/latitude"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewLatitude"
+        android:layout_below="@+id/textViewGender"
+        android:maxLines="1" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/longitude"
+        android:id="@+id/textViewLongitude"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewLatitude" />
+
+    <EditText
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/longitude"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewLongitude"
+        android:layout_below="@+id/textViewLatitude"
+        android:maxLines="1" />
+
 
 
        <!--
@@ -356,8 +402,8 @@
         android:text="@string/btn_label_booking"
         android:id="@+id/btnBooking"
         android:paddingTop="12dp"
-        android:layout_alignStart="@+id/textViewGender"
-        android:layout_below="@+id/textViewGender"
+        android:layout_alignStart="@+id/textViewLongitude"
+        android:layout_below="@+id/textViewLongitude"
         android:layout_marginTop="32dp" />
 
     <!--
@@ -380,8 +426,8 @@
                   android:textSize="@dimen/font_size_small"
                   android:text="@string/btn_label_update"
                   android:id="@+id/btnUpdate"
-                  android:layout_below="@+id/textViewGender"
-                  android:layout_alignEnd="@+id/group_activity"
+                  android:layout_below="@+id/textViewLongitude"
+                  android:layout_alignEnd="@+id/longitude"
                   android:layout_marginTop="32dp" />
 
 

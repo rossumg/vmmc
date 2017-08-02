@@ -61,24 +61,33 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(BookingList.size()), "UTF-8");
             int i = 0;
             String[] recs = new String[BookingList.size()];
-            for (Booking Booking: BookingList) {
+            for (Booking booking: BookingList) {
                 recs[i] =
-                        Booking.get_timestamp() + "," +
-                        Booking.get_first_name() + "," +
-                        Booking.get_last_name() + "," +
-                        Booking.get_national_id() + "," +
-                        Booking.get_phone() + "," +
-                        Booking.get_fac_first_name() + "," +
-                        Booking.get_fac_last_name() + "," +
-                        Booking.get_fac_national_id() + "," +
-                        Booking.get_fac_phone() + "," +
-                        Booking.get_location_id() + "," +
-                        Booking.get_projected_date() + "," +
+                        booking.get_timestamp() + "," +
+                                booking.get_first_name() + "," +
+                                booking.get_last_name() + "," +
+                                booking.get_national_id() + "," +
+                                booking.get_phone() + "," +
+                                booking.get_fac_first_name() + "," +
+                                booking.get_fac_last_name() + "," +
+                                booking.get_fac_national_id() + "," +
+                                booking.get_fac_phone() + "," +
+                                booking.get_location_id() + "," +
+                                booking.get_latitude() + "," +
+                                booking.get_longitude()   + "," +
 //                        Double.toString(Booking.get_latitude()) + "," +
 //                        Double.toString(Booking.get_longitude()) + "," +
-                        Booking.get_actual_date();
+                                booking.get_projected_date() + "," +
+                                booking.get_actual_date() + "," +
 
-//                        Log.d(LOG, "loop: " + recs[i] + "<");
+                                booking.get_consent() + "," +
+                                booking.get_procedure_type_id() + "," +
+                                booking.get_followup_id() + "," +
+                                booking.get_followup_date() + "," +
+//                                booking.get_contact() + "," +
+                                booking.get_alt_contact();
+
+                        Log.d(LOG, "loop: " + recs[i] + "<");
 
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
                 i++;

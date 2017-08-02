@@ -281,7 +281,7 @@ public class AddEditFacilitatorFragment extends Fragment implements AdapterView.
                     Log.d(LOG, "EditFacilitator button phoneNumber: " + paramPhoneNumber);
                 }
 
-                if (complete || !paramName.toString().equals("")  ) {
+                if (true || !paramName.toString().equals("")  ) {
                     Fragment fragment;
                     fragment = EditFacilitatorFragment.newInstance("editFacilitator", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditFacilitatorFragment.TAG).addToBackStack("EditFacilitator").commit();

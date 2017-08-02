@@ -5,7 +5,6 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
-import android.text.InputType;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -15,6 +14,8 @@ import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.RadioButton;
+import android.widget.RadioGroup;
 import android.widget.Spinner;
 import android.widget.TextView;
 import android.widget.Toast;
@@ -53,6 +54,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
     private static Status _status;
     private static Client _client;
     private static VMMCLocation _location;
+    private static ProcedureType _procedureType;
+    private static Followup _followup;
     private static TextView _first_name;
     private static TextView _last_name;
     private static TextView _national_id;
@@ -62,9 +65,24 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
     private static TextView _projected_date;
     private static TextView _actual_date;
 
+    private static TextView _consent;
+    private static RadioGroup _rg_consent;
+    private static RadioButton _rb_consent;
+    private static RadioButton _rb_consent_no;
+    private static RadioButton _rb_consent_yes;
+
+    private static TextView _procedure_type_id;
+    private static TextView _followup_id;
+    private static TextView _followup_date;
+    private static TextView _contact;
+    private static TextView _alt_contact;
 
     private EditText et_projected_date;
     private EditText et_actual_date;
+    private EditText et_followup_date;
+
+    private static TextView _latitude;
+    private static TextView _longitude;
 
     private static OnFragmentInteractionListener mListener;
     private DBHelper dbHelp;
@@ -116,6 +134,12 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         String facilitator = "";
         String projectedDate = "";
         String actualDate = "";
+
+        String consent = "";
+        int procedure_type_id = 1;
+        int followup_id = 1;
+        String followupDate = "";
+        String alt_contact = "";
 
         switch (parts.length) {
             case 0: {
@@ -169,9 +193,11 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         Log.d(LOG, "EBF PhoneNumber: " + phoneNumber);
         Log.d(LOG, "EBF ProjectedDate: " + projectedDate);
 
+
         dbHelp = new DBHelper(getActivity());
 
         _booking = dbHelp.getBooking(firstName, lastName, nationalId, phoneNumber, projectedDate);
+//        Log.d(LOG, "after getBooking _booking.get_followup_date: " + _booking.get_followup_date());
 
 //        if (!nationalId.equals("") || !phoneNumber.equals("")) {
 //            _booking = dbHelp.getBooking(nationalId, phoneNumber, projectedDate);
@@ -202,6 +228,20 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _booking.set_national_id(client.get_national_id());
             _booking.set_phone(client.get_phone());
             _booking.set_projected_date(projectedDate);
+
+            if (MainActivity.gFacilitator != null) {
+                _booking.set_fac_first_name(MainActivity.gFacilitator.get_first_name());
+                _booking.set_fac_last_name(MainActivity.gFacilitator.get_last_name());
+                _booking.set_fac_national_id("");
+                _booking.set_fac_phone(MainActivity.gFacilitator.get_phone());
+            }
+
+            _booking.set_consent(consent);
+            _booking.set_procedure_type_id(procedure_type_id);
+            _booking.set_followup_id(followup_id);
+            _booking.set_alt_contact(alt_contact);
+
+
             //Log.d(LOG, "EBF _booking is equal null " + _booking.get_first_name());
         }
 
@@ -214,7 +254,14 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _client.set_phone(_booking.get_phone());
             _status = dbHelp.getStatus("Pending");
             _client.set_status_id(_status.get_id());
-            GroupActivity _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+
+            GroupActivity _groupActivity = null;
+            if(MainActivity.gGroupActivity == null) {
+                 _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+            } else {
+                 _groupActivity = MainActivity.gGroupActivity;
+            }
+
             _client.set_group_activity_name(_groupActivity.get_name());
             _client.set_group_activity_date(_groupActivity.get_activity_date());
             Institution _institution = dbHelp.getInstitution("1");
@@ -233,18 +280,17 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         if(_booking != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_booking.get_first_name());
-            _first_name.setInputType(InputType.TYPE_NULL);
+//            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_booking.get_last_name());
-            _last_name.setInputType(InputType.TYPE_NULL);
+//            _last_name.setInputType(InputType.TYPE_NULL);
             _national_id = (TextView) _view.findViewById(R.id.national_id);
             _national_id.setText(_booking.get_national_id());
-            _national_id.setInputType(InputType.TYPE_NULL);
+//            _national_id.setInputType(InputType.TYPE_NULL);
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_booking.get_phone());
-            _phone.setInputType(InputType.TYPE_NULL);
+//            _phone.setInputType(InputType.TYPE_NULL);
             _facilitator = (TextView) _view.findViewById(R.id.facilitator);
-
 
             if(_booking.get_fac_first_name() == null &&
                     _booking.get_fac_last_name() == null &&
@@ -258,11 +304,37 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _projected_date.setText(_booking.get_projected_date());
             _actual_date = (EditText) _view.findViewById(R.id.actual_date);
             _actual_date.setText(_booking.get_actual_date());
+            _followup_date = (EditText) _view.findViewById(R.id.followup_date);
+            _followup_date.setText(_booking.get_followup_date());
+
+//            _contact = (TextView) _view.findViewById(R.id.contact);
+//            _contact.setText(_booking.get_contact());
+            _alt_contact = (TextView) _view.findViewById(R.id.altContact);
+            _alt_contact.setText(_booking.get_alt_contact());
+
+            Log.d(LOG, "ECF MainActivity.lat: " + MainActivity.lat);
+            Log.d(LOG, "ECF MainActivity.lng: " + MainActivity.lng);
+
+            _latitude = (TextView) _view.findViewById(R.id.latitude);
+            if(_booking.get_latitude() == 0){
+                _latitude.setText(String.valueOf(MainActivity.lat));
+            } else {
+                _latitude.setText(String.valueOf(_booking.get_latitude()));
+            }
+            _longitude = (TextView) _view.findViewById(R.id.longitude);
+            if(_booking.get_latitude() == 0){
+                _longitude.setText(String.valueOf(MainActivity.lng));
+            } else {
+                _longitude.setText(String.valueOf(_booking.get_longitude()));
+            }
         }
 
         loadFacilitatorAutoComplete(_view );
         loadStatusDropdown(_view );
         loadLocationDropdown(_view );
+        loadProcedureTypeDropdown(_view );
+        loadFollowupDropdown(_view );
+        loadConsentRadio(_view);
 
         et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
         final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
@@ -308,6 +380,28 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             }
         });
 
+        et_followup_date = (EditText) _view.findViewById(R.id.followup_date);
+//        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+//        Calendar newCalendar = Calendar.getInstance();
+        DatePickerDialog hold_followup_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
+            public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
+                Calendar newDate = Calendar.getInstance();
+                newDate.set(year, monthOfYear, dayOfMonth);
+                et_followup_date.setText(dateFormatter.format(newDate.getTime()));
+                Log.d(LOG, "EBF: onDateSet: " + et_followup_date.getText());
+            }
+        }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
+
+        final DatePickerDialog followup_date_picker_dialog = hold_followup_date_picker_dialog;
+
+        et_followup_date.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d(LOG, "onClick: ");
+                followup_date_picker_dialog.show();
+            }
+        });
+
         Button btnUpdateBooking = (Button) _view.findViewById(R.id.btnUpdateBooking);
         btnUpdateBooking.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -329,6 +423,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
                 _projected_date= (TextView) _view.findViewById(R.id.projected_date);
                 _actual_date= (TextView) _view.findViewById(R.id.actual_date);
+                _followup_date= (TextView) _view.findViewById(R.id.followup_date);
 
                 Log.d(LOG, "UpdateBooking button: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitator.getText() + " <");
@@ -346,8 +441,30 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 //                String sDOB = _dob.getText().toString();
 //                String sGender = _gender.getText().toString();
 
+//                String sContact = _contact.getText().toString();
+                String sAltContact = _alt_contact.getText().toString();
+
+                Spinner pSpinner = (Spinner) _view.findViewById(R.id.procedureType);
+                ProcedureType _procedureType = dbHelp.getProcedureType( pSpinner.getSelectedItem().toString());
+
+                Spinner fSpinner = (Spinner) _view.findViewById(R.id.followup);
+                Followup _followup = dbHelp.getFollowup( fSpinner.getSelectedItem().toString());
+
+                String sFollowupDate = _followup_date.getText().toString();
+                String sConsent = _booking.get_consent();
+
+                _latitude = (TextView) _view.findViewById(R.id.latitude); Float fLatitude = Float.valueOf(_latitude.getText().toString());
+                _longitude = (TextView) _view.findViewById(R.id.longitude); Float fLongitude = Float.valueOf(_longitude.getText().toString());
+
                 Log.d(LOG, "UpdateBooking button2: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _actual_date.getText() + " <");
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " +
+                        _actual_date.getText() + ", " +
+                        sConsent + ", " +
+                        _procedureType.get_name() + ", " +
+                        _followup.get_name() + ", " +
+                        sFollowupDate + ", " +
+//                        _contact.getText() + ", " +
+                        _alt_contact.getText() + " <");
 
                 DisplayParts displayParts = new DisplayParts(sFacilitator);
                 Log.d(LOG, "UpdateBooking button3: " +
@@ -373,9 +490,18 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         lookupBooking.set_fac_last_name(displayParts.get_last_name());
                         lookupBooking.set_fac_national_id(displayParts.get_national_id());
                         lookupBooking.set_fac_phone(displayParts.get_phone());
-                        lookupBooking.set_location_id(String.valueOf(_location.get_id()));
+                        lookupBooking.set_location_id(_location.get_id());
+                        lookupBooking.set_latitude(fLatitude);
+                        lookupBooking.set_longitude(fLongitude);
                         lookupBooking.set_projected_date(sProjectedDate);
                         lookupBooking.set_actual_date(sActualDate);
+
+                        lookupBooking.set_consent(sConsent);
+                        lookupBooking.set_procedure_type_id(_procedureType.get_id());
+                        lookupBooking.set_followup_id(_followup.get_id());
+                        lookupBooking.set_followup_date(sFollowupDate);
+//                        lookupBooking.set_contact(sContact);
+                        lookupBooking.set_alt_contact(sAltContact);
                         Log.d(LOG, "UpdateBooking update: " +
                                 _first_name.getText() + " " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.updateBooking(lookupBooking))
@@ -390,9 +516,17 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         booking.set_fac_last_name(displayParts.get_last_name());
                         booking.set_fac_national_id(displayParts.get_national_id());
                         booking.set_fac_phone(displayParts.get_phone());
-                        booking.set_location_id(String.valueOf(_location.get_id()));
+                        booking.set_location_id(_location.get_id());
+                        booking.set_latitude(fLatitude);
+                        booking.set_longitude(fLongitude);
                         booking.set_projected_date(sProjectedDate);
                         booking.set_actual_date(sActualDate);
+                        booking.set_consent(sConsent);
+                        booking.set_procedure_type_id(_procedureType.get_id());
+                        booking.set_followup_id(_followup.get_id());
+                        booking.set_followup_date(sFollowupDate);
+//                        booking.set_contact(sContact);
+                        booking.set_alt_contact(sAltContact);
                         Log.d(LOG, "UpdateBooking add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.addBooking(booking))
@@ -449,6 +583,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
         _projected_date = (TextView) _view.findViewById(R.id.projected_date); _projected_date.setText("");
         _actual_date = (TextView) _view.findViewById(R.id.actual_date); _actual_date.setText("");
+        _followup_date = (TextView) _view.findViewById(R.id.followup_date); _followup_date.setText("");
 //        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
 //        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
@@ -465,6 +600,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _projected_date.setText(_booking.get_projected_date());
             _actual_date = (TextView) _view.findViewById(R.id.actual_date);
             _actual_date.setText(_booking.get_actual_date());
+            _followup_date = (TextView) _view.findViewById(R.id.followup_date);
+            _followup_date.setText(_booking.get_followup_date());
 
         }
     }
@@ -636,6 +773,117 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             @Override
             public void onNothingSelected(AdapterView<?> parent) {
                 Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadProcedureTypeDropdown(View view ) {
+        Log.d(LOG, "loadProcedureTypeDropdown: " );
+
+        final Spinner pSpinner = (Spinner) view.findViewById(R.id.procedureType);
+        final List<String> procedureTypeNames = dbHelp.getAllProcedureTypeNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, procedureTypeNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        pSpinner.setAdapter(dataAdapter);
+        _procedureType = dbHelp.getProcedureType(String.valueOf(_booking.get_procedure_type_id()));
+        if (_procedureType == null) {
+            _procedureType = dbHelp.getProcedureType("1"); // Default
+        }
+        String compareValue = _procedureType.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            pSpinner.setSelection(spinnerPosition);
+        }
+
+        pSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String procedureTypeText  = pSpinner.getSelectedItem().toString();
+                _procedureType = dbHelp.getProcedureType(procedureTypeText);
+                _booking.set_procedure_type_id(_procedureType.get_id());
+                Log.d(LOG, "procedureType: " + _procedureType.get_id() + _procedureType.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadFollowupDropdown(View view ) {
+        Log.d(LOG, "loadFollowupDropdown: " );
+
+        final Spinner fSpinner = (Spinner) view.findViewById(R.id.followup);
+        final List<String> followupNames = dbHelp.getAllFollowupNames();
+
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, followupNames);
+
+        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+        fSpinner.setAdapter(dataAdapter);
+        _followup = dbHelp.getFollowup(String.valueOf(_booking.get_followup_id()));
+        if (_followup == null) {
+            _followup = dbHelp.getFollowup("1"); // Default
+        }
+        String compareValue = _followup.get_name();
+        if (!compareValue.equals(null)) {
+            int spinnerPosition = dataAdapter.getPosition(compareValue);
+            fSpinner.setSelection(spinnerPosition);
+        }
+
+        fSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+            @Override
+            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+                String followupText  =fSpinner.getSelectedItem().toString();
+                _followup = dbHelp.getFollowup(followupText);
+                _booking.set_followup_id(_followup.get_id());
+                Log.d(LOG, "followup: " + _followup.get_id() + _followup.get_name());
+            }
+
+            @Override
+            public void onNothingSelected(AdapterView<?> parent) {
+                Log.d(LOG, "spinner nothing selected");
+            }
+        });
+    }
+
+    public void loadConsentRadio(View view ) {
+        Log.d(LOG, "loadConsentRadio: ");
+
+        _rg_consent = (RadioGroup) _view.findViewById(R.id.consent_radio_group);
+        _rb_consent_no = (RadioButton) _view.findViewById(R.id.radioButtonNo);
+        _rb_consent_yes = (RadioButton) _view.findViewById(R.id.radioButtonYes);
+
+        if(_booking.get_consent() == null){
+            _booking.set_consent("N"); // default
+        }
+        if (_booking.get_consent().equals("N") ) {
+            _rb_consent_no.setChecked(true);
+            _rb_consent_yes.setChecked(false);
+        } else {
+            _rb_consent_no.setChecked(false);
+            _rb_consent_yes.setChecked(true);
+        }
+
+        _rb_consent_no.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_consent.getCheckedRadioButtonId();
+                _rb_consent=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_consent: " + _rb_consent.getText() );
+                _booking.set_consent("N");
+            }
+        });
+
+        _rb_consent_yes.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                int selectedId=_rg_consent.getCheckedRadioButtonId();
+                _rb_consent=(RadioButton) _view.findViewById(selectedId);
+                Log.d(LOG, "rb_consent: " + _rb_consent.getText() );
+                _booking.set_consent("Y");
             }
         });
     }
