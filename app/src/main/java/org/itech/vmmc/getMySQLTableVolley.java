@@ -50,6 +50,7 @@ public class getMySQLTableVolley {
         if (MainActivity.jwt.equals("")) {
             attemptLogin();
         } else { //already had a web token. login unneeded attempt all puts
+            getTable(dbhelp.personTableInfo);
             getTable(dbhelp.regionTableInfo);
             getTable(dbhelp.locationTableInfo);
             getTable(dbhelp.addressTableInfo);
@@ -87,6 +88,7 @@ public class getMySQLTableVolley {
                         MainActivity.jwt = response.getString("jwt");
                         Log.d(LOG, "Login success: " + MainActivity.jwt);
                         LOGGED_IN = true;
+                        getTable(dbhelp.personTableInfo);
                         getTable(dbhelp.regionTableInfo);
                         getTable(dbhelp.locationTableInfo);
                         getTable(dbhelp.addressTableInfo);
@@ -157,6 +159,7 @@ public class getMySQLTableVolley {
                         int num_recs = results_JSONarray.length();
                         int num_fields = fields.length();
                         int id = 1;
+                        int i = 0;
 
                         NotificationManager mNotifyManager = (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
                         NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(_context);
@@ -167,7 +170,7 @@ public class getMySQLTableVolley {
                         String fields_string = fields.join(", ");
                         //create strings from received data for sql statement
                         //loop for each record received
-                        for (int i = 0; i < num_recs; ++i) {
+                        for (i = 0; i < num_recs; ++i) {
                             JSONObject _rec = results_JSONarray.getJSONObject(i);
                             String results_string = "";
                             //loop to format data for insert or replace
@@ -197,6 +200,8 @@ public class getMySQLTableVolley {
                                 Log.d(LOG, "getMySQLTable loop exception > " + ex.toString());
                             }
                         }
+                        mBuilder.setContentText(_context.getResources().getString(R.string.sync_complete) + " (" + i + " records)").setProgress(0, 0, false);
+                        mNotifyManager.notify(id, mBuilder.build());
                     } catch (JSONException e) {
                         Log.d(LOG, "exception > GET request for: " + dataTable);
                         Log.d(LOG, "exception > Fields: " + fields.toString());

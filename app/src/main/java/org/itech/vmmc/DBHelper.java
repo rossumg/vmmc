@@ -344,6 +344,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String GEOLOCATION_USERNAME  = "username";
     private static final String GEOLOCATION_PASSWORD  = "password";
 
+    public JSONObject personTableInfo = new JSONObject();
     public JSONObject userTableInfo = new JSONObject();
     public JSONObject userTypeTableInfo = new JSONObject();
     public JSONObject userToAclTableInfo = new JSONObject();
@@ -376,6 +377,45 @@ public class DBHelper extends SQLiteOpenHelper{
 
     private void makeTableJSONObjects() throws JSONException {
         try {
+            JSONArray personTableFields = new JSONArray("['"
+                    + PERSON_ID + "','"
+                    + PERSON_TIMESTAMP + "','"
+                    + PERSON_FIRST_NAME + "','"
+                    + PERSON_LAST_NAME + "','"
+                    + PERSON_NATIONAL_ID + "','"
+                    + PERSON_ADDRESS + "','"
+                    + PERSON_PHONE + "','"
+                    + PERSON_DOB + "','"
+                    + PERSON_GENDER + "','"
+                    + PERSON_LATITUDE + "','"
+                    + PERSON_LONGITUDE + "','"
+                    + PERSON_IS_DELETED
+                    + "']"
+            );
+
+            JSONArray bookingTableFields = new JSONArray("['"
+                    + BOOKING_ID + "','"
+                    + BOOKING_TIMESTAMP + "','"
+                    + BOOKING_FIRST_NAME + "','"
+                    + BOOKING_LAST_NAME + "','"
+                    + BOOKING_NATIONAL_ID + "','"
+                    + BOOKING_PHONE + "','"
+                    + BOOKING_FAC_FIRST_NAME + "','"
+                    + BOOKING_FAC_LAST_NAME + "','"
+                    + BOOKING_FAC_NATIONAL_ID + "','"
+                    + BOOKING_FAC_PHONE + "','"
+                    + BOOKING_LOCATION_ID + "','"
+                    + BOOKING_LATITUDE + "','"
+                    + BOOKING_LONGITUDE + "','"
+                    + BOOKING_PROJECTED_DATE + "','"
+                    + BOOKING_ACTUAL_DATE + "','"
+                    + BOOKING_CONSENT + "','"
+                    + BOOKING_PROCEDURE_TYPE_ID + "','"
+                    + BOOKING_FOLLOWUP_ID + "','"
+                    + BOOKING_FOLLOWUP_DATE + "','"
+                    + BOOKING_ALT_CONTACT
+                    + "']");
+
             JSONArray userTableFields = new JSONArray("['"
                     + USER_ID + "','"
                     + USER_TIMESTAMP + "','"
@@ -395,22 +435,6 @@ public class DBHelper extends SQLiteOpenHelper{
                     + USER_TIMESTAMP_UPDATED + "','"
                     + USER_TIMESTAMP_CREATED + "','"
                     + USER_TIMESTAMP_LAST_LOGIN
-                    + "']");
-
-            JSONArray bookingTableFields = new JSONArray("['"
-                    + BOOKING_ID + "','"
-                    + BOOKING_TIMESTAMP + "','"
-                    + BOOKING_FIRST_NAME + "','"
-                    + BOOKING_LAST_NAME + "','"
-                    + BOOKING_NATIONAL_ID + "','"
-                    + BOOKING_PHONE + "','"
-                    + BOOKING_FAC_FIRST_NAME + "','"
-                    + BOOKING_FAC_LAST_NAME + "','"
-                    + BOOKING_FAC_NATIONAL_ID + "','"
-                    + BOOKING_FAC_PHONE + "','"
-                    + BOOKING_LOCATION_ID + "','"
-                    + BOOKING_PROJECTED_DATE + "','"
-                    + BOOKING_ACTUAL_DATE
                     + "']");
 
             JSONArray userTypeTableFields = new JSONArray("['"
@@ -561,6 +585,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     + "']");
 
             //put table names in object
+            personTableInfo.put("dataTable", TABLE_PERSON);
             userTableInfo.put("dataTable", TABLE_USER);
             userTypeTableInfo.put("dataTable", TABLE_USER_TYPE);
             userToAclTableInfo.put("dataTable", TABLE_USER_TO_ACL);
@@ -582,6 +607,7 @@ public class DBHelper extends SQLiteOpenHelper{
             groupTypeTableInfo.put("dataTable", TABLE_GROUP_TYPE);
 
             //put field list in json object
+            personTableInfo.put("fields", personTableFields);
             userTableInfo.put("fields", userTableFields);
             userTypeTableInfo.put("fields", userTypeTableFields);
             userToAclTableInfo.put("fields", userToAclTableFields);
@@ -1898,7 +1924,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join address a on p.address_id = a.id \n" +
                         "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and u.username = '" + MainActivity._username + "'\n";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -1942,7 +1968,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join address a on c.address_id = a.id \n" +
                         "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and u.username = '" + MainActivity._username + "'\n";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2074,7 +2100,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join location l on ga.location_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and u.username = '" + MainActivity._username + "'\n";
 
         Log.d(LOG, "getAllLikeGroupActivitieyIDs selectQuery: " + selectQuery);
 
@@ -2122,7 +2148,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join location l on ga.location_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "and trim(ga." + GROUP_ACTIVITY_NAME + ") like ? \n" +
                         "and trim(ga." + GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
 
@@ -2820,7 +2846,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 "select l." + LOCATION_NAME + " from " + TABLE_LOCATION + " l\n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and u.username = '" + MainActivity._username + "'\n";
 
         String whereClause = "1=1 ";
 
@@ -2910,7 +2936,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 "select a.name from " + TABLE_ADDRESS + " a\n" +
                         "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and u.username = '" + MainActivity._username + "'\n";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
 
@@ -2993,7 +3019,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 "select i.name from " + TABLE_INSTITUTION + " i\n" +
                         "join user u on i.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and u.username = '" + MainActivity._username + "'\n";
 
         String whereClause = "1=1 ";
 
@@ -3095,7 +3121,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join address a on c.address_id = a.id\n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3\n" +
                         "where s.name = 'Pending'\n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "order by difference desc ";
 
 //        Log.d(LOG, "getAllPendingFollowups:select: " + selectQuery.toString());
@@ -4496,7 +4522,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join location l on c.loc_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "and trim(c." + CLIENT_FIRST_NAME + ") like ? " +
                         "and trim(c." + CLIENT_LAST_NAME + ") like ? " +
                         "and trim(c." + CLIENT_NATIONAL_ID + ") like ? " +
@@ -4752,7 +4778,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join location l on ga.location_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "and trim(ga." + GROUP_ACTIVITY_NAME + ") like ? \n" +
                         "and trim(ga." + GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
 
@@ -4863,7 +4889,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join location l on f.location_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "and trim(f." + FACILITATOR_FIRST_NAME + ") like ? \n" +
                         "and trim(f." + FACILITATOR_LAST_NAME + ") like ? \n" +
                         "and trim(f." + FACILITATOR_NATIONAL_ID + ") like ? \n" +
@@ -5753,7 +5779,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join address a on p.address_id = a.id \n" +
                         "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "and trim(p." + PERSON_FIRST_NAME + ") like ? \n" +
                         "and trim(p." + PERSON_LAST_NAME + ") like ? \n" +
                         "and trim(p." + PERSON_NATIONAL_ID + ") like ? \n" +
@@ -5852,7 +5878,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "join location l on b.location_id = l.id \n" +
                         "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
+                        "and u.username = '" + MainActivity._username + "'\n" +
                         "and trim(b." + BOOKING_FIRST_NAME + ") like ? \n" +
                         "and trim(b." + BOOKING_LAST_NAME + ") like ? \n" +
                         "and trim(b." + BOOKING_NATIONAL_ID + ") like ? \n" +

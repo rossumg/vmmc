@@ -23,6 +23,7 @@ import java.net.URLEncoder;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.concurrent.ExecutionException;
 
 import static org.itech.vmmc.MainActivity.LOG;
 
@@ -49,6 +50,7 @@ public class putMySQLTableVolley {
         if (MainActivity.jwt.equals("")) {
             attemptLogin();
         } else { //already had a web token. login unneeded attempt all puts
+            putTable(dbhelp.personTableInfo);
             putTable(dbhelp.userTableInfo);
             putTable(dbhelp.bookingTableInfo);
             putTable(dbhelp.clientTableInfo);
@@ -121,10 +123,10 @@ public class putMySQLTableVolley {
                     try {
                         if (response.getString(MainActivity.TAG_SUCCESS).equals("1")) {
                             //int num_GroupActiviy_recs = json.getInt("number_records");
-                            Log.d(LOG, "putMySQLTable" + dataTable + ": Success");
+                            Log.d(LOG, "Server returned success for POST " + dataTable);
                             //LOGGED_IN = true;
                         } else {
-                            Log.d(LOG, "putMySQLTable" + dataTable + ": Not Successful");
+                            Log.d(LOG, "Server returned an error for POST " + dataTable);
                             MainActivity._pass = "";
                             MainActivity.jwt = "";
                             LOGGED_IN = false;
@@ -163,22 +165,58 @@ public class putMySQLTableVolley {
 
     private JSONObject createRequestData(String dataTable, JSONArray fields) {
         JSONObject requestData = null;
-        if (dataTable.equals("user")) {
-            requestData = createUserRequestData();
-      //  } else if (dataTable.equals("person")) {
-      //      requestData = createPersonRequestData();
-        } else if (dataTable.equals("booking")) {
-            requestData = createBookingRequestData();
-        } else if (dataTable.equals("client_table")) {
-            requestData = createClientRequestData();
-        } else if (dataTable.equals("facilitator")) {
-            requestData = createFacilitatorRequestData();
-        } else if (dataTable.equals("interaction")) {
-            requestData = createInteractionRequestData();
-        } else if (dataTable.equals("group_activity")) {
-            requestData = createGroupActivityRequestData();
+        try {
+            if (dataTable.equals("user")) {
+                requestData = createUserRequestData();
+            } else if (dataTable.equals("person")) {
+                requestData = createPersonRequestData();
+            } else if (dataTable.equals("booking")) {
+                requestData = createBookingRequestData();
+            } else if (dataTable.equals("client_table")) {
+                requestData = createClientRequestData();
+            } else if (dataTable.equals("facilitator")) {
+                requestData = createFacilitatorRequestData();
+            } else if (dataTable.equals("interaction")) {
+                requestData = createInteractionRequestData();
+            } else if (dataTable.equals("group_activity")) {
+                requestData = createGroupActivityRequestData();
+            }
+        } catch (Exception e) {
+            Log.d(LOG, "error in createRequestData for " + dataTable);
         }
         return requestData;
+    }
+
+    private JSONObject createPersonRequestData() {
+        List<Person> personList = dbhelp.getAllPersons();
+        JSONObject requestObject = new JSONObject();
+        JSONArray recsJSON = new JSONArray();
+        for (Person person: personList) {
+            String rec =  "[\"" +
+                    person.get_timestamp() + "\",\"" +
+                    person.get_first_name() + "\",\"" +
+                    person.get_last_name() + "\",\"" +
+                    person.get_national_id() + "\",\"" +
+                    person.get_address_id() + "\",\"" +
+                    person.get_phone() + "\",\"" +
+                    person.get_dob() + "\",\"" +
+                    person.get_gender() + "\",\"" +
+                    Double.toString(person.get_latitude()) + "\",\"" +
+                    Double.toString(person.get_longitude()) + "\",\"" +
+                    person.get_is_deleted();
+            try {
+                JSONArray recJSON = new JSONArray(rec);
+                recsJSON.put(recJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            requestObject.put("datatable", recsJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return requestObject;
     }
 
     private JSONObject createFacilitatorRequestData() {
@@ -260,22 +298,30 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLBookingTable build rec: " + BookingList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
-        for (Booking Booking: BookingList) {
+        for (Booking booking: BookingList) {
             String rec = "[\"" +
-                    Booking.get_timestamp() + "\",\"" +
-                            Booking.get_first_name() + "\",\"" +
-                            Booking.get_last_name() + "\",\"" +
-                            Booking.get_national_id() + "\",\"" +
-                            Booking.get_phone() + "\",\"" +
-                            Booking.get_fac_first_name() + "\",\"" +
-                            Booking.get_fac_last_name() + "\",\"" +
-                            Booking.get_fac_national_id() + "\",\"" +
-                            Booking.get_fac_phone() + "\",\"" +
-                            Booking.get_location_id() + "\",\"" +
-                            Booking.get_projected_date() + "\",\"" +
+                    booking.get_timestamp() + "\",\"" +
+                            booking.get_first_name() + "\",\"" +
+                            booking.get_last_name() + "\",\"" +
+                            booking.get_national_id() + "\",\"" +
+                            booking.get_phone() + "\",\"" +
+                            booking.get_fac_first_name() + "\",\"" +
+                            booking.get_fac_last_name() + "\",\"" +
+                            booking.get_fac_national_id() + "\",\"" +
+                            booking.get_fac_phone() + "\",\"" +
+                            booking.get_location_id() + "\",\"" +
+                            booking.get_latitude() + "\",\"" +
+                            booking.get_longitude() + "\",\"" +
+                            booking.get_projected_date() + "\",\"" +
 //                        Double.toString(Booking.get_latitude()) + "\",\"" +
 //                        Double.toString(Booking.get_longitude()) + "\",\"" +
-                            Booking.get_actual_date() + "\"]";
+                            booking.get_actual_date() + "\",\"" +
+                            booking.get_consent() + "\",\"" +
+                            booking.get_procedure_type_id() + "\",\"" +
+                            booking.get_followup_id() + "\",\"" +
+                            booking.get_followup_date() + "\",\"" +
+//                                booking.get_contact() + "\",\"" +
+                            booking.get_alt_contact() + "\"]";
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
