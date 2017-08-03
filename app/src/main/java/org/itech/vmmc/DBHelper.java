@@ -344,6 +344,12 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String GEOLOCATION_USERNAME  = "username";
     private static final String GEOLOCATION_PASSWORD  = "password";
 
+    public JSONObject assessmentsTableInfo = new JSONObject();
+    public JSONObject assessmentsAnswersTableInfo = new JSONObject();
+    public JSONObject assessmentsQuestionsTableInfo = new JSONObject();
+    public JSONObject personToAssessmentsTableInfo = new JSONObject();
+    public JSONObject questionDropdownTableInfo = new JSONObject();
+
     public JSONObject personTableInfo = new JSONObject();
     public JSONObject userTableInfo = new JSONObject();
     public JSONObject userTypeTableInfo = new JSONObject();
@@ -379,6 +385,56 @@ public class DBHelper extends SQLiteOpenHelper{
 
     private void makeTableJSONObjects() throws JSONException {
         try {
+            JSONArray assessmentsTableFields = new JSONArray("['"
+                    + ASSESSMENTS_ROWID + "','"
+                    + ASSESSMENTS_ASSESSMENT_ID + "','"
+                    + ASSESSMENTS_ASSESSMENT_TYPE + "','"
+                    + ASSESSMENTS_STATUS
+                    + "']"
+            );
+
+            JSONArray assessmentsAnswersTableFields = new JSONArray("['"
+                    + ASSESSMENTS_ANSWERS_ASSESS_ID + "','"
+                    + ASSESSMENTS_ANSWERS_PERSON + "','"
+                    + ASSESSMENTS_ANSWERS_FACILITY + "','"
+                    + ASSESSMENTS_ANSWERS_DATE_CREATED + "','"
+                    + ASSESSMENTS_ANSWERS_ASSESSMENT_ID + "','"
+                    + ASSESSMENTS_ANSWERS_QUESTION + "','"
+                    + ASSESSMENTS_ANSWERS_ANSWER + "','"
+                    + ASSESSMENTS_ANSWERS_ACTIVE
+                    + "']"
+            );
+
+            JSONArray assessmentsQuestionsTableFields = new JSONArray("['"
+                    + ASSESSMENTS_QUESTIONS_ROWID + "','"
+                    + ASSESSMENTS_QUESTIONS_ASSESSMENTS_QUESTIONS_ID + "','"
+                    + ASSESSMENTS_QUESTIONS_ASSESSMENT_ID + "','"
+                    + ASSESSMENTS_QUESTIONS_QUESTION + "','"
+                    + ASSESSMENTS_QUESTIONS_ITEMORDER + "','"
+                    + ASSESSMENTS_QUESTIONS_ITEMTYPE + "','"
+                    + ASSESSMENTS_QUESTIONS_STATUS
+                    + "']"
+            );
+
+            JSONArray personToAssessmentsTableFields = new JSONArray("['"
+                    + PERSON_TO_ASSESSMENTS_PERSON_TO_ASSESSMENTS_ID + "','"
+                    + PERSON_TO_ASSESSMENTS_PERSON_ID + "','"
+                    + PERSON_TO_ASSESSMENTS_FACILITY_ID + "','"
+                    + PERSON_TO_ASSESSMENTS_DATE_CREATED + "','"
+                    + PERSON_TO_ASSESSMENTS_ASSESSMENT_ID + "','"
+                    + PERSON_TO_ASSESSMENTS_USER_ID + "','"
+                    + PERSON_TO_ASSESSMENTS_STATUS
+                    + "']"
+            );
+
+            JSONArray questionDropdownTableFields = new JSONArray("['"
+                    + QUESTION_DROPDOWN_OPTION_QUESTION_DROPDOWN_OPTION_ID + "','"
+                    + QUESTION_DROPDOWN_OPTION_QUESTION_ID + "','"
+                    + QUESTION_DROPDOWN_OPTION_DROPDOWN_OPTION_ID + "','"
+                    + QUESTION_DROPDOWN_OPTION_STATUS
+                    + "']"
+            );
+
             JSONArray personTableFields = new JSONArray("['"
                     + PERSON_ID + "','"
                     + PERSON_TIMESTAMP + "','"
@@ -595,7 +651,14 @@ public class DBHelper extends SQLiteOpenHelper{
                     + GROUP_TYPE_NAME
                     + "']");
 
+
             //put table names in object
+            assessmentsTableInfo.put("dataTable", TABLE_ASSESSMENTS);
+            assessmentsAnswersTableInfo.put("dataTable", TABLE_ASSESSMENTS_ANSWERS);
+            assessmentsQuestionsTableInfo.put("dataTable", TABLE_ASSESSMENTS_QUESTIONS);
+            personToAssessmentsTableInfo.put("dataTable", TABLE_PERSON_TO_ASSESSMENTS);
+            questionDropdownTableInfo.put("dataTable", TABLE_QUESTION_DROPDOWN_OPTION);
+
             personTableInfo.put("dataTable", TABLE_PERSON);
             userTableInfo.put("dataTable", TABLE_USER);
             userTypeTableInfo.put("dataTable", TABLE_USER_TYPE);
@@ -620,6 +683,12 @@ public class DBHelper extends SQLiteOpenHelper{
             groupTypeTableInfo.put("dataTable", TABLE_GROUP_TYPE);
 
             //put field list in json object
+            assessmentsTableInfo.put("fields", assessmentsTableFields);
+            assessmentsAnswersTableInfo.put("fields", assessmentsAnswersTableFields);
+            assessmentsQuestionsTableInfo.put("fields", assessmentsQuestionsTableFields);
+            personToAssessmentsTableInfo.put("fields", personToAssessmentsTableFields);
+            questionDropdownTableInfo.put("fields", questionDropdownTableFields);
+
             personTableInfo.put("fields", personTableFields);
             userTableInfo.put("fields", userTableFields);
             userTypeTableInfo.put("fields", userTypeTableFields);
@@ -6078,9 +6147,13 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public void uploadDBData() {
         Log.d(LOG, "uploadDBData ");
+        putMySQLTableVolley tablePutter = new putMySQLTableVolley(_context, this);
+        tablePutter.putAllDBData();
+    /*
         new putMySQLGeoLocationsTable(this).execute();
         new putMySQLPersonToAssessmentsTable(this).execute();
         new putMySQLAssessmentsAnswersTable(this._context, this).execute();
+    */
     }
 
     public void downloadDBData() {
@@ -6089,6 +6162,9 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "load assessments_answers ");
         load_assessments_answers();
         Log.d(LOG, "downloadDBData getMySQLPersonTable");
+        getMySQLTableVolley tableGetter = new getMySQLTableVolley(_context, this);
+        tableGetter.getAllDBData();
+    /*
         new getMySQLPersonTable(this._context, this).execute();
         Log.d(LOG, "downloadDBData getMySQLAssessmentsQuestionsTable");
         new getMySQLAssessmentsQuestionsTable(this).execute();
@@ -6096,6 +6172,7 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLAssessmentsTable(this).execute();
         Log.d(LOG, "downloadDBData getMySQLQuestionDropdownOptionTable");
         new getMySQLQuestionDropdownOptionTable(this).execute();
+    */
     }
 
     protected void load_person_to_assessments() {

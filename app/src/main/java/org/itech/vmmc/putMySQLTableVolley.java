@@ -45,10 +45,103 @@ public class putMySQLTableVolley {
         this._db = dbhelp.getReadableDatabase();
     }
 
+    //put tables for uploadDbData()
+    public void putAllDBData() {
+        //check for json web token and login if doesn't exist
+        if (MainActivity.jwt.equals("")) {
+            Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
+            //Response handler on success
+            Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try{
+                        if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
+                            MainActivity.jwt = "";
+                            MainActivity._pass = "";
+                            LOGGED_IN = false;
+                            Log.d(LOG, "Login unsuccessful in putAllTables");
+                            Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
+                        } else {
+                            MainActivity.jwt = response.getString("jwt");
+                            Log.d(LOG, "Login success: " + MainActivity.jwt);
+                            LOGGED_IN = true;
+                            putTable(dbhelp.geolocationTableInfo);
+                            putTable(dbhelp.personToAssessmentsTableInfo);
+                            putTable(dbhelp.assessmentsAnswersTableInfo);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            //response handler on error
+            Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(LOG, "error on login attempt");
+                    error.printStackTrace();
+                }
+            };
+            //make login request
+            try {
+                JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
+                JsonObjectRequest request = new JsonObjectRequest
+                        (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
+                VolleySingleton.getInstance(mContext).addToRequestQueue(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        } else { //already had a web token. login unneeded attempt all puts
+            putTable(dbhelp.geolocationTableInfo);
+            putTable(dbhelp.personToAssessmentsTableInfo);
+            putTable(dbhelp.assessmentsAnswersTableInfo);
+        }
+    }
+
+    //put all tables in sync process
     public void putAllTables() {
         //check for json web token and login if doesn't exist
         if (MainActivity.jwt.equals("")) {
-            attemptLogin();
+            Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
+            //Response handler on success
+            Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try{
+                        if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
+                            MainActivity.jwt = "";
+                            MainActivity._pass = "";
+                            LOGGED_IN = false;
+                            Log.d(LOG, "Login unsuccessful in putAllTables");
+                            Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
+                        } else {
+                            MainActivity.jwt = response.getString("jwt");
+                            Log.d(LOG, "Login success: " + MainActivity.jwt);
+                            LOGGED_IN = true;
+                            putAllTablesVerified();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            //response handler on error
+            Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(LOG, "error on login attempt");
+                    error.printStackTrace();
+                }
+            };
+            //make login request
+            try {
+                JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
+                JsonObjectRequest request = new JsonObjectRequest
+                        (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
+                VolleySingleton.getInstance(mContext).addToRequestQueue(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else { //already had a web token. login unneeded attempt all puts
             putAllTablesVerified();
         }
@@ -61,49 +154,6 @@ public class putMySQLTableVolley {
         putTable(dbhelp.facilitatorTableInfo);
         putTable(dbhelp.interactionTableInfo);
         putTable(dbhelp.groupActivityTableInfo);
-    }
-
-    private void attemptLogin() {
-        Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
-        //Response handler on success
-        Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try{
-                    if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
-                        MainActivity.jwt = "";
-                        MainActivity._pass = "";
-                        LOGGED_IN = false;
-                        Log.d(LOG, "Login unsuccessful in putAllTables");
-                        Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
-                    } else {
-                        MainActivity.jwt = response.getString("jwt");
-                        Log.d(LOG, "Login success: " + MainActivity.jwt);
-                        LOGGED_IN = true;
-                        putAllTablesVerified();
-                    }
-                } catch (JSONException e) {
-                    e.printStackTrace();
-                }
-            }
-        };
-        //response handler on error
-        Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(LOG, "error on login attempt");
-                error.printStackTrace();
-            }
-        };
-        //make login request
-        try {
-            JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
-            JsonObjectRequest request = new JsonObjectRequest
-                    (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
-            VolleySingleton.getInstance(mContext).addToRequestQueue(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
-        }
     }
 
 
@@ -178,11 +228,100 @@ public class putMySQLTableVolley {
                 requestData = createInteractionRequestData();
             } else if (dataTable.equals("group_activity")) {
                 requestData = createGroupActivityRequestData();
+
+            } else if (dataTable.equals("geolocations")) {
+                requestData = createGeolocationRequestData();
+            } else if (dataTable.equals("person_to_assessments")) {
+                requestData = createPersonToAssessmentsRequestData();
+            } else if (dataTable.equals("assessments_answers")) {
+                requestData = createAssessmentsAnswersRequestData();
             }
+
         } catch (Exception e) {
             Log.d(LOG, "error in createRequestData for " + dataTable);
         }
         return requestData;
+    }
+
+    private JSONObject createAssessmentsAnswersRequestData() {
+        List<AssessmentsAnswers> assessmentsAnswersList = dbhelp.getAllAssessmentsAnswers();
+        JSONObject requestObject = new JSONObject();
+        JSONArray recsJSON = new JSONArray();
+        for (AssessmentsAnswers poa: assessmentsAnswersList) {
+            String rec =  "[\"" +
+                    poa.get_assess_id() + "\",\"" +
+                    poa.get_person() + "\",\"" +
+                    poa.get_facility() + "\",\"" +
+                    poa.get_date_created() + "\",\"" +
+                    poa.get_assessment_id() + "\",\"" +
+                    poa.get_question() + "\",\"" +
+                    poa.get_answer() + "\"]";
+            try {
+                JSONArray recJSON = new JSONArray(rec);
+                recsJSON.put(recJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            requestObject.put("datatable", recsJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return requestObject;
+    }
+
+    private JSONObject createPersonToAssessmentsRequestData() {
+        List<PersonToAssessments> personToAssessmentsList = dbhelp.getAllPersonToAssessments();
+        JSONObject requestObject = new JSONObject();
+        JSONArray recsJSON = new JSONArray();
+        for (PersonToAssessments poa: personToAssessmentsList) {
+            String rec =  "[\"" +
+                    poa.get_person_id() + "\",\"" +
+                    poa.get_facility_id() + "\",\"" +
+                    poa.get_date_created() + "\",\"" +
+                    poa.get_assessment_id() + "\",\"" +
+                    poa.get_user_id() + "\"]";
+            try {
+                JSONArray recJSON = new JSONArray(rec);
+                recsJSON.put(recJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            requestObject.put("datatable", recsJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return requestObject;
+    }
+
+    private JSONObject createGeolocationRequestData() {
+        List<GeoLocations> geoLocationsList = dbhelp.getAllGeoLocations();
+        JSONObject requestObject = new JSONObject();
+        JSONArray recsJSON = new JSONArray();
+        for (GeoLocations geoLocations: geoLocationsList) {
+            String rec =  "[\"" +
+                    geoLocations.get_longitude() + "\",\"" +
+                    geoLocations.get_latitude() + "\",\"" +
+                    geoLocations.get_device_id() + "\",\"" +
+                    geoLocations.get_created_at() + "\",\"" +
+                    geoLocations.get_username() + "\",\"" +
+                    geoLocations.get_password() + "\"]";
+            try {
+                JSONArray recJSON = new JSONArray(rec);
+                recsJSON.put(recJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            requestObject.put("datatable", recsJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return requestObject;
     }
 
     private JSONObject createPersonRequestData() {
@@ -201,7 +340,7 @@ public class putMySQLTableVolley {
                     person.get_gender() + "\",\"" +
                     Double.toString(person.get_latitude()) + "\",\"" +
                     Double.toString(person.get_longitude()) + "\",\"" +
-                    person.get_is_deleted();
+                    person.get_is_deleted() + "\"]";
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);

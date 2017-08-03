@@ -44,56 +44,114 @@ public class getMySQLTableVolley {
         this.dbhelp = dbHelper;
         this._db = dbHelper.getWritableDatabase();
     }
-    
+
     public void getAllTables() {
         //if no jwt, attempt login. getTables called in login response handler
         if (MainActivity.jwt.equals("")) {
-            attemptLogin();
+            Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
+            //Response handler on success
+            Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try{
+                        if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
+                            MainActivity.jwt = "";
+                            MainActivity._pass = "";
+                            LOGGED_IN = false;
+                            Log.d(LOG, "Login unsuccessful in getAllTables");
+                            Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
+                        } else {
+                            MainActivity.jwt = response.getString("jwt");
+                            Log.d(LOG, "Login success: " + MainActivity.jwt);
+                            LOGGED_IN = true;
+                            getAllTablesVerified();
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
+                    }
+                }
+            };
+            //response handler on error
+            Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(LOG, "error on login attempt");
+                    error.printStackTrace();
+                }
+            };
+            //make login request
+            try {
+                JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
+                JsonObjectRequest request = new JsonObjectRequest
+                        (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
+                VolleySingleton.getInstance(_context).addToRequestQueue(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
         } else { //already had a web token. login unneeded attempt all puts
             getAllTablesVerified();
         }
     }
 
-    private void attemptLogin() {
-        Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
-        //Response handler on success
-        Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
-            @Override
-            public void onResponse(JSONObject response) {
-                try{
-                    if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
-                        MainActivity.jwt = "";
-                        MainActivity._pass = "";
-                        LOGGED_IN = false;
-                        Log.d(LOG, "Login unsuccessful in putAllTables");
-                        Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
-                    } else {
-                        MainActivity.jwt = response.getString("jwt");
-                        Log.d(LOG, "Login success: " + MainActivity.jwt);
-                        LOGGED_IN = true;
-                        getAllTablesVerified();
+    public void getAllDBData() {
+        //if no jwt, attempt login. getTables called in login response handler
+        if (MainActivity.jwt.equals("")) {
+            Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
+            //Response handler on success
+            Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
+                @Override
+                public void onResponse(JSONObject response) {
+                    try{
+                        if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
+                            MainActivity.jwt = "";
+                            MainActivity._pass = "";
+                            LOGGED_IN = false;
+                            Log.d(LOG, "Login unsuccessful in getAllDBData");
+                            Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
+                        } else {
+                            MainActivity.jwt = response.getString("jwt");
+                            Log.d(LOG, "Login success: " + MainActivity.jwt);
+                            LOGGED_IN = true;
+                            Log.d(LOG, "downloadDBData getMySQLPersonTable");
+                            getTable(dbhelp.personTableInfo);
+                            Log.d(LOG, "downloadDBData getMySQLAssessmentsQuestionsTable");
+                            getTable(dbhelp.assessmentsQuestionsTableInfo);
+                            Log.d(LOG, "downloadDBData getMySQLAssessmentsTable");
+                            getTable(dbhelp.assessmentsTableInfo);
+                            Log.d(LOG, "downloadDBData getMySQLQuestionDropdownOptionTable");
+                            getTable(dbhelp.questionDropdownTableInfo);
+                        }
+                    } catch (JSONException e) {
+                        e.printStackTrace();
                     }
-                } catch (JSONException e) {
-                    e.printStackTrace();
                 }
+            };
+            //response handler on error
+            Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    Log.d(LOG, "error on login attempt");
+                    error.printStackTrace();
+                }
+            };
+            //make login request
+            try {
+                JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
+                JsonObjectRequest request = new JsonObjectRequest
+                        (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
+                VolleySingleton.getInstance(_context).addToRequestQueue(request);
+            } catch (JSONException e) {
+                e.printStackTrace();
             }
-        };
-        //response handler on error
-        Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
-            @Override
-            public void onErrorResponse(VolleyError error) {
-                Log.d(LOG, "error on login attempt");
-                error.printStackTrace();
-            }
-        };
-        //make login request
-        try {
-            JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
-            JsonObjectRequest request = new JsonObjectRequest
-                    (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
-            VolleySingleton.getInstance(_context).addToRequestQueue(request);
-        } catch (JSONException e) {
-            e.printStackTrace();
+        } else { //already had a web token. login unneeded attempt all puts
+            Log.d(LOG, "downloadDBData getMySQLPersonTable");
+            getTable(dbhelp.personTableInfo);
+            Log.d(LOG, "downloadDBData getMySQLAssessmentsQuestionsTable");
+            getTable(dbhelp.assessmentsQuestionsTableInfo);
+            Log.d(LOG, "downloadDBData getMySQLAssessmentsTable");
+            getTable(dbhelp.assessmentsTableInfo);
+            Log.d(LOG, "downloadDBData getMySQLQuestionDropdownOptionTable");
+            getTable(dbhelp.questionDropdownTableInfo);
         }
     }
 
