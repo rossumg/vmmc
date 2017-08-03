@@ -147,13 +147,17 @@ public class putMySQLTableVolley {
         }
     }
     public void putAllTablesVerified() {
-        putTable(dbhelp.personTableInfo);
-        putTable(dbhelp.userTableInfo);
-        putTable(dbhelp.bookingTableInfo);
-        putTable(dbhelp.clientTableInfo);
-        putTable(dbhelp.facilitatorTableInfo);
-        putTable(dbhelp.interactionTableInfo);
-        putTable(dbhelp.groupActivityTableInfo);
+        try {
+            putTable(dbhelp.personTableInfo);
+            putTable(dbhelp.userTableInfo);
+            putTable(dbhelp.bookingTableInfo);
+            putTable(dbhelp.clientTableInfo);
+            putTable(dbhelp.facilitatorTableInfo);
+            putTable(dbhelp.interactionTableInfo);
+            putTable(dbhelp.groupActivityTableInfo);
+        } catch (Exception e) {
+
+        }
     }
 
 

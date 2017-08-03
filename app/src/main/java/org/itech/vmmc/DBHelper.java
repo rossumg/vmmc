@@ -1065,26 +1065,30 @@ public class DBHelper extends SQLiteOpenHelper{
                     + cursor.getString(2) + ", "
                     + cursor.getString(8)
             );
-            _user = new User(
-                    parseInt(cursor.getString(0)),
-                    cursor.getString(1),
-                    cursor.getString(2),
-                    cursor.getString(3),
-                    cursor.getString(4),
-                    cursor.getString(5),
-                    cursor.getString(6),
-                    cursor.getString(7),
-                    cursor.getString(8),
-                    parseInt(cursor.getString(9)),
-                    parseInt(cursor.getString(10)),
-                    parseInt(cursor.getString(11)),
-                    parseInt(cursor.getString(12)),
-                    parseInt(cursor.getString(13)),
-                    parseInt(cursor.getString(14)),
-                    cursor.getString(15),
-                    cursor.getString(16),
-                    cursor.getString(17)
-            );
+            try {
+                _user = new User(
+                        parseInt(cursor.getString(0)),
+                        cursor.getString(1),
+                        cursor.getString(2),
+                        cursor.getString(3),
+                        cursor.getString(4),
+                        cursor.getString(5),
+                        cursor.getString(6),
+                        cursor.getString(7),
+                        cursor.getString(8),
+                        parseInt(cursor.getString(9)),
+                        parseInt(cursor.getString(10)),
+                        parseInt(cursor.getString(11)),
+                        parseInt(cursor.getString(12)),
+                        parseInt(cursor.getString(13)),
+                        parseInt(cursor.getString(14)),
+                        cursor.getString(15),
+                        cursor.getString(16),
+                        cursor.getString(17)
+                );
+            } catch (NumberFormatException e) {
+                Log.d(LOG,"error in getUser()" + e.toString());
+            }
 
             cursor.close();
             // db.close();
@@ -1902,8 +1906,12 @@ public class DBHelper extends SQLiteOpenHelper{
 //        Log.d(LOG, "getAssessmentsQuestionsQuestion  "
 //                        + cursor.getString(0) + " "
 //        );
-
-        int returnQuestion = parseInt(cursor.getString(0));
+        int returnQuestion = -1;
+        try {
+            returnQuestion = parseInt(cursor.getString(0));
+        } catch (NumberFormatException e) {
+            Log.d(LOG, "error in getAssessmentsQuestionsQuestion" + e.toString());
+        }
         cursor.close();
         // db.close();
         return returnQuestion;
@@ -2244,18 +2252,22 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 GroupActivity groupActivity = new GroupActivity();
-                groupActivity.set_id(cursor.getInt(0));
-                groupActivity.set_timestamp(cursor.getString(1));
-                groupActivity.set_name(cursor.getString(2));
-                groupActivity.set_location_id(parseInt(cursor.getString(3)));
-                groupActivity.set_activity_date(cursor.getString(4));
-                groupActivity.set_group_type_id(parseInt(cursor.getString(5)));
-                groupActivity.set_institution_id(parseInt(cursor.getString(6)));
-                groupActivity.set_males(parseInt(cursor.getString(7)));
-                groupActivity.set_females(parseInt(cursor.getString(8)));
-                groupActivity.set_messages(cursor.getString(9));
-                groupActivity.set_longitude(parseFloat(cursor.getString(10)));
-                groupActivity.set_latitude(parseFloat(cursor.getString(11)));
+                try {
+                    groupActivity.set_id(cursor.getInt(0));
+                    groupActivity.set_timestamp(cursor.getString(1));
+                    groupActivity.set_name(cursor.getString(2));
+                    groupActivity.set_location_id(parseInt(cursor.getString(3)));
+                    groupActivity.set_activity_date(cursor.getString(4));
+                    groupActivity.set_group_type_id(parseInt(cursor.getString(5)));
+                    groupActivity.set_institution_id(parseInt(cursor.getString(6)));
+                    groupActivity.set_males(parseInt(cursor.getString(7)));
+                    groupActivity.set_females(parseInt(cursor.getString(8)));
+                    groupActivity.set_messages(cursor.getString(9));
+                    groupActivity.set_longitude(parseFloat(cursor.getString(10)));
+                    groupActivity.set_latitude(parseFloat(cursor.getString(11)));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllGroupActivities" + e.toString());
+                }
 
                 Log.d(LOG, "getAllGroupActivities loop: " + groupActivity.get_name() );
                 Log.d(LOG, "getAllGroupActivities loop: " + cursor.getString(0) + "," + cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3) + "," + cursor.getString(6) );
@@ -3217,14 +3229,18 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 PendingFollowup pendingFollowup = new PendingFollowup();
-                pendingFollowup.set_first_name(cursor.getString(0));
-                pendingFollowup.set_last_name(cursor.getString(1));
-                pendingFollowup.set_national_id(cursor.getString(2));
-                pendingFollowup.set_difference(parseInt(cursor.getString(3)));
-                pendingFollowup.set_dob(cursor.getString(4));
-                pendingFollowup.set_location(cursor.getString(5));
-                pendingFollowup.set_address(cursor.getString(6));
-                pendingFollowup.set_phone(cursor.getString(7));
+                try {
+                    pendingFollowup.set_first_name(cursor.getString(0));
+                    pendingFollowup.set_last_name(cursor.getString(1));
+                    pendingFollowup.set_national_id(cursor.getString(2));
+                    pendingFollowup.set_difference(parseInt(cursor.getString(3)));
+                    pendingFollowup.set_dob(cursor.getString(4));
+                    pendingFollowup.set_location(cursor.getString(5));
+                    pendingFollowup.set_address(cursor.getString(6));
+                    pendingFollowup.set_phone(cursor.getString(7));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllPendingFollowups" + e.toString());
+                }
                 // Adding person to list
                 _List.add(pendingFollowup);
             } while (cursor.moveToNext());
@@ -3577,12 +3593,16 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 EditPageObject editPageObject = new EditPageObject();
-                editPageObject.set_assessments_questions_id(parseInt(cursor.getString(0)));
-                editPageObject.set_question(cursor.getString(1));
-                editPageObject.set_itemtype(cursor.getString(2));
-                editPageObject.set_itemorder(parseInt(cursor.getString(3)));
-                editPageObject.set_answer(cursor.getString(4));
-                editPageObject.set_dropdown_tablename("");
+                try {
+                    editPageObject.set_assessments_questions_id(parseInt(cursor.getString(0)));
+                    editPageObject.set_question(cursor.getString(1));
+                    editPageObject.set_itemtype(cursor.getString(2));
+                    editPageObject.set_itemorder(parseInt(cursor.getString(3)));
+                    editPageObject.set_answer(cursor.getString(4));
+                    editPageObject.set_dropdown_tablename("");
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getEditPageData" + e.toString());
+                }
 
                 // Adding object to list
                 editPageList.add(editPageObject);
@@ -4491,23 +4511,27 @@ public class DBHelper extends SQLiteOpenHelper{
                         + cursor1.getString(6) + ":"
                         + cursor1.getString(7) + ":" );
                 Client client = new Client();
-                client.set_id(parseInt(cursor1.getString(0)));
-                client.set_timestamp(cursor1.getString(1));
-                client.set_first_name(cursor1.getString(2));
-                client.set_last_name(cursor1.getString(3));
-                client.set_national_id(cursor1.getString(4));
-                client.set_phone(cursor1.getString(5));
-                client.set_status_id(parseInt(cursor1.getString(6)));
-                client.set_loc_id(parseInt(cursor1.getString(7)));
-                client.set_latitude(parseFloat(cursor1.getString(8)));
-                client.set_longitude(parseFloat(cursor1.getString(9)));
-                client.set_institution_id(parseInt(cursor1.getString(10)));
-                client.set_group_activity_name(cursor1.getString(11));
-                client.set_group_activity_date(cursor1.getString(12));
+                try {
+                    client.set_id(parseInt(cursor1.getString(0)));
+                    client.set_timestamp(cursor1.getString(1));
+                    client.set_first_name(cursor1.getString(2));
+                    client.set_last_name(cursor1.getString(3));
+                    client.set_national_id(cursor1.getString(4));
+                    client.set_phone(cursor1.getString(5));
+                    client.set_status_id(parseInt(cursor1.getString(6)));
+                    client.set_loc_id(parseInt(cursor1.getString(7)));
+                    client.set_latitude(parseFloat(cursor1.getString(8)));
+                    client.set_longitude(parseFloat(cursor1.getString(9)));
+                    client.set_institution_id(parseInt(cursor1.getString(10)));
+                    client.set_group_activity_name(cursor1.getString(11));
+                    client.set_group_activity_date(cursor1.getString(12));
 
-                client.set_address_id(parseInt(cursor1.getString(13)));
-                client.set_dob(cursor1.getString(14));
-                client.set_gender(cursor1.getString(15));
+                    client.set_address_id(parseInt(cursor1.getString(13)));
+                    client.set_dob(cursor1.getString(14));
+                    client.set_gender(cursor1.getString(15));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllClients" + e.toString());
+                }
 
                 // Adding person to list
                 clientList.add(client);
@@ -4538,11 +4562,15 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(6) + ":"
 //                        + cursor1.getString(7) + ":" );
                 UserToAcl userToAcl = new UserToAcl();
-                userToAcl.set_id(parseInt(cursor.getString(0)));
-                userToAcl.set_timestamp_created(cursor.getString(1));
-                userToAcl.set_acl_id(cursor.getString(2));
-                userToAcl.set_user_id(cursor.getString(3));
-                userToAcl.set_created_by(cursor.getString(4));
+                try {
+                    userToAcl.set_id(parseInt(cursor.getString(0)));
+                    userToAcl.set_timestamp_created(cursor.getString(1));
+                    userToAcl.set_acl_id(cursor.getString(2));
+                    userToAcl.set_user_id(cursor.getString(3));
+                    userToAcl.set_created_by(cursor.getString(4));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllUserToAcl" + e.toString());
+                }
 
                 // Adding user to list
                 _List.add(userToAcl);
@@ -4566,24 +4594,28 @@ public class DBHelper extends SQLiteOpenHelper{
             do {
                 Log.d(LOG, "getAllUsers: loop: " + cursor.getString(2));
                 User user = new User();
-                user.set_id(parseInt(cursor.getString(0)));
-                user.set_timestamp(cursor.getString(1));
-                user.set_username(cursor.getString(2));
-                user.set_password(cursor.getString(3));
-                user.set_email(cursor.getString(4));
-                user.set_first_name(cursor.getString(5));
-                user.set_last_name(cursor.getString(6));
-                user.set_national_id(cursor.getString(7));
-                user.set_phone(cursor.getString(8));
-                user.set_region_id(parseInt(cursor.getString(9)));
-                user.set_user_type_id(parseInt(cursor.getString(10)));
-                user.set_location_id(parseInt(cursor.getString(11)));
-                user.set_modified_by(parseInt(cursor.getString(12)));
-                user.set_created_by(parseInt(cursor.getString(13)));
-                user.set_is_blocked(parseInt(cursor.getString(14)));
-                user.set_timestamp_updated(cursor.getString(15));
-                user.set_timestamp_created(cursor.getString(16));
-                user.set_timestamp_last_login(cursor.getString(17));
+                try {
+                    user.set_id(parseInt(cursor.getString(0)));
+                    user.set_timestamp(cursor.getString(1));
+                    user.set_username(cursor.getString(2));
+                    user.set_password(cursor.getString(3));
+                    user.set_email(cursor.getString(4));
+                    user.set_first_name(cursor.getString(5));
+                    user.set_last_name(cursor.getString(6));
+                    user.set_national_id(cursor.getString(7));
+                    user.set_phone(cursor.getString(8));
+                    user.set_region_id(parseInt(cursor.getString(9)));
+                    user.set_user_type_id(parseInt(cursor.getString(10)));
+                    user.set_location_id(parseInt(cursor.getString(11)));
+                    user.set_modified_by(parseInt(cursor.getString(12)));
+                    user.set_created_by(parseInt(cursor.getString(13)));
+                    user.set_is_blocked(parseInt(cursor.getString(14)));
+                    user.set_timestamp_updated(cursor.getString(15));
+                    user.set_timestamp_created(cursor.getString(16));
+                    user.set_timestamp_last_login(cursor.getString(17));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllUsers" + e.toString());
+                }
                 // Adding user to list
                 userList.add(user);
             } while (cursor.moveToNext());
@@ -4629,22 +4661,26 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(6) + ":"
 //                        + cursor1.getString(7) + ":" );
                 Client client = new Client();
-                client.set_id(parseInt(cursor.getString(0)));
-                client.set_timestamp(cursor.getString(1));
-                client.set_first_name(cursor.getString(2));
-                client.set_last_name(cursor.getString(3));
-                client.set_national_id(cursor.getString(4));
-                client.set_phone(cursor.getString(5));
-                client.set_status_id(parseInt(cursor.getString(6)));
-                client.set_loc_id(parseInt(cursor.getString(7)));
-                client.set_latitude(parseFloat(cursor.getString(8)));
-                client.set_longitude(parseFloat(cursor.getString(9)));
-                client.set_institution_id(parseInt(cursor.getString(10)));
-                client.set_group_activity_name(cursor.getString(11));
-                client.set_group_activity_date(cursor.getString(12));
-                client.set_address_id(parseInt(cursor.getString(13)));
-                client.set_dob(cursor.getString(14));
-                client.set_gender(cursor.getString(15));
+                try {
+                    client.set_id(parseInt(cursor.getString(0)));
+                    client.set_timestamp(cursor.getString(1));
+                    client.set_first_name(cursor.getString(2));
+                    client.set_last_name(cursor.getString(3));
+                    client.set_national_id(cursor.getString(4));
+                    client.set_phone(cursor.getString(5));
+                    client.set_status_id(parseInt(cursor.getString(6)));
+                    client.set_loc_id(parseInt(cursor.getString(7)));
+                    client.set_latitude(parseFloat(cursor.getString(8)));
+                    client.set_longitude(parseFloat(cursor.getString(9)));
+                    client.set_institution_id(parseInt(cursor.getString(10)));
+                    client.set_group_activity_name(cursor.getString(11));
+                    client.set_group_activity_date(cursor.getString(12));
+                    client.set_address_id(parseInt(cursor.getString(13)));
+                    client.set_dob(cursor.getString(14));
+                    client.set_gender(cursor.getString(15));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikeClients" + e.toString());
+                }
 
                 // Adding person to list
                 clientList.add(client);
@@ -4688,24 +4724,28 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(6) + ":"
 //                        + cursor1.getString(7) + ":" );
                 User _user = new User();
-                _user.set_id(parseInt(cursor.getString(0)));
-                _user.set_timestamp(cursor.getString(1));
-                _user.set_username(cursor.getString(2));
-                _user.set_password(cursor.getString(3));
-                _user.set_email(cursor.getString(4));
-                _user.set_first_name(cursor.getString(5));
-                _user.set_last_name(cursor.getString(6));
-                _user.set_national_id(cursor.getString(7));
-                _user.set_phone(cursor.getString(8));
-                _user.set_region_id(parseInt(cursor.getString(9)));
-                _user.set_user_type_id(parseInt(cursor.getString(10)));
-                _user.set_location_id(parseInt(cursor.getString(11)));
-                _user.set_modified_by(parseInt(cursor.getString(12)));
-                _user.set_created_by(parseInt(cursor.getString(13)));
-                _user.set_is_blocked(parseInt(cursor.getString(14)));
-                _user.set_timestamp_updated(cursor.getString(15));
-                _user.set_timestamp_created(cursor.getString(16));
-                _user.set_timestamp_last_login(cursor.getString(17));
+                try {
+                    _user.set_id(parseInt(cursor.getString(0)));
+                    _user.set_timestamp(cursor.getString(1));
+                    _user.set_username(cursor.getString(2));
+                    _user.set_password(cursor.getString(3));
+                    _user.set_email(cursor.getString(4));
+                    _user.set_first_name(cursor.getString(5));
+                    _user.set_last_name(cursor.getString(6));
+                    _user.set_national_id(cursor.getString(7));
+                    _user.set_phone(cursor.getString(8));
+                    _user.set_region_id(parseInt(cursor.getString(9)));
+                    _user.set_user_type_id(parseInt(cursor.getString(10)));
+                    _user.set_location_id(parseInt(cursor.getString(11)));
+                    _user.set_modified_by(parseInt(cursor.getString(12)));
+                    _user.set_created_by(parseInt(cursor.getString(13)));
+                    _user.set_is_blocked(parseInt(cursor.getString(14)));
+                    _user.set_timestamp_updated(cursor.getString(15));
+                    _user.set_timestamp_created(cursor.getString(16));
+                    _user.set_timestamp_last_login(cursor.getString(17));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikeUsers" + e.toString());
+                }
 
                 _List.add(_user);
             } while (cursor.moveToNext());
@@ -4738,20 +4778,24 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor.getString(6) + ":"
 //                        + cursor.getString(7) + ":" );
                 Interaction interaction = new Interaction();
-                interaction.set_id(parseInt(cursor.getString(0)));
-                interaction.set_timestamp(cursor.getString(1));
-                interaction.set_fac_first_name(cursor.getString(2));
-                interaction.set_fac_last_name(cursor.getString(3));
-                interaction.set_fac_national_id(cursor.getString(4));
-                interaction.set_fac_phone(cursor.getString(5));
-                interaction.set_person_first_name(cursor.getString(6));
-                interaction.set_person_last_name(cursor.getString(7));
-                interaction.set_person_national_id(cursor.getString(8));
-                interaction.set_person_phone(cursor.getString(9));
-                interaction.set_interaction_date(cursor.getString(10));
-                interaction.set_followup_date(cursor.getString(11));
-                interaction.set_type_id(parseInt(cursor.getString(12)));
-                interaction.set_note(cursor.getString(13));
+                try {
+                    interaction.set_id(parseInt(cursor.getString(0)));
+                    interaction.set_timestamp(cursor.getString(1));
+                    interaction.set_fac_first_name(cursor.getString(2));
+                    interaction.set_fac_last_name(cursor.getString(3));
+                    interaction.set_fac_national_id(cursor.getString(4));
+                    interaction.set_fac_phone(cursor.getString(5));
+                    interaction.set_person_first_name(cursor.getString(6));
+                    interaction.set_person_last_name(cursor.getString(7));
+                    interaction.set_person_national_id(cursor.getString(8));
+                    interaction.set_person_phone(cursor.getString(9));
+                    interaction.set_interaction_date(cursor.getString(10));
+                    interaction.set_followup_date(cursor.getString(11));
+                    interaction.set_type_id(parseInt(cursor.getString(12)));
+                    interaction.set_note(cursor.getString(13));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllInteractions" + e.toString());
+                }
 
                 // Adding person to list
                 interactionList.add(interaction);
@@ -4821,20 +4865,24 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(6) + ":"
 //                        + cursor1.getString(7) + ":" );
                 Interaction interaction = new Interaction();
-                interaction.set_id(parseInt(cursor.getString(0)));
-                interaction.set_timestamp(cursor.getString(1));
-                interaction.set_fac_first_name(cursor.getString(2));
-                interaction.set_fac_last_name(cursor.getString(3));
-                interaction.set_fac_national_id(cursor.getString(4));
-                interaction.set_fac_phone(cursor.getString(5));
-                interaction.set_person_first_name(cursor.getString(6));
-                interaction.set_person_last_name(cursor.getString(7));
-                interaction.set_person_national_id(cursor.getString(8));
-                interaction.set_person_phone(cursor.getString(9));
-                interaction.set_interaction_date(cursor.getString(10));
-                interaction.set_followup_date(cursor.getString(11));
-                interaction.set_type_id(parseInt(cursor.getString(12)));
-                interaction.set_note(cursor.getString(13));
+                try {
+                    interaction.set_id(parseInt(cursor.getString(0)));
+                    interaction.set_timestamp(cursor.getString(1));
+                    interaction.set_fac_first_name(cursor.getString(2));
+                    interaction.set_fac_last_name(cursor.getString(3));
+                    interaction.set_fac_national_id(cursor.getString(4));
+                    interaction.set_fac_phone(cursor.getString(5));
+                    interaction.set_person_first_name(cursor.getString(6));
+                    interaction.set_person_last_name(cursor.getString(7));
+                    interaction.set_person_national_id(cursor.getString(8));
+                    interaction.set_person_phone(cursor.getString(9));
+                    interaction.set_interaction_date(cursor.getString(10));
+                    interaction.set_followup_date(cursor.getString(11));
+                    interaction.set_type_id(parseInt(cursor.getString(12)));
+                    interaction.set_note(cursor.getString(13));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikeInteractions" + e.toString());
+                }
 
                 // Adding person to list
                 interactionList.add(interaction);
@@ -4887,18 +4935,22 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(6) + ":"
 //                        + cursor1.getString(7) + ":" );
                 GroupActivity group_activity = new GroupActivity();
-                group_activity.set_id(parseInt(cursor1.getString(0)));
-                group_activity.set_timestamp(cursor1.getString(1));
-                group_activity.set_name(cursor1.getString(2));
-                group_activity.set_location_id(parseInt(cursor1.getString(3)));
-                group_activity.set_activity_date(cursor1.getString(4));
-                group_activity.set_group_type_id(parseInt(cursor1.getString(5)));
-                group_activity.set_institution_id(parseInt(cursor1.getString(6)));
-                group_activity.set_males(parseInt(cursor1.getString(7)));
-                group_activity.set_females(parseInt(cursor1.getString(8)));
-                group_activity.set_messages(cursor1.getString(9));
-                group_activity.set_latitude(parseFloat(cursor1.getString(10)));
-                group_activity.set_longitude(parseFloat(cursor1.getString(11)));
+                try {
+                    group_activity.set_id(parseInt(cursor1.getString(0)));
+                    group_activity.set_timestamp(cursor1.getString(1));
+                    group_activity.set_name(cursor1.getString(2));
+                    group_activity.set_location_id(parseInt(cursor1.getString(3)));
+                    group_activity.set_activity_date(cursor1.getString(4));
+                    group_activity.set_group_type_id(parseInt(cursor1.getString(5)));
+                    group_activity.set_institution_id(parseInt(cursor1.getString(6)));
+                    group_activity.set_males(parseInt(cursor1.getString(7)));
+                    group_activity.set_females(parseInt(cursor1.getString(8)));
+                    group_activity.set_messages(cursor1.getString(9));
+                    group_activity.set_latitude(parseFloat(cursor1.getString(10)));
+                    group_activity.set_longitude(parseFloat(cursor1.getString(11)));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikeGroupActivities" + e.toString());
+                }
 
                 // Adding person to list
                 _List.add(group_activity);
@@ -4935,21 +4987,25 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(7) + ":" );
 
                 Facilitator facilitator = new Facilitator();
-                facilitator.set_id(parseInt(cursor.getString(0)));
-                facilitator.set_timestamp(cursor.getString(1));
-                facilitator.set_first_name(cursor.getString(2));
-                facilitator.set_last_name(cursor.getString(3));
-                facilitator.set_national_id(cursor.getString(4));
-                facilitator.set_phone(cursor.getString(5));
-                facilitator.set_facilitator_type_id(parseInt(cursor.getString(6)));
-                facilitator.set_note(cursor.getString(7));
-                facilitator.set_location_id(parseInt(cursor.getString(8)));
-                facilitator.set_latitude(parseFloat(cursor.getString(9)));
-                facilitator.set_longitude(parseFloat(cursor.getString(10)));
-                facilitator.set_institution_id(parseInt(cursor.getString(11)));
-                facilitator.set_address_id(parseInt(cursor.getString(12)));
-                facilitator.set_dob(cursor.getString(13));
-                facilitator.set_gender(cursor.getString(14));
+                try {
+                    facilitator.set_id(parseInt(cursor.getString(0)));
+                    facilitator.set_timestamp(cursor.getString(1));
+                    facilitator.set_first_name(cursor.getString(2));
+                    facilitator.set_last_name(cursor.getString(3));
+                    facilitator.set_national_id(cursor.getString(4));
+                    facilitator.set_phone(cursor.getString(5));
+                    facilitator.set_facilitator_type_id(parseInt(cursor.getString(6)));
+                    facilitator.set_note(cursor.getString(7));
+                    facilitator.set_location_id(parseInt(cursor.getString(8)));
+                    facilitator.set_latitude(parseFloat(cursor.getString(9)));
+                    facilitator.set_longitude(parseFloat(cursor.getString(10)));
+                    facilitator.set_institution_id(parseInt(cursor.getString(11)));
+                    facilitator.set_address_id(parseInt(cursor.getString(12)));
+                    facilitator.set_dob(cursor.getString(13));
+                    facilitator.set_gender(cursor.getString(14));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllFacilitators" + e.toString());
+                }
 
                 // Adding facilitator to list
                 facilitatorList.add(facilitator);
@@ -4997,21 +5053,25 @@ public class DBHelper extends SQLiteOpenHelper{
 //                        + cursor1.getString(7) + ":" );
 
                 Facilitator facilitator = new Facilitator();
-                facilitator.set_id(parseInt(cursor.getString(0)));
-                facilitator.set_timestamp(cursor.getString(1));
-                facilitator.set_first_name(cursor.getString(2));
-                facilitator.set_last_name(cursor.getString(3));
-                facilitator.set_national_id(cursor.getString(4));
-                facilitator.set_phone(cursor.getString(5));
-                facilitator.set_facilitator_type_id(parseInt(cursor.getString(6)));
-                facilitator.set_note(cursor.getString(7));
-                facilitator.set_location_id(parseInt(cursor.getString(8)));
-                facilitator.set_latitude(parseFloat(cursor.getString(9)));
-                facilitator.set_longitude(parseFloat(cursor.getString(10)));
-                facilitator.set_institution_id(parseInt(cursor.getString(11)));
-                facilitator.set_address_id(parseInt(cursor.getString(12)));
-                facilitator.set_dob(cursor.getString(13));
-                facilitator.set_gender(cursor.getString(14));
+                try {
+                    facilitator.set_id(parseInt(cursor.getString(0)));
+                    facilitator.set_timestamp(cursor.getString(1));
+                    facilitator.set_first_name(cursor.getString(2));
+                    facilitator.set_last_name(cursor.getString(3));
+                    facilitator.set_national_id(cursor.getString(4));
+                    facilitator.set_phone(cursor.getString(5));
+                    facilitator.set_facilitator_type_id(parseInt(cursor.getString(6)));
+                    facilitator.set_note(cursor.getString(7));
+                    facilitator.set_location_id(parseInt(cursor.getString(8)));
+                    facilitator.set_latitude(parseFloat(cursor.getString(9)));
+                    facilitator.set_longitude(parseFloat(cursor.getString(10)));
+                    facilitator.set_institution_id(parseInt(cursor.getString(11)));
+                    facilitator.set_address_id(parseInt(cursor.getString(12)));
+                    facilitator.set_dob(cursor.getString(13));
+                    facilitator.set_gender(cursor.getString(14));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikeFacilitators" + e.toString());
+                }
 
                 // Adding person to list
                 facilitatorList.add(facilitator);
@@ -5823,18 +5883,22 @@ public class DBHelper extends SQLiteOpenHelper{
             do {
                 Log.d(LOG, "getAllPersons: loop: " + cursor.getString(1));
                 Person person = new Person();
-                person.set_id(parseInt(cursor.getString(0)));
-                person.set_timestamp(cursor.getString(1));
-                person.set_first_name(cursor.getString(2));
-                person.set_last_name(cursor.getString(3));
-                person.set_national_id(cursor.getString(4));
-                person.set_address_id(parseInt(cursor.getString(5)));
-                person.set_phone(cursor.getString(6));
-                person.set_dob(cursor.getString(7));
-                person.set_gender(cursor.getString(8));
-                person.set_latitude(parseFloat(cursor.getString(9)));
-                person.set_longitude(parseFloat(cursor.getString(10)));
-                person.set_is_deleted(parseInt(cursor.getString(11)));
+                try {
+                    person.set_id(parseInt(cursor.getString(0)));
+                    person.set_timestamp(cursor.getString(1));
+                    person.set_first_name(cursor.getString(2));
+                    person.set_last_name(cursor.getString(3));
+                    person.set_national_id(cursor.getString(4));
+                    person.set_address_id(parseInt(cursor.getString(5)));
+                    person.set_phone(cursor.getString(6));
+                    person.set_dob(cursor.getString(7));
+                    person.set_gender(cursor.getString(8));
+                    person.set_latitude(parseFloat(cursor.getString(9)));
+                    person.set_longitude(parseFloat(cursor.getString(10)));
+                    person.set_is_deleted(parseInt(cursor.getString(11)));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllPersons" + e.toString());
+                }
 
                 // Adding person to list
                 personList.add(person);
@@ -5880,18 +5944,22 @@ public class DBHelper extends SQLiteOpenHelper{
             do {
 //                Log.d(LOG, "getAllPersons: loop: " + cursor.getString(1));
                 Person person = new Person();
-                person.set_id(parseInt(cursor.getString(0)));
-                person.set_timestamp(cursor.getString(1));
-                person.set_first_name(cursor.getString(2));
-                person.set_last_name(cursor.getString(3));
-                person.set_national_id(cursor.getString(4));
-                person.set_address_id(parseInt(cursor.getString(5)));
-                person.set_phone(cursor.getString(6));
-                person.set_dob(cursor.getString(7));
-                person.set_gender(cursor.getString(8));
-                person.set_latitude(parseFloat(cursor.getString(9)));
-                person.set_longitude(parseFloat(cursor.getString(10)));
-                person.set_is_deleted(parseInt(cursor.getString(11)));
+                try {
+                    person.set_id(parseInt(cursor.getString(0)));
+                    person.set_timestamp(cursor.getString(1));
+                    person.set_first_name(cursor.getString(2));
+                    person.set_last_name(cursor.getString(3));
+                    person.set_national_id(cursor.getString(4));
+                    person.set_address_id(parseInt(cursor.getString(5)));
+                    person.set_phone(cursor.getString(6));
+                    person.set_dob(cursor.getString(7));
+                    person.set_gender(cursor.getString(8));
+                    person.set_latitude(parseFloat(cursor.getString(9)));
+                    person.set_longitude(parseFloat(cursor.getString(10)));
+                    person.set_is_deleted(parseInt(cursor.getString(11)));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllLikePersons" + e.toString());
+                }
 
                 // Adding person to list
                 personList.add(person);
@@ -5915,28 +5983,32 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 Booking booking = new Booking();
-                booking.set_id(parseInt(cursor.getString(0)));
-                booking.set_timestamp(cursor.getString(1));
-                booking.set_first_name(cursor.getString(2));
-                booking.set_last_name(cursor.getString(3));
-                booking.set_national_id(cursor.getString(4));
-                booking.set_phone(cursor.getString(5));
-                booking.set_fac_first_name(cursor.getString(6));
-                booking.set_fac_last_name(cursor.getString(7));
-                booking.set_fac_national_id(cursor.getString(8));
-                booking.set_fac_phone(cursor.getString(9));
-                booking.set_location_id(parseInt(cursor.getString(10)));
-                booking.set_latitude(parseFloat(cursor.getString(11)));
-                booking.set_longitude(parseFloat(cursor.getString(12)));
-                booking.set_projected_date(cursor.getString(13));
-                booking.set_actual_date(cursor.getString(14));
+                try {
+                    booking.set_id(parseInt(cursor.getString(0)));
+                    booking.set_timestamp(cursor.getString(1));
+                    booking.set_first_name(cursor.getString(2));
+                    booking.set_last_name(cursor.getString(3));
+                    booking.set_national_id(cursor.getString(4));
+                    booking.set_phone(cursor.getString(5));
+                    booking.set_fac_first_name(cursor.getString(6));
+                    booking.set_fac_last_name(cursor.getString(7));
+                    booking.set_fac_national_id(cursor.getString(8));
+                    booking.set_fac_phone(cursor.getString(9));
+                    booking.set_location_id(parseInt(cursor.getString(10)));
+                    booking.set_latitude(parseFloat(cursor.getString(11)));
+                    booking.set_longitude(parseFloat(cursor.getString(12)));
+                    booking.set_projected_date(cursor.getString(13));
+                    booking.set_actual_date(cursor.getString(14));
 
-                booking.set_consent(cursor.getString(15));
-                booking.set_procedure_type_id(parseInt(cursor.getString(16)));
-                booking.set_followup_id(parseInt(cursor.getString(17)));
-                booking.set_followup_date(cursor.getString(18));
+                    booking.set_consent(cursor.getString(15));
+                    booking.set_procedure_type_id(parseInt(cursor.getString(16)));
+                    booking.set_followup_id(parseInt(cursor.getString(17)));
+                    booking.set_followup_date(cursor.getString(18));
 
-                booking.set_alt_contact(cursor.getString(19));
+                    booking.set_alt_contact(cursor.getString(19));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllBookings" + e.toString());
+                }
 
                 // Adding booking to list
                 _List.add(booking);
@@ -5984,24 +6056,24 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 Booking booking = new Booking();
-                booking.set_id(parseInt(cursor.getString(0)));
-                booking.set_timestamp(cursor.getString(1));
-                booking.set_first_name(cursor.getString(2));
-                booking.set_last_name(cursor.getString(3));
-                booking.set_national_id(cursor.getString(4));
-                booking.set_phone(cursor.getString(5));
-                booking.set_fac_first_name(cursor.getString(6));
-                booking.set_fac_last_name(cursor.getString(7));
-                booking.set_fac_national_id(cursor.getString(8));
-                booking.set_fac_phone(cursor.getString(9));
-                booking.set_location_id(parseInt(cursor.getString(10)));
-                booking.set_latitude(parseFloat(cursor.getString(11)));
-                booking.set_longitude(parseFloat(cursor.getString(12)));
-                booking.set_projected_date(cursor.getString(13));
-                booking.set_actual_date(cursor.getString(14));
-
-                booking.set_consent(cursor.getString(15));
                 try {
+                    booking.set_id(parseInt(cursor.getString(0)));
+                    booking.set_timestamp(cursor.getString(1));
+                    booking.set_first_name(cursor.getString(2));
+                    booking.set_last_name(cursor.getString(3));
+                    booking.set_national_id(cursor.getString(4));
+                    booking.set_phone(cursor.getString(5));
+                    booking.set_fac_first_name(cursor.getString(6));
+                    booking.set_fac_last_name(cursor.getString(7));
+                    booking.set_fac_national_id(cursor.getString(8));
+                    booking.set_fac_phone(cursor.getString(9));
+                    booking.set_location_id(parseInt(cursor.getString(10)));
+                    booking.set_latitude(parseFloat(cursor.getString(11)));
+                    booking.set_longitude(parseFloat(cursor.getString(12)));
+                    booking.set_projected_date(cursor.getString(13));
+                    booking.set_actual_date(cursor.getString(14));
+
+                    booking.set_consent(cursor.getString(15));
                     booking.set_procedure_type_id(parseInt(cursor.getString(16)));
                     booking.set_followup_id(parseInt(cursor.getString(17)));
                 } catch (NumberFormatException e) {
@@ -6032,14 +6104,18 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 AssessmentsAnswers assessmentsAnswers = new AssessmentsAnswers();
-                //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                assessmentsAnswers.set_assess_id(parseInt(cursor.getString(0)));
-                assessmentsAnswers.set_person(parseInt(cursor.getString(1)));
-                assessmentsAnswers.set_facility(parseInt(cursor.getString(2)));
-                assessmentsAnswers.set_date_created(cursor.getString(3));
-                assessmentsAnswers.set_assessment_id(parseInt(cursor.getString(4)));
-                assessmentsAnswers.set_question(parseInt(cursor.getString(5)));
-                assessmentsAnswers.set_answer(cursor.getString(6));
+                try {
+                    //person.setRowId(Integer.parseInt(cursor.getString(0)));
+                    assessmentsAnswers.set_assess_id(parseInt(cursor.getString(0)));
+                    assessmentsAnswers.set_person(parseInt(cursor.getString(1)));
+                    assessmentsAnswers.set_facility(parseInt(cursor.getString(2)));
+                    assessmentsAnswers.set_date_created(cursor.getString(3));
+                    assessmentsAnswers.set_assessment_id(parseInt(cursor.getString(4)));
+                    assessmentsAnswers.set_question(parseInt(cursor.getString(5)));
+                    assessmentsAnswers.set_answer(cursor.getString(6));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllAssessmentsAnswers" + e.toString());
+                }
 
                 // Adding person to list
                 assessmentsAnswersList.add(assessmentsAnswers);
@@ -6063,13 +6139,17 @@ public class DBHelper extends SQLiteOpenHelper{
         if (cursor.moveToFirst()) {
             do {
                 PersonToAssessments personToAssessments = new PersonToAssessments();
-                //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                personToAssessments.set_person_to_assessments_id(parseInt(cursor.getString(0)));
-                personToAssessments.set_person_id(parseInt(cursor.getString(1)));
-                personToAssessments.set_facility_id(parseInt(cursor.getString(2)));
-                personToAssessments.set_date_created(cursor.getString(3));
-                personToAssessments.set_assessment_id(parseInt(cursor.getString(4)));
-                personToAssessments.set_user_id(parseInt(cursor.getString(5)));
+                try {
+                    //person.setRowId(Integer.parseInt(cursor.getString(0)));
+                    personToAssessments.set_person_to_assessments_id(parseInt(cursor.getString(0)));
+                    personToAssessments.set_person_id(parseInt(cursor.getString(1)));
+                    personToAssessments.set_facility_id(parseInt(cursor.getString(2)));
+                    personToAssessments.set_date_created(cursor.getString(3));
+                    personToAssessments.set_assessment_id(parseInt(cursor.getString(4)));
+                    personToAssessments.set_user_id(parseInt(cursor.getString(5)));
+                } catch (NumberFormatException e) {
+                    Log.d(LOG, "error in getAllPersonToAssessments" + e.toString());
+                }
 
                 // Adding person to list
                 personToAssessmentsList.add(personToAssessments);
