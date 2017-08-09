@@ -207,7 +207,7 @@ public class getMySQLTableVolley {
                                     results_string += ", '" + encodeForSQL(_rec.getString(value)) + "'";
                                 }
                             }
-                            //protect against SQL injection using prepared statement
+
                             SQLiteStatement _insert = _db.compileStatement(
                                     "insert or replace into " + dataTable.toLowerCase()
                                             + " (" + fields_string + ") "

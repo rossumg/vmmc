@@ -149,11 +149,17 @@ public class putMySQLTableVolley {
     public void putAllTablesVerified() {
         try {
             putTable(dbhelp.personTableInfo);
+            Thread.sleep(300);
             putTable(dbhelp.userTableInfo);
+            Thread.sleep(300);
             putTable(dbhelp.bookingTableInfo);
+            Thread.sleep(300);
             putTable(dbhelp.clientTableInfo);
+            Thread.sleep(300);
             putTable(dbhelp.facilitatorTableInfo);
+            Thread.sleep(300);
             putTable(dbhelp.interactionTableInfo);
+            Thread.sleep(300);
             putTable(dbhelp.groupActivityTableInfo);
         } catch (Exception e) {
 
@@ -554,6 +560,7 @@ public class putMySQLTableVolley {
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
         for (User user: userList) {
+            Log.d(LOG, "password at createRequestData() " + user.get_password());
             Log.d(LOG, "putMySQLUserTable loop: " + user.get_timestamp() + ":" + user.get_username()  );
             String rec = "[\"" +
                     user.get_timestamp() + "\",\"" +
