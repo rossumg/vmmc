@@ -191,27 +191,29 @@ public class getMySQLTableVolley {
                                 .setContentText("Download in progress")
                                 .setSmallIcon(R.drawable.download);
 
+                        //list of fields for statement and
+                        //list of '?'s for using prepared statement to protect from SQLinjection
                         String fields_string = fields.join(", ");
-                        //create strings from received data for sql statement
-                        //loop for each record received
+                        String prepared_results_string = "";
+                        for (int j = 0; j < num_fields; ++j) {
+                            if (j == 0) {
+                                prepared_results_string += "?";
+                            } else {
+                                prepared_results_string += ", ?";
+                            }
+                        }
+                        SQLiteStatement _insert = _db.compileStatement(
+                                "insert or replace into " + dataTable.toLowerCase()
+                                        + " (" + fields_string + ") "
+                                        + " values(" + prepared_results_string + ");");
+                        //for each entry bind all params, then clear all bindings for next
                         for (i = 0; i < num_recs; ++i) {
                             JSONObject _rec = results_JSONarray.getJSONObject(i);
-                            String results_string = "";
                             //loop to format data for insert or replace
                             for (int j = 0; j < num_fields; ++j) {
-                                String value = fields.getString(j);
                                 int SQLindex = j + 1;
-                                if (j == 0) {
-                                    results_string += "'" + encodeForSQL(_rec.getString(value)) + "'";
-                                } else {
-                                    results_string += ", '" + encodeForSQL(_rec.getString(value)) + "'";
-                                }
+                                _insert.bindString(SQLindex, _rec.getString(fields.getString(j)));
                             }
-
-                            SQLiteStatement _insert = _db.compileStatement(
-                                    "insert or replace into " + dataTable.toLowerCase()
-                                            + " (" + fields_string + ") "
-                                            + " values(" + results_string + ");");
                             try {
                                 int incr = (int) ((i / (float) num_recs) * 100);
                                 mBuilder.setProgress(100, incr, false);
@@ -223,6 +225,7 @@ public class getMySQLTableVolley {
                             } catch (Exception ex) {
                                 Log.d(LOG, "getMySQLTable loop exception > " + ex.toString());
                             }
+                            _insert.clearBindings();
                         }
                         mBuilder.setContentText(_context.getResources().getString(R.string.sync_complete) + " (" + i + " records)").setProgress(0, 0, false);
                         mNotifyManager.notify(id, mBuilder.build());

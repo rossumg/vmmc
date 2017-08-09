@@ -4229,7 +4229,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
         values.put(USER_USERNAME, user.get_username());
         values.put(USER_PASSWORD, user.get_password());
-        Log.d(LOG, "password at UpdateUser " + user.get_password());
         values.put(USER_EMAIL, user.get_email());
         values.put(USER_FIRST_NAME, user.get_first_name());
         values.put(USER_LAST_NAME, user.get_last_name());

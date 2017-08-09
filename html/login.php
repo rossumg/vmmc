@@ -63,10 +63,10 @@ var_dump("req_data=", $req_data, "END");
 $toss = ob_get_clean(); file_put_contents('php_login_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 $row = $stmt->fetch();
 if ($row) {
-  //if we encrypted the password, we would unencrypt it here, but in our case we just
-  //compare the two passwords
+  //compare hash (bCrypt)
   //if ($_POST['password'] === $row['password']) {
-  if (md5($req_data['password']) === $row['password'] || $req_data['password'] === $row['password']) {
+   
+  if (password_verify($req_data['password'], $row['password']) || $req_data['password'] === $row['password']) {
     $login_ok = true;
   } else {
     file_put_contents('php_login_debug.log', 'login bad password >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();

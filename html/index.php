@@ -2933,7 +2933,7 @@ function putUser()
     
     file_put_contents('php_index_debug.log', 'putUser()2 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
-    var_dump($timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
+    var_dump($timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name, $password);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
     
@@ -2942,6 +2942,7 @@ function putUser()
       
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
+    
       updateUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
