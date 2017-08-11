@@ -10,8 +10,9 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
-import org.itech.vmmc.getMySQLTableVolley;
+import org.itech.vmmc.APICommunication.getMySQLTableVolley;
 
+import org.itech.vmmc.APICommunication.putMySQLTableVolley;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -1607,6 +1608,31 @@ public class DBHelper extends SQLiteOpenHelper{
         if(_userType.get_name().equalsIgnoreCase("admin")) { _permission = true; }
 
         return _permission;
+    }
+
+    public String getUserCredentials(String mEmail) {
+        Log.d(LOG, "DBHelper.getUserCredentials()");
+        SQLiteDatabase db = this.getReadableDatabase();
+        String credentials = "";
+
+        String[] tableColumns = new String[] { USER_USERNAME, USER_PASSWORD };
+        String whereClause = "1=1 and " + USER_IS_BLOCKED + " = 0 and "
+                + USER_USERNAME + " = ?";
+        String[] whereArgs = new String[]{mEmail};
+        Cursor cursor = db.query(TABLE_USER, tableColumns, whereClause, whereArgs, null, null, null);
+
+        if (cursor.moveToFirst()) {
+            Log.d(LOG, "getCredentials  "
+                    + cursor.getString(0)
+                    + cursor.getString(1)
+            );
+            credentials = (cursor.getString(0) + ":" + cursor.getString(1));
+        }
+
+        cursor.close();
+        // db.close();
+
+        return credentials;
     }
 
     public ArrayList<String> getCredentials(){

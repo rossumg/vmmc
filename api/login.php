@@ -3,8 +3,6 @@
 $method  = $_SERVER['REQUEST_METHOD'];
 $request = trim($_SERVER['PATH_INFO'], '/');
 $input   = file_get_contents('php://input');
-$requestHeaders = apache_request_headers();
-$auth = trim($requestHeaders['Authorization']);
 
 file_put_contents('php_login_debug.log', 'login start >'.PHP_EOL, FILE_APPEND | LOCK_EX); 
 file_put_contents('php_login_debug.log', "\tmethod: " . $method . PHP_EOL, FILE_APPEND | LOCK_EX); 
@@ -17,16 +15,9 @@ require("config.inc.php");
 file_put_contents('php_login_debug.log', 'test0 login found config >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
 $toss = ob_get_clean(); file_put_contents('php_login_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-//extract username and password from header
-$base64Credentials = substr($auth, 6);
-$credentials = base64_decode($base64Credentials);
-$credentialArray = explode(':', $credentials);
-$username = $credentialArray[0];
-$password = $credentialArray[1];
-
-
 //gets user's info based off of a username.
 $req_data = json_decode($input, true);
+$username = $req_data['username'];
 $query = " 
   SELECT 
     id, 
@@ -37,13 +28,13 @@ $query = "
     username = :username 
   ";
     
-$query_params = array(':username' => $username);
+$query_params = array(':username' => $req_data['username']);
 
 
 try {
   file_put_contents('php_login_debug.log', 'getTable try select user >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
-  var_dump("username=", $username, "END");
-  var_dump("password=", $password, "END");
+  var_dump("username=", $req_data['username'], "END");
+  var_dump("password=", $req_data['password'], "END");
   $toss = ob_get_clean(); file_put_contents('php_login_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
   $stmt   = $db->prepare($query);
@@ -72,10 +63,10 @@ var_dump("req_data=", $req_data, "END");
 $toss = ob_get_clean(); file_put_contents('php_login_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 $row = $stmt->fetch();
 if ($row) {
-  //compare hash (bCrypt)
+  //if we encrypted the password, we would unencrypt it here, but in our case we just
+  //compare the two passwords
   //if ($_POST['password'] === $row['password']) {
-   
-  if (password_verify($password, $row['password']) || $password === $row['password']) {
+  if (md5($req_data['password']) === $row['password'] || $req_data['password'] === $row['password']) {
     $login_ok = true;
   } else {
     file_put_contents('php_login_debug.log', 'login bad password >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();

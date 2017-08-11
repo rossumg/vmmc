@@ -1,31 +1,31 @@
-package org.itech.vmmc;
+package org.itech.vmmc.APICommunication;
 
-import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
-import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 
-import com.android.volley.AuthFailureError;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
-import com.android.volley.toolbox.JsonObjectRequest;
-import com.android.volley.toolbox.StringRequest;
-import org.itech.vmmc.VolleySingleton;
 
+import org.itech.vmmc.AssessmentsAnswers;
+import org.itech.vmmc.Booking;
+import org.itech.vmmc.Client;
 import org.itech.vmmc.DBHelper;
+import org.itech.vmmc.Facilitator;
+import org.itech.vmmc.GeoLocations;
+import org.itech.vmmc.GroupActivity;
+import org.itech.vmmc.Interaction;
+import org.itech.vmmc.MainActivity;
+import org.itech.vmmc.Person;
+import org.itech.vmmc.PersonToAssessments;
+import org.itech.vmmc.User;
+import org.itech.vmmc.VolleySingleton;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
-import java.net.URLEncoder;
-import java.util.HashMap;
 import java.util.List;
-import java.util.Map;
-import java.util.concurrent.ExecutionException;
-
-import static org.itech.vmmc.MainActivity.LOG;
 
 /**
  * Created by Caleb on 21/07/2017.
@@ -33,65 +33,32 @@ import static org.itech.vmmc.MainActivity.LOG;
 
 public class putMySQLTableVolley {
 
-    public boolean LOGGED_IN = false;
-    Context mContext;
+    Context _context;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
-    static String LOG = "csl";
+    LoginManager loginManager;
+    private static String LOG = "csl";
 
     public putMySQLTableVolley(Context context, final DBHelper dbHelper) {
-        mContext = context;
+        _context = context;
         this.dbhelp = dbHelper;
         this._db = dbhelp.getReadableDatabase();
+        loginManager = new LoginManager(_context);
     }
 
     //put tables for uploadDbData()
     public void putAllDBData() {
         //check for json web token and login if doesn't exist
-        if (MainActivity.jwt.equals("")) {
-            Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
-            //Response handler on success
-            Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
+        if (!loginManager.hasValidJWT()) {
+            loginManager.logIn(new NetworkResponseCallback() {
                 @Override
-                public void onResponse(JSONObject response) {
-                    try{
-                        if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
-                            MainActivity.jwt = "";
-                            MainActivity._pass = "";
-                            LOGGED_IN = false;
-                            Log.d(LOG, "Login unsuccessful in putAllTables");
-                            Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
-                        } else {
-                            MainActivity.jwt = response.getString("jwt");
-                            Log.d(LOG, "Login success: " + MainActivity.jwt);
-                            LOGGED_IN = true;
-                            putTable(dbhelp.geolocationTableInfo);
-                            putTable(dbhelp.personToAssessmentsTableInfo);
-                            putTable(dbhelp.assessmentsAnswersTableInfo);
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                public void onSuccess() {
+                    putTable(dbhelp.geolocationTableInfo);
+                    putTable(dbhelp.personToAssessmentsTableInfo);
+                    putTable(dbhelp.assessmentsAnswersTableInfo);
                 }
-            };
-            //response handler on error
-            Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(LOG, "error on login attempt");
-                    error.printStackTrace();
-                }
-            };
-            //make login request
-            try {
-                JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
-                JsonObjectRequest request = new JsonObjectRequest
-                        (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
-                VolleySingleton.getInstance(mContext).addToRequestQueue(request);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else { //already had a web token. login unneeded attempt all puts
+            }, MainActivity._user, MainActivity._pass);
+        } else {
             putTable(dbhelp.geolocationTableInfo);
             putTable(dbhelp.personToAssessmentsTableInfo);
             putTable(dbhelp.assessmentsAnswersTableInfo);
@@ -100,64 +67,28 @@ public class putMySQLTableVolley {
 
     //put all tables in sync process
     public void putAllTables() {
+        LoginManager loginManager = new LoginManager(_context);
         //check for json web token and login if doesn't exist
-        if (MainActivity.jwt.equals("")) {
-            Log.d(LOG, "Login attempt at " + MainActivity.LOGIN_URL);
-            //Response handler on success
-            Response.Listener<JSONObject> loginResponseListener = new Response.Listener<JSONObject>() {
+        if (!loginManager.hasValidJWT()) {
+            loginManager.logIn(new NetworkResponseCallback() {
                 @Override
-                public void onResponse(JSONObject response) {
-                    try{
-                        if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
-                            MainActivity.jwt = "";
-                            MainActivity._pass = "";
-                            LOGGED_IN = false;
-                            Log.d(LOG, "Login unsuccessful in putAllTables");
-                            Log.d(LOG, response.getString(MainActivity.TAG_MESSAGE));
-                        } else {
-                            MainActivity.jwt = response.getString("jwt");
-                            Log.d(LOG, "Login success: " + MainActivity.jwt);
-                            LOGGED_IN = true;
-                            putAllTablesVerified();
-                        }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
+                public void onSuccess() {
+                    putSyncTables();
                 }
-            };
-            //response handler on error
-            Response.ErrorListener loginResponseErrorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    Log.d(LOG, "error on login attempt");
-                    error.printStackTrace();
-                }
-            };
-            //make login request
-            try {
-                JSONObject credentials = new JSONObject("{username:" + MainActivity._user + ",password:" + MainActivity._pass + "}");
-                JsonObjectRequest request = new JsonObjectRequest
-                        (Request.Method.POST, MainActivity.LOGIN_URL, credentials, loginResponseListener, loginResponseErrorListener);
-                VolleySingleton.getInstance(mContext).addToRequestQueue(request);
-            } catch (JSONException e) {
-                e.printStackTrace();
-            }
-        } else { //already had a web token. login unneeded attempt all puts
-            putAllTablesVerified();
+            }, MainActivity._user, MainActivity._pass);
+        } else {
+            putSyncTables();
         }
     }
-    public void putAllTablesVerified() {
-        try {
-            putTable(dbhelp.personTableInfo);
-            putTable(dbhelp.userTableInfo);
-            putTable(dbhelp.bookingTableInfo);
-            putTable(dbhelp.clientTableInfo);
-            putTable(dbhelp.facilitatorTableInfo);
-            putTable(dbhelp.interactionTableInfo);
-            putTable(dbhelp.groupActivityTableInfo);
-        } catch (Exception e) {
 
-        }
+    private void putSyncTables() {
+        putTable(dbhelp.personTableInfo);
+        putTable(dbhelp.userTableInfo);
+        putTable(dbhelp.bookingTableInfo);
+        putTable(dbhelp.clientTableInfo);
+        putTable(dbhelp.facilitatorTableInfo);
+        putTable(dbhelp.interactionTableInfo);
+        putTable(dbhelp.groupActivityTableInfo);
     }
 
 
@@ -166,49 +97,33 @@ public class putMySQLTableVolley {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
             final String url = MainActivity.INDEX_URL + "/" + dataTable;
-            Log.d(LOG, url);
 
-            //response listener on success
-            Response.Listener<JSONObject> responseListener = new Response.Listener<JSONObject>() {
-                @Override
-                public void onResponse(JSONObject response) {
-                    try {
-                        if (response.getString(MainActivity.TAG_SUCCESS).equals("1")) {
-                            //int num_GroupActiviy_recs = json.getInt("number_records");
-                            Log.d(LOG, "Server returned success for POST " + dataTable);
-                            //LOGGED_IN = true;
-                        } else {
-                            Log.d(LOG, "Server returned ERROR for POST " + dataTable);
-                            MainActivity._pass = "";
-                            MainActivity.jwt = "";
-                            LOGGED_IN = false;
+            AuthenticatedRequest request = new AuthenticatedRequest
+                    (Request.Method.POST, url, createRequestData(dataTable, fields),
+                            new Response.Listener<JSONObject>() {
+                                @Override
+                                public void onResponse(JSONObject response) {
+                                    try {
+                                        if (response.getString(MainActivity.TAG_SUCCESS).equals("1")) {
+                                            Log.d(LOG, "Server returned success for POST " + dataTable);
+                                        } else {
+                                            Log.d(LOG, "Server returned ERROR for POST " + dataTable);
+                                            MainActivity._pass = "";
+                                            loginManager.invalidateJWT();
+                                        }
+                                    } catch (JSONException e) {
+                                        e.printStackTrace();
+                                    }
+                                }
+                        }, new Response.ErrorListener() {
+                            @Override
+                                public void onErrorResponse(VolleyError error) {
+                                    error.printStackTrace();
+                                    Log.d(LOG, error.toString());
+                                }
                         }
-                    } catch (JSONException e) {
-                        e.printStackTrace();
-                    }
-                }
-            };
-            //response listener called on error
-            Response.ErrorListener responseErrorListener = new Response.ErrorListener() {
-                @Override
-                public void onErrorResponse(VolleyError error) {
-                    error.printStackTrace();
-                    Log.d(LOG, error.toString());
-                }
-            };
-
-            JsonObjectRequest request = new JsonObjectRequest
-                    (Request.Method.POST, url, createRequestData(dataTable, fields), responseListener, responseErrorListener){
-                @Override
-                public Map<String, String> getHeaders() throws AuthFailureError {
-                    Map<String, String> headers = new HashMap<>();
-                    String auth = "Bearer " + MainActivity.jwt;
-                    headers.put("Content-Type", "application/json");
-                    headers.put("Authorization", auth);
-                    return headers;
-                }
-            };
-            VolleySingleton.getInstance(mContext).addToRequestQueue(request);
+                    );
+            VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             Log.d(LOG, "Error in putTable");
             e.printStackTrace();

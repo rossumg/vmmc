@@ -368,41 +368,40 @@ public class LoginFragment extends Fragment {
         protected Boolean doInBackground(Void... params) {
             Log.d(LOG, "check credentials0");
             DBHelper dbHelp = new DBHelper(getActivity());
-            ArrayList<String> _CREDENTIALS = new ArrayList<String>();
-            _CREDENTIALS = dbHelp.getCredentials();
-            PasswordUtil passwordUtil = new PasswordUtil();
-            if (_CREDENTIALS.isEmpty()) {
-                String passwordHash = passwordUtil.secureHashPassword("password");
-                _CREDENTIALS.add("sync@:" + passwordHash);
-            }
-            for (String credential : _CREDENTIALS) {
-                String[] pieces = credential.split(":");
-                boolean loginSuccess = false;
-                try {
-                    loginSuccess = pieces[0].equals(mEmail) && passwordUtil.verifyPassword(mPassword, pieces[1]);
-                } catch (Exception e) {
-                    Log.d(LOG, "ERROR while checking password hash " + e.toString());
-                    Log.d(LOG, "attempting unencrypted check");
-                    loginSuccess = pieces[0].equals(mEmail) && pieces[1].equals(mPassword);
-                    if (loginSuccess) {
-                        User user = new User(dbHelp, mEmail + ":" + mPassword);
-                        pieces[1] = passwordUtil.secureHashPassword(mPassword);
-                        Log.d(LOG, "password at loginFragment " + pieces[1]);
-                        user.set_password(pieces[1]);
-                        dbHelp.updateUser(user);
-                    }
-                } finally {
-                    if (loginSuccess) {
-                        Log.d(LOG, "password check success");
-                        MainActivity.LOGGED_IN = true;
-                        MainActivity._username = mEmail; // referred to as username in db, email in pop-up
-                        MainActivity._password = pieces[1];
+            String credentials = dbHelp.getUserCredentials(mEmail);
 
-                        if (!MainActivity._username.equals("sync@")) {
-                            MainActivity.USER_OBJ = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
-                        }
-                        return true;
+            PasswordUtil passwordUtil = new PasswordUtil();
+            if (credentials.equals("")) {
+                String passwordHash = passwordUtil.secureHashPassword("password");
+                credentials = "sync@:" + passwordHash;
+            }
+
+            String[] pieces = credentials.split(":");
+            boolean loginSuccess = false;
+            try {
+                loginSuccess = pieces[0].equals(mEmail) && passwordUtil.verifyPassword(mPassword, pieces[1]);
+            } catch (Exception e) {
+                Log.d(LOG, "ERROR while checking password hash " + e.toString());
+                Log.d(LOG, "attempting unencrypted check");
+                loginSuccess = pieces[0].equals(mEmail) && pieces[1].equals(mPassword);
+                if (loginSuccess) {
+                    User user = new User(dbHelp, mEmail + ":" + mPassword);
+                    pieces[1] = passwordUtil.secureHashPassword(mPassword);
+                    Log.d(LOG, "password at loginFragment " + pieces[1]);
+                    user.set_password(pieces[1]);
+                    dbHelp.updateUser(user);
+                }
+            } finally {
+                if (loginSuccess) {
+                    Log.d(LOG, "password check success");
+                    MainActivity.LOGGED_IN = true;
+                    MainActivity._username = mEmail; // referred to as username in db, email in pop-up
+                    MainActivity._password = pieces[1];
+
+                    if (!MainActivity._username.equals("sync@")) {
+                        MainActivity.USER_OBJ = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
                     }
+                    return true;
                 }
             }
             // Log.d(TAG, "bad");
@@ -411,7 +410,6 @@ public class LoginFragment extends Fragment {
 
         @Override
         protected void onPostExecute(Boolean result) {
-
             // Log.d(TAG, "Logged In?:" + MainActivity.LOGGED_IN);
             if (!MainActivity.LOGGED_IN){
                 Toast.makeText(getActivity(), getActivity().getString(R.string.error_invalid_login), Toast.LENGTH_SHORT).show();

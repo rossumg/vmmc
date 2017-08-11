@@ -84,8 +84,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static GroupActivity gGroupActivity = null;
     public static Facilitator gFacilitator = null;
 
-    public static String jwt = "";
-
 //    public static ArrayList<String> _CREDENTIALS = new ArrayList<String>();
 
 //                "user@itech.org:password", "bar@example.com:world", "u@:pa", "a@:pa"
