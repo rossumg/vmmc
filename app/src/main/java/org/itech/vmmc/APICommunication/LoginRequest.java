@@ -20,7 +20,7 @@ import java.util.Map;
 public class LoginRequest extends JsonObjectRequest {
     private String base64Credentials;
     private static String LOG = "csl";
-    private static String TAG = "LOGIN";
+    private static String TAG = "login";
 
     public LoginRequest(int method, String url, JSONObject requestBody,
                         Response.Listener successListener, Response.ErrorListener errorListener){

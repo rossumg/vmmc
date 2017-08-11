@@ -208,6 +208,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).commit();
                 }
                 currentFragmentId = "Login";
+                LOGGED_IN = false;
 
                 break;
 

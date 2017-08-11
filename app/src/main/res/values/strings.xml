@@ -172,6 +172,7 @@
     <string name="altContact">Alt Contact</string>
     <string name="logging_in">Attempting login...</string>
     <string name="valid_login">Logged in</string>
+    <string name="authentication_failure">Authentication Failed</string>
 
 
 </resources>

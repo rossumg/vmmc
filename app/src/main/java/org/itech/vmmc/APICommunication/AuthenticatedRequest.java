@@ -16,7 +16,7 @@ import java.util.Map;
 public class AuthenticatedRequest extends JsonObjectRequest {
 
     private static String LOG = "csl";
-    public static String TAG = "LOGIN";
+    public static String TAG = "Auth";
 
     public AuthenticatedRequest(int method, String url, JSONObject requestBody,
                                 Response.Listener successListener, Response.ErrorListener errorListener) {

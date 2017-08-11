@@ -33,14 +33,24 @@ public class getMySQLTableVolley {
 
     public static String LOG = "csl";
 
+    NotificationManager mNotifyManager;
+    NotificationCompat.Builder mBuilder;
+
     public getMySQLTableVolley(Context context, DBHelper dbHelper) {
         this._context = context;
         this.dbhelp = dbHelper;
         this._db = dbHelper.getWritableDatabase();
         loginManager = new LoginManager(_context);
+
+        mNotifyManager =
+                (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(_context);
     }
 
     public void getAllTables() {
+        mBuilder.setContentTitle("Data Download")
+                .setContentText("Download in progress")
+                .setSmallIcon(R.drawable.download);
         //if no jwt, attempt login. getTables called in login response handler
         if (!loginManager.hasValidJWT()) {
             loginManager.logIn(new NetworkResponseCallback() {
@@ -168,13 +178,6 @@ public class getMySQLTableVolley {
         int num_fields = fields.length();
         int id = 1;
         int i = 0;
-
-        NotificationManager mNotifyManager =
-                (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
-        NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(_context);
-        mBuilder.setContentTitle("Data Download")
-                .setContentText("Download in progress")
-                .setSmallIcon(R.drawable.download);
 
         //list of fields for statement and
         //list of '?'s for using prepared statement to protect from SQLinjection

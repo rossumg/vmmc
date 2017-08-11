@@ -1,8 +1,11 @@
 package org.itech.vmmc.APICommunication;
 
+import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
+import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
@@ -19,6 +22,7 @@ import org.itech.vmmc.Interaction;
 import org.itech.vmmc.MainActivity;
 import org.itech.vmmc.Person;
 import org.itech.vmmc.PersonToAssessments;
+import org.itech.vmmc.R;
 import org.itech.vmmc.User;
 import org.itech.vmmc.VolleySingleton;
 import org.json.JSONArray;
@@ -39,11 +43,17 @@ public class putMySQLTableVolley {
     LoginManager loginManager;
     private static String LOG = "csl";
 
+    NotificationManager mNotifyManager;
+    NotificationCompat.Builder mBuilder;
+
     public putMySQLTableVolley(Context context, final DBHelper dbHelper) {
         _context = context;
         this.dbhelp = dbHelper;
         this._db = dbhelp.getReadableDatabase();
         loginManager = new LoginManager(_context);
+
+        mNotifyManager = (NotificationManager) this._context.getSystemService(this._context.NOTIFICATION_SERVICE);
+        mBuilder = new NotificationCompat.Builder(this._context);
     }
 
     //put tables for uploadDbData()
@@ -67,6 +77,9 @@ public class putMySQLTableVolley {
 
     //put all tables in sync process
     public void putAllTables() {
+        mBuilder.setContentTitle("Data Upload")
+                .setContentText("Upload in progress")
+                .setSmallIcon(R.drawable.upload);
         LoginManager loginManager = new LoginManager(_context);
         //check for json web token and login if doesn't exist
         if (!loginManager.hasValidJWT()) {
@@ -166,6 +179,9 @@ public class putMySQLTableVolley {
         List<AssessmentsAnswers> assessmentsAnswersList = dbhelp.getAllAssessmentsAnswers();
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = assessmentsAnswersList.size();
         for (AssessmentsAnswers poa: assessmentsAnswersList) {
             String rec =  "[\"" +
                     poa.get_assess_id() + "\",\"" +
@@ -175,6 +191,9 @@ public class putMySQLTableVolley {
                     poa.get_assessment_id() + "\",\"" +
                     poa.get_question() + "\",\"" +
                     poa.get_answer() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -194,6 +213,9 @@ public class putMySQLTableVolley {
         List<PersonToAssessments> personToAssessmentsList = dbhelp.getAllPersonToAssessments();
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = personToAssessmentsList.size();
         for (PersonToAssessments poa: personToAssessmentsList) {
             String rec =  "[\"" +
                     poa.get_person_id() + "\",\"" +
@@ -201,6 +223,9 @@ public class putMySQLTableVolley {
                     poa.get_date_created() + "\",\"" +
                     poa.get_assessment_id() + "\",\"" +
                     poa.get_user_id() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -220,6 +245,9 @@ public class putMySQLTableVolley {
         List<GeoLocations> geoLocationsList = dbhelp.getAllGeoLocations();
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = geoLocationsList.size();
         for (GeoLocations geoLocations: geoLocationsList) {
             String rec =  "[\"" +
                     geoLocations.get_longitude() + "\",\"" +
@@ -228,6 +256,9 @@ public class putMySQLTableVolley {
                     geoLocations.get_created_at() + "\",\"" +
                     geoLocations.get_username() + "\",\"" +
                     geoLocations.get_password() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -247,6 +278,9 @@ public class putMySQLTableVolley {
         List<Person> personList = dbhelp.getAllPersons();
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = personList.size();
         for (Person person: personList) {
             String rec =  "[\"" +
                     person.get_timestamp() + "\",\"" +
@@ -260,6 +294,9 @@ public class putMySQLTableVolley {
                     Double.toString(person.get_latitude()) + "\",\"" +
                     Double.toString(person.get_longitude()) + "\",\"" +
                     person.get_is_deleted() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -280,6 +317,9 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLFacilitatorTable build rec: " + facilitatorList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = facilitatorList.size();
         for (Facilitator facilitator: facilitatorList) {
             String rec = "[\"" +
                     facilitator.get_timestamp() + "\",\"" +
@@ -296,6 +336,9 @@ public class putMySQLTableVolley {
                     facilitator.get_address_id() + "\",\"" +
                     facilitator.get_dob() + "\",\"" +
                     facilitator.get_gender() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
 
             try {
                 JSONArray recJSON = new JSONArray(rec);
@@ -317,6 +360,9 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLClientTable build rec: " + clientList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = clientList.size();
         for (Client client: clientList) {
             String rec = "[\"" +
                     client.get_timestamp() + "\",\"" +
@@ -334,6 +380,9 @@ public class putMySQLTableVolley {
                             client.get_address_id()   + "\",\"" +
                             client.get_dob()   + "\",\"" +
                             client.get_gender() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -354,6 +403,9 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLBookingTable build rec: " + BookingList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = BookingList.size();
         for (Booking booking: BookingList) {
             String rec = "[\"" +
                     booking.get_timestamp() + "\",\"" +
@@ -378,6 +430,9 @@ public class putMySQLTableVolley {
                             booking.get_followup_date() + "\",\"" +
 //                                booking.get_contact() + "\",\"" +
                             booking.get_alt_contact() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -398,6 +453,9 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLInteractionTable build rec: " + interactionList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = interactionList.size();
         for (Interaction interaction: interactionList) {
             String rec = "[\"" +
                     interaction.get_timestamp() + "\",\"" +
@@ -412,7 +470,7 @@ public class putMySQLTableVolley {
                             interaction.get_interaction_date() + "\",\"" +
                             interaction.get_followup_date() + "\",\"" +
                             interaction.get_type_id() + "\",\"" +
-                            interaction.get_note() + "\"]";
+                            interaction.get_note() + "\"]";             int incr = (int)((i / (float) num_recs) * 100);             mBuilder.setProgress(100, incr, false);             mNotifyManager.notify(id, mBuilder.build());
 
             try {
                 JSONArray recJSON = new JSONArray(rec);
@@ -434,6 +492,9 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLGroupActivityTable build rec: " + groupActivityList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = groupActivityList.size();
         for (GroupActivity groupActivity: groupActivityList) {
             Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_institution_id() + ", " + groupActivity.get_males() + ", " + groupActivity.get_females() + groupActivity.get_messages() );
             String rec = "[\"" +
@@ -448,6 +509,9 @@ public class putMySQLTableVolley {
                             groupActivity.get_messages() + "\",\"" +
                             groupActivity.get_latitude() + "\",\"" +
                             groupActivity.get_longitude() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);
@@ -468,6 +532,9 @@ public class putMySQLTableVolley {
         Log.d(LOG, "putMySQLUserTable build rec: " + userList.size() );
         JSONObject requestObject = new JSONObject();
         JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = userList.size();
         for (User user: userList) {
             Log.d(LOG, "putMySQLUserTable loop: " + user.get_timestamp() + ":" + user.get_username()  );
             String rec = "[\"" +
@@ -488,6 +555,9 @@ public class putMySQLTableVolley {
                     user.get_timestamp_updated() + "\",\"" +
                     user.get_timestamp_created() + "\",\"" +
                     user.get_timestamp_last_login() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
             try {
                 JSONArray recJSON = new JSONArray(rec);
                 recsJSON.put(recJSON);

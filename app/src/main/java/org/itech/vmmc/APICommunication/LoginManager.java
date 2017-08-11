@@ -2,12 +2,14 @@ package org.itech.vmmc.APICommunication;
 
 import android.content.Context;
 import android.util.Log;
+import android.widget.Toast;
 
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
 import org.itech.vmmc.MainActivity;
+import org.itech.vmmc.R;
 import org.itech.vmmc.VolleySingleton;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -49,6 +51,8 @@ public class LoginManager {
                                             MainActivity._pass = "";
                                             Log.d(LOG, "Login unsuccessful: "
                                                    + response.getString(MainActivity.TAG_MESSAGE));
+                                            Toast.makeText(_context, _context.getResources()
+                                                    .getString(R.string.authentication_failure), Toast.LENGTH_SHORT).show();
                                         } else {
                                             JWT = response.getString("jwt");
                                             Log.d(LOG, "Login success: " + JWT);
