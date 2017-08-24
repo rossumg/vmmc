@@ -332,6 +332,7 @@
     android:text="@string/latitude"
     android:id="@+id/textViewLatitude"
     android:paddingTop="12dp"
+    android:visibility="invisible"
     android:layout_below="@+id/textViewGender" />
 
     <EditText
@@ -344,6 +345,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewLatitude"
+        android:visibility="invisible"
         android:layout_below="@+id/textViewGender"
         android:maxLines="1" />
 
@@ -355,6 +357,7 @@
         android:text="@string/longitude"
         android:id="@+id/textViewLongitude"
         android:paddingTop="12dp"
+        android:visibility="invisible"
         android:layout_below="@+id/textViewLatitude" />
 
     <EditText
@@ -367,6 +370,7 @@
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
         android:layout_toEndOf="@+id/textViewLongitude"
+        android:visibility="invisible"
         android:layout_below="@+id/textViewLatitude"
         android:maxLines="1" />
 
@@ -402,8 +406,8 @@
         android:text="@string/btn_label_booking"
         android:id="@+id/btnBooking"
         android:paddingTop="12dp"
-        android:layout_alignStart="@+id/textViewLongitude"
-        android:layout_below="@+id/textViewLongitude"
+        android:layout_alignStart="@+id/textViewGender"
+        android:layout_below="@+id/textViewGender"
         android:layout_marginTop="32dp" />
 
     <!--
@@ -426,8 +430,8 @@
                   android:textSize="@dimen/font_size_small"
                   android:text="@string/btn_label_update"
                   android:id="@+id/btnUpdate"
-                  android:layout_below="@+id/textViewLongitude"
-                  android:layout_alignEnd="@+id/longitude"
+                  android:layout_below="@+id/textViewGender"
+                  android:layout_alignEnd="@+id/gender_radio_group"
                   android:layout_marginTop="32dp" />
 
 

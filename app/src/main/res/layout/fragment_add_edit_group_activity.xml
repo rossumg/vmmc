@@ -14,7 +14,7 @@
         android:layout_height="wrap_content"
         android:layout_marginLeft="10dp"
         android:textSize="@dimen/font_size_small"
-        android:text="@string/name"
+        android:text="@string/search"
         android:id="@+id/textViewName"
         android:paddingTop="128dp"
         android:layout_below="@+id/imageViewVMMC" />
@@ -41,6 +41,7 @@
         android:text="@string/activity_date"
         android:id="@+id/textViewActivityDate"
         android:paddingTop="12dp"
+        android:visibility="invisible"
         android:layout_below="@+id/textViewName" />
 
     <EditText
@@ -52,6 +53,7 @@
         android:layout_marginRight="50dp"
         android:layout_alignParentEnd="true"
         android:layout_alignParentStart="true"
+        android:visibility="invisible"
         android:layout_toEndOf="@+id/textViewName"
         android:layout_below="@+id/textViewName"
         android:maxLines="1" />

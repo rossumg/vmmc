@@ -24,6 +24,8 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.List;
 
+import static org.itech.vmmc.R.string.IllegalEntry;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -307,8 +309,11 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
                 EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
                 Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
-                if (_institution == null) {
-                    _institution = dbHelp.getInstitution( "IUM" ); // default
+                if(_institution == null) {
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _institutionEditText.setText("");
+                    _institutionEditText.requestFocus();
+                    return;
                 }
 
                 _cb_message1=(CheckBox) _view.findViewById(R.id.cb_message1);
