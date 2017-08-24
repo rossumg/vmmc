@@ -28,6 +28,8 @@ import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
 
+import static org.itech.vmmc.R.string.IllegalEntry;
+
 
 /**
  * A simple {@link Fragment} subclass.
@@ -402,8 +404,14 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
                 VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
 
-                EditText _institutioinEditText = (EditText) _view.findViewById(R.id.institution);
-                Institution _institution = dbHelp.getInstitution( _institutioinEditText.getText().toString());
+                EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
+                Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
+                if(_institution == null) {
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _institutionEditText.setText("");
+                    _institutionEditText.requestFocus();
+                    return;
+                }
 
                 Spinner gaSpinner = (Spinner) _view.findViewById(R.id.group_activity);
 //                String sGroupActivityText  = gaSpinner.getSelectedItem().toString();

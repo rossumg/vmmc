@@ -26,6 +26,7 @@ import java.util.Calendar;
 import java.util.List;
 
 import static org.itech.vmmc.R.id.dob;
+import static org.itech.vmmc.R.string.IllegalEntry;
 
 
 /**
@@ -335,6 +336,12 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 
                 EditText _institutionEditText = (EditText) _view.findViewById(R.id.institution);
                 Institution _institution = dbHelp.getInstitution( _institutionEditText.getText().toString());
+                if(_institution == null) {
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _institutionEditText.setText("");
+                    _institutionEditText.requestFocus();
+                    return;
+                }
 
                 Spinner aSpinner = (Spinner) _view.findViewById(R.id.address);
 //              String sAddressText  = aSpinner.getSelectedItem().toString();

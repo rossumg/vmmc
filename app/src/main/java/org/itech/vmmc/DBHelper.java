@@ -3212,9 +3212,9 @@ public class DBHelper extends SQLiteOpenHelper{
             return institution;
         } else { //do not return null for autocomplete in case junk typed in
             cursor.close();
-            institution = new Institution(1, "IUM"); //default
+            //institution = new Institution(1, "IUM"); //default
             // db.close();
-            return institution;
+            return null;
         }
     }
 
