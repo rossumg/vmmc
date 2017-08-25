@@ -307,9 +307,15 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
                     Log.d(LOG, "EditBooking button projectedDate: " + paramProjectedDate);
                 }
 
+                String nameParts[] = {};
+                Client client = null;
+                nameParts = paramName.split(" ",2);
+                if(nameParts.length == 2) {
+                    client = dbHelp.getClient(nameParts[0], nameParts[1], "", paramPhoneNumber);
+                }
 //                if (complete && !paramProjectedDate.toString().equals("") || !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
-                if (paramName.toString().equals("")) {
-                    Toast.makeText(getActivity(), "Must enter client", Toast.LENGTH_LONG).show();
+                if (paramName.toString().equals("") || client == null) {
+                    Toast.makeText(getActivity(), "Must enter valid client", Toast.LENGTH_LONG).show();
                 } else {
                    Fragment fragment;
                    fragment = EditBookingFragment.newInstance("editBooking", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);
