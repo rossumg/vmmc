@@ -43,7 +43,6 @@ $query_params = array(':username' => $username);
 try {
   file_put_contents('php_login_debug.log', 'getTable try select user >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
   var_dump("username=", $username, "END");
-  var_dump("password=", $password, "END");
   $toss = ob_get_clean(); file_put_contents('php_login_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
   $stmt   = $db->prepare($query);

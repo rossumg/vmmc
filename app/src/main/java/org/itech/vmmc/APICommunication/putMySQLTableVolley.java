@@ -56,7 +56,7 @@ public class putMySQLTableVolley {
         mBuilder = new NotificationCompat.Builder(this._context);
     }
 
-    //put tables for uploadDbData()
+    //called by DBHelper.uploadDbData()
     public void putAllDBData() {
         //check for json web token and login if doesn't exist
         if (!loginManager.hasValidJWT()) {
@@ -75,7 +75,7 @@ public class putMySQLTableVolley {
         }
     }
 
-    //put all tables in sync process
+
     public void putAllTables() {
         mBuilder.setContentTitle("Data Upload")
                 .setContentText("Upload in progress")
@@ -94,6 +94,7 @@ public class putMySQLTableVolley {
         }
     }
 
+    //put all tables in regular database sync
     private void putSyncTables() {
         putTable(dbhelp.personTableInfo);
         putTable(dbhelp.userTableInfo);

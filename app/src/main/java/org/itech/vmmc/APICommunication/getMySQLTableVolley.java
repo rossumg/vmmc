@@ -64,6 +64,7 @@ public class getMySQLTableVolley {
         }
     }
 
+    //gets all tables in regular database sync
     public void getSyncTables() {
         getTable(dbhelp.personTableInfo);
         getTable(dbhelp.userTableInfo);
@@ -75,10 +76,8 @@ public class getMySQLTableVolley {
         getTable(dbhelp.locationTableInfo);
         getTable(dbhelp.addressTableInfo);
         getTable(dbhelp.regionTableInfo);
-        getTable(dbhelp.constituencyTableInfo);
         getTable(dbhelp.bookingTableInfo);
         getTable(dbhelp.interactionTableInfo);
-        getTable(dbhelp.geolocationTableInfo);
         getTable(dbhelp.facilitatorTypeTableInfo);
         getTable(dbhelp.procedureTypeTableInfo);
         getTable(dbhelp.followupTableInfo);
@@ -90,6 +89,7 @@ public class getMySQLTableVolley {
     }
 
 
+    //called by DBHelper.downloadDBData
     public void getAllDBData() {
         //if no jwt, attempt login. getTables called in login response handler
         if (!loginManager.hasValidJWT()) {

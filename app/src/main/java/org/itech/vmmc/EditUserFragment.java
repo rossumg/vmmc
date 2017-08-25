@@ -160,7 +160,9 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
             _phone = (TextView) _view.findViewById(R.id.phone);
             _phone.setText(_user.get_phone());
             _password = (TextView) _view.findViewById(R.id.password);
-            _password.setText(FILLER_PASSWORD);
+            if (_user.get_password() != null) {
+                _password.setText(FILLER_PASSWORD);
+            }
             _firstName = (TextView) _view.findViewById(R.id.first_name);
             _firstName.setText(_user.get_first_name());
             _lastName = (TextView) _view.findViewById(R.id.last_name);
