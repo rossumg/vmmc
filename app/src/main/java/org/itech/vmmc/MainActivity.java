@@ -60,8 +60,9 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 //    public static String COUNTRY = "zimbabwe";
 
     public static final String BASE_URL = "http://10.0.2.2:4567/";
+    //public static final String BASE_URL = "http://android.trainingdata.org/";
 
-    public static final String GET_TABLE_URL = BASE_URL  + "getTable.php";
+    //public static final String GET_TABLE_URL = BASE_URL + COUNTRY + "/" + "getTable.php";
     public static final String LOGIN_URL = BASE_URL + "login.php";
     public static final String INDEX_URL = BASE_URL + "index.php";
     public static final String TAG_SUCCESS = "success";

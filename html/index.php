@@ -21,12 +21,21 @@ $toss = ob_get_clean(); file_put_contents('php_index_debug.log', $toss .PHP_EOL,
 //MOVE TO A PROTECTED CONFIG FILE (and change)
 $secret_key = '0Ba8^BfY6$AjCI@LyGUBz%yyRlEkDEAk';
 
+//extract jwt from input
+if ($auth == '' && $method == "POST") {
+  $req_data = json_decode($request_data, true);
+  $jwt = urldecode($req_data['jwt']);
+//extract jwt from input
+} else if ($auth == '' && $method == "GET") {
+  $jwt = str_replace('\/','/',$_GET['jwt']);
 //extract jwt from auth header (values are base64 encoded)
-$jwt = substr($auth, 7);
-$jwt_values = explode('.', $jwt);
-$jwt_header = $jwt_values[0];
-$jwt_payload = $jwt_values[1];
-$jwt_recv_sig = $jwt_values[2];
+} else {
+  $jwt = substr($auth, 7);
+}
+  $jwt_values = explode('.', $jwt);
+  $jwt_header = $jwt_values[0];
+  $jwt_payload = $jwt_values[1];
+  $jwt_recv_sig = $jwt_values[2];
 
 //recompute signature
 $jwt_check_sig = base64_encode(hash_hmac('SHA256', "$jwt_header.$jwt_payload", $secret_key, true));

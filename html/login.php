@@ -17,12 +17,21 @@ require("config.inc.php");
 file_put_contents('php_login_debug.log', 'test0 login found config >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
 $toss = ob_get_clean(); file_put_contents('php_login_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
-//extract username and password from header
-$base64Credentials = substr($auth, 6);
-$credentials = base64_decode($base64Credentials);
-$credentialArray = explode(':', $credentials);
-$username = $credentialArray[0];
-$password = $credentialArray[1];
+if ($auth == '' && $method == "POST") {
+  $req_data = json_decode($input, true);
+  $username = urldecode($req_data['username']);
+  $password = urldecode($req_data['password']);
+} else if ($auth == '' && $method == "GET") {
+  $username = $_GET['username'];
+  $password = $_GET['password'];
+} else {
+  //extract username and password from header
+  $base64Credentials = substr($auth, 6);
+  $credentials = base64_decode($base64Credentials);
+  $credentialArray = explode(':', $credentials);
+  $username = $credentialArray[0];
+  $password = $credentialArray[1];
+}
 
 
 //gets user's info based off of a username.
