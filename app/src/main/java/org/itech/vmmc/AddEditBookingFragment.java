@@ -104,7 +104,7 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
         final EditText projectedDate = (EditText) view.findViewById(R.id.projected_date);
 
         et_projected_date = (EditText) view.findViewById(R.id.projected_date);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -369,7 +369,7 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
     }
 
     public void onResume() {

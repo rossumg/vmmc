@@ -336,7 +336,7 @@ public class AddEditFacilitatorFragment extends Fragment implements AdapterView.
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

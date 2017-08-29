@@ -264,7 +264,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //            }
 //        });
         et_dob = (EditText) _view.findViewById(R.id.dob);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_dob_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -396,7 +396,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                         Log.d(LOG, "UpdateFacilitator add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addFacilitator(facilitator))
-                            Toast.makeText(getActivity(), "Recruiter Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Recruiter Saved", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name, Phone Number and Institution", Toast.LENGTH_LONG).show();
@@ -487,7 +487,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

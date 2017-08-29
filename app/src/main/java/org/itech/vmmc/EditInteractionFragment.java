@@ -320,7 +320,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
                         lookupInteraction.set_type_id(_interactionType.get_id());
                         lookupInteraction.set_note(sNote);
                         if(dbHelp.updateInteraction(lookupInteraction))
-                            Toast.makeText(getActivity(), "Interaction Updated", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Interaction Updated", Toast.LENGTH_LONG).show();
                     } else {
                         Interaction interaction = new Interaction();
                         interaction.set_fac_first_name(iFacParts.get_first_name());
@@ -339,7 +339,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
                                 iFacParts.get_first_name() + ", " + iFacParts.get_last_name() + ", " + iFacParts.get_national_id() + ", " + iFacParts.get_phone() + " - " +
                                 iPersonParts.get_first_name() + ", " + iPersonParts.get_last_name() + ", " + iPersonParts.get_national_id() + ", " + iPersonParts.get_phone() );
                         if(dbHelp.addInteraction(interaction))
-                            Toast.makeText(getActivity(), "Interaction Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Interaction Saved", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter Facilitator, Person and Interaction Date", Toast.LENGTH_LONG).show();
@@ -430,7 +430,7 @@ public class EditInteractionFragment extends Fragment implements AdapterView.OnI
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
     }
 
     public void loadPersonIDDropdown(View view) {

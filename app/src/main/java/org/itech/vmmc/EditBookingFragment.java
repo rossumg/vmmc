@@ -337,7 +337,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         loadConsentRadio(_view);
 
         et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -505,7 +505,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         Log.d(LOG, "UpdateBooking update: " +
                                 _first_name.getText() + " " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.updateBooking(lookupBooking))
-                            Toast.makeText(getActivity(), "Booking Updated", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Booking Updated", Toast.LENGTH_LONG).show();
                     } else {
                         Booking booking = new Booking();
                         booking.set_first_name(sFirstName.toString());
@@ -530,7 +530,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         Log.d(LOG, "UpdateBooking add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _projected_date.getText() +" <");
                         if(dbHelp.addBooking(booking))
-                            Toast.makeText(getActivity(), "Booking Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Booking Saved", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
@@ -618,7 +618,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 
@@ -669,7 +669,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         }
         statusNames.add(0, _status.get_name().toString());
         Set<String> noDups = new LinkedHashSet<>(statusNames);
-        statusNames.clear();;
+        statusNames.clear();
         statusNames.addAll(noDups);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, statusNames);

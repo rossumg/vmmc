@@ -69,7 +69,7 @@ class putMySQLAssessmentsAnswersTable extends AsyncTask<String, String, String> 
             i = 0;
             //publishProgress("0");
 
-            NotificationManager mNotifyManager = (NotificationManager) this._context.getSystemService(this._context.NOTIFICATION_SERVICE);
+            NotificationManager mNotifyManager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
             NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this._context);
 
             mBuilder.setContentTitle("Data Upload")

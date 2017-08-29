@@ -173,7 +173,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         } else {
 
             DBHelper dbHelp = new DBHelper(this);
-            if(!this._username.equals("sync@")) {
+            if(!_username.equals("sync@")) {
                 User _user = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
                 int i = 0;
                 do {

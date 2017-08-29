@@ -1560,7 +1560,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_ID);
-        _ID.clear();;
+        _ID.clear();
         _ID.addAll(noDups);
 
         // convert to array
@@ -1603,7 +1603,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_phone_numbers);
-        _phone_numbers.clear();;
+        _phone_numbers.clear();
         _phone_numbers.addAll(noDups);
 
         // convert to array
@@ -1647,7 +1647,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(personID);
-        personID.clear();;
+        personID.clear();
         personID.addAll(noDups);
 
         // convert to array
@@ -1691,7 +1691,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(clientID);
-        clientID.clear();;
+        clientID.clear();
         clientID.addAll(noDups);
 
         // convert to array
@@ -1736,7 +1736,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_ID);
-        _ID.clear();;
+        _ID.clear();
         _ID.addAll(noDups);
 
         // convert to array
@@ -1779,7 +1779,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_ID);
-        _ID.clear();;
+        _ID.clear();
         _ID.addAll(noDups);
 
         // convert to array
@@ -1825,7 +1825,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(_ID);
-        _ID.clear();;
+        _ID.clear();
         _ID.addAll(noDups);
 
         // convert to array
@@ -1918,7 +1918,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(assessmentTypes);
-        assessmentTypes.clear();;
+        assessmentTypes.clear();
         assessmentTypes.addAll(noDups);
 
         // convert to array
@@ -1958,7 +1958,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(facilitatorTypes);
-        facilitatorTypes.clear();;
+        facilitatorTypes.clear();
         facilitatorTypes.addAll(noDups);
 
         // convert to array
@@ -1998,7 +1998,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(interactionTypes);
-        interactionTypes.clear();;
+        interactionTypes.clear();
         interactionTypes.addAll(noDups);
 
         // convert to array
@@ -2038,7 +2038,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(statusTypes);
-        statusTypes.clear();;
+        statusTypes.clear();
         statusTypes.addAll(noDups);
 
         // convert to array
@@ -2078,7 +2078,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(userTypes);
-        userTypes.clear();;
+        userTypes.clear();
         userTypes.addAll(noDups);
 
         // convert to array
@@ -2188,7 +2188,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(groupActivityTypes);
-        groupActivityTypes.clear();;
+        groupActivityTypes.clear();
         groupActivityTypes.addAll(noDups);
 
         // convert to array
@@ -2314,7 +2314,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(procedureTypes);
-        procedureTypes.clear();;
+        procedureTypes.clear();
         procedureTypes.addAll(noDups);
 
         // convert to array
@@ -2397,7 +2397,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(followups);
-        followups.clear();;
+        followups.clear();
         followups.addAll(noDups);
 
         // convert to array
@@ -2572,7 +2572,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(locationNames);
-        locationNames.clear();;
+        locationNames.clear();
         locationNames.addAll(noDups);
 
         // convert to array
@@ -2656,7 +2656,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(addressNames);
-        addressNames.clear();;
+        addressNames.clear();
         addressNames.addAll(noDups);
 
         // convert to array
@@ -2745,7 +2745,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(institutionNames);
-        institutionNames.clear();;
+        institutionNames.clear();
         institutionNames.addAll(noDups);
 
         // convert to array
@@ -2937,7 +2937,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(phone_numbers);
-        phone_numbers.clear();;
+        phone_numbers.clear();
         phone_numbers.addAll(noDups);
 
         // convert to array
@@ -2978,7 +2978,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(phone_numbers);
-        phone_numbers.clear();;
+        phone_numbers.clear();
         phone_numbers.addAll(noDups);
 
         // convert to array
@@ -3019,7 +3019,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(facility_names);
-        facility_names.clear();;
+        facility_names.clear();
         facility_names.addAll(noDups);
 
         // convert to array
@@ -3082,7 +3082,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(nationalIds);
-        nationalIds.clear();;
+        nationalIds.clear();
         nationalIds.addAll(noDups);
 
         // convert to array
@@ -3127,7 +3127,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         // remove duplicates
         Set<String> noDups = new LinkedHashSet<>(nationalIds);
-        nationalIds.clear();;
+        nationalIds.clear();
         nationalIds.addAll(noDups);
 
         // convert to array
@@ -3285,7 +3285,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //                            + epo._answer + " "
 //            );
         }
-    };
+    }
 
     public Assessments getAssessments(int assessments_assessment_id) {
 
@@ -3770,7 +3770,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        client.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        client.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
 
         values.put(CLIENT_TIMESTAMP, client.get_timestamp());
         values.put(CLIENT_FIRST_NAME, client.get_first_name());
@@ -3820,7 +3820,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        user.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        user.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         Log.d(LOG, "updateUser timestamp: " + user.get_timestamp());
         values.put(USER_TIMESTAMP, user.get_timestamp());
 
@@ -3893,7 +3893,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        interaction.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        interaction.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         Log.d(LOG, "updateInteraction timestamp: " + interaction.get_timestamp());
 
         values.put(INTERACTION_ID, interaction.get_id() );
@@ -4677,7 +4677,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        facilitator.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        facilitator.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         values.put(FACILITATOR_TIMESTAMP, oTimestamp.toString());
         values.put(FACILITATOR_FIRST_NAME, facilitator.get_first_name());
         values.put(FACILITATOR_LAST_NAME, facilitator.get_last_name());
@@ -4861,7 +4861,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        groupActivity.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        groupActivity.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
 
         values.put(GROUP_ACTIVITY_TIMESTAMP, oTimestamp.toString());
         values.put(GROUP_ACTIVITY_NAME, groupActivity.get_name());
@@ -5167,7 +5167,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        booking.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        booking.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         Log.d(LOG, "updateBooking timestamp: " + booking.get_timestamp());
 
         String[] tableColumns = new String[]{
@@ -5716,7 +5716,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Calendar calendar = Calendar.getInstance();
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
-        person.set_timestamp(df.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        person.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
         Log.d(LOG, "updatePerson timestamp: " + person.get_timestamp());
         values.put(PERSON_TIMESTAMP, person.get_timestamp());
         values.put(PERSON_FIRST_NAME, person.get_first_name());

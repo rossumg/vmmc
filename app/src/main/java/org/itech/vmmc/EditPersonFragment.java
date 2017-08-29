@@ -192,7 +192,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
         loadGenderRadio(_view);
 
         et_dob = (EditText) _view.findViewById(R.id.dob);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_dob_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -263,7 +263,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                         lookupPerson.set_gender(sGender);
                         Log.d(LOG, "UpdatePerson update: " + lookupPerson.get_gender());
                         if(dbHelp.updatePerson(lookupPerson))
-                            Toast.makeText(getActivity(), "Person Updated", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Person Updated", Toast.LENGTH_LONG).show();
                     } else {
                         Person person = new Person();
                         person.set_first_name(sFirstName.toString());
@@ -275,7 +275,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
                         person.set_gender(sGender);
                         Log.d(LOG, "UpdatePerson add: " + person.get_gender());
                         if(dbHelp.addPerson(person))
-                            Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();
                     }
 
                     //Toast.makeText(getActivity(), "Person Saved", Toast.LENGTH_LONG).show();
@@ -370,7 +370,7 @@ public class EditPersonFragment extends Fragment implements AdapterView.OnItemSe
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

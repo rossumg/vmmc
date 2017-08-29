@@ -127,7 +127,7 @@ public class AddPersonFragment extends Fragment implements AdapterView.OnItemSel
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

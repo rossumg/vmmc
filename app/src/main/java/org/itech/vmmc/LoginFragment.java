@@ -167,8 +167,8 @@ public class LoginFragment extends Fragment {
         btnLogout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                mEmailView.setText((CharSequence) "");
-                mPasswordView.setText((CharSequence) "");
+                mEmailView.setText("");
+                mPasswordView.setText("");
                 MainActivity.LOGGED_IN = false;
             }
         });
@@ -386,7 +386,7 @@ public class LoginFragment extends Fragment {
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
     }
 
     public void showMessage(String title, String message) {

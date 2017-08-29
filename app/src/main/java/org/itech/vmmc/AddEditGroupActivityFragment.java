@@ -107,7 +107,7 @@ public class AddEditGroupActivityFragment extends Fragment implements AdapterVie
         final EditText activityDate = (EditText) view.findViewById(R.id.activity_date);
 
         et_activity_date = (EditText) view.findViewById(R.id.activity_date);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_activity_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -312,7 +312,7 @@ public class AddEditGroupActivityFragment extends Fragment implements AdapterVie
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
     }
 
     public void onResume() {

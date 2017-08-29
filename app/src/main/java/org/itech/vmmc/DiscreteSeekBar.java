@@ -64,11 +64,11 @@ public class DiscreteSeekBar extends View {
          * @param value    the new value
          * @param fromUser if the change was made from the user or not (i.e. the developer calling {@link #setProgress(int)}
          */
-        public void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser);
+        void onProgressChanged(DiscreteSeekBar seekBar, int value, boolean fromUser);
 
-        public void onStartTrackingTouch(DiscreteSeekBar seekBar);
+        void onStartTrackingTouch(DiscreteSeekBar seekBar);
 
-        public void onStopTrackingTouch(DiscreteSeekBar seekBar);
+        void onStopTrackingTouch(DiscreteSeekBar seekBar);
     }
 
     /**

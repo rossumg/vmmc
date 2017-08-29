@@ -336,7 +336,7 @@ public class AddEditClientFragment extends Fragment implements AdapterView.OnIte
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

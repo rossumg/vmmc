@@ -74,7 +74,7 @@ class getMySQLAclTable extends AsyncTask<String, String, String> {
                 num_recs = json.getInt("number_records");
                 JSONArray _array = json.getJSONArray("posts");
 
-                NotificationManager mNotifyManager = (NotificationManager) this._context.getSystemService(this._context.NOTIFICATION_SERVICE);
+                NotificationManager mNotifyManager = (NotificationManager) this._context.getSystemService(Context.NOTIFICATION_SERVICE);
                 NotificationCompat.Builder mBuilder = new NotificationCompat.Builder(this._context);
 
                 mBuilder.setContentTitle("Data Download")

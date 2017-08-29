@@ -109,7 +109,7 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
 //        final InteractionType _interactionType = dbHelp.getInteractionType( iSpinner.getSelectedItem().toString());
 
         et_interaction_date = (EditText) view.findViewById(R.id.interaction_date);
-        SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         final SimpleDateFormat finalDateFormatter1 = dateFormatter;
         DatePickerDialog hold_interaction_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -133,7 +133,7 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
 
 
         et_followup_date = (EditText) view.findViewById(R.id.followup_date);
-        dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         newCalendar = Calendar.getInstance();
         final SimpleDateFormat finalDateFormatter = dateFormatter;
         DatePickerDialog hold_followup_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
@@ -434,7 +434,7 @@ public class AddEditInteractionFragment extends Fragment implements AdapterView.
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

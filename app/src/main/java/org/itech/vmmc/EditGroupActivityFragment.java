@@ -237,7 +237,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
         });
 
         et_activity_date = (EditText) _view.findViewById(R.id.activity_date);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_activity_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -373,7 +373,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
                                 _name.getText() + ", " +  " <");
                         if(dbHelp.addGroupActivity(groupActivity))
                             MainActivity.gGroupActivity = groupActivity;
-                            Toast.makeText(getActivity(), "GroupActivity Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "GroupActivity Saved", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter Name and Activity Date ", Toast.LENGTH_LONG).show();
@@ -464,7 +464,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

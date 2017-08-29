@@ -226,8 +226,8 @@ public class MarkerDrawable extends StateDrawable implements Animatable {
      * This is the "poor's man" AnimatorListener for this Drawable
      */
     public interface MarkerAnimationListener {
-        public void onClosingComplete();
+        void onClosingComplete();
 
-        public void onOpeningComplete();
+        void onOpeningComplete();
     }
 }

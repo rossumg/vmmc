@@ -296,7 +296,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //        }); gnr: direct to edit frag
 
         et_dob = (EditText) _view.findViewById(R.id.dob);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_dob_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
@@ -480,7 +480,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         Log.d(LOG, "UpdateClient add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addClient(client))
-                            Toast.makeText(getActivity(), "Client Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "Client Saved", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name and Phone Number", Toast.LENGTH_LONG).show();
@@ -555,7 +555,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and name
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 
@@ -596,7 +596,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         statusNames.add(0, _status.get_name().toString());
 
         Set<String> noDups = new LinkedHashSet<>(statusNames);
-        statusNames.clear();;
+        statusNames.clear();
         statusNames.addAll(noDups);
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, statusNames);

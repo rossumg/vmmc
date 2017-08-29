@@ -251,7 +251,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
                         Log.d(LOG, "UpdateUser add: " + _username.getText() + ", " +  " <");
                         if(dbHelp.addUser(user))
-                            Toast.makeText(getActivity(), "User Saved", Toast.LENGTH_LONG).show();;
+                            Toast.makeText(getActivity(), "User Saved", Toast.LENGTH_LONG).show();
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter username", Toast.LENGTH_LONG).show();
@@ -320,7 +320,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
      */
     public interface OnFragmentInteractionListener {
         // TODO: Update argument type and username
-        public void onFragmentInteraction(int position);
+        void onFragmentInteraction(int position);
 
     }
 

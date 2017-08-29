@@ -369,11 +369,7 @@ public class MultiTypeListAdapter extends BaseAdapter {
     }
 
     public boolean convertStrToChecked (String checked) {
-        if (checked.equals("A")) {
-            return true;
-        } else {
-            return false;
-        }
+        return checked.equals("A");
     }
 
     public String convertProgressToStr (int progressInt) {
