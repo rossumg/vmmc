@@ -316,6 +316,13 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
 //                if (complete && !paramProjectedDate.toString().equals("") || !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
                 if (paramName.toString().equals("") || client == null) {
                     Toast.makeText(getActivity(), "Must enter valid client", Toast.LENGTH_LONG).show();
+                    Fragment fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
+                    if (fragment == null) {
+                        fragment = AddEditClientFragment.newInstance();
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditClientFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditClientFragment.TAG).commit();
+                    }
                 } else {
                    Fragment fragment;
                    fragment = EditBookingFragment.newInstance("editBooking", paramName + ":" + paramNationalID + ":" + paramPhoneNumber + ":" + paramProjectedDate);

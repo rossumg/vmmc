@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -20,6 +21,8 @@ import android.widget.Toast;
 
 import java.util.Calendar;
 import java.util.List;
+
+import static org.itech.vmmc.R.string.IllegalEntry;
 
 
 /**
@@ -190,6 +193,15 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                 String sUsername = _username.getText().toString();
                 _phone = (TextView) _view.findViewById(R.id.phone);
                 String sPhone = _phone.getText().toString();
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhone) && sPhone.length() == 11) {
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhone.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhone.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _phone.setText(_user.get_phone());
+                    _phone.requestFocus();
+                    return;
+                };
                 _password = (TextView) _view.findViewById(R.id.password);
                 String sPassword = _password.getText().toString();
                 _firstName = (TextView) _view.findViewById(R.id.first_name);

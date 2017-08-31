@@ -11,6 +11,7 @@ import android.util.Log;
 import android.widget.Toast;
 
 import java.sql.Timestamp;
+import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Calendar;
@@ -6015,6 +6016,23 @@ public class DBHelper extends SQLiteOpenHelper{
 //        c.close();
         return questionData;
     }
+
+    static public boolean isDate(String testDate){
+        Log.d(LOG, "isDate: " + testDate);
+//        String regEx = regEx ="^(0[1-9]|1[012])[- /.](0[1-9]|[12][0-9]|3[01])[- /.](19|20)\\d{2}$";
+//        String regEx = regEx ="^(19|20)\\d{2}[- /.](0[1-9]|1[012])[- /.]0[1-9]|[12][0-9]|3[01]$";
+//        Matcher matcherObj = Pattern.compile(regEx).matcher(testDate);
+//        if (matcherObj.matches()) return true;
+//        else return false;
+        SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
+        try {
+            dateFormatter.parse(testDate);
+            return true;
+        }
+        catch(java.text.ParseException e){
+            return false;
+        }
+    };
 
 
 

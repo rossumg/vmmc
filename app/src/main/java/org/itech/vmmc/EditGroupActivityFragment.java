@@ -290,8 +290,18 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
                 _name = (TextView) _view.findViewById(R.id.name);
                 String sName = _name.getText().toString();
-                _activity_date = (TextView) _view.findViewById(R.id.activity_date);
+                EditText activityDateEditText = (EditText) _view.findViewById(R.id.activity_date);
                 String sActivityDate = _activity_date.getText().toString();
+                if(DBHelper.isDate(sActivityDate) && sActivityDate.length() == 10) {
+//                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sActivityDate.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sActivityDate.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    activityDateEditText.setText(_groupActivity.get_activity_date());
+                    activityDateEditText.requestFocus();
+                    return;
+                };
+
                 _males = (NumberPicker) _view.findViewById(R.id.males);
                 Integer iMales = _males.getValue();
                 _females = (NumberPicker) _view.findViewById(R.id.females);

@@ -3,15 +3,19 @@ package org.itech.vmmc;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.text.Editable;
 import android.text.TextUtils;
+import android.text.TextWatcher;
 import android.util.Log;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.view.inputmethod.EditorInfo;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AutoCompleteTextView;
 import android.widget.Button;
 import android.widget.EditText;
@@ -41,6 +45,7 @@ public class LoginFragment extends Fragment {
     //public DBHelper dbHelp = new DBHelper(getActivity());
     // moved to onCreate: http://stackoverflow.com/questions/23449384/getwritabledatabase-throwing-null-pointer-exception-in-my-apps
     public DBHelper _dbHelp;
+    public View view;
 
     // TODO: Rename and change types of parameters
     private String mParam1;
@@ -121,27 +126,64 @@ public class LoginFragment extends Fragment {
 //        Log.d(LOG, "loginFragemnt:onCreate:id: " + deviceId);
     }
 
+
+
+
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View view = inflater.inflate(R.layout.fragment_login, container, false);
+        view = inflater.inflate(R.layout.fragment_login, container, false);
 
         getActivity().setTitle(getResources().getString(R.string.loginTitle));
         // Inflate the layout for this fragment
 
         // Set up the login form.
         mEmailView = (AutoCompleteTextView) view.findViewById(R.id.email);
+        mEmailView.setFocusable(true);
+        mEmailView.requestFocus();
+        InputMethodManager imm;
+        imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+        imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
 
         mPasswordView = (EditText) view.findViewById(R.id.password);
+
+        mEmailView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
+            @Override
+            public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
+                Log.d(LOG, "email action:" + id + textView.getText());
+                mPasswordView.requestFocus();
+                return true;
+            }
+        });
+
         mPasswordView.setOnEditorActionListener(new TextView.OnEditorActionListener() {
             @Override
             public boolean onEditorAction(TextView textView, int id, KeyEvent keyEvent) {
-                if (id == R.id.login || id == EditorInfo.IME_NULL) {
+                Log.d(LOG, "password action:" + id + textView.getText());
+                if (id == R.id.login || id == EditorInfo.IME_NULL || id == 6) {
                     attemptLogin();
                     return true;
                 }
                 return false;
             }
         });
+
+        mEmailView.addTextChangedListener(new TextWatcher() {
+                                              @Override
+                                              public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                                  Log.d(LOG, "before:" + charSequence.toString());
+                                              }
+
+                                              @Override
+                                              public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
+                                                  Log.d(LOG, "on:" + charSequence.toString());
+                                              }
+
+                                              @Override
+                                              public void afterTextChanged(Editable editable) {
+                                                  Log.d(LOG, "after:" + editable.toString());
+                                              }
+
+                                          });
 
         Button mEmailSignInButton = (Button) view.findViewById(R.id.email_sign_in_button);
         mEmailSignInButton.setOnClickListener(new View.OnClickListener() {

@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -26,6 +27,8 @@ import java.util.Calendar;
 import java.util.LinkedHashSet;
 import java.util.List;
 import java.util.Set;
+
+import static org.itech.vmmc.R.string.IllegalEntry;
 
 
 /**
@@ -432,10 +435,37 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 String sLastName = _last_name.getText().toString();
                 String sNationalId = _national_id.getText().toString();
                 String sPhoneNumber = _phone.getText().toString();
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == 11) {
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhoneNumber.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhoneNumber.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _phone.setText(_booking.get_phone());
+                    _phone.requestFocus();
+                    return;
+                };
                 String sFacilitator = _facilitator.getText().toString();
 
                 String sProjectedDate = _projected_date.getText().toString();
+                if(DBHelper.isDate(sProjectedDate) && sProjectedDate.length() == 10) {
+//                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sProjectedDate.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sProjectedDate.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _projected_date.setText(_booking.get_projected_date());
+                    _projected_date.requestFocus();
+                    return;
+                };
                 String sActualDate = _actual_date.getText().toString();
+                if((DBHelper.isDate(sActualDate) && sActualDate.length() == 10) || sActualDate.equals("")) {
+//                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sProjectedDate.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sProjectedDate.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _actual_date.setText(_booking.get_actual_date());
+                    _actual_date.requestFocus();
+                    return;
+                };
 //                DateFormat df = new android.text.format.DateFormat();
 //                String dProjectedDate = df.format(VMMC_DATE_FORMAT, projected_date);
 //                String sDOB = _dob.getText().toString();
@@ -449,8 +479,17 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
                 Spinner fSpinner = (Spinner) _view.findViewById(R.id.followup);
                 Followup _followup = dbHelp.getFollowup( fSpinner.getSelectedItem().toString());
-
                 String sFollowupDate = _followup_date.getText().toString();
+                if((DBHelper.isDate(sFollowupDate) && sFollowupDate.length() == 10) || sFollowupDate.equals("")) {
+//                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sProjectedDate.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sProjectedDate.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _followup_date.setText(_booking.get_followup_date());
+                    _followup_date.requestFocus();
+                    return;
+                };
+
                 String sConsent = _booking.get_consent();
 
                 _latitude = (TextView) _view.findViewById(R.id.latitude); Float fLatitude = Float.valueOf(_latitude.getText().toString());

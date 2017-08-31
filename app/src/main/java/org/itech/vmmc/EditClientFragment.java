@@ -5,10 +5,12 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.view.inputmethod.InputMethodManager;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.Button;
@@ -204,7 +206,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _location = dbHelp.getLocation("1");
             _institution = dbHelp.getInstitution("1");
             if(MainActivity.gGroupActivity == null) {
-                _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+                _groupActivity = null;
             } else {
                 _groupActivity = MainActivity.gGroupActivity;
             }
@@ -238,6 +240,11 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         if(_client != null) {
             _first_name = (TextView) _view.findViewById(R.id.first_name);
             _first_name.setText(_client.get_first_name());
+            _first_name.setFocusable(true);
+            InputMethodManager imm;
+            imm = (InputMethodManager) getActivity().getSystemService(Context.INPUT_METHOD_SERVICE);
+            imm.toggleSoftInput(InputMethodManager.SHOW_FORCED,0);
+            _first_name.requestFocus();
 //            _first_name.setInputType(InputType.TYPE_NULL);
             _last_name = (TextView) _view.findViewById(R.id.last_name);
             _last_name.setText(_client.get_last_name());
@@ -317,6 +324,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             }
         });
 
+
+
         Button btnBookingDisplay = (Button) _view.findViewById(R.id.btnBooking);
         btnBookingDisplay.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -353,7 +362,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
                 Log.d(LOG, "Booking button: " +
                         _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
-                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + "ga can be null" + ", " + " <");
 
                 Client client = dbHelp.getClient(_first_name.getText().toString(), _last_name.getText().toString(), "", _phone.getText().toString());
                 Fragment fragment;
@@ -396,6 +405,17 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 _national_id = (TextView) _view.findViewById(R.id.national_id); String sNationalId = _national_id.getText().toString();
                 _phone = (TextView) _view.findViewById(R.id.phone_number); String sPhoneNumber = _phone.getText().toString();
 
+                Log.d(LOG, "btnUpdate: " + PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) + "<");
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == 11) {
+                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhoneNumber.length());
+                }else{
+                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhoneNumber.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _phone.setText("");
+                    _phone.requestFocus();
+                    return;
+                };
+
                 Spinner sSpinner = (Spinner) _view.findViewById(R.id.status);
 //              String sStatusText  = sSpinner.getSelectedItem().toString();
                 Status _status = dbHelp.getStatus( sSpinner.getSelectedItem().toString());
@@ -413,23 +433,47 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                     return;
                 }
 
-                Spinner gaSpinner = (Spinner) _view.findViewById(R.id.group_activity);
+//                Spinner gaSpinner = (Spinner) _view.findViewById(R.id.group_activity);
+                EditText _groupActivityEditText = (EditText) _view.findViewById(R.id.group_activity);
 //                String sGroupActivityText  = gaSpinner.getSelectedItem().toString();
-                String parts[] = gaSpinner.getSelectedItem().toString().split(", ",2);
-                GroupActivity _groupActivity = dbHelp.getGroupActivity( parts[0], parts[1]);
+
+                Log.d(LOG, "_groupActivityEditText.getText().toString(): " + _groupActivityEditText.getText().toString() + "<");
+
+                GroupActivity _groupActivity = new GroupActivity();
+
+                if(_groupActivityEditText.getText().toString().equals("")) {
+                    _groupActivity.set_name("");
+                    _groupActivity.set_activity_date("");
+                    MainActivity.gGroupActivity = null;
+                } else {
+                    String parts[] = _groupActivityEditText.getText().toString().split(", ", 2);
+                    _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
+                }
 
                 Spinner aSpinner = (Spinner) _view.findViewById(R.id.address);
 //              String sAddressText  = aSpinner.getSelectedItem().toString();
                 Address _address = dbHelp.getAddress( aSpinner.getSelectedItem().toString());
 
                 String sDOB = _dob.getText().toString();
+                EditText _dobEditText = (EditText) _view.findViewById(R.id.dob);
+                Log.d(LOG, "btnUpdate: " + DBHelper.isDate(sDOB) + "<");
+                if(DBHelper.isDate(sDOB) && sDOB.length() == 10) {
+                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sDOB.length());
+                }else{
+                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sDOB.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _dob.setText(_client.get_dob());
+                    _dobEditText.requestFocus();
+                    return;
+                };
+
                 String sGender = _client.get_gender();
                 _latitude = (TextView) _view.findViewById(R.id.latitude); Float fLatitude = Float.valueOf(_latitude.getText().toString());
                 _longitude = (TextView) _view.findViewById(R.id.longitude); Float fLongitude = Float.valueOf(_longitude.getText().toString());
 
-                Log.d(LOG, "UpdateClient button: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
-                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + _groupActivity.get_name() + ", " + _groupActivity.get_activity_date() + " <");
+//                Log.d(LOG, "UpdateClient button: " +
+//                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
+//                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + "ga can be null" + ", " + _groupActivity.get_activity_date() + " <");
 
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
@@ -559,6 +603,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
     }
 
+
+
     public void loadPersonIDDropdown(View view) {
 
         List<String> personIDs = dbHelp.getAllPersonIDs();
@@ -669,10 +715,34 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
     }
 
     public void loadGroupActivityDropdown(View view ) {
-        final Spinner gaSpinner = (Spinner) view.findViewById(R.id.group_activity);
+//        final Spinner gaSpinner = (Spinner) view.findViewById(R.id.group_activity);
+        final ClearableAutoCompleteTextView gaAutoComplete = (ClearableAutoCompleteTextView) view.findViewById(R.id.group_activity);
         final List<String> groupActivityNames = dbHelp.getAllGroupActivityIDs();
 
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, groupActivityNames);
+//        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, groupActivityNames);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, groupActivityNames);
+        gaAutoComplete.setThreshold(1);
+        gaAutoComplete.setAdapter(dataAdapter);
+
+        if (_groupActivity == null) {
+            gaAutoComplete.setText("");
+        } else {
+            _client.set_group_activity_name(_groupActivity.get_name());
+            _client.set_group_activity_date(_groupActivity.get_activity_date());
+            _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+            gaAutoComplete.setText(_groupActivity.get_name());
+        }
+
+
+        gaAutoComplete.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                String gaID  = gaAutoComplete.getText().toString();
+                String parts[] = gaID.split(", ", 2);
+                _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
+                _client.set_group_activity_name(_groupActivity.get_name());
+                _client.set_group_activity_date(_groupActivity.get_activity_date());
+            }
+        });
 //        {
 //            @Override
 //            public boolean isEnabled(int position) {
@@ -711,37 +781,37 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //                return v;
 //            }
 //        };
-        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
-        gaSpinner.setAdapter(dataAdapter);
-        if(_client == null) {
-            _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
-        } else {
-            _client.set_group_activity_name(_groupActivity.get_name());
-            _client.set_group_activity_date(_groupActivity.get_activity_date());
-            _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
-        }
-        String compareValue = _groupActivity.get_name() + ", " + _groupActivity.get_activity_date();
-        if (!compareValue.equals(null)) {
-            int spinnerPosition = dataAdapter.getPosition(compareValue);
-            gaSpinner.setSelection(spinnerPosition);
-        }
-
-        gaSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String gaID  = gaSpinner.getSelectedItem().toString();
-                String parts[] = gaID.split(", ", 2);
-                _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
-//                _client.set_group_activity_name(_groupActivity.get_name());
-//                _client.set_group_activity_date(_groupActivity.get_activity_date());
-                Log.d(LOG, "_groupActivity: " + _groupActivity.get_name() + _groupActivity.get_activity_date());
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
-            }
-        });
+//        dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
+//        gaSpinner.setAdapter(dataAdapter);
+//        if(_client == null) {
+//            _groupActivity = dbHelp.getGroupActivity("Default Group", "2000-01-01");
+//        } else {
+//            _client.set_group_activity_name(_groupActivity.get_name());
+//            _client.set_group_activity_date(_groupActivity.get_activity_date());
+//            _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+//        }
+//        String compareValue = _groupActivity.get_name() + ", " + _groupActivity.get_activity_date();
+//        if (!compareValue.equals(null)) {
+//            int spinnerPosition = dataAdapter.getPosition(compareValue);
+//            gaSpinner.setSelection(spinnerPosition);
+//        }
+//
+//        gaSpinner.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
+//            @Override
+//            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
+//                String gaID  = gaSpinner.getSelectedItem().toString();
+//                String parts[] = gaID.split(", ", 2);
+//                _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
+////                _client.set_group_activity_name(_groupActivity.get_name());
+////                _client.set_group_activity_date(_groupActivity.get_activity_date());
+//                Log.d(LOG, "_groupActivity: " + _groupActivity.get_name() + _groupActivity.get_activity_date());
+//            }
+//
+//            @Override
+//            public void onNothingSelected(AdapterView<?> parent) {
+//                Log.d(LOG, "spinner nothing selected");
+//            }
+//        });
     }
 
     public void loadLocationDropdown(View view ) {

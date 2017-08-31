@@ -5,6 +5,7 @@ import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.os.Bundle;
+import android.telephony.PhoneNumberUtils;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -323,6 +324,15 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                 String sNationalId = _national_id.getText().toString();
                 _phone = (TextView) _view.findViewById(R.id.phone_number);
                 String sPhoneNumber = _phone.getText().toString();
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == 11) {
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhoneNumber.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhoneNumber.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _phone.setText(_facilitator.get_phone());
+                    _phone.requestFocus();
+                    return;
+                };
                 _note = (TextView) _view.findViewById(R.id.note);
                 String sNote = _note.getText().toString();
 
@@ -348,6 +358,16 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                 Address _address = dbHelp.getAddress( aSpinner.getSelectedItem().toString());
 
                 String sDOB = _dob.getText().toString();
+                if(DBHelper.isDate(sDOB) && sDOB.length() == 10) {
+//                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sDOB.length());
+                }else{
+//                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sDOB.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+                    _dob.setText(_facilitator.get_dob());
+                    _dob.requestFocus();
+                    return;
+                };
+
                 String sGender = _facilitator.get_gender();
 
 //                Log.d(LOG, "UpdateFacilitator button: " +
