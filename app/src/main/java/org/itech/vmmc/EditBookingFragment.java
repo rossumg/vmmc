@@ -435,7 +435,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 String sLastName = _last_name.getText().toString();
                 String sNationalId = _national_id.getText().toString();
                 String sPhoneNumber = _phone.getText().toString();
-                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == 11) {
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == DBHelper.VMMC_PHONE_NUMBER_LENGTH && sPhoneNumber.matches(DBHelper.VMMC_PHONE_NUMBER_REGEX)) {
 //                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhoneNumber.length());
                 }else{
 //                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhoneNumber.length());

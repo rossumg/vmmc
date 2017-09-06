@@ -33,6 +33,8 @@ public class DBHelper extends SQLiteOpenHelper{
     public static String LOG = "gnr";
     public static String VMMC_DATE_TIME_FORMAT = "yyyy-MM-dd hh:mm:ss";
     public static String VMMC_DATE_FORMAT = "yyyy-MM-dd";
+    public static int VMMC_PHONE_NUMBER_LENGTH = 10;
+    public static String VMMC_PHONE_NUMBER_REGEX = "\\d+";
     private static final int DATABASE_VERSION = 1;
     public Context _context;
 

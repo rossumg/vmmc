@@ -406,7 +406,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 _phone = (TextView) _view.findViewById(R.id.phone_number); String sPhoneNumber = _phone.getText().toString();
 
                 Log.d(LOG, "btnUpdate: " + PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) + "<");
-                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == 11) {
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhoneNumber) && sPhoneNumber.length() == DBHelper.VMMC_PHONE_NUMBER_LENGTH && sPhoneNumber.matches(DBHelper.VMMC_PHONE_NUMBER_REGEX)) {
                     Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhoneNumber.length());
                 }else{
                     Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhoneNumber.length());
@@ -730,7 +730,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _client.set_group_activity_name(_groupActivity.get_name());
             _client.set_group_activity_date(_groupActivity.get_activity_date());
             _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
-            gaAutoComplete.setText(_groupActivity.get_name());
+            gaAutoComplete.setText(_groupActivity.get_name() + ", " + _groupActivity.get_activity_date());
         }
 
 

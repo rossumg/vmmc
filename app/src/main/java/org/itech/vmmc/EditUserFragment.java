@@ -193,7 +193,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                 String sUsername = _username.getText().toString();
                 _phone = (TextView) _view.findViewById(R.id.phone);
                 String sPhone = _phone.getText().toString();
-                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhone) && sPhone.length() == 11) {
+                if(PhoneNumberUtils.isGlobalPhoneNumber(sPhone) && sPhone.length() == DBHelper.VMMC_PHONE_NUMBER_LENGTH && sPhone.matches(DBHelper.VMMC_PHONE_NUMBER_REGEX)) {
 //                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "true:" + sPhone.length());
                 }else{
 //                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhone.length());
