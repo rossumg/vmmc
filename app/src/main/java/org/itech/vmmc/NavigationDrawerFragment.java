@@ -21,6 +21,7 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -116,6 +117,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
     }
 
     public List<NavigationItem> getMenu() {
+
         List<NavigationItem> items = new ArrayList<NavigationItem>();
 
         items.add(new NavigationItem(getResources().getString(R.string.loginTitle)));
@@ -136,6 +138,8 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
 //        items.add(new NavigationItem(getResources().getString(R.string.addEditInteractionTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditPendingFollowup)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditUserTitle)));
+        items.add(new NavigationItem(getResources().getString(R.string.restoreTitle)));
+//        items.add(new NavigationItem("Export"));
 
 
         return items;

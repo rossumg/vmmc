@@ -10,6 +10,10 @@ import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileOutputStream;
+import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
@@ -610,6 +614,74 @@ public class DBHelper extends SQLiteOpenHelper{
 //        load_interaction_type();
     }
 
+    public static void importDB() {
+        try {
+            Log.d(LOG, "importDB0");
+            final String inFileName = "/data/data/org.itech.vmmc/databases/vmmc.db.bu";
+            File dbFile = new File(inFileName);
+            FileInputStream fis = new FileInputStream(dbFile);
+
+            String outFileName = "/data/data/org.itech.vmmc/databases/vmmc.db";
+            Log.d(LOG, "importDB1");
+
+            OutputStream output = new FileOutputStream(outFileName);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer))>0){
+                output.write(buffer, 0, length);
+            }
+            Log.d(LOG, "importDB2");
+
+            output.flush();
+            output.close();
+            fis.close();
+
+            Log.d(LOG, "importDB:restore successful");
+//                Toast.makeText(MyApplication.getAppContext(), "Import Successful!",Toast.LENGTH_SHORT).show();
+
+        } catch (Exception e) {
+
+            Log.d(LOG, "importDB:restore failed" + e.toString());
+//            Toast.makeText(MyApplication.getAppContext(), "Import Failed!", Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
+    public static void exportDB() {
+        try {
+            Log.d(LOG, "exportDB0");
+            final String inFileName = "/data/data/org.itech.vmmc/databases/vmmc.db";
+            File dbFile = new File(inFileName);
+            FileInputStream fis = new FileInputStream(dbFile);
+
+            String outFileName = inFileName+".bu";
+//            Log.d(LOG, "exportDB1");
+
+            OutputStream output = new FileOutputStream(outFileName);
+
+            byte[] buffer = new byte[1024];
+            int length;
+            while ((length = fis.read(buffer))>0){
+                output.write(buffer, 0, length);
+            }
+//            Log.d(LOG, "exportDB2");
+
+            output.flush();
+            output.close();
+            fis.close();
+
+            Log.d(LOG, "exportDB:backup successful");
+//            Toast.makeText(this._context, "Backup Successful!", Toast.LENGTH_SHORT).show();
+
+
+        } catch (Exception e) {
+            Log.d(LOG, "exportDB:backup failed" + e.toString());
+//            Toast.makeText(MyApplication.getAppContext(), "Backup Failed!" + e.toString(), Toast.LENGTH_SHORT).show();
+
+        }
+    }
+
     public void doSyncDB() {
         Log.d(LOG, "DBHelper.doSyncDB");
         SQLiteDatabase db = this.getWritableDatabase();
@@ -744,6 +816,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_USER, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addUser catch " + ex.toString());
@@ -3508,6 +3581,7 @@ public class DBHelper extends SQLiteOpenHelper{
             cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
             String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assessments_answers.get_assess_id();
             db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
+            DBHelper.exportDB();
             // db.close();
         }
         else {
@@ -3759,6 +3833,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_CLIENT, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addClient catch " + ex.toString());
@@ -3813,6 +3888,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 CLIENT_PHONE + " = '" + values.get(CLIENT_PHONE).toString().replaceAll("'","''") + "'";
 
         db.update(TABLE_CLIENT, values, updateWhereClause, null);
+        DBHelper.exportDB();
         // db.close();
         return true;
     }
@@ -3853,6 +3929,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 USER_PHONE + " = '" + values.get(USER_PHONE) + "'";
 
         db.update(TABLE_USER, values, updateWhereClause, null);
+        DBHelper.exportDB();
         // db.close();
         return true;
     }
@@ -3882,6 +3959,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_INTERACTION, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addInteraction catch " + ex.toString());
@@ -3932,6 +4010,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //                INTERACTION_FOLLOWUP_DATE + " = '" + values.get(INTERACTION_FOLLOWUP_DATE) + "'";
 
         db.update(TABLE_INTERACTION, values, updateWhereClause, null);
+        DBHelper.exportDB();
         // db.close();
         return true;
     }
@@ -3958,6 +4037,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_PERSON, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addPerson catch " + ex.toString());
@@ -4665,6 +4745,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_FACILITATOR, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addFacilitator catch " + ex.toString());
@@ -4707,6 +4788,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 FACILITATOR_PHONE + " = '" + values.get(FACILITATOR_PHONE).toString().replaceAll("'","''") + "'";
 
         db.update(TABLE_FACILITATOR, values, updateWhereClause, null);
+        DBHelper.exportDB();
         // db.close();
         return true;
     }
@@ -4849,6 +4931,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_GROUP_ACTIVITY, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addGroupActivity catch " + ex.toString());
@@ -4896,6 +4979,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 GROUP_ACTIVITY_ACTIVITY_DATE + " = '" + values.get(GROUP_ACTIVITY_ACTIVITY_DATE) + "'";
 
         db.update(TABLE_GROUP_ACTIVITY, values, updateWhereClause, null);
+        DBHelper.exportDB();
         // db.close();
         return true;
     }
@@ -5154,6 +5238,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_BOOKING, null, values);
+            DBHelper.exportDB();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addBooking catch " + ex.toString());
@@ -5257,6 +5342,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     values.get(BOOKING_ALT_CONTACT)
             );
             db.update(TABLE_BOOKING, values, updateWhereClause, null);
+            DBHelper.exportDB();
             // db.close();
             return true;
 
@@ -5746,6 +5832,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "updatePerson updateWhereClause: " + updateWhereClause);
 
         db.update(TABLE_PERSON, values, updateWhereClause, null);
+        DBHelper.exportDB();
         // db.close();
         return true;
     }

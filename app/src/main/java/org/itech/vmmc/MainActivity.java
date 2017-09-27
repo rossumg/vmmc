@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "1.11";
+    public static String _version = "1.12";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -193,7 +193,40 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         getFragmentManager().popBackStackImmediate(null, getFragmentManager().POP_BACK_STACK_INCLUSIVE);
 
         Fragment fragment;
+        final DBHelper dbHelp = new DBHelper(this);
         switch(position) {
+
+            case 7:
+//                final DBHelper userDBHelp = new DBHelper(this);
+                if  (_username.equals("sync@")) {
+                    dbHelp.importDB();
+                    Toast.makeText(this, "Restore Complete", Toast.LENGTH_LONG).show();
+                    fragment = getFragmentManager().findFragmentByTag(LoginFragment.LOG);
+                    if (fragment == null) {
+                        fragment = LoginFragment.newInstance();
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).addToBackStack(currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, LoginFragment.LOG).commit();
+                    }
+                    currentFragmentId = "Login";
+                } else {
+                    Toast.makeText(this, "Permission Denied", Toast.LENGTH_LONG).show();
+
+                    fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);
+                    if (fragment == null) {
+                        fragment = ActionFragment.newInstance("main", "");
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).addToBackStack(currentFragmentId).commit();
+                    } else {
+                        getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
+                    }
+                }
+
+
+                break;
+
+            case 8:
+                dbHelp.exportDB();
+                break;
 
             case 0:
                 fragment = getFragmentManager().findFragmentByTag(LoginFragment.LOG);
@@ -210,7 +243,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
             case 1:
 
             Log.d(LOG, "SYNC btn");
-                final DBHelper dbHelp = new DBHelper(this);
             if(MainActivity._pass.equals("")) {
 
                 AlertDialog.Builder builder = new AlertDialog.Builder(this);
@@ -358,8 +390,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
 
             case 6:
-                final DBHelper userDBHelp = new DBHelper(this);
-                if (userDBHelp.getUserAccess("edit_user")) {
+//                final DBHelper userDBHelp = new DBHelper(this);
+                if (dbHelp.getUserAccess("edit_user")) {
                     fragment = getFragmentManager().findFragmentByTag(AddEditUserFragment.TAG);
                     if (fragment == null) {
                         fragment = AddEditUserFragment.newInstance();
