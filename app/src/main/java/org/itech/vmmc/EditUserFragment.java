@@ -66,6 +66,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
     private  RadioButton _rb_is_blocked;
     private  CheckBox _cb_region1;
     private  CheckBox _cb_region2;
+    private  CheckBox _cb_region3;
     private  RadioButton _rb_yes;
     private  RadioButton _rb_no;
     private static VMMCLocation _location;
@@ -220,7 +221,18 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
               Spinner lSpinner = (Spinner) _view.findViewById(R.id.vmmclocation);
 //              String sLocationText  = lSpinner.getSelectedItem().toString();
-              VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
+
+                VMMCLocation _location = dbHelp.getLocation( lSpinner.getSelectedItem().toString());
+//                _location = dbHelp.getLocation( "Okaku" );
+
+                if(_user.get_region_id() != 0) {
+                    Log.d(LOG, "btnUpdate:region: " + iRegionId);
+                }else{
+//                    Log.d(LOG, "btnUpdate:isPhoneNumber: " + "false:" + sPhone.length());
+                    Toast.makeText(getActivity(), getResources().getString(IllegalEntry), Toast.LENGTH_LONG).show();
+
+                    return;
+                };
 
                 Log.d(LOG, "UpdateUser button: " +
                         sUsername + ", " + sPhone + " <");
@@ -265,6 +277,7 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                         if(dbHelp.addUser(user))
                             Toast.makeText(getActivity(), "User Saved", Toast.LENGTH_LONG).show();
                     }
+                    if (MainActivity._username == lookupUser.get_username()) MainActivity.USER_OBJ = lookupUser;
                 } else {
                     Toast.makeText(getActivity(), "Must enter username", Toast.LENGTH_LONG).show();
                 }
@@ -341,20 +354,42 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
 
         _cb_region1 = (CheckBox) _view.findViewById(R.id.cb_Region1);
         _cb_region2 = (CheckBox) _view.findViewById(R.id.cb_Region2);
+        _cb_region3 = (CheckBox) _view.findViewById(R.id.cb_Region3);
 
         if (_user.get_region_id() == 0 ) {
             _cb_region1.setChecked(false);
             _cb_region2.setChecked(false);
+            _cb_region3.setChecked(false);
         } else if (_user.get_region_id() == 1){
             _cb_region1.setChecked(true);
             _cb_region2.setChecked(false);
+            _cb_region3.setChecked(false);
         } else if (_user.get_region_id() == 2){
             _cb_region1.setChecked(false);
             _cb_region2.setChecked(true);
+            _cb_region3.setChecked(false);
         } else if (_user.get_region_id() == 3){
             _cb_region1.setChecked(true);
             _cb_region2.setChecked(true);
+            _cb_region3.setChecked(false);
+        } else if (_user.get_region_id() == 4) {
+            _cb_region1.setChecked(false);
+            _cb_region2.setChecked(false);
+            _cb_region3.setChecked(true);
+        } else if (_user.get_region_id() == 5) {
+            _cb_region1.setChecked(true);
+            _cb_region2.setChecked(false);
+            _cb_region3.setChecked(true);
+        } else if (_user.get_region_id() == 6) {
+            _cb_region1.setChecked(false);
+            _cb_region2.setChecked(true);
+            _cb_region3.setChecked(true);
+        } else if (_user.get_region_id() == 7) {
+            _cb_region1.setChecked(true);
+            _cb_region2.setChecked(true);
+            _cb_region3.setChecked(true);
         }
+
 
         _cb_region1.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -377,6 +412,19 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                     _user.set_region_id(_user.get_region_id()+2);
                 }else {
                     _user.set_region_id(_user.get_region_id()-2);
+                }
+                Log.d(LOG, "region: " + _user.get_region_id());
+            }
+        });
+
+        _cb_region3.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                _cb_region=(CheckBox) _view.findViewById(R.id.cb_Region3);
+                if(_cb_region.isChecked()) {
+                    _user.set_region_id(_user.get_region_id()+4);
+                }else {
+                    _user.set_region_id(_user.get_region_id()-4);
                 }
                 Log.d(LOG, "region: " + _user.get_region_id());
             }
@@ -498,7 +546,8 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
         Log.d(LOG, "loadLocationDropdown: " );
 
         final Spinner lSpinner = (Spinner) view.findViewById(R.id.vmmclocation);
-        final List<String> locationNames = dbHelp.getAllLocationNames();
+        final List<String> locationNames = dbHelp.getAllLocationNamesWithoutRegionJoin();
+//        final List<String> locationNames = dbHelp.getAllLocationNames();
 
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), R.layout.simple_spinner_item, locationNames);
 

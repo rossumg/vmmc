@@ -1700,8 +1700,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select p.* from " + TABLE_PERSON + " p\n" +
                         "join address a on p.address_id = a.id \n" +
-                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and a.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1744,8 +1745,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select c.* from " + TABLE_CLIENT + " c\n" +
                         "join address a on c.address_id = a.id \n" +
-                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and a.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -1876,8 +1878,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga \n" +
                         "join location l on ga.location_id = l.id \n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
         Log.d(LOG, "getAllLikeGroupActivitieyIDs selectQuery: " + selectQuery);
@@ -1924,8 +1927,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
                         "join location l on ga.location_id = l.id \n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "and trim(ga." + GROUP_ACTIVITY_NAME + ") like ? \n" +
                         "and trim(ga." + GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
@@ -2612,7 +2616,7 @@ public class DBHelper extends SQLiteOpenHelper{
         }
     }
 
-    public List<String> getAllLocationNames(){
+    public List<String> getAllLocationNamesWithoutRegionJoin(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> locationNames = new ArrayList<String>();
 
@@ -2621,10 +2625,89 @@ public class DBHelper extends SQLiteOpenHelper{
         };
 
         String selectQuery =
-                "select l." + LOCATION_NAME + " from " + TABLE_LOCATION + " l\n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                "select l." + LOCATION_NAME + " from " + TABLE_LOCATION + " l \n" +
+                        "where 1=1 \n";
+
+        String whereClause = "1=1 ";
+
+        String[] whereArgs = new String[]{};
+
+        String orderBy = LOCATION_ID;
+
+        Cursor cursor = db.rawQuery(selectQuery, null);
+
+        if (cursor.moveToFirst()) {
+            do {
+//                Log.d(LOG, "getAllLocationNames  "
+//                                + cursor.getString(0)
+//                );
+                locationNames.add(cursor.getString(0));
+            } while (cursor.moveToNext());
+        }
+
+        cursor.close();
+        // db.close();
+
+        // remove duplicates
+        Set<String> noDups = new LinkedHashSet<>(locationNames);
+        locationNames.clear();
+        locationNames.addAll(noDups);
+
+        // convert to array
+        String[] stringArrayNames = new String[ locationNames.size() ];
+        locationNames.toArray(stringArrayNames);
+
+        return locationNames;
+    }
+
+    public String getRegionString(){
+        Log.d(LOG, "getRegionString: " + MainActivity.USER_OBJ.get_region_id());
+        String regionString = new String ("");
+        switch ( MainActivity.USER_OBJ.get_region_id() ) {
+            case 0:
+            default:
+                regionString = " ( 0 ) ";
+                break;
+            case 1:
+                regionString = " ( 1 ) ";
+                break;
+            case 2:
+                regionString = " ( 2 ) ";
+                break;
+            case 3:
+                regionString = " ( 1,2 ) ";
+                break;
+            case 4:
+                regionString = " ( 3 ) ";
+                break;
+            case 5:
+                regionString = " ( 3,1 ) ";
+                break;
+            case 6:
+                regionString = " ( 3,2 ) ";
+                break;
+            case 7:
+                regionString = " ( 3,2,1 ) ";
+                break;
+        };
+        return regionString;
+    }
+
+    public List<String> getAllLocationNames(){
+        SQLiteDatabase db = this.getReadableDatabase();
+        List<String> locationNames = new ArrayList<String>();
+
+        String[] tableColumns = new String[] {
+                LOCATION_NAME
+        };
+
+        // gnr: we understand that this is a cartesian product, see getRegionString and user.region_id
+        String selectQuery =
+                "select l." + LOCATION_NAME + " from " + TABLE_LOCATION + " l \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
-                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
+                        "and l.region_id in " + getRegionString() + " \n" +
+                        "and u.username = '" + MainActivity.USER_OBJ.get_username() + "' \n";
 
         String whereClause = "1=1 ";
 
@@ -2712,8 +2795,9 @@ public class DBHelper extends SQLiteOpenHelper{
 
         String selectQuery =
                 "select a.name from " + TABLE_ADDRESS + " a\n" +
-                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and a.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -2795,8 +2879,9 @@ public class DBHelper extends SQLiteOpenHelper{
 
         String selectQuery =
                 "select i.name from " + TABLE_INSTITUTION + " i\n" +
-                        "join user u on i.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and i.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n";
 
         String whereClause = "1=1 ";
@@ -2897,8 +2982,9 @@ public class DBHelper extends SQLiteOpenHelper{
                         "  c.phone = b.phone\n" +
                         "join location l on c.loc_id = l.id\n" +
                         "join address a on c.address_id = a.id\n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3\n" +
+                        "join user u \n" +
                         "where s.name = 'Pending'\n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "order by difference desc ";
 
@@ -4305,8 +4391,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select c.* from " + TABLE_CLIENT + " c\n" +
                         "join location l on c.loc_id = l.id \n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "and trim(c." + CLIENT_FIRST_NAME + ") like ? " +
                         "and trim(c." + CLIENT_LAST_NAME + ") like ? " +
@@ -4561,8 +4648,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select ga.* from " + TABLE_GROUP_ACTIVITY + " ga\n" +
                         "join location l on ga.location_id = l.id \n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "and trim(ga." + GROUP_ACTIVITY_NAME + ") like ? \n" +
                         "and trim(ga." + GROUP_ACTIVITY_ACTIVITY_DATE + ") like ? ";
@@ -4672,8 +4760,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select f.* from " + TABLE_FACILITATOR + " f\n" +
                         "join location l on f.location_id = l.id \n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "and trim(f." + FACILITATOR_FIRST_NAME + ") like ? \n" +
                         "and trim(f." + FACILITATOR_LAST_NAME + ") like ? \n" +
@@ -5568,8 +5657,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select p.* from " + TABLE_PERSON + " p\n" +
                         "join address a on p.address_id = a.id \n" +
-                        "join user u on a.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and a.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "and trim(p." + PERSON_FIRST_NAME + ") like ? \n" +
                         "and trim(p." + PERSON_LAST_NAME + ") like ? \n" +
@@ -5667,8 +5757,9 @@ public class DBHelper extends SQLiteOpenHelper{
         String selectQuery =
                 "select b.* from " + TABLE_BOOKING + " b\n" +
                         "join location l on b.location_id = l.id \n" +
-                        "join user u on l.region_id = u.region_id or u.region_id = 3 \n" +
+                        "join user u \n" +
                         "where 1=1 \n" +
+                        "and l.region_id in " + getRegionString() + " \n" +
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "and trim(b." + BOOKING_FIRST_NAME + ") like ? \n" +
                         "and trim(b." + BOOKING_LAST_NAME + ") like ? \n" +
