@@ -173,6 +173,7 @@
     <string name="IllegalEntry">Illegal Entry</string>
     <string name="restoreTitle">Restore</string>
     <string name="Karas">//Karas</string>
+    <string name="auditTitle">Audit</string>
 
 
 </resources>

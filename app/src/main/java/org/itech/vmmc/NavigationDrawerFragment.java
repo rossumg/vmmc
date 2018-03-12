@@ -21,7 +21,6 @@ import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -139,6 +138,7 @@ public class NavigationDrawerFragment extends Fragment implements NavigationDraw
         items.add(new NavigationItem(getResources().getString(R.string.addEditPendingFollowup)));
         items.add(new NavigationItem(getResources().getString(R.string.addEditUserTitle)));
         items.add(new NavigationItem(getResources().getString(R.string.restoreTitle)));
+        items.add(new NavigationItem(getResources().getString(R.string.auditTitle)));
 //        items.add(new NavigationItem("Export"));
 
 

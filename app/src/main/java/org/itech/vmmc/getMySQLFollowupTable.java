@@ -26,8 +26,11 @@ class getMySQLFollowupTable extends AsyncTask<String, String, String> {
     public Context _context;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     getMySQLFollowupTable(Context context, DBHelper dbhelp) {
+        this.dbhelp = dbhelp;
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
         this._db.execSQL("delete from facilitator_type");
@@ -47,7 +50,7 @@ class getMySQLFollowupTable extends AsyncTask<String, String, String> {
         // TODO Auto-generated method stub
         // Check for success tag
         int success;
-        int i = 0;
+        i = 0;
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
@@ -93,7 +96,7 @@ class getMySQLFollowupTable extends AsyncTask<String, String, String> {
 
                     Log.d(LOG, "getMySQLFollowupTable:doInBackground: " + _name );
                     String _insert =
-                            "insert into followup "
+                            "insert or replace into followup "
                                     + "(id, name) "
                                     + " values("
                                     + "'" + _id + "'" + ","
@@ -124,6 +127,7 @@ class getMySQLFollowupTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "getMySQLFollowupTable exception > " + e.toString());
+            syncAudit.set_status("getMySQLFollowupTable exception:" + e.toString());
         }
         Log.d(LOG, "getMySQLFollowupTable.doInBackground end");
         return Integer.toString(i);
@@ -131,6 +135,8 @@ class getMySQLFollowupTable extends AsyncTask<String, String, String> {
 
     protected void onPostExecute(String result) {
         Log.d(LOG, "getMySQLFollowupTable:onPostExecute: " + result);
+        syncAudit.set_progress("getMySQLFollowupTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }

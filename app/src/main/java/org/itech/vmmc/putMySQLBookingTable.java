@@ -21,6 +21,8 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLBookingTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -59,7 +61,7 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
             List<Booking> BookingList = dbhelp.getAllBookings();
             Log.d(LOG, "putMySQLBookingTable build rec: " + BookingList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(BookingList.size()), "UTF-8");
-            int i = 0;
+            i = 0;
             String[] recs = new String[BookingList.size()];
             for (Booking booking: BookingList) {
                 recs[i] =
@@ -87,7 +89,7 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
 //                                booking.get_contact() + "," +
                                 booking.get_alt_contact();
 
-                        Log.d(LOG, "loop: " + recs[i] + "<");
+//                        Log.d(LOG, "loop: " + recs[i] + "<");
 
                 data += "&" + URLEncoder.encode("recs"+Integer.toString(i), "UTF-8") + "=" + URLEncoder.encode(recs[i], "UTF-8");
                 i++;
@@ -109,9 +111,16 @@ class putMySQLBookingTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLBookingTable exception > " + e.toString());
+            syncAudit.set_status("putMySQLBookingTable exception:" + e.toString());
         }
         Log.d(LOG, "putMySQLBookingTable.doInBackground end");
-        return null;
+        return Integer.toString(i);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d(LOG, "putMySQLBookingTable:onPostExecute: " + result);
+        syncAudit.set_progress("putMySQLBookingTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
     }
 }
 

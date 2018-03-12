@@ -21,6 +21,8 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLPersonTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -41,6 +43,7 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
         // TODO Auto-generated method stub
         // Check for success tag
         int success;
+        i = 0;
         String username = MainActivity._user;
         String password = MainActivity._pass;
         String datatable = "putPerson";
@@ -59,7 +62,7 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
             List<Person> personList = dbhelp.getAllPersons();
             Log.d(LOG, "putMySQLPersonTable build rec: " + personList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(personList.size()), "UTF-8");
-            int i = 0;
+
             String[] recs = new String[personList.size()];
             for (Person person: personList) {
                 recs[i] =
@@ -97,9 +100,19 @@ class putMySQLPersonTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLPersonTable exception > " + e.toString());
+            if ( e instanceof org.json.JSONException )
+                syncAudit.set_status("putMySQLPersonTable exception: Invalid Password");
+            else
+                syncAudit.set_status("putMySQLPersonTable exception:" + e.toString());
         }
         Log.d(LOG, "putMySQLPersonTable.doInBackground end");
-        return null;
+        return Integer.toString(i);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d(LOG, "putMySQLPersonTable:onPostExecute: " + result);
+        syncAudit.set_progress("putMySQLPersonTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
     }
 }
 

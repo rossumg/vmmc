@@ -27,7 +27,6 @@ import java.util.Set;
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
 
-
 /**
  * Created by Greg on 8/21/2015.
  */
@@ -121,6 +120,7 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String ANSWER_TYPE_TITLE = "title";
 
     // vmmc.db table names
+    private static final String TABLE_SYNC_AUDIT  = "sync_audit";
     private static final String TABLE_PERSON      = "person";
     private static final String TABLE_USER        = "user";
     private static final String TABLE_USER_TYPE   = "user_type";
@@ -143,6 +143,17 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String TABLE_INSTITUTION  = "institution";
     private static final String TABLE_GROUP_ACTIVITY  = "group_activity";
     private static final String TABLE_GROUP_TYPE  = "group_type";
+
+    // audit_sync table column names
+    private static final String SYNC_AUDIT_ID         = "id";
+    private static final String SYNC_AUDIT_TIMESTAMP  = "timestamp";
+    private static final String SYNC_AUDIT_LATITUDE   = "latitude";
+    private static final String SYNC_AUDIT_LONGITUDE  = "longitude";
+    private static final String SYNC_AUDIT_DEVICE_ID  = "device_id";
+    private static final String SYNC_AUDIT_USERNAME   = "username";
+    private static final String SYNC_AUDIT_PASSWORD   = "password";
+    private static final String SYNC_AUDIT_PROGRESS   = "progress";
+    private static final String SYNC_AUDIT_STATUS     = "status";
 
     // person table column names
     private static final String PERSON_ID          = "id";
@@ -183,9 +194,6 @@ public class DBHelper extends SQLiteOpenHelper{
     private static final String BOOKING_FOLLOWUP_ID       = "followup_id";
     private static final String BOOKING_FOLLOWUP_DATE       = "followup_date";
     private static final String BOOKING_ALT_CONTACT       = "alt_contact";
-
-
-
 
     // user table column names
     private static final String USER_ID = "id";
@@ -357,6 +365,18 @@ public class DBHelper extends SQLiteOpenHelper{
 
         //try { db.execSQL("delete from person;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
         try {
+            String CREATE_SYNC_AUDIT_TABLE = "CREATE TABLE IF NOT EXISTS sync_audit(" +
+                    "id integer primary key  autoincrement  not null  unique, " +
+                    "timestamp datetime default current_timestamp, " +
+                    "latitude real default 0.0, " +
+                    "longitude real default 0.0, " +
+                    "device_id varchar, " +
+                    "username varchar, " +
+                    "password varchar, " +
+                    "progress varchar, " +
+                    "status varchar);";
+            db.execSQL(CREATE_SYNC_AUDIT_TABLE);
+
             String CREATE_PERSON_TABLE = "CREATE TABLE IF NOT EXISTS person(" +
                     "id integer primary key  autoincrement  not null  unique, " +
                     "timestamp datetime default current_timestamp, " +
@@ -690,11 +710,16 @@ public class DBHelper extends SQLiteOpenHelper{
 //        load_interaction_type();
 //          load_person();
 
-        new putMySQLPersonTable(this).execute();
+        SyncAudit syncAudit = new SyncAudit();
+        syncAudit.set_progress("Start"); this.addSyncAudit(syncAudit);
+
+//        new putMySQLSyncAuditTable(this).execute();
+
+//        new putMySQLPersonTable(this).execute();
         new putMySQLBookingTable(this).execute();
         new putMySQLClientTable(this).execute();
         new putMySQLFacilitatorTable(this).execute();
-        new putMySQLInteractionTable(this).execute();
+//        new putMySQLInteractionTable(this).execute();
         new putMySQLGroupActivityTable(this).execute();
         new putMySQLUserTable(this).execute();
         new getMySQLRegionTable(this._context, this).execute();
@@ -705,8 +730,8 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLFollowupTable(this._context, this).execute();
         new getMySQLStatusTypeTable(this._context, this).execute();
         new getMySQLInstitutionTable(this._context, this).execute();
-        new getMySQLInteractionTypeTable(this._context, this).execute();
-        new getMySQLPersonTable(this._context, this).execute();
+//        new getMySQLInteractionTypeTable(this._context, this).execute();
+//        new getMySQLPersonTable(this._context, this).execute();
         new getMySQLBookingTable(this._context, this).execute();
         new getMySQLClientTable(this._context, this).execute();
         new getMySQLFacilitatorTable(this._context, this).execute();
@@ -717,6 +742,8 @@ public class DBHelper extends SQLiteOpenHelper{
         new getMySQLUserToAclTable(this._context, this).execute();
         new getMySQLGroupTypeTable(this._context, this).execute();
         new getMySQLGroupActivityTable(this._context, this).execute();
+
+//        new putMySQLSyncAuditTable(this).execute();
 
         Log.d(LOG, "DBHelper after sync: _username: " + MainActivity._username );
 
@@ -733,6 +760,62 @@ public class DBHelper extends SQLiteOpenHelper{
 
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
+
+    public List<SyncAudit> getAllSyncLocation() {
+
+        List<SyncAudit> syncAuditList = new ArrayList<SyncAudit>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_SYNC_AUDIT;
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                SyncAudit syncAudit = new SyncAudit();
+                syncAudit.set_timestamp(cursor.getString(1));
+                syncAudit.set_longitude(parseFloat(cursor.getString(2)));
+                syncAudit.set_latitude(parseFloat(cursor.getString(3)));
+                syncAudit.set_device_id(cursor.getString(4));
+                syncAudit.set_username(cursor.getString(5));
+                syncAudit.set_password(cursor.getString(6));
+                syncAudit.set_progress(cursor.getString(7));
+                syncAudit.set_status(cursor.getString(8));
+                syncAuditList.add(syncAudit);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        // db.close();
+
+        return syncAuditList;
+    }
+
+    public boolean addSyncAudit(SyncAudit syncAudit){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+
+        values.put(SYNC_AUDIT_TIMESTAMP, oTimestamp.toString());
+        values.put(SYNC_AUDIT_LONGITUDE, syncAudit.get_longitude());
+        values.put(SYNC_AUDIT_LATITUDE, syncAudit.get_latitude());
+        values.put(SYNC_AUDIT_DEVICE_ID, MainActivity.deviceId);
+        values.put(SYNC_AUDIT_USERNAME, MainActivity._username);
+        values.put(SYNC_AUDIT_PASSWORD, MainActivity._password);
+        values.put(SYNC_AUDIT_PROGRESS, syncAudit.get_progress());
+        values.put(SYNC_AUDIT_STATUS, syncAudit.get_status());
+
+        try {
+            db.insert(TABLE_SYNC_AUDIT, null, values);
+            Toast.makeText(this._context, "Record: " + syncAudit.get_longitude() + " " + syncAudit.get_latitude(), Toast.LENGTH_LONG).show();
+        } catch (Exception ex) {
+            // db.close();
+            Log.d(LOG, "addSyncAudit catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
 
     public User getUser(String username, String password, String phone){
         User _user = null;
@@ -1013,7 +1096,7 @@ public class DBHelper extends SQLiteOpenHelper{
                             Booking.get_projected_date() + "," +
                             Booking.get_actual_date();
 
-            Log.d(LOG, "loop: " + recs[i] + "<");
+//            Log.d(LOG, "loop: " + recs[i] + "<");
             i++;
         }
     }
@@ -1955,8 +2038,8 @@ public class DBHelper extends SQLiteOpenHelper{
                 groupActivity.set_longitude(parseFloat(cursor.getString(10)));
                 groupActivity.set_latitude(parseFloat(cursor.getString(11)));
 
-                Log.d(LOG, "getAllGroupActivities loop: " + groupActivity.get_name() );
-                Log.d(LOG, "getAllGroupActivities loop: " + cursor.getString(0) + "," + cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3) + "," + cursor.getString(6) );
+//                Log.d(LOG, "getAllGroupActivities loop: " + groupActivity.get_name() );
+//                Log.d(LOG, "getAllGroupActivities loop: " + cursor.getString(0) + "," + cursor.getString(1) + "," + cursor.getString(2) + "," + cursor.getString(3) + "," + cursor.getString(6) );
 
                 // Adding groupActivity to list
                 groupActivityList.add(groupActivity);
@@ -2988,7 +3071,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "and u.username = '" + MainActivity.USER_OBJ.get_username() + "'\n" +
                         "order by difference desc ";
 
-//        Log.d(LOG, "getAllPendingFollowups:select: " + selectQuery.toString());
+        Log.d(LOG, "getAllPendingFollowups:select: " + selectQuery.toString());
 
         SQLiteDatabase db = this.getReadableDatabase();
         Cursor cursor = db.rawQuery(selectQuery, null);
@@ -3006,6 +3089,35 @@ public class DBHelper extends SQLiteOpenHelper{
                 pendingFollowup.set_phone(cursor.getString(7));
                 // Adding person to list
                 _List.add(pendingFollowup);
+            } while (cursor.moveToNext());
+        }
+        cursor.close();
+        // db.close();
+
+        return _List;
+    }
+
+    public List<SyncAudit> getAllSyncAudits() {
+
+        List<SyncAudit> _List = new ArrayList<SyncAudit>();
+        // Select All Query
+        String selectQuery = "SELECT  * FROM " + TABLE_SYNC_AUDIT +  " order by id desc";
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery(selectQuery, null);
+        // looping through all rows and adding to list
+        if (cursor.moveToFirst()) {
+            do {
+                SyncAudit syncAudit = new SyncAudit();
+                syncAudit.set_id(cursor.getInt(0));
+                syncAudit.set_timestamp(cursor.getString(1));
+                syncAudit.set_longitude(parseFloat(cursor.getString(2)));
+                syncAudit.set_latitude(parseFloat(cursor.getString(3)));
+                syncAudit.set_device_id(cursor.getString(4));
+                syncAudit.set_username(cursor.getString(5));
+                syncAudit.set_progress(cursor.getString(7));
+                syncAudit.set_status(cursor.getString(8));
+                // Adding record to list
+                _List.add(syncAudit);
             } while (cursor.moveToNext());
         }
         cursor.close();
@@ -4268,6 +4380,7 @@ public class DBHelper extends SQLiteOpenHelper{
         // looping through all rows and adding to list
         if (cursor1.moveToFirst()) {
             do {
+                /*
                 Log.d(LOG, "getAllClients: loop: "
                         + cursor1.getString(1) + ":"
                         + cursor1.getString(2) + ":"
@@ -4276,6 +4389,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         + cursor1.getString(5) + ":"
                         + cursor1.getString(6) + ":"
                         + cursor1.getString(7) + ":" );
+                        */
                 Client client = new Client();
                 client.set_id(parseInt(cursor1.getString(0)));
                 client.set_timestamp(cursor1.getString(1));
@@ -4350,7 +4464,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
             do {
-                Log.d(LOG, "getAllUsers: loop: " + cursor.getString(2));
+//                Log.d(LOG, "getAllUsers: loop: " + cursor.getString(2));
                 User user = new User();
                 user.set_id(parseInt(cursor.getString(0)));
                 user.set_timestamp(cursor.getString(1));
@@ -4599,7 +4713,7 @@ public class DBHelper extends SQLiteOpenHelper{
 
         if (cursor.moveToFirst()) {
             do {
-//                Log.d(LOG, "getAllClients: loop: "
+//                Log.d(LOG, "getAllLikeInteractions: loop: "
 //                        + cursor1.getString(1) + ":"
 //                        + cursor1.getString(2) + ":"
 //                        + cursor1.getString(3) + ":"
@@ -5616,7 +5730,7 @@ public class DBHelper extends SQLiteOpenHelper{
         // looping through all rows and adding to list
         if (cursor.moveToFirst()) {
             do {
-                Log.d(LOG, "getAllPersons: loop: " + cursor.getString(1));
+//                Log.d(LOG, "getAllPersons: loop: " + cursor.getString(1));
                 Person person = new Person();
                 person.set_id(parseInt(cursor.getString(0)));
                 person.set_timestamp(cursor.getString(1));

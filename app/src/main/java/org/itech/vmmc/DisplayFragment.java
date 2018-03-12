@@ -45,6 +45,7 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
     List<GroupActivity> group_activities = new ArrayList<GroupActivity>();
     List<PendingFollowup> pending_followups = new ArrayList<PendingFollowup>();
     List<User> users = new ArrayList<User>();
+    List<SyncAudit> sync_audits = new ArrayList<SyncAudit>();
 
     @Override
     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
@@ -100,7 +101,14 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 Log.d(LOG, "DisplayFragment editBooking: " + parts[0] + " " + parts[1] + " " + parts[2] + " " + parts[3]);
                 fragment = EditBookingFragment.newInstance("editBooking", nameParts[0] + " " + nameParts[1] + ":" + "%" + ":" + parts[3] + ":" + "%");
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
+
+            }  else if (displayType == "displaySyncAudit") {
+//                String parts[] = mAdapter.getItem(position).toString().split(", ", 2);
+                Log.d(LOG, "DisplayFragment editSyncAudit: ");
+//            fragment = EditUserFragment.newInstance("editUser", parts[0] + ":" + parts[1]);
+//            getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditUserFragment.TAG).addToBackStack("EditUser").commit();
             }
+
         }
     }
 
@@ -266,6 +274,21 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
 
             mAdapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
+        } else if (displayType == "displaySyncAudit") {
+            sync_audits = dbHelp.getAllSyncAudits();
+            String[] _stringArray = new String[sync_audits.size()];
+            int i = 0;
+            for (SyncAudit _rec : sync_audits) {
+                _stringArray[i] = _rec.get_id() + ", " + _rec.get_timestamp() + ", " + _rec.get_latitude() + ", " + _rec.get_longitude() + ", " + _rec.get_username()+ ", " +
+//                        _rec.get_device_id() + ", " +
+                        _rec.get_progress() + ", " + _rec.get_status();
+                i++;
+            }
+
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
 
         } else if (displayType == "") {
 

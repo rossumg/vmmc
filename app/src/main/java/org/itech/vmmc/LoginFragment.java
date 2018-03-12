@@ -327,6 +327,11 @@ public class LoginFragment extends Fragment {
 
                     if(!MainActivity._username.equals("sync@")) {
                         MainActivity.USER_OBJ = new User(dbHelp, MainActivity._username + ":" + MainActivity._password);
+                    } else {
+                        MainActivity.USER_OBJ = new User();
+                        MainActivity.USER_OBJ.set_username(MainActivity._username);
+                        MainActivity.USER_OBJ.set_password(MainActivity._password);
+                        MainActivity.USER_OBJ.set_region_id(3);
                     }
 
                     Fragment fragment = getFragmentManager().findFragmentByTag(ActionFragment.TAG);

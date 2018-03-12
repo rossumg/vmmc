@@ -21,6 +21,8 @@ class putMySQLFacilitatorTable extends AsyncTask<String, String, String> {
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLFacilitatorTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -59,7 +61,7 @@ class putMySQLFacilitatorTable extends AsyncTask<String, String, String> {
             List<Facilitator> facilitatorList = dbhelp.getAllFacilitators();
             Log.d(LOG, "putMySQLFacilitatorTable build rec: " + facilitatorList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(facilitatorList.size()), "UTF-8");
-            int i = 0;
+            i = 0;
             String[] recs = new String[facilitatorList.size()];
             for (Facilitator facilitator: facilitatorList) {
                 recs[i] =
@@ -98,9 +100,18 @@ class putMySQLFacilitatorTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLFacilitatorTable exception > " + e.toString());
+            syncAudit.set_status("putMySQLFacilitatorTable exception > " + e.toString());
         }
         Log.d(LOG, "putMySQLFacilitatorTable.doInBackground end");
-        return null;
+        return Integer.toString(i);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d(LOG, "putMySQLFacilitatorTable:onPostExecute: " + result);
+        syncAudit.set_progress("putMySQLFacilitatorTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
+        //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 }
 

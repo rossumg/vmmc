@@ -21,6 +21,8 @@ class putMySQLUserTable extends AsyncTask<String, String, String> {
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLUserTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -59,7 +61,7 @@ class putMySQLUserTable extends AsyncTask<String, String, String> {
             List<User> userList = dbhelp.getAllUsers();
             Log.d(LOG, "putMySQLUserTable build rec: " + userList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(userList.size()), "UTF-8");
-            int i = 0;
+            i = 0;
             String[] recs = new String[userList.size()];
             for (User user: userList) {
                 Log.d(LOG, "putMySQLUserTable loop: " + user.get_timestamp() + ":" + user.get_username()  );
@@ -102,9 +104,18 @@ class putMySQLUserTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLUserTable exception > " + e.toString());
+            syncAudit.set_status("putMySQLUserTable exception:" + e.toString());
         }
         Log.d(LOG, "putMySQLUserTable.doInBackground end");
-        return null;
+        return Integer.toString(i);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d(LOG, "putMySQLUserTable:onPostExecute: " + result);
+        syncAudit.set_progress("putMySQLUserTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
+        //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 }
 

@@ -6,7 +6,6 @@ import android.database.sqlite.SQLiteDatabase;
 import android.os.AsyncTask;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.widget.Toast;
 
 import org.json.JSONArray;
 import org.json.JSONObject;
@@ -26,8 +25,11 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
     public Context _context;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     getMySQLGroupActivityTable(Context context, DBHelper dbhelp) {
+        this.dbhelp = dbhelp;
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
 //        this._db.execSQL("delete from facilitator_table");
@@ -47,7 +49,7 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
         // TODO Auto-generated method stub
         // Check for success tag
         int success;
-        int i = 0;
+        i = 0;
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
@@ -148,15 +150,20 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
                 } // foreach
                 mBuilder.setContentText(this._context.getResources().getString(R.string.sync_complete) + " (" + i + " records)").setProgress(0, 0, false);
                 mNotifyManager.notify(id, mBuilder.build());
-            } else {
+            } else { // never gets called
                 Log.d(LOG, "Login Failed");
-                Toast.makeText(this._context, "Login Failed", Toast.LENGTH_LONG).show();
+//                Toast.makeText(this._context, "Login Failed", Toast.LENGTH_LONG).show();
+                syncAudit.set_status("getMySQLGroupActivityTable exception: Invalid Password");
                 MainActivity._pass = "";
                 LOGGED_IN = false;
             }
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "getMySQLGroupActivityTable exception > " + e.toString());
+            if ( e instanceof org.json.JSONException )
+                syncAudit.set_status("getMySQLGroupActivityTable exception: Invalid Password");
+            else
+                syncAudit.set_status("getMySQLGroupActivityTable exception:" + e.toString());
         }
         Log.d(LOG, "getMySQLGroupActivityTable.doInBackground end");
         return Integer.toString(i);
@@ -164,6 +171,8 @@ class getMySQLGroupActivityTable extends AsyncTask<String, String, String> {
 
     protected void onPostExecute(String result) {
         Log.d(LOG, "getMySQLGroupActivityTable:onPostExecute: " + result);
+        syncAudit.set_progress("getMySQLGroupActivityTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }

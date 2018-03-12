@@ -21,6 +21,8 @@ class putMySQLInteractionTable extends AsyncTask<String, String, String> {
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLInteractionTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -59,7 +61,7 @@ class putMySQLInteractionTable extends AsyncTask<String, String, String> {
             List<Interaction> interactionList = dbhelp.getAllInteractions();
             Log.d(LOG, "putMySQLInteractionTable build rec: " + interactionList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(interactionList.size()), "UTF-8");
-            int i = 0;
+            i = 0;
             String[] recs = new String[interactionList.size()];
             for (Interaction interaction: interactionList) {
                 recs[i] =
@@ -97,9 +99,18 @@ class putMySQLInteractionTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLInteractionTable exception > " + e.toString());
+            syncAudit.set_status("putMySQLInteractionTable exception:" + e.toString());
         }
         Log.d(LOG, "putMySQLInteractionTable.doInBackground end");
-        return null;
+        return Integer.toString(i);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d(LOG, "putMySQLInteractionTable:onPostExecute: " + result);
+        syncAudit.set_progress("putMySQLInteractionTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
+        //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 }
 

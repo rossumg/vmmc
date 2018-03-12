@@ -28,8 +28,11 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
     public Context _context;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     getMySQLInstitutionTable(Context context, DBHelper dbhelp) {
+        this.dbhelp = dbhelp;
         this._context = context;
         this._db = dbhelp.getWritableDatabase();
         this._db.execSQL("delete from institution");
@@ -49,7 +52,7 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
         // TODO Auto-generated method stub
         // Check for success tag
         int success;
-        int i = 0;
+        i = 0;
 
         String username = MainActivity._user;
         String password = MainActivity._pass;
@@ -129,6 +132,7 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "getMySQLInstitutionTable exception > " + e.toString());
+            syncAudit.set_status("getMySQLInstitutionTable exception:" + e.toString());
         }
         Log.d(LOG, "getMySQLInstitutionTable.doInBackground end");
         return Integer.toString(i);
@@ -136,6 +140,8 @@ class getMySQLInstitutionTable extends AsyncTask<String, String, String> {
 
     protected void onPostExecute(String result) {
         Log.d(LOG, "getMySQLInstitutionTable:onPostExecute: " + result);
+        syncAudit.set_progress("getMySQLInstitutionTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }

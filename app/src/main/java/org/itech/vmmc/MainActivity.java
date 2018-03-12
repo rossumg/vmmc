@@ -55,7 +55,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "1.13x";
+    public static String _version = "1.15";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -108,14 +108,15 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
         //mNavigationDrawerFragment.setUserData("Zimbabwe", "Rayce.Rossum");
 
         final TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
+        final String tmIMEI, tmSerial, androidId;
+        tmIMEI = "" + tm.getDeviceId();
         tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        deviceId = deviceUuid.toString();
-        Log.d(LOG, "mainActivity:onCreate:deviceId: " + deviceId);
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmIMEI.hashCode() << 32) | tmSerial.hashCode());
+        MainActivity.deviceId = tmIMEI.toString();
+//        Log.d(LOG, "mainActivity:onCreate:deviceId: " + deviceId + ":" + tmIMEI + ":" + tmSerial + ":" + androidId);
+        Log.d(LOG, "mainActivity:onCreate:tmIMEI: " + tmIMEI );
 
 
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
@@ -225,7 +226,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 break;
 
             case 8:
-                dbHelp.exportDB();
+                fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
+                getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("DisplayFragment"));
+                if (fragment == null) {
+                    fragment = DisplayFragment.newInstance("displaySyncAudit", "");
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                } else {
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).commit();
+                }
+                MainActivity.currentFragmentId = "DisplayFragment";
+
                 break;
 
             case 0:

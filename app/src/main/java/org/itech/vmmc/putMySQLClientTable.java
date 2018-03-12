@@ -21,6 +21,8 @@ class putMySQLClientTable extends AsyncTask<String, String, String> {
     private boolean LOGGED_IN = false;
     public SQLiteDatabase _db;
     DBHelper dbhelp;
+    int i = 0;
+    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLClientTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -59,7 +61,7 @@ class putMySQLClientTable extends AsyncTask<String, String, String> {
             List<Client> clientList = dbhelp.getAllClients();
             Log.d(LOG, "putMySQLClientTable build rec: " + clientList.size() );
             data += "&" + URLEncoder.encode("num_recs", "UTF-8") + "=" + URLEncoder.encode(Integer.toString(clientList.size()), "UTF-8");
-            int i = 0;
+            i = 0;
             String[] recs = new String[clientList.size()];
             for (Client client: clientList) {
                 recs[i] =
@@ -99,9 +101,19 @@ class putMySQLClientTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLClientTable exception > " + e.toString());
+            syncAudit.set_status("putMySQLClientTable exception > " + e.toString());
         }
         Log.d(LOG, "putMySQLClientTable.doInBackground end");
-        return null;
+        return Integer.toString(i);
+    }
+
+    protected void onPostExecute(String result) {
+        Log.d(LOG, "putMySQLClientTable:onPostExecute: " + result);
+
+        syncAudit.set_progress("putMySQLClientTable:" + result);
+        dbhelp.addSyncAudit(syncAudit);
+        //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
+        //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 }
 
