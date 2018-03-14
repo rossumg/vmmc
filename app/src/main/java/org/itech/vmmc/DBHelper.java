@@ -9,6 +9,8 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
+import org.itech.vmmc.APICommunication.getMySQLTableVolley;
+import org.itech.vmmc.APICommunication.putMySQLTableVolley;
 
 import java.io.File;
 import java.io.FileInputStream;
@@ -16,16 +18,11 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.ArrayList;
-import java.util.Arrays;
-import java.util.Calendar;
-import java.util.LinkedHashSet;
-import java.util.List;
-import java.util.Random;
-import java.util.Set;
+import java.util.*;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
+import static org.itech.vmmc.DatabaseNames.*;
 
 /**
  * Created by Greg on 8/21/2015.
@@ -44,314 +41,8 @@ public class DBHelper extends SQLiteOpenHelper{
     // Database Name
     private static final String DATABASE_NAME = "vmmc.db";
 
-    // assessments.db table names
-    private static final String TABLE_ASSESSMENTS = "assessments";
-    private static final String TABLE_ASSESSMENTS_ANSWERS = "assessments_answers";
-    private static final String TABLE_ASSESSMENTS_QUESTIONS = "assessments_questions";
-    // private static final String TABLE_PERSON = "person";
-    private static final String TABLE_PERSON_TO_ASSESSMENTS = "person_to_assessments";
-    private static final String TABLE_GEOLOCATIONS = "geolocations";
-    private static final String TABLE_QUESTION_DROPDOWN_OPTION = "question_dropdown";
-
-    // assessments table column names
-    private static final String ASSESSMENTS_ROWID = "rowid";
-    private static final String ASSESSMENTS_ASSESSMENT_ID = "assessment_id";
-    private static final String ASSESSMENTS_ASSESSMENT_TYPE = "assessment_type";
-    private static final String ASSESSMENTS_STATUS = "status";
-
-    // assessments_answers table column names
-    private static final String ASSESSMENTS_ANSWERS_ASSESS_ID = "assess_id";
-    private static final String ASSESSMENTS_ANSWERS_PERSON = "person";
-    private static final String ASSESSMENTS_ANSWERS_FACILITY = "facility";
-    private static final String ASSESSMENTS_ANSWERS_DATE_CREATED = "date_created";
-    private static final String ASSESSMENTS_ANSWERS_ASSESSMENT_ID = "assessment_id";
-    private static final String ASSESSMENTS_ANSWERS_QUESTION = "question";
-    private static final String ASSESSMENTS_ANSWERS_ANSWER = "answer";
-    private static final String ASSESSMENTS_ANSWERS_ACTIVE = "active";
-
-    // assessments_questions table column names
-    private static final String ASSESSMENTS_QUESTIONS_ROWID = "rowid";
-    private static final String ASSESSMENTS_QUESTIONS_ASSESSMENTS_QUESTIONS_ID = "assessments_questions_id";
-    private static final String ASSESSMENTS_QUESTIONS_ASSESSMENT_ID = "assessment_id";
-    private static final String ASSESSMENTS_QUESTIONS_QUESTION = "question";
-    private static final String ASSESSMENTS_QUESTIONS_ITEMORDER = "itemorder";
-    private static final String ASSESSMENTS_QUESTIONS_ITEMTYPE = "itemtype";
-    private static final String ASSESSMENTS_QUESTIONS_STATUS = "status";
-
-    // geolocations table column names
-    private static final String GEOLOCATIONS_ID = "rowid";
-    private static final String GEOLOCATIONS_LONGITUDE = "longitude";
-    private static final String GEOLOCATIONS_LATITUDE = "latitude";
-    private static final String GEOLOCATIONS_DEVICE_ID = "device_id";
-    private static final String GEOLOCATIONS_TIMESTAMP = "timestamp";
-    private static final String GEOLOCATIONS_USERNAME = "username";
-    private static final String GEOLOCATIONS_PASSWORD = "password";
-
-    // person table column names
-    private static final String PERSON_ROWID = "rowid";
-    private static final String PERSON_PERSON_ID = "person_id";
-    //private static final String PERSON_FIRST_NAME = "first_name";
-    //private static final String PERSON_LAST_NAME = "last_name";
-    // private static final String PERSON_NATIONAL_ID = "national_id";
-    private static final String PERSON_FACILITY_ID = "facility_id";
-    private static final String PERSON_FACILITY_NAME = "facility_name";
-
-    // person_to_assessments table column names
-    private static final String PERSON_TO_ASSESSMENTS_PERSON_TO_ASSESSMENTS_ID = "person_to_assessments_id";
-    private static final String PERSON_TO_ASSESSMENTS_PERSON_ID = "person_id";
-    private static final String PERSON_TO_ASSESSMENTS_FACILITY_ID = "facility_id";
-    private static final String PERSON_TO_ASSESSMENTS_DATE_CREATED = "date_created";
-    private static final String PERSON_TO_ASSESSMENTS_ASSESSMENT_ID = "assessment_id";
-    private static final String PERSON_TO_ASSESSMENTS_USER_ID = "user_id";
-    private static final String PERSON_TO_ASSESSMENTS_STATUS = "status";
-
-    // question_dropdown table column names
-    private static final String QUESTION_DROPDOWN_OPTION_QUESTION_DROPDOWN_OPTION_ID = "question_dropdown_option_id";
-    private static final String QUESTION_DROPDOWN_OPTION_QUESTION_ID = "question_id";
-    private static final String QUESTION_DROPDOWN_OPTION_DROPDOWN_OPTION_ID = "dropdown_option_id";
-    private static final String QUESTION_DROPDOWN_OPTION_STATUS = "status";
-
-    // answer types
-    private static final String ANSWER_TYPE_TEXT = "text";
-    private static final String ANSWER_TYPE_QUESTION110 = "question110";
-    private static final String ANSWER_TYPE_QUESTIONTEXT = "questiontext";
-    private static final String ANSWER_TYPE_QUESTIONYESNO = "questionyesno";
-    private static final String ANSWER_TYPE_QUESTIONMULTI = "questiontextarea";
-    private static final String ANSWER_TYPE_TITLE = "title";
-
-    // vmmc.db table names
-    private static final String TABLE_SYNC_AUDIT  = "sync_audit";
-    private static final String TABLE_PERSON      = "person";
-    private static final String TABLE_USER        = "user";
-    private static final String TABLE_USER_TYPE   = "user_type";
-    private static final String TABLE_USER_TO_ACL = "user_to_acl";
-    private static final String TABLE_ACL         = "acl";
-    private static final String TABLE_CLIENT      = "client_table";
-    private static final String TABLE_FACILITATOR = "facilitator";
-    private static final String TABLE_LOCATION    = "location";
-    private static final String TABLE_ADDRESS     = "address";
-    private static final String TABLE_REGION      = "region";
-    private static final String TABLE_CONSTITUENCY = "constituency";
-    private static final String TABLE_BOOKING      = "booking";
-    private static final String TABLE_INTERACTION  = "interaction";
-    private static final String TABLE_GEOLOCATION  = "geolocation";
-    private static final String TABLE_FACILITATOR_TYPE = "facilitator_type";
-    private static final String TABLE_PROCEDURE_TYPE = "procedure_type";
-    private static final String TABLE_FOLLOWUP       = "followup";
-    private static final String TABLE_INTERACTION_TYPE = "interaction_type";
-    private static final String TABLE_STATUS_TYPE  = "status_type";
-    private static final String TABLE_INSTITUTION  = "institution";
-    private static final String TABLE_GROUP_ACTIVITY  = "group_activity";
-    private static final String TABLE_GROUP_TYPE  = "group_type";
-
-    // audit_sync table column names
-    private static final String SYNC_AUDIT_ID         = "id";
-    private static final String SYNC_AUDIT_TIMESTAMP  = "timestamp";
-    private static final String SYNC_AUDIT_LATITUDE   = "latitude";
-    private static final String SYNC_AUDIT_LONGITUDE  = "longitude";
-    private static final String SYNC_AUDIT_DEVICE_ID  = "device_id";
-    private static final String SYNC_AUDIT_USERNAME   = "username";
-    private static final String SYNC_AUDIT_PASSWORD   = "password";
-    private static final String SYNC_AUDIT_PROGRESS   = "progress";
-    private static final String SYNC_AUDIT_STATUS     = "status";
-
-    // person table column names
-    private static final String PERSON_ID          = "id";
-    private static final String PERSON_TIMESTAMP  = "timestamp";
-    private static final String PERSON_FIRST_NAME  = "first_name";
-    private static final String PERSON_LAST_NAME   = "last_name";
-    private static final String PERSON_NATIONAL_ID = "national_id";
-    private static final String PERSON_ADDRESS     = "address_id";
-    private static final String PERSON_PHONE       = "phone";
-    private static final String PERSON_DOB         = "dob";
-    private static final String PERSON_GENDER      = "gender";
-    private static final String PERSON_LATITUDE    = "latitude";
-    private static final String PERSON_LONGITUDE   = "longitude";
-    private static final String PERSON_IS_DELETED      = "is_deleted";
-
-    // booking table column names
-    private static final String BOOKING_ID              = "id";
-    private static final String BOOKING_TIMESTAMP        = "timestamp";
-    private static final String BOOKING_FIRST_NAME  = "first_name";
-    private static final String BOOKING_LAST_NAME   = "last_name";
-    private static final String BOOKING_NATIONAL_ID = "national_id";
-    private static final String BOOKING_PHONE       = "phone";
-
-    private static final String BOOKING_FAC_FIRST_NAME  = "fac_first_name";
-    private static final String BOOKING_FAC_LAST_NAME   = "fac_last_name";
-    private static final String BOOKING_FAC_NATIONAL_ID = "fac_national_id";
-    private static final String BOOKING_FAC_PHONE       = "fac_phone";
-
-    private static final String BOOKING_LOCATION_ID     = "location_id";
-    private static final String BOOKING_LATITUDE        = "latitude";
-    private static final String BOOKING_LONGITUDE       = "longitude";
-
-    private static final String BOOKING_PROJECTED_DATE  = "projected_date";
-    private static final String BOOKING_ACTUAL_DATE     = "actual_date";
-
-    private static final String BOOKING_CONSENT           = "consent";
-    private static final String BOOKING_PROCEDURE_TYPE_ID = "procedure_type_id";
-    private static final String BOOKING_FOLLOWUP_ID       = "followup_id";
-    private static final String BOOKING_FOLLOWUP_DATE       = "followup_date";
-    private static final String BOOKING_ALT_CONTACT       = "alt_contact";
-
-    // user table column names
-    private static final String USER_ID = "id";
-    private static final String USER_TIMESTAMP = "timestamp";
-    private static final String USER_USERNAME = "username";
-    private static final String USER_PASSWORD = "password";
-    private static final String USER_EMAIL = "email";
-    private static final String USER_FIRST_NAME = "first_name";
-    private static final String USER_LAST_NAME = "last_name";
-    private static final String USER_NATIONAL_ID = "national_id";
-    private static final String USER_PHONE = "phone";
-    private static final String USER_REGION_ID = "region_id";
-    private static final String USER_USER_TYPE_ID = "user_type_id";
-    private static final String USER_LOCATION_ID = "location_id";
-    private static final String USER_MODIFIED_BY = "modified_by";
-    private static final String USER_CREATED_BY = "created_by";
-    private static final String USER_IS_BLOCKED = "is_blocked";
-    private static final String USER_TIMESTAMP_UPDATED = "timestamp_updated";
-    private static final String USER_TIMESTAMP_CREATED = "timestamp_created";
-    private static final String USER_TIMESTAMP_LAST_LOGIN = "timestamp_last_login";
-
-    // user_type table column names
-    private static final String USER_TYPE_ID = "id";
-    private static final String USER_TYPE_NAME = "name";
-
-    // user_to_acl table column names
-    private static final String USER_TO_ACL_ID = "id";
-    private static final String USER_TO_ACL_TIMESTAMP_CREATED = "timestamp_created";
-    private static final String USER_TO_ACL_ACL_ID = "acl_id";
-    private static final String USER_TO_ACL_USER_ID = "user_id";
-    private static final String USER_TO_ACL_CREATED_BY = "created_by";
-
-    // acl table column names
-    private static final String ACL_ID = "id";
-    private static final String ACL_ACL = "acl";
-
-    // client table column names
-    private static final String CLIENT_ID        = "id";
-    private static final String CLIENT_TIMESTAMP  = "timestamp";
-    private static final String CLIENT_FIRST_NAME  = "first_name";
-    private static final String CLIENT_LAST_NAME   = "last_name";
-    private static final String CLIENT_NATIONAL_ID = "national_id";
-    private static final String CLIENT_PHONE       = "phone";
-    private static final String CLIENT_STATUS_ID    = "status_id";
-    private static final String CLIENT_LOC_ID    = "loc_id";
-    private static final String CLIENT_LATITUDE    = "latitude";
-    private static final String CLIENT_LONGITUDE    = "longitude";
-    private static final String CLIENT_INSTITUTION_ID    = "institution_id";
-    private static final String CLIENT_GROUP_ACTIVITY_NAME    = "group_activity_name";
-    private static final String CLIENT_GROUP_ACTIVITY_DATE    = "group_activity_date";
-    private static final String CLIENT_ADDRESS_ID    = "address_id";
-    private static final String CLIENT_DOB    = "dob";
-    private static final String CLIENT_GENDER    = "gender";
-
-    // facilitator table column names
-    private static final String FACILITATOR_ID          = "id";
-    private static final String FACILITATOR_TIMESTAMP  = "timestamp";
-    private static final String FACILITATOR_FIRST_NAME  = "first_name";
-    private static final String FACILITATOR_LAST_NAME = "last_name";
-    private static final String FACILITATOR_NATIONAL_ID = "national_id";
-    private static final String FACILITATOR_PHONE       = "phone";
-    private static final String FACILITATOR_FACILITATOR_TYPE_ID  = "facilitator_type_id";
-    private static final String FACILITATOR_NOTE        = "note";
-    private static final String FACILITATOR_LOCATION_ID = "location_id";
-    private static final String FACILITATOR_LATITUDE    = "latitude";
-    private static final String FACILITATOR_LONGITUDE   = "longitude";
-    private static final String FACILITATOR_INSTITUTION_ID = "institution_id";
-    private static final String FACILITATOR_ADDRESS_ID    = "address_id";
-    private static final String FACILITATOR_DOB    = "dob";
-    private static final String FACILITATOR_GENDER    = "gender";
-
-    // group_activity table column names
-    private static final String GROUP_ACTIVITY_ID          = "id";
-    private static final String GROUP_ACTIVITY_NAME  = "name";
-    private static final String GROUP_ACTIVITY_TIMESTAMP  = "timestamp";
-    private static final String GROUP_ACTIVITY_LOCATION_ID = "location_id";
-    private static final String GROUP_ACTIVITY_ACTIVITY_DATE = "activity_date";
-    private static final String GROUP_ACTIVITY_GROUP_TYPE_ID  = "group_type_id";
-    private static final String GROUP_ACTIVITY_INSTITUTION_ID   = "institution_id";
-    private static final String GROUP_ACTIVITY_MALES  = "males";
-    private static final String GROUP_ACTIVITY_FEMALES  = "females";
-    private static final String GROUP_ACTIVITY_MESSAGES        = "messages";
-    private static final String GROUP_ACTIVITY_LATITUDE    = "latitude";
-    private static final String GROUP_ACTIVITY_LONGITUDE   = "longitude";
-
-    // location table column names
-    private static final String LOCATION_ID   = "id";
-    private static final String LOCATION_NAME = "name";
-    private static final String LOCATION_REGION_ID = "region_id";
-
-    // address table column names
-    private static final String ADDRESS_ID   = "id";
-    private static final String ADDRESS_NAME = "name";
-    private static final String ADDRESS_REGION_ID = "region_id";
-
-    // institution table column names
-    private static final String INSTITUTION_ID          = "id";
-    private static final String INSTITUTION_NAME        = "name";
-    private static final String INSTITUTION_REGION_ID = "region_id";
-
-    // group_type table column names
-    private static final String GROUP_TYPE_ID          = "id";
-    private static final String GROUP_TYPE_NAME        = "name";
-
-    // region table column names
-    private static final String REGION_ID          = "id";
-    private static final String REGION_NAME        = "name";
-
-    // constituency table column names
-    private static final String CONSTITUENCY_ID        = "id";
-    private static final String CONSTITUENCY_NAME      = "name";
-    private static final String CONSTITUENCY_REGION_ID = "region_id";
-
-    // interaction table column names
-    private static final String INTERACTION_ID          = "id";
-    private static final String INTERACTION_TIMESTAMP  = "timestamp";
-    private static final String INTERACTION_FAC_FIRST_NAME  = "fac_first_name";
-    private static final String INTERACTION_FAC_LAST_NAME  = "fac_last_name";
-    private static final String INTERACTION_FAC_NATIONAL_ID  = "fac_national_id";
-    private static final String INTERACTION_FAC_PHONE  = "fac_phone";
-    private static final String INTERACTION_PERSON_FIRST_NAME  = "person_first_name";
-    private static final String INTERACTION_PERSON_LAST_NAME  = "person_last_name";
-    private static final String INTERACTION_PERSON_NATIONAL_ID  = "person_national_id";
-    private static final String INTERACTION_PERSON_PHONE  = "person_phone";
-    private static final String INTERACTION_DATE = "interaction_date";
-    private static final String INTERACTION_FOLLOWUP_DATE = "followup_date";
-    private static final String INTERACTION_TYPE        = "type_id";
-    private static final String INTERACTION_NOTE        = "note";
-
-    // interaction_type table column names
-    private static final String INTERACTION_TYPE_ID     = "id";
-    private static final String INTERACTION_TYPE_NAME   = "name";
 
 
-    // facilitator_type table column names
-    private static final String FACILITATOR_TYPE_ID     = "id";
-    private static final String FACILITATOR_TYPE_NAME   = "name";
-
-    // procedure_type table column names
-    private static final String PROCEDURE_TYPE_ID     = "id";
-    private static final String PROCEDURE_TYPE_NAME   = "name";
-
-    // followup table column names
-    private static final String FOLLOWUP_ID     = "id";
-    private static final String FOLLOWUP_NAME   = "name";
-
-    // status_type table column names
-    private static final String STATUS_TYPE_ID     = "id";
-    private static final String STATUS_TYPE_NAME   = "name";
-
-    // geolocation table column names
-    private static final String GEOLOCATION_ID        = "id";
-    private static final String GEOLOCATION_LAT       = "lat";
-    private static final String GEOLOCATION_LONG      = "long";
-    private static final String GEOLOCATION_DEVICE_ID = "device_id";
-    private static final String GEOLOCATION_TIMESTAMP = "timestamp";
-    private static final String GEOLOCATION_USERNAME  = "username";
-    private static final String GEOLOCATION_PASSWORD  = "password";
 
     public DBHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -706,44 +397,44 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "DBHelper.doSyncDB");
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
-//        load_facilitator_type();
-//        load_interaction_type();
-//          load_person();
 
         SyncAudit syncAudit = new SyncAudit();
         syncAudit.set_progress("Start"); this.addSyncAudit(syncAudit);
 
-//        new putMySQLSyncAuditTable(this).execute();
 
-//        new putMySQLPersonTable(this).execute();
-        new putMySQLBookingTable(this).execute();
-        new putMySQLClientTable(this).execute();
-        new putMySQLFacilitatorTable(this).execute();
-//        new putMySQLInteractionTable(this).execute();
-        new putMySQLGroupActivityTable(this).execute();
-        new putMySQLUserTable(this).execute();
-        new getMySQLRegionTable(this._context, this).execute();
-        new getMySQLLocationTable(this._context, this).execute();
-        new getMySQLAddressTable(this._context, this).execute();
-        new getMySQLFacilitatorTypeTable(this._context, this).execute();
-        new getMySQLProcedureTypeTable(this._context, this).execute();
-        new getMySQLFollowupTable(this._context, this).execute();
-        new getMySQLStatusTypeTable(this._context, this).execute();
-        new getMySQLInstitutionTable(this._context, this).execute();
-//        new getMySQLInteractionTypeTable(this._context, this).execute();
-//        new getMySQLPersonTable(this._context, this).execute();
-        new getMySQLBookingTable(this._context, this).execute();
-        new getMySQLClientTable(this._context, this).execute();
-        new getMySQLFacilitatorTable(this._context, this).execute();
-        new getMySQLInteractionTable(this._context, this).execute();
-        new getMySQLUserTable(this._context, this).execute();
-        new getMySQLUserTypeTable(this._context, this).execute();
-        new getMySQLAclTable(this._context, this).execute();
-        new getMySQLUserToAclTable(this._context, this).execute();
-        new getMySQLGroupTypeTable(this._context, this).execute();
-        new getMySQLGroupActivityTable(this._context, this).execute();
+//        new putMySQLBookingTable(this).execute();
+//        new putMySQLClientTable(this).execute();
+//        new putMySQLFacilitatorTable(this).execute();
+
+//        new putMySQLGroupActivityTable(this).execute();
+//        new putMySQLUserTable(this).execute();
+//        new getMySQLRegionTable(this._context, this).execute();
+//        new getMySQLLocationTable(this._context, this).execute();
+//        new getMySQLAddressTable(this._context, this).execute();
+//        new getMySQLFacilitatorTypeTable(this._context, this).execute();
+//        new getMySQLProcedureTypeTable(this._context, this).execute();
+//        new getMySQLFollowupTable(this._context, this).execute();
+//        new getMySQLStatusTypeTable(this._context, this).execute();
+//        new getMySQLInstitutionTable(this._context, this).execute();
+
+//        new getMySQLBookingTable(this._context, this).execute();
+//        new getMySQLClientTable(this._context, this).execute();
+//        new getMySQLFacilitatorTable(this._context, this).execute();
+//        new getMySQLInteractionTable(this._context, this).execute();
+//        new getMySQLUserTable(this._context, this).execute();
+//        new getMySQLUserTypeTable(this._context, this).execute();
+//        new getMySQLAclTable(this._context, this).execute();
+//        new getMySQLUserToAclTable(this._context, this).execute();
+//        new getMySQLGroupTypeTable(this._context, this).execute();
+//        new getMySQLGroupActivityTable(this._context, this).execute();
 
 //        new putMySQLSyncAuditTable(this).execute();
+
+        putMySQLTableVolley tablePutter = new putMySQLTableVolley(this._context, this);
+        tablePutter.putAllTables();
+
+        getMySQLTableVolley tableGetter = new getMySQLTableVolley(this._context, this);
+        tableGetter.getAllTables();
 
         Log.d(LOG, "DBHelper after sync: _username: " + MainActivity._username );
 
@@ -807,7 +498,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
         try {
             db.insert(TABLE_SYNC_AUDIT, null, values);
-            Toast.makeText(this._context, "Record: " + syncAudit.get_longitude() + " " + syncAudit.get_latitude(), Toast.LENGTH_LONG).show();
         } catch (Exception ex) {
             // db.close();
             Log.d(LOG, "addSyncAudit catch " + ex.toString());
@@ -1610,82 +1300,6 @@ public class DBHelper extends SQLiteOpenHelper{
         return readableRecentAssessmentsList;
     }
 
-    public List<String> getRecentAssessments(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<String> recentAssessements = new ArrayList<String>();
-
-        String[] tableColumns = new String[] {
-                PERSON_TO_ASSESSMENTS_PERSON_TO_ASSESSMENTS_ID, PERSON_TO_ASSESSMENTS_PERSON_ID, PERSON_TO_ASSESSMENTS_FACILITY_ID, PERSON_TO_ASSESSMENTS_DATE_CREATED, PERSON_TO_ASSESSMENTS_ASSESSMENT_ID, PERSON_TO_ASSESSMENTS_USER_ID, PERSON_TO_ASSESSMENTS_STATUS
-
-        };
-
-        String whereClause = "1=1 ";
-
-        String[] whereArgs = new String[]{};
-
-        String orderBy = PERSON_TO_ASSESSMENTS_DATE_CREATED;
-
-        Cursor cursor = db.query(TABLE_PERSON_TO_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, orderBy);
-
-        if (cursor.moveToFirst()) {
-            do {
-//                Log.d(LOG, "getAllPersonIDs  "
-//                                + cursor.getString(0) + " "
-//                                + cursor.getString(1) + " "
-//                                + cursor.getString(2) + " "
-//                                + cursor.getString(3) + " "
-//                );
-                recentAssessements.add(cursor.getString(0) + ", " + cursor.getString(1) + ", " + cursor.getString(2) + ",  " + cursor.getString(3) + ", " + cursor.getString(4) + ", " + cursor.getString(5) + ",  " + cursor.getString(6));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        // db.close();
-
-        // remove duplicates
-//        Set<String> noDups = new LinkedHashSet<>(recentAssessements);
-//        recentAssessements.clear();;
-//        recentAssessements.addAll(noDups);
-
-        // convert to array
-//        String[] stringArrayPersonID = new String[ personID.size() ];
-//        personID.toArray(stringArrayPersonID);
-
-        return recentAssessements;
-    }
-
-    public int getAssessmentsQuestionsQuestion(int assessment_id, int itemorder){
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_QUESTIONS_ASSESSMENTS_QUESTIONS_ID
-        };
-
-        String whereClause = "1=1 and " +
-
-                ASSESSMENTS_QUESTIONS_ASSESSMENT_ID + " = ? and " +
-                ASSESSMENTS_QUESTIONS_ITEMORDER + " = ? ";
-
-        String assessment_id_string = new Integer(assessment_id).toString();
-        String itemorder_string = new Integer(itemorder).toString();
-        String[] whereArgs = new String [] {
-                assessment_id_string, itemorder_string };
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS_QUESTIONS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-//        Log.d(LOG, "getAssessmentsQuestionsQuestion  "
-//                        + cursor.getString(0) + " "
-//        );
-
-        int returnQuestion = parseInt(cursor.getString(0));
-        cursor.close();
-        // db.close();
-        return returnQuestion;
-    }
-
     public List<String> getAllUserIDs(){
         SQLiteDatabase db = this.getReadableDatabase();
         List<String> _ID = new ArrayList<String>();
@@ -1770,6 +1384,39 @@ public class DBHelper extends SQLiteOpenHelper{
 //        _phone_numbers.toArray(stringArrayPersonID);
 
         return _phone_numbers;
+    }
+
+    public String getRegionString(){
+        Log.d(LOG, "getRegionString: " + MainActivity.USER_OBJ.get_region_id());
+        String regionString = new String ("");
+        switch ( MainActivity.USER_OBJ.get_region_id() ) {
+            case 0:
+            default:
+                regionString = " ( 0 ) ";
+                break;
+            case 1:
+                regionString = " ( 1 ) ";
+                break;
+            case 2:
+                regionString = " ( 2 ) ";
+                break;
+            case 3:
+                regionString = " ( 1,2 ) ";
+                break;
+            case 4:
+                regionString = " ( 3 ) ";
+                break;
+            case 5:
+                regionString = " ( 3,1 ) ";
+                break;
+            case 6:
+                regionString = " ( 3,2 ) ";
+                break;
+            case 7:
+                regionString = " ( 3,2,1 ) ";
+                break;
+        };
+        return regionString;
     }
 
     public List<String> getAllPersonIDs(){
@@ -2049,46 +1696,6 @@ public class DBHelper extends SQLiteOpenHelper{
         // db.close();
 
         return groupActivityList;
-    }
-
-    public List<String> getAllAssessmentTypes(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<String> assessmentTypes = new ArrayList<String>();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ASSESSMENT_TYPE
-        };
-
-        String whereClause = "1=1 ";
-
-        String[] whereArgs = new String[]{};
-
-        String orderBy = ASSESSMENTS_ASSESSMENT_ID;
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, orderBy);
-
-        if (cursor.moveToFirst()) {
-            do {
-//                Log.d(LOG, "getAllFacilityNames  "
-//                                + cursor.getString(0)
-//                );
-                assessmentTypes.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        // db.close();
-
-        // remove duplicates
-        Set<String> noDups = new LinkedHashSet<>(assessmentTypes);
-        assessmentTypes.clear();
-        assessmentTypes.addAll(noDups);
-
-        // convert to array
-        String[] stringArrayFacilityNames = new String[ assessmentTypes.size() ];
-        assessmentTypes.toArray(stringArrayFacilityNames);
-
-        return assessmentTypes;
     }
 
     public List<String> getAllFacilitatorTypes(){
@@ -2743,38 +2350,7 @@ public class DBHelper extends SQLiteOpenHelper{
         return locationNames;
     }
 
-    public String getRegionString(){
-        Log.d(LOG, "getRegionString: " + MainActivity.USER_OBJ.get_region_id());
-        String regionString = new String ("");
-        switch ( MainActivity.USER_OBJ.get_region_id() ) {
-            case 0:
-            default:
-                regionString = " ( 0 ) ";
-                break;
-            case 1:
-                regionString = " ( 1 ) ";
-                break;
-            case 2:
-                regionString = " ( 2 ) ";
-                break;
-            case 3:
-                regionString = " ( 1,2 ) ";
-                break;
-            case 4:
-                regionString = " ( 3 ) ";
-                break;
-            case 5:
-                regionString = " ( 3,1 ) ";
-                break;
-            case 6:
-                regionString = " ( 3,2 ) ";
-                break;
-            case 7:
-                regionString = " ( 3,2,1 ) ";
-                break;
-        };
-        return regionString;
-    }
+
 
     public List<String> getAllLocationNames(){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -3126,56 +2702,6 @@ public class DBHelper extends SQLiteOpenHelper{
         return _List;
     }
 
-    public List<GeoLocations> getAllGeoLocations() {
-
-        List<GeoLocations> geoLocationsList = new ArrayList<GeoLocations>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_GEOLOCATIONS;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                GeoLocations geoLocations = new GeoLocations();
-                geoLocations.set_longitude(parseFloat(cursor.getString(1)));
-                geoLocations.set_latitude(parseFloat(cursor.getString(2)));
-                geoLocations.set_device_id(cursor.getString(3));
-                geoLocations.set_created_at(cursor.getString(4));
-                geoLocations.set_username(cursor.getString(5));
-                geoLocations.set_password(cursor.getString(6));
-                // Adding person to list
-                geoLocationsList.add(geoLocations);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        // db.close();
-
-        return geoLocationsList;
-    }
-
-    public boolean addGeoLocation(){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        GeoLocations geoLocations = new GeoLocations();
-
-        ContentValues values = new ContentValues();
-        values.put(GEOLOCATIONS_LONGITUDE, geoLocations.get_longitude());
-        values.put(GEOLOCATIONS_LATITUDE, geoLocations.get_latitude());
-        values.put(GEOLOCATIONS_DEVICE_ID, geoLocations.get_device_id());
-        values.put(GEOLOCATIONS_USERNAME, geoLocations.get_username());
-        values.put(GEOLOCATIONS_PASSWORD, geoLocations.get_password());
-
-        try {
-            db.insert(TABLE_GEOLOCATIONS, null, values);
-            Toast.makeText(this._context, "Record: " + geoLocations.get_longitude() + " " + geoLocations.get_latitude(), Toast.LENGTH_LONG).show();
-        } catch (Exception ex) {
-            // db.close();
-            Log.d(LOG, "addGeoLocation catch " + ex.toString());
-            return false;
-        }
-        return true;
-    }
-
     public String[] getAllPersonPhoneNumbers() {
         return getAllPhoneNumbers();
     }
@@ -3262,46 +2788,46 @@ public class DBHelper extends SQLiteOpenHelper{
         return stringArrayPhoneNumbers;
     }
 
-    public String[] getAllFacilityNames(){
-        SQLiteDatabase db = this.getReadableDatabase();
-        List<String> facility_names = new ArrayList<String>();
-
-        String[] tableColumns = new String[] {
-                PERSON_FACILITY_NAME
-        };
-
-        String whereClause = "1=1 ";
-
-        String[] whereArgs = new String[]{};
-
-        String orderBy = PERSON_FACILITY_NAME;
-
-        Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, orderBy);
-
-        if (cursor.moveToFirst()) {
-            do {
-//                Log.d(LOG, "getAllFacilityNames  "
-//                                + cursor.getString(0)
-//                );
-
-                facility_names.add(cursor.getString(0));
-            } while (cursor.moveToNext());
-        }
-
-        cursor.close();
-        // db.close();
-
-        // remove duplicates
-        Set<String> noDups = new LinkedHashSet<>(facility_names);
-        facility_names.clear();
-        facility_names.addAll(noDups);
-
-        // convert to array
-        String[] stringArrayFacilityNames = new String[ facility_names.size() ];
-        facility_names.toArray(stringArrayFacilityNames);
-
-        return stringArrayFacilityNames;
-    }
+//    public String[] getAllFacilityNames(){
+//        SQLiteDatabase db = this.getReadableDatabase();
+//        List<String> facility_names = new ArrayList<String>();
+//
+//        String[] tableColumns = new String[] {
+//                PERSON_FACILITY_NAME
+//        };
+//
+//        String whereClause = "1=1 ";
+//
+//        String[] whereArgs = new String[]{};
+//
+//        String orderBy = PERSON_FACILITY_NAME;
+//
+//        Cursor cursor = db.query(TABLE_PERSON, tableColumns, whereClause, whereArgs, null, null, orderBy);
+//
+//        if (cursor.moveToFirst()) {
+//            do {
+////                Log.d(LOG, "getAllFacilityNames  "
+////                                + cursor.getString(0)
+////                );
+//
+//                facility_names.add(cursor.getString(0));
+//            } while (cursor.moveToNext());
+//        }
+//
+//        cursor.close();
+//        // db.close();
+//
+//        // remove duplicates
+//        Set<String> noDups = new LinkedHashSet<>(facility_names);
+//        facility_names.clear();
+//        facility_names.addAll(noDups);
+//
+//        // convert to array
+//        String[] stringArrayFacilityNames = new String[ facility_names.size() ];
+//        facility_names.toArray(stringArrayFacilityNames);
+//
+//        return stringArrayFacilityNames;
+//    }
 
     public int getFacilityID(String facility_name){
         SQLiteDatabase db = this.getReadableDatabase();
@@ -3488,520 +3014,7 @@ public class DBHelper extends SQLiteOpenHelper{
         return editPageList;
     }
 
-    public void setEditPageRow(PersonToAssessments pa, int question_id, String new_answer){
-        // select from answers, if (answer) update answer else insert answer
-        AssessmentsAnswers assessmentsAnswers =
-                this.getAssessmentsAnswers(
-                        pa.get_person_id(),
-                        pa.get_facility_id(),
-                        pa.get_date_created(),
-                        pa.get_assessment_id(),
-                        question_id);
 
-        if(assessmentsAnswers != null){
-            this.updateAssessmentsAnswers(assessmentsAnswers.get_assess_id(), new_answer);
-            Log.d(LOG, "update: " + assessmentsAnswers.get_assess_id() + " " + assessmentsAnswers.get_question() + " " + new_answer);
-        } else {
-            this.insertAssessmentsAnswers(
-                    pa.get_person_id(),
-                    pa.get_facility_id(),
-                    pa.get_date_created(),
-                    pa.get_assessment_id(),
-                    question_id,
-                    new_answer );
-            Log.d(LOG, "insert: " + " " + question_id + " " +  new_answer);
-        }
-
-//            Log.d(LOG, "helperTest setEditPageData editPageObjectList > "
-//                            //+ editPageObjectList._rowid + " "
-//                            + epo._assessments_questions_id + " "
-//                            + epo._question + " "
-//                            + epo._itemtype + " "
-//                            + epo._itemorder + " "
-//                            + epo._answer + " "
-//            );
-    }
-
-    public void setEditPageData(PersonToAssessments pa, List<EditPageObject> editPageObjectList){
-        Log.d(LOG, "setEditPageData");
-        Log.d(LOG, "pa >" + pa._person_id + " " + pa._facility_id + " " + pa._date_created + " " + pa._assessment_id);
-        // for each questions, select from answers, if (answer) update answer else insert answer
-        for (EditPageObject epo : editPageObjectList) {
-
-            AssessmentsAnswers assessmentsAnswers =
-                    this.getAssessmentsAnswers(
-                            pa.get_person_id(),
-                            pa.get_facility_id(),
-                            pa.get_date_created(),
-                            pa.get_assessment_id(),
-                            epo.get_assessments_questions_id());
-
-            if(assessmentsAnswers != null){
-                Log.d(LOG, "setEditPageData update: " + epo.get_answer());
-                this.updateAssessmentsAnswers(assessmentsAnswers.get_assess_id(), epo.get_answer());
-            } else if (epo.get_itemtype() != ANSWER_TYPE_TEXT) {
-                Log.d(LOG, "setEditPageData insert: ");
-                this.insertAssessmentsAnswers(
-                        pa.get_person_id(),
-                        pa.get_facility_id(),
-                        pa.get_date_created(),
-                        pa.get_assessment_id(),
-                        epo.get_assessments_questions_id(),
-                        epo.get_answer() );
-            }
-
-//            Log.d(LOG, "helperTest setEditPageData editPageObjectList > "
-//                            //+ editPageObjectList._rowid + " "
-//                            + epo._assessments_questions_id + " "
-//                            + epo._question + " "
-//                            + epo._itemtype + " "
-//                            + epo._itemorder + " "
-//                            + epo._answer + " "
-//            );
-        }
-    }
-
-    public Assessments getAssessments(int assessments_assessment_id) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ROWID, ASSESSMENTS_ASSESSMENT_ID, ASSESSMENTS_ASSESSMENT_TYPE, ASSESSMENTS_STATUS
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ASSESSMENT_ID + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(assessments_assessment_id) };
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-        Log.d(LOG, "getAssessments  "
-                + cursor.getString(0) + " "
-                + cursor.getString(1) + " "
-                + cursor.getString(2) + " "
-        );
-
-        Assessments assessments = new Assessments(
-                parseInt(cursor.getString(1)),
-                cursor.getString(2)
-
-        );
-        cursor.close();
-        // db.close();
-        return assessments;
-    }
-
-    public Assessments getAssessments(String assessments_assessment_type) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ASSESSMENT_ID, ASSESSMENTS_ASSESSMENT_TYPE
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ASSESSMENT_TYPE + " = ?";
-
-        String[] whereArgs = new String[]{
-                assessments_assessment_type };
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor != null)
-            cursor.moveToFirst();
-//        Log.d(LOG, "geAssessments  "
-//                        + cursor.getString(0) + " "
-//                        + cursor.getString(1) + " "
-//                        + cursor.getString(2) + " "
-//        );
-
-        Assessments assessments = new Assessments(
-                parseInt(cursor.getString(0)),
-                cursor.getString(1)
-
-        );
-        cursor.close();
-        // db.close();
-        return assessments;
-    }
-
-    public AssessmentsAnswers getAssessmentsAnswers(int assess_id) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ANSWERS_ASSESS_ID + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(assess_id) };
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS_ANSWERS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor.moveToFirst()) {
-
-//        Log.d(LOG, "getAssessmentsAnswers  "
-//                        + cursor.getString(0) + " "
-//                        + cursor.getString(1) + " "
-//                        + cursor.getString(2) + " "
-//                        + cursor.getString(3) + " "
-//                        + cursor.getString(4) + " "
-//                        + cursor.getString(5) + " "
-//                        + cursor.getString(6) + " "
-//        );
-
-            AssessmentsAnswers assessments_answers = new AssessmentsAnswers(
-                    parseInt(cursor.getString(0)),
-                    parseInt(cursor.getString(1)),
-                    parseInt(cursor.getString(2)),
-                    cursor.getString(3),
-                    parseInt(cursor.getString(4)),
-                    parseInt(cursor.getString(5)),
-                    cursor.getString(6)
-
-            );
-            cursor.close();
-            // db.close();
-            return assessments_answers;
-        }
-        else {
-            cursor.close();
-            // db.close();
-            return null;
-        }
-    }
-
-    public AssessmentsAnswers getAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ANSWERS_PERSON + " = ? and " +
-                ASSESSMENTS_ANSWERS_FACILITY + " = ? and " +
-                ASSESSMENTS_ANSWERS_DATE_CREATED + " = ? and " +
-                ASSESSMENTS_ANSWERS_ASSESSMENT_ID + " = ? and " +
-                ASSESSMENTS_ANSWERS_QUESTION + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(person), Integer.toString(facility), date_created, Integer.toString(assessment_id), Integer.toString(question) };
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS_ANSWERS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor.moveToFirst()) {
-
-//        Log.d(LOG, "getAssessmentsAnswers  "
-//                        + cursor.getString(0) + " "
-//                        + cursor.getString(1) + " "
-//                        + cursor.getString(2) + " "
-//                        + cursor.getString(3) + " "
-//                        + cursor.getString(4) + " "
-//                        + cursor.getString(5) + " "
-//                        + cursor.getString(6) + " "
-//        );
-
-            AssessmentsAnswers assessments_answers = new AssessmentsAnswers(
-                    parseInt(cursor.getString(0)),
-                    parseInt(cursor.getString(1)),
-                    parseInt(cursor.getString(2)),
-                    cursor.getString(3),
-                    parseInt(cursor.getString(4)),
-                    parseInt(cursor.getString(5)),
-                    cursor.getString(6)
-
-            );
-            cursor.close();
-            // db.close();
-            return assessments_answers;
-        }
-        else {
-            cursor.close();
-            // db.close();
-            return null;
-        }
-    }
-
-    public void updateAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question, String new_answer) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ANSWERS_PERSON + " = ? and " +
-                ASSESSMENTS_ANSWERS_FACILITY + " = ? and " +
-                ASSESSMENTS_ANSWERS_DATE_CREATED + " = ? and " +
-                ASSESSMENTS_ANSWERS_ASSESSMENT_ID + " = ? and " +
-                ASSESSMENTS_ANSWERS_QUESTION + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(person), Integer.toString(facility), date_created, Integer.toString(assessment_id), Integer.toString(question) };
-
-        Cursor cursor = db.query(TABLE_ASSESSMENTS_ANSWERS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor.moveToFirst()) {
-
-//        Log.d(LOG, "getAssessmentsAnswers  "
-//                        + cursor.getString(0) + " "
-//                        + cursor.getString(1) + " "
-//                        + cursor.getString(2) + " "
-//                        + cursor.getString(3) + " "
-//                        + cursor.getString(4) + " "
-//                        + cursor.getString(5) + " "
-//                        + cursor.getString(6) + " "
-//        );
-
-            AssessmentsAnswers assessments_answers = new AssessmentsAnswers(
-                    parseInt(cursor.getString(0)),
-                    parseInt(cursor.getString(1)),
-                    parseInt(cursor.getString(2)),
-                    cursor.getString(3),
-                    parseInt(cursor.getString(4)),
-                    parseInt(cursor.getString(5)),
-                    cursor.getString(6)
-
-            );
-            cursor.close();
-            // use assess_id to update
-            ContentValues cv = new ContentValues();
-            cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
-            String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assessments_answers.get_assess_id();
-            db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
-            DBHelper.exportDB();
-            // db.close();
-        }
-        else {
-            cursor.close();
-            // db.close();
-        }
-    }
-
-    public void updateAssessmentsAnswers(int assess_id, String new_answer) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-        // use assess_id to update
-        ContentValues cv = new ContentValues();
-        cv.put(ASSESSMENTS_ANSWERS_ANSWER, new_answer);
-        String updateWhereClause = "1=1 and " + ASSESSMENTS_ANSWERS_ASSESS_ID + " = " + assess_id;
-        db.update(TABLE_ASSESSMENTS_ANSWERS, cv, updateWhereClause, null);
-        // db.close();
-    }
-
-    public void insertAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question, String answer) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        // use assess_id to update
-        ContentValues cv = new ContentValues();
-        cv.put(ASSESSMENTS_ANSWERS_PERSON, person);
-        cv.put(ASSESSMENTS_ANSWERS_FACILITY, facility);
-        cv.put(ASSESSMENTS_ANSWERS_DATE_CREATED, date_created);
-        cv.put(ASSESSMENTS_ANSWERS_ASSESSMENT_ID, assessment_id);
-        cv.put(ASSESSMENTS_ANSWERS_QUESTION, question);
-        cv.put(ASSESSMENTS_ANSWERS_ANSWER, answer);
-        cv.put(ASSESSMENTS_ANSWERS_ACTIVE, "Y"); // not used
-        db.insert(TABLE_ASSESSMENTS_ANSWERS, null, cv);
-        // db.close();
-    }
-
-    public void insertAssessmentsAnswers(AssessmentsAnswers assessmentsAnswers) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        // use assess_id to update
-        ContentValues cv = new ContentValues();
-        cv.put(ASSESSMENTS_ANSWERS_PERSON, assessmentsAnswers.get_person());
-        cv.put(ASSESSMENTS_ANSWERS_FACILITY, assessmentsAnswers.get_facility());
-        cv.put(ASSESSMENTS_ANSWERS_DATE_CREATED, assessmentsAnswers.get_date_created());
-        cv.put(ASSESSMENTS_ANSWERS_ASSESSMENT_ID, assessmentsAnswers.get_assessment_id());
-        cv.put(ASSESSMENTS_ANSWERS_QUESTION, assessmentsAnswers.get_question());
-        cv.put(ASSESSMENTS_ANSWERS_ANSWER, assessmentsAnswers.get_answer());
-        cv.put(ASSESSMENTS_ANSWERS_ACTIVE, "Y"); // not used
-        db.insert(TABLE_ASSESSMENTS_ANSWERS, null, cv);
-        // db.close();
-    }
-
-    public void deleteAssessmentsAnswers(int person, int facility, String date_created, int assessment_id, int question){
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ANSWERS_PERSON + " = ? and " +
-                ASSESSMENTS_ANSWERS_FACILITY + " = ? and " +
-                ASSESSMENTS_ANSWERS_DATE_CREATED + " = ? and " +
-                ASSESSMENTS_ANSWERS_ASSESSMENT_ID + " = ? and " +
-                ASSESSMENTS_ANSWERS_QUESTION + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(person), Integer.toString(facility), date_created, Integer.toString(assessment_id), Integer.toString(question) };
-
-        db.delete(TABLE_ASSESSMENTS_ANSWERS, whereClause, whereArgs);
-        // db.close();
-    }
-
-    public void deleteAssessmentsAnswers(int assess_id) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-
-        String[] tableColumns = new String[] {
-                ASSESSMENTS_ANSWERS_ASSESS_ID, ASSESSMENTS_ANSWERS_PERSON, ASSESSMENTS_ANSWERS_FACILITY, ASSESSMENTS_ANSWERS_DATE_CREATED, ASSESSMENTS_ANSWERS_ASSESSMENT_ID, ASSESSMENTS_ANSWERS_QUESTION, ASSESSMENTS_ANSWERS_ANSWER, ASSESSMENTS_ANSWERS_ACTIVE,
-        };
-
-        String whereClause = "1=1 and " +
-                ASSESSMENTS_ANSWERS_ASSESS_ID + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(assess_id) };
-
-        db.delete(TABLE_ASSESSMENTS_ANSWERS, whereClause, whereArgs);
-        // db.close();
-    }
-
-    public PersonToAssessments getPersonToAssessments(int pa_pa_id) {
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        PersonToAssessments person_to_assessments = null;
-
-        String[] tableColumns = new String[]{
-                PERSON_TO_ASSESSMENTS_PERSON_TO_ASSESSMENTS_ID, PERSON_TO_ASSESSMENTS_PERSON_ID, PERSON_TO_ASSESSMENTS_FACILITY_ID, PERSON_TO_ASSESSMENTS_DATE_CREATED, PERSON_TO_ASSESSMENTS_ASSESSMENT_ID, PERSON_TO_ASSESSMENTS_USER_ID, PERSON_TO_ASSESSMENTS_STATUS
-        };
-
-        String whereClause = "1=1 and " +
-                PERSON_TO_ASSESSMENTS_PERSON_TO_ASSESSMENTS_ID + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(pa_pa_id)};
-
-        Cursor cursor = db.query(TABLE_PERSON_TO_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if (cursor.moveToFirst()) {
-            Log.d(LOG, "getPersonToAssessments  "
-                    + cursor.getString(0) + " "
-                    + cursor.getString(1) + " "
-                    + cursor.getString(2) + " "
-                    + cursor.getString(3) + " "
-                    + cursor.getString(4) + " "
-                    + cursor.getString(5) + " "
-                    + cursor.getString(6) + " "
-            );
-            person_to_assessments = new PersonToAssessments(
-                    parseInt(cursor.getString(0)),
-                    parseInt(cursor.getString(1)),
-                    parseInt(cursor.getString(2)),
-                    cursor.getString(3),
-                    parseInt(cursor.getString(4)),
-                    parseInt(cursor.getString(5))
-
-            );
-            cursor.close();
-            // db.close();
-            return person_to_assessments;
-        } else {
-            cursor.close();
-            // db.close();
-            return person_to_assessments;
-        }
-    }
-
-    public PersonToAssessments getPersonToAssessments(int person_id, int facility_id, String date_created, int assessment_id) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        PersonToAssessments personToAssessments = null;
-
-        String[] tableColumns = new String[] {
-                PERSON_TO_ASSESSMENTS_PERSON_TO_ASSESSMENTS_ID, PERSON_TO_ASSESSMENTS_PERSON_ID, PERSON_TO_ASSESSMENTS_FACILITY_ID, PERSON_TO_ASSESSMENTS_DATE_CREATED, PERSON_TO_ASSESSMENTS_ASSESSMENT_ID, PERSON_TO_ASSESSMENTS_USER_ID, PERSON_TO_ASSESSMENTS_STATUS
-        };
-
-        String whereClause = "1=1 and " +
-                PERSON_TO_ASSESSMENTS_PERSON_ID + " = ? and " +
-                PERSON_TO_ASSESSMENTS_FACILITY_ID + " = ? and " +
-                PERSON_TO_ASSESSMENTS_DATE_CREATED + " = ? and " +
-                PERSON_TO_ASSESSMENTS_ASSESSMENT_ID + " = ?";
-
-        String[] whereArgs = new String[]{
-                Integer.toString(person_id), Integer.toString(facility_id), date_created, Integer.toString(assessment_id) };
-
-        Cursor cursor = db.query(TABLE_PERSON_TO_ASSESSMENTS, tableColumns, whereClause, whereArgs, null, null, null);
-
-        if ( cursor.moveToFirst() ) {
-
-//        Log.d(LOG, "getPersonToAssessments  "
-//                        + cursor.getString(0) + " "
-//                        + cursor.getString(1) + " "
-//                        + cursor.getString(2) + " "
-//                        + cursor.getString(3) + " "
-//                        + cursor.getString(4) + " "
-//                        + cursor.getString(5) + " "
-//                        + cursor.getString(6) + " "
-//        );
-
-            personToAssessments = new PersonToAssessments(
-                    parseInt(cursor.getString(0)),
-                    parseInt(cursor.getString(1)),
-                    parseInt(cursor.getString(2)),
-                    cursor.getString(3),
-                    parseInt(cursor.getString(4)),
-                    parseInt(cursor.getString(5))
-
-            );
-            cursor.close();
-            // db.close();
-            return personToAssessments;
-        } else {
-            cursor.close();
-            // db.close();
-            return personToAssessments;
-        }
-    }
-
-    public boolean addPersonToAssessments(PersonToAssessments pToA){
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        ContentValues values = new ContentValues();
-        values.put(PERSON_TO_ASSESSMENTS_PERSON_ID, pToA.get_person_id());
-        values.put(PERSON_TO_ASSESSMENTS_FACILITY_ID, pToA.get_facility_id());
-        values.put(PERSON_TO_ASSESSMENTS_DATE_CREATED, pToA.get_date_created());
-        values.put(PERSON_TO_ASSESSMENTS_ASSESSMENT_ID, pToA.get_assessment_id());
-        values.put(PERSON_TO_ASSESSMENTS_USER_ID, pToA.get_user_id());
-        values.put(PERSON_TO_ASSESSMENTS_STATUS, 1);
-
-        try {
-            db.insert(TABLE_PERSON_TO_ASSESSMENTS, null, values);
-            Log.d(LOG, "addPersonToAssessments insert: ");
-        } catch (Exception ex) {
-            // db.close();
-            Log.d(LOG, "addPersonToAssessments catch " + ex.toString());
-            return false;
-        }
-        return true;
-    }
 
 //    dbHelp.addClient(_booking.get_first_name(), _booking.get_last_name(), _booking.get_national_id(), _booking.get_phone());
 
@@ -5927,67 +4940,6 @@ public class DBHelper extends SQLiteOpenHelper{
         return _List;
     }
 
-    public List<AssessmentsAnswers> getAllAssessmentsAnswers() {
-        List<AssessmentsAnswers> assessmentsAnswersList = new ArrayList<AssessmentsAnswers>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_ASSESSMENTS_ANSWERS;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                AssessmentsAnswers assessmentsAnswers = new AssessmentsAnswers();
-                //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                assessmentsAnswers.set_assess_id(parseInt(cursor.getString(0)));
-                assessmentsAnswers.set_person(parseInt(cursor.getString(1)));
-                assessmentsAnswers.set_facility(parseInt(cursor.getString(2)));
-                assessmentsAnswers.set_date_created(cursor.getString(3));
-                assessmentsAnswers.set_assessment_id(parseInt(cursor.getString(4)));
-                assessmentsAnswers.set_question(parseInt(cursor.getString(5)));
-                assessmentsAnswers.set_answer(cursor.getString(6));
-
-                // Adding person to list
-                assessmentsAnswersList.add(assessmentsAnswers);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        // db.close();
-        // return personToAssessments list
-        return assessmentsAnswersList;
-    }
-
-    public List<PersonToAssessments> getAllPersonToAssessments() {
-        List<PersonToAssessments> personToAssessmentsList = new ArrayList<PersonToAssessments>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_PERSON_TO_ASSESSMENTS;
-
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                PersonToAssessments personToAssessments = new PersonToAssessments();
-                //person.setRowId(Integer.parseInt(cursor.getString(0)));
-                personToAssessments.set_person_to_assessments_id(parseInt(cursor.getString(0)));
-                personToAssessments.set_person_id(parseInt(cursor.getString(1)));
-                personToAssessments.set_facility_id(parseInt(cursor.getString(2)));
-                personToAssessments.set_date_created(cursor.getString(3));
-                personToAssessments.set_assessment_id(parseInt(cursor.getString(4)));
-                personToAssessments.set_user_id(parseInt(cursor.getString(5)));
-
-                // Adding person to list
-                personToAssessmentsList.add(personToAssessments);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        // db.close();
-        // return personToAssessments list
-        return personToAssessmentsList;
-    }
-
     public int getPersonsCount() {
         Log.d(LOG, "getPersonsCount");
         String countQuery = "SELECT  * FROM " + TABLE_PERSON;
@@ -6051,264 +5003,6 @@ public class DBHelper extends SQLiteOpenHelper{
     }
 
     public void dropDatabase() {
-    }
-
-    public void uploadDBData() {
-        Log.d(LOG, "uploadDBData ");
-        new putMySQLGeoLocationsTable(this).execute();
-        new putMySQLPersonToAssessmentsTable(this).execute();
-        new putMySQLAssessmentsAnswersTable(this._context, this).execute();
-    }
-
-    public void downloadDBData() {
-        Log.d(LOG, "load person_to_assessments ");
-        load_person_to_assessments();
-        Log.d(LOG, "load assessments_answers ");
-        load_assessments_answers();
-        Log.d(LOG, "downloadDBData getMySQLPersonTable");
-        new getMySQLPersonTable(this._context, this).execute();
-        Log.d(LOG, "downloadDBData getMySQLAssessmentsQuestionsTable");
-        new getMySQLAssessmentsQuestionsTable(this).execute();
-        Log.d(LOG, "downloadDBData getMySQLAssessmentsTable");
-        new getMySQLAssessmentsTable(this).execute();
-        Log.d(LOG, "downloadDBData getMySQLQuestionDropdownOptionTable");
-        new getMySQLQuestionDropdownOptionTable(this).execute();
-    }
-
-    protected void load_person_to_assessments() {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-//        db.execSQL("delete from person_to_assessments ");
-//        db.execSQL("insert into person_to_assessments values (19,1,1,\"2015-09-15\",2,1,1);");
-    }
-
-    protected void load_assessments_answers() {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        //db.execSQL("delete from assessments_answers ");
-
-//        db.execSQL("insert into assessments_answers values (3485,1,1,\"2015-09-15\",2,14,\"A\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3486,1,1,\"2015-09-15\",2,16,\"B\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3487,1,1,\"2015-09-15\",2,17,\"text area\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3488,1,1,\"2015-09-15\",2,18,\"text area\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3489,1,1,\"2015-09-15\",2,19,\"D\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3490,1,1,\"2015-09-15\",2,21,\"E\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3491,1,1,\"2015-09-15\",2,22,\"3.2\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3492,1,1,\"2015-09-15\",2,23,\"3.3\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3493,1,1,\"2015-09-15\",2,24,\"3.4\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3494,1,1,\"2015-09-15\",2,25,\"3.5\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3495,1,1,\"2015-09-15\",2,26,\"3.6\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3496,1,1,\"2015-09-15\",2,27,\"3.7\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3497,1,1,\"2015-09-15\",2,28,\"3.8\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3498,1,1,\"2015-09-15\",2,29,\"3.9\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3499,1,1,\"2015-09-15\",2,30,\"3.ten\",\"Y\");");
-//        db.execSQL("insert into assessments_answers values (3500,1,1,\"2015-09-15\",2,40,\"5.1\",\"Y\");");
-
-    }
-
-    protected void not_load_person_to_assessments() {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.execSQL("delete from person_to_assessments ");
-        db.execSQL("insert into person_to_assessments values (1,1,1,\"2015-07-07\",2,1,0);");
-        db.execSQL("insert into person_to_assessments values (2,1,1,\"2015-09-07\",2,1,0);");
-        db.execSQL("insert into person_to_assessments values (3,1,1,\"2015-11-07\",2,1,0);");
-        db.execSQL("insert into person_to_assessments values (4,1,1,\"2015-07-07\",3,1,0);");
-        db.execSQL("insert into person_to_assessments values (5,1,1,\"2015-09-07\",3,1,0);");
-        db.execSQL("insert into person_to_assessments values (6,1,1,\"2015-07-13\",2,1,0);");
-        db.execSQL("insert into person_to_assessments values (7,16,3,\"2015-07-13\",2,1,0);");
-        db.execSQL("insert into person_to_assessments values (8,42,417,\"2015-07-16\",4,1,0);");
-        db.execSQL("insert into person_to_assessments values (14,42,417,\"2015-07-17\",4,1,0);");
-        db.execSQL("insert into person_to_assessments values (15,42,417,\"2015-07-17\",3,1,0);");
-        db.execSQL("insert into person_to_assessments values (16,42,417,\"2015-07-17\",2,1,0);");
-        db.execSQL("insert into person_to_assessments values (17,42,417,\"2015-07-20\",15,1,0);");
-        db.execSQL("insert into person_to_assessments values (18,42,417,\"2015-07-21\",15,1,0);");
-
-    }
-
-    protected void not_load_assessments_answers() {
-        SQLiteDatabase db = this.getWritableDatabase();
-
-        db.execSQL("delete from assessments_answers ");
-        db.execSQL("insert into assessments_answers values (3343,1,1,\"2015-07-07\",2,14,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3345,1,1,\"2015-07-07\",2,16,\"B\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3346,1,1,\"2015-07-07\",2,17,\"C\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3347,1,1,\"2015-07-07\",2,18,\"D\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3348,1,1,\"2015-07-07\",2,19,\"E\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3350,1,1,\"2015-07-07\",2,21,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3351,1,1,\"2015-07-07\",2,22,\"3.2.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3352,1,1,\"2015-07-07\",2,23,\"3.3.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3353,1,1,\"2015-07-07\",2,24,\"3.4.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3354,1,1,\"2015-07-07\",2,25,\"3.5.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3355,1,1,\"2015-07-07\",2,26,\"3.6.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3356,1,1,\"2015-07-07\",2,27,\"3.7.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3357,1,1,\"2015-07-07\",2,28,\"3.8.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3358,1,1,\"2015-07-07\",2,29,\"3.9.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3359,1,1,\"2015-07-07\",2,30,\"3.10\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3361,1,1,\"2015-07-07\",2,32,\"4.1.\",\"Y\");");
-        //db.execSQL("insert into assessments_answers values (3362,1,1,\"2015-07-07\",2,33,\"4.2.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3363,1,1,\"2015-07-07\",2,34,\"4.3.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3364,1,1,\"2015-07-07\",2,36,\"4.5.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3374,1,1,\"2015-07-07\",2,38,\"4.7.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3377,1,1,\"2015-07-07\",2,40,\"5.1.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3378,1,1,\"2015-07-07\",2,35,\"4.4.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3379,1,1,\"2015-07-07\",2,37,\"4.6.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3380,1,1,\"2015-09-07\",2,14,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3381,1,1,\"2015-09-07\",2,16,\"B\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3382,1,1,\"2015-09-07\",2,17,\"C\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3383,1,1,\"2015-09-07\",2,18,\"D\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3384,1,1,\"2015-09-07\",2,19,\"E\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3385,1,1,\"2015-09-07\",2,21,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3386,1,1,\"2015-09-07\",2,22,\"3.2. save\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3387,1,1,\"2015-09-07\",2,23,\"3.3.  2015-09-07\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3388,1,1,\"2015-09-07\",2,24,\"3.4.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3389,1,1,\"2015-09-07\",2,25,\"3.5.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3390,1,1,\"2015-09-07\",2,26,\"3.6.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3391,1,1,\"2015-09-07\",2,27,\"3.7.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3392,1,1,\"2015-09-07\",2,28,\"3.8.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3393,1,1,\"2015-09-07\",2,29,\"3.9.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3394,1,1,\"2015-09-07\",2,30,\"3.10\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3395,1,1,\"2015-09-07\",2,32,\"4.1.\",\"Y\");");
-        //db.execSQL("insert into assessments_answers values (3396,1,1,\"2015-09-07\",2,33,\"4.2.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3397,1,1,\"2015-09-07\",2,34,\"4.3.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3398,1,1,\"2015-09-07\",2,36,\"4.5.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3399,1,1,\"2015-09-07\",2,38,\"4.7.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3400,1,1,\"2015-09-07\",2,40,\"5.1.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3401,1,1,\"2015-07-07\",3,42,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3402,1,1,\"2015-07-07\",3,43,\": comment loooooooooooooooooooooooooooooooooooooooooooooog comment\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3403,1,1,\"2015-07-07\",3,44,\"B\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3404,1,1,\"2015-07-07\",3,46,\"C\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3405,1,1,\"2015-07-07\",3,48,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3406,1,1,\"2015-07-07\",3,50,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3407,1,1,\"2015-07-07\",3,52,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3408,1,1,\"2015-07-07\",3,54,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3409,1,1,\"2015-07-07\",3,56,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3410,1,1,\"2015-07-07\",3,58,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3411,1,1,\"2015-07-07\",3,60,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3412,1,1,\"2015-07-07\",3,62,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3413,1,1,\"2015-07-07\",3,64,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3414,1,1,\"2015-07-07\",3,66,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3415,1,1,\"2015-07-07\",3,68,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3416,1,1,\"2015-09-07\",2,35,\"4.4. \",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3417,1,1,\"2015-09-07\",2,37,\"4.6.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3418,1,1,\"2015-11-07\",2,14,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3419,1,1,\"2015-11-07\",2,16,\"B\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3420,1,1,\"2015-11-07\",2,17,\"C\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3421,1,1,\"2015-11-07\",2,18,\"D\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3422,1,1,\"2015-11-07\",2,19,\"E\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3423,1,1,\"2015-11-07\",2,21,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3424,1,1,\"2015-11-07\",2,40,\"2015-11-07\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3425,1,1,\"2015-11-07\",2,22,\"3.1.\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3426,1,1,\"2015-11-07\",2,23,\"2015-11-07\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3427,1,1,\"2015-07-07\",3,45,\"test 2\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3428,1,1,\"2015-07-07\",3,47,\"test 3\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3450,1,1,\"2015-07-13\",3,42,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3449,1,1,\"2015-07-13\",2,40,\"test test test\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3448,1,1,\"2015-07-13\",2,23,\"3.2 2015-07-13\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3480,1,1,\"2015-07-13\",2,22,\"3.1 update\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3446,1,1,\"2015-07-13\",2,21,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3445,1,1,\"2015-07-13\",2,19,\"E\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3444,1,1,\"2015-07-13\",2,18,\"D\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3443,1,1,\"2015-07-13\",2,17,\"C\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3442,1,1,\"2015-07-13\",2,16,\"B\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3441,1,1,\"2015-07-13\",2,14,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3451,1,1,\"2015-07-13\",3,43,\"comment 1 test looooooooooooooooooooooooooooooooooooooooooooooooooooooooog comment\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3452,1,1,\"2015-07-13\",3,44,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3453,1,1,\"2015-07-13\",3,46,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3454,1,1,\"2015-07-13\",3,48,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3455,1,1,\"2015-07-13\",3,50,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3456,1,1,\"2015-07-13\",3,52,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3457,1,1,\"2015-07-13\",3,54,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3458,1,1,\"2015-07-13\",3,56,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3459,1,1,\"2015-07-13\",3,58,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3460,1,1,\"2015-07-13\",3,60,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3461,1,1,\"2015-07-13\",3,62,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3462,1,1,\"2015-07-13\",3,64,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3463,1,1,\"2015-07-13\",3,66,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3464,1,1,\"2015-07-13\",3,68,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3465,1,1,\"2015-07-13\",3,69,\"comment 14\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3466,1,1,\"2015-07-07\",3,49,\"test 4\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3467,16,3,\"2015-07-13\",2,14,\"A\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3468,16,3,\"2015-07-13\",2,16,\"B\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3469,16,3,\"2015-07-13\",2,17,\"C\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3470,16,3,\"2015-07-13\",2,18,\"D\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3471,16,3,\"2015-07-13\",2,19,\"E\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3472,16,3,\"2015-07-13\",2,21,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3473,42,417,\"2015-07-16\",4,136,\"F\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3474,42,417,\"2015-07-20\",15,135,\"This is a test answer for q1\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3475,42,417,\"2015-07-20\",15,137,\"This is a textbox answer for q2\",\"Y\");");
-
-//		MainActivity.db.execSQL("insert into assessments_answers values (3476,42,417,\"2015-07-20\",15,138,\"This is a long test answer for q2a
-//				This is a long test answer for q2b
-//		This is a long test answer for q2c
-//		This is a long test answer for q2d
-//		This is a long test answer for q2e
-//		This is a long test answer for q2f
-//		This is a long test answer for q2a
-//		T...\",\"Y\");");
-
-        db.execSQL("insert into assessments_answers values (3477,42,417,\"2015-07-21\",15,135,\"textarea q1\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3478,42,417,\"2015-07-21\",15,137,\"-\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3479,42,417,\"2015-07-21\",15,138,\"textbox q2\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3481,42,417,\"2015-07-21\",15,140,\"textarea q3\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3482,42,417,\"2015-07-21\",15,139,\"-\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3483,42,417,\"2015-07-21\",15,141,\"-\",\"Y\");");
-        db.execSQL("insert into assessments_answers values (3484,42,417,\"2015-07-21\",15,142,\"F\",\"Y\");");
-    }
-
-    public String[][] getQuestionData(int personID, int facilityID, int date, int assessmentID) {
-        //String query = "select * from person";
-//        String query = "select " +
-//                "aq.question, " +
-//                "aq.itemtype, " +
-
-//                "(select aa.answer from assessments_answers aa where aa.person = pa.person_id and aa.facility = pa.facility_id and aa.date_created = " +
-//                "pa.date_created and a.assessment_id = aq.assessment_id  and aa.question = aq.assessments_questions_id) as answer " +
-//                "from person_to_assessments pa " +
-//                "join person p on p.person_id = pa.person_id " +
-//                "join assessments a on pa.assessment_id = a.assessment_id " +
-//                "join assessments_questions aq on a.assessment_id = aq.assessment_id " +
-//                "where 1=1 " +
-//                " and pa.person_id = " + personID +
-//                " and pa.facility_id = " + facilityID +
-//                " and pa.date_created = " + "\'2015-07-07\'" +
-//                " and pa.assessment_id = " + assessmentID +
-//                " and aq.status = 1 " +
-//                "order by aq.itemorder; ";
-//        Log.d("Query: ", query);
-
-//        Cursor c = MainActivity.db.rawQuery(query, null);
-//        while (c.moveToNext()) {
-//
-//        }
-//        c.close();
-        int question = 0;
-        int itemtype = 1;
-        int answer = 2;
-        String[][] questionData = new String[30][3];
-
-        String[] itemTypes = {"text", "question110", "questiontext", "questionyesno", "questionmulti"};
-        Random r = new Random();
-
-        questionData[0][question] = "What time is it?";
-        questionData[0][itemtype] = "title";
-        questionData[0][answer] = "3:00PM";
-
-
-        for (int i=1; i<30; i++) {
-            questionData[i][question] = "What time is it?";
-            //questionData[i][itemtype] = itemTypes[r.nextInt(itemTypes.length)];
-            questionData[i][itemtype] = itemTypes[1];
-            questionData[i][answer] = "3:00PM";
-        }
-
-//        keyData[0] = c.getString(0);
-//        keyData[1] = c.getString(1);
-//        keyData[2] = c.getString(2);
-//        keyData[3] = c.getString(3);
-
-//        c.close();
-        return questionData;
     }
 
     static public boolean isDate(String testDate){

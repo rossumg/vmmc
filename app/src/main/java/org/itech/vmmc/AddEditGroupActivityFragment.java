@@ -16,7 +16,6 @@ import android.widget.Button;
 import android.widget.DatePicker;
 import android.widget.EditText;
 import android.widget.ListAdapter;
-import android.widget.Spinner;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -398,36 +397,6 @@ public class AddEditGroupActivityFragment extends Fragment implements AdapterVie
                 Log.d(LOG, "phoneNumber selected: " + dropdown.getText());
             }
         });
-
-    }
-
-    private Assessments assessment = null;
-    public void loadAssessmentTypeDropdown(View view) {
-        final Spinner dropdown = (Spinner) view.findViewById(R.id.assessment_type);
-        dropdown.setOnItemSelectedListener( new AdapterView.OnItemSelectedListener() {
-            @Override
-            public void onItemSelected(AdapterView<?> parent, View view, int position, long id) {
-                String assessmentTypeText  = dropdown.getSelectedItem().toString();
-                Log.d(LOG, "assessmentTypeText: " + assessmentTypeText + "<");
-                // because of the all option, not available in create
-                if(!assessmentTypeText.equals("")) {
-                    assessment = dbHelp.getAssessments(assessmentTypeText);
-                } else assessment = null;
-            }
-
-            @Override
-            public void onNothingSelected(AdapterView<?> parent) {
-                Log.d(LOG, "spinner nothing selected");
-            }
-        });
-
-        List<String> assessmentTypes = dbHelp.getAllAssessmentTypes();
-        String all = "";
-        assessmentTypes.add(0,all);
-
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, assessmentTypes);
-        dataAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-        dropdown.setAdapter(dataAdapter);
 
     }
 }

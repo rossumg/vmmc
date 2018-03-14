@@ -55,7 +55,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
             }
 
             if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.GEOLOCATION))) {
-                dbHelp.addGeoLocation();
+//                dbHelp.addGeoLocation();
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.loginTitle))) {
                 Log.d(LOG, getResources().getString(R.string.loginTitle) + " btn");
@@ -146,17 +146,7 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
 //                    dbHelp.downloadDBData();
 //                }
 //
-            } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditPerson))) {
-                Log.d(LOG, getResources().getString(R.string.addEditPerson) + " btn");
-                Fragment fragment;
-                fragment = getFragmentManager().findFragmentByTag(AddEditPersonFragment.TAG);
-                if (fragment == null) {
-                    fragment = AddEditPersonFragment.newInstance();
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).addToBackStack(currentFragmentId).commit();
-                } else {
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).commit();
-                }
-                currentFragmentId = "AddEditPerson";
+
 
             } else if (mAdapter.getItem(position).toString().equals(getResources().getString(R.string.addEditBooking))) {
                 Log.d(LOG, "ActionFragment " + getResources().getString(R.string.addEditBooking) + " btn");
@@ -224,8 +214,8 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
                 Fragment fragment;
                 fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
 //                if (fragment == null) {
-                    fragment = DisplayFragment.newInstance("displayPendingFollowup", "");
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(currentFragmentId).commit();
+                fragment = DisplayFragment.newInstance("displayPendingFollowup", "");
+                getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(currentFragmentId).commit();
 //                } else {
 //                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).commit();
 //                }
@@ -326,8 +316,8 @@ public class ActionFragment extends Fragment implements AbsListView.OnItemClickL
      * Use this factory method to create a new instance of
      * this fragment using the provided parameters.
      *
-//     * @param param1 Parameter 1.
-//     * @param param2 Parameter 2.
+     //     * @param param1 Parameter 1.
+     //     * @param param2 Parameter 2.
      * @return A new instance of fragment RecentFragment.
      */
     // TODO: Rename and change types and number of parameters

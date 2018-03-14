@@ -178,11 +178,9 @@ class getMySQLBookingTable extends AsyncTask<String, String, String> {
     }
 
     protected void onPostExecute(String result) {
-        Log.d(LOG, "putMySQLBookingTable:onPostExecute: " + result);
-        syncAudit.set_progress("putMySQLBookingTable:" + result);
+        Log.d(LOG, "getMySQLBookingTable:onPostExecute: " + result);
+        syncAudit.set_progress("getMySQLBookingTable:" + result);
         dbhelp.addSyncAudit(syncAudit);
-        //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
-        //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
 }
 

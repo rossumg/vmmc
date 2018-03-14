@@ -25,14 +25,7 @@ import java.util.UUID;
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
         LoginFragment.OnFragmentInteractionListener,
-        EditFragment.OnFragmentInteractionListener,
-        CreateFragment.OnFragmentInteractionListener,
-        DebugFragment.OnFragmentInteractionListener,
-        CreatePersonFragment.OnFragmentInteractionListener,
-        SearchFragment.OnFragmentInteractionListener,
-        RecentFragment.OnFragmentInteractionListener,
         ActionFragment.OnFragmentInteractionListener,
-        AddEditPersonFragment.OnFragmentInteractionListener,
 //        AddPersonFragment.OnFragmentInteractionListener,
         EditPersonFragment.OnFragmentInteractionListener,
         AddEditBookingFragment.OnFragmentInteractionListener,
@@ -55,13 +48,16 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "1.15";
+    public static String _version = "1.16";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
     public static final String BASE_URL = "http://android.trainingdata.org/";
-
     public static final String GET_TABLE_URL = BASE_URL + COUNTRY + "/" + "getTable.php";
+
+    public static final String LOGIN_URL = BASE_URL + "login.php";
+    public static final String INDEX_URL = BASE_URL + "index.php";
+
     public static final String TAG_SUCCESS = "success";
     public static final String TAG_MESSAGE = "message";
     public static SQLiteDatabase db;
@@ -77,6 +73,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     private static String provider;
     public static float lat = 0;
     public static float lng = 0;
+    public static int MAX_RETRIES = 3;
 
     public static String deviceId = "";
     public static GroupActivity gGroupActivity = null;
@@ -311,18 +308,6 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, ActionFragment.TAG).commit();
                 }
                 currentFragmentId = "Action";
-
-                break;
-
-            case 92:
-                fragment = getFragmentManager().findFragmentByTag(AddEditPersonFragment.TAG);
-                if (fragment == null) {
-                    fragment = AddEditPersonFragment.newInstance();
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).addToBackStack(currentFragmentId).commit();
-                } else {
-                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, AddEditPersonFragment.TAG).commit();
-                }
-                currentFragmentId = "AddEditPerson";
 
                 break;
 
