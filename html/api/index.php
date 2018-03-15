@@ -1,4 +1,5 @@
 <?php
+exit();
 
 $method  = $_SERVER['REQUEST_METHOD'];
 $request = trim($_SERVER['PATH_INFO'], '/');
@@ -152,6 +153,10 @@ if ($jwt_check_sig == $jwt_recv_sig) {
     ob_start();
     
     switch ($request) {
+      case 'sync_audit':
+        $response = putSyncAudit();
+        break;
+		
       case 'person':
         $response = putPerson();
         break;
@@ -4701,6 +4706,222 @@ and phone=:wphone
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
     // continue?
   }
+}
+
+function putSyncAudit(){
+
+  global $db, $request_data;
+
+  $post = array();
+  //$post = $_POST['recs'];
+
+  file_put_contents('php_debug.log', 'putSyncAudit()0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+  $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+    foreach ($recs as $value) {
+      $rec[$i] = $value;
+      $i = $i + 1;
+    }
+    ob_start();
+    var_dump($rec);
+    $toss = ob_get_clean();
+    file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+  
+        $timestamp = $rec[0];
+        $latitude =  $rec[1];
+        $longitude = $rec[2];
+        $device_id = $rec[3];
+        $username =  $rec[4];
+	$password =  $rec[5];
+	$progress =  $rec[6];
+        $status =    $rec[7];
+    
+    file_put_contents('php_index_debug.log', 'putSyncAudit()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
+    var_dump($first_name, $last_name);
+    $toss = ob_get_clean(); file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    $row = selectSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status );
+
+    file_put_contents('php_debug.log', 'putSyncAudit()2 recs >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump( $timestamp, '==', $row[timestamp], $timestamp, $device_id );
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+    if(!$row) {
+            insertSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status );
+
+    } elseif ($row[timestamp] < $timestamp) {
+	    updateSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status );
+
+    } //$row[timestamp] < $timestamp
+  } //$i = 0; $i < $_POST['num_recs']; $i++
+
+  file_put_contents('php_debug.log', 'putSyncAudit() DONE >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+  //var_dump( $first_name, $last_name);
+  $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+  $response["success"] = 1;
+  die(json_encode($response));
+}
+
+function selectSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status ){
+
+       global $db;
+
+   file_put_contents('php_debug.log', 'selectSyncAudit1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+       var_dump("params=", $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+      $query = "
+select
+timestamp,
+latitude,
+longitude,
+device_id,
+username,
+password,
+progress,
+status
+from sync_audit
+where 1=1
+and timestamp <= :timestamp
+and device = :device_id
+	";
+
+   file_put_contents('php_debug.log', 'selectSyncAudit2>'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("query=", $query, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+   try {
+
+	   
+      $stmt = $db->prepare($query);
+
+      $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+      $stmt->bindParam(':device_id', $device_id, PDO::PARAM_STR, strlen($device_id));
+         
+      file_put_contents('php_debug.log', 'selectSyncAudit3a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+      var_dump("queryString=", $stmt->queryString, "END");
+      $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+      
+      $result = $stmt->execute();
+      $row = $stmt->fetch();
+
+   } catch (PDOException $ex) {
+	    //die
+      file_put_contents('php_debug.log', 'selectSyncAudit exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+      var_dump("exception=", $ex, "END");
+      $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+
+      return null;
+   }
+   
+   file_put_contents('php_debug.log', 'selectSyncAudit3b >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("row=", $row, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+   
+   return $row;
+}
+
+function insertSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status ){
+    global $db;
+    
+    file_put_contents('php_debug.log', 'insertSyncAudit0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status );
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $insert = "
+insert into sync_audit ( timestamp, latitude, longitude, device_id, username, password, progress, status )
+values ( :timestamp, :latitude, :longitude, :device_id, :username, :password, :progress, :status ) ";
+    
+    file_put_contents('php_debug.log', 'insertSyncAudit1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("insert=", $insert, "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    try {
+        $stmt = $db->prepare($insert);
+        $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+        $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
+        $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
+        $stmt->bindParam(':device_id', $device_id, PDO::PARAM_STR, strlen($device_id));
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+        $stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
+        $stmt->bindParam(':progress', $progress, PDO::PARAM_STR, strlen($progress));
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR, strlen($status));
+        $result = $stmt->execute();
+    
+        file_put_contents('php_debug.log', 'insertSyncAudit2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("insert result=", $result, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    }
+    catch (PDOException $ex) {
+        //die
+        file_put_contents('php_debug.log', 'insertSyncAudit exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("exception=", $ex, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+        // continue?
+    }
+}
+
+
+function updateSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status ){
+    global $db;
+    
+    file_put_contents('php_debug.log', 'updateSyncAudit0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status);
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $update = "
+update sync_audit set
+timestamp=:timestamp,
+latitude=:latitude,
+longitude=:longitude,
+device_id=:device_id,
+username=:username,
+password=:password,
+progress=:progress,
+status=:status
+where 1=1
+and timestamp<:wtimestamp
+and device_id=:wdevice_id
+	";
+    
+    file_put_contents('php_debug.log', 'updateSyncAudit1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("update=", $update, "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    try {
+        $stmt = $db->prepare($update);
+
+        $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+        $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
+        $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
+        $stmt->bindParam(':device_id', $device_id, PDO::PARAM_STR, strlen($device_id));
+        $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+        $stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
+        $stmt->bindParam(':progress', $progress, PDO::PARAM_STR, strlen($progress));
+        $stmt->bindParam(':status', $status, PDO::PARAM_STR, strlen($status));
+        $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+        $stmt->bindParam(':wdevice_id', $device_id, PDO::PARAM_STR, strlen($device_id));
+
+        $result = $stmt->execute();
+    
+        file_put_contents('php_debug.log', 'updateSyncAudit2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("update result=", $result, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    }
+    catch (PDOException $ex) {
+        //die
+        file_put_contents('php_debug.log', 'updateSyncAudit exception >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("exception=", $ex, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+        // continue?
+    }
 }
 
 

@@ -41,6 +41,7 @@ public class getMySQLTableVolley {
     NotificationCompat.Builder mBuilder;
 
     int SOCKET_TIMEOUT_MS = 30000;
+    int MAX_RETRY = 3;
 
     public getMySQLTableVolley(Context context, DBHelper dbHelper) {
         this._context = context;
@@ -74,29 +75,32 @@ public class getMySQLTableVolley {
     //gets all tables in regular database sync
     public void getSyncTables() {
         SyncTableObjects  syncTableObjects = new SyncTableObjects();
-        getTable(syncTableObjects.personTableInfo);
-        getTable(syncTableObjects.userTableInfo);
-        getTable(syncTableObjects.userTypeTableInfo);
-        getTable(syncTableObjects.userToAclTableInfo);
-        getTable(syncTableObjects.aclTableInfo);
-        getTable(syncTableObjects.clientTableInfo);
-        getTable(syncTableObjects.facilitatorTableInfo);
-        getTable(syncTableObjects.locationTableInfo);
-        getTable(syncTableObjects.addressTableInfo);
-        getTable(syncTableObjects.regionTableInfo);
-        getTable(syncTableObjects.bookingTableInfo);
-        getTable(syncTableObjects.interactionTableInfo);
-        getTable(syncTableObjects.facilitatorTypeTableInfo);
-        getTable(syncTableObjects.procedureTypeTableInfo);
-        getTable(syncTableObjects.followupTableInfo);
-        getTable(syncTableObjects.interactionTypeTableInfo);
-        getTable(syncTableObjects.statusTypeTableInfo);
-        getTable(syncTableObjects.institutionTableInfo);
-        getTable(syncTableObjects.groupActivityTableInfo);
-        getTable(syncTableObjects.groupTypeTableInfo);
+        getTable(syncTableObjects.personTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.userTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.userTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.userToAclTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.aclTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.clientTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.locationTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.addressTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.regionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.bookingTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.interactionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.facilitatorTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.procedureTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.followupTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.interactionTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.statusTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.institutionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.groupTypeTableInfo, MAX_RETRY);
     }
 
-    private void getTable(JSONObject tableInfo) {
+    private void getTable(final JSONObject tableInfo, final int numRetry) {
+        if (numRetry <= 0) {
+            return;
+        }
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
@@ -129,10 +133,12 @@ public class getMySQLTableVolley {
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         Log.d(LOG, "exception > received JSONObject" + response.toString());
                                         e.printStackTrace();
+                                        getTable(tableInfo, numRetry - 1);
                                     } catch (NullPointerException e) {
                                         Log.d(LOG, "exception > GET request for: " + dataTable);
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         e.printStackTrace();
+                                        getTable(tableInfo, numRetry - 1);
                                     }
                                 }
                             }
@@ -141,6 +147,7 @@ public class getMySQLTableVolley {
                         public void onErrorResponse(VolleyError error) {
                             Log.d(LOG, "error on GET at " + url);
                             error.printStackTrace();
+                            getTable(tableInfo, numRetry - 1);
                         }
                     }) {
             };

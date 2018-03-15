@@ -434,7 +434,7 @@ public class DBHelper extends SQLiteOpenHelper{
         tablePutter.putAllTables();
 
         getMySQLTableVolley tableGetter = new getMySQLTableVolley(this._context, this);
-        tableGetter.getAllTables();
+        //tableGetter.getAllTables();
 
         Log.d(LOG, "DBHelper after sync: _username: " + MainActivity._username );
 

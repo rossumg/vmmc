@@ -46,6 +46,7 @@ public class putMySQLTableVolley {
     NotificationCompat.Builder mBuilder;
 
     int SOCKET_TIMEOUT_MS = 60000;
+    int MAX_RETRY = 3;
 
     public putMySQLTableVolley(Context context, final DBHelper dbHelper) {
         _context = context;
@@ -82,14 +83,17 @@ public class putMySQLTableVolley {
     //put all tables in regular database sync
     private void putSyncTables() {
         SyncTableObjects syncTableObjects = new SyncTableObjects();
-        putTable(syncTableObjects.userTableInfo);
-        putTable(syncTableObjects.bookingTableInfo);
-        putTable(syncTableObjects.clientTableInfo);
-        putTable(syncTableObjects.facilitatorTableInfo);
-        putTable(syncTableObjects.groupActivityTableInfo);
+        putTable(syncTableObjects.userTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.bookingTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.clientTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
     }
 
-    private void putTable(JSONObject tableInfo) {
+    private void putTable(final JSONObject tableInfo, final int numRetry) {
+        if (numRetry <= 0) {
+            return;
+        }
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
@@ -116,6 +120,7 @@ public class putMySQLTableVolley {
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
+                                        putTable(tableInfo, numRetry - 1);
                                     }
                                 }
                         }, new Response.ErrorListener() {
@@ -124,6 +129,7 @@ public class putMySQLTableVolley {
                                     error.printStackTrace();
                                     Log.d(LOG, error.toString());
                                     Log.d(LOG, "Server ERROR for POST " + dataTable);
+                                putTable(tableInfo, numRetry - 1);
                                 }
                         }
                     );
