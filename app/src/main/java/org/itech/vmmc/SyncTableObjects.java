@@ -33,6 +33,7 @@ public class SyncTableObjects {
     public JSONObject groupTypeTableInfo = new JSONObject();
     public JSONObject followupTableInfo = new JSONObject();
     public JSONObject procedureTypeTableInfo = new JSONObject();
+    public JSONObject syncAuditTableInfo = new JSONObject();
 
     public SyncTableObjects(){
         makeTableJSONObjects();
@@ -40,6 +41,19 @@ public class SyncTableObjects {
 
     private void makeTableJSONObjects() {
         try {
+
+            JSONArray syncAuditTableFields = new JSONArray("['"
+                    + SYNC_AUDIT_ID + "','"
+                    + SYNC_AUDIT_TIMESTAMP + "','"
+                    + SYNC_AUDIT_LATITUDE + "','"
+                    + SYNC_AUDIT_LONGITUDE + "','"
+                    + SYNC_AUDIT_DEVICE_ID + "','"
+                    + SYNC_AUDIT_USERNAME + "','"
+                    + SYNC_AUDIT_PASSWORD + "','"
+                    + SYNC_AUDIT_PROGRESS + "','"
+                    + SYNC_AUDIT_STATUS
+                    + "']"
+            );
 
             JSONArray personTableFields = new JSONArray("['"
                     + PERSON_ID + "','"
@@ -279,6 +293,7 @@ public class SyncTableObjects {
             institutionTableInfo.put("dataTable", TABLE_INSTITUTION);
             groupActivityTableInfo.put("dataTable", TABLE_GROUP_ACTIVITY);
             groupTypeTableInfo.put("dataTable", TABLE_GROUP_TYPE);
+            syncAuditTableInfo.put("dataTable", TABLE_SYNC_AUDIT);
 
             personTableInfo.put("fields", personTableFields);
             userTableInfo.put("fields", userTableFields);
@@ -302,6 +317,7 @@ public class SyncTableObjects {
             institutionTableInfo.put("fields", institutionTableFields);
             groupActivityTableInfo.put("fields", groupActivityTableFields);
             groupTypeTableInfo.put("fields", groupTypeTableFields);
+            syncAuditTableInfo.put("fields", syncAuditTableFields);
 
         } catch (JSONException e) {
             e.printStackTrace();

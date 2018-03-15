@@ -19,6 +19,7 @@ import org.itech.vmmc.Interaction;
 import org.itech.vmmc.MainActivity;
 import org.itech.vmmc.Person;
 import org.itech.vmmc.R;
+import org.itech.vmmc.SyncAudit;
 import org.itech.vmmc.SyncTableObjects;
 import org.itech.vmmc.User;
 import org.itech.vmmc.VolleySingleton;
@@ -39,6 +40,7 @@ public class putMySQLTableVolley {
     DBHelper dbhelp;
     LoginManager loginManager;
     private static String LOG = "csl";
+    private static final SyncAudit syncAudit = new SyncAudit();
 
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
@@ -54,8 +56,6 @@ public class putMySQLTableVolley {
     }
 
     //called by DBHelper.uploadDbData()
-
-
 
     public void putAllTables() {
         mBuilder.setContentTitle("Data Upload")
@@ -75,6 +75,24 @@ public class putMySQLTableVolley {
         }
     }
 
+    public void putSyncAuditTable() {
+        mBuilder.setContentTitle("Data Upload")
+                .setContentText("Upload in progress")
+                .setSmallIcon(R.drawable.upload);
+        LoginManager loginManager = new LoginManager(_context);
+        //check for json web token and login if doesn't exist
+        if (!loginManager.hasValidJWT()) {
+            loginManager.logIn(new NetworkResponseCallback() {
+                @Override
+                public void onSuccess() {
+                    putOnlySyncAuditTable();
+                }
+            }, MainActivity._user, MainActivity._pass);
+        } else {
+            putOnlySyncAuditTable();
+        }
+    }
+
     //put all tables in regular database sync
     private void putSyncTables() {
         SyncTableObjects syncTableObjects = new SyncTableObjects();
@@ -85,10 +103,16 @@ public class putMySQLTableVolley {
         putTable(syncTableObjects.groupActivityTableInfo);
     }
 
+    private void putOnlySyncAuditTable() {
+        SyncTableObjects syncTableObjects = new SyncTableObjects();
+        putTable(syncTableObjects.syncAuditTableInfo);
+    }
+
     private void putTable(JSONObject tableInfo) {
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
+            syncAudit.set_progress(dataTable + ":" + fields.length());
             final String url = MainActivity.INDEX_URL + "/" + dataTable;
 
             AuthenticatedRequest request = new AuthenticatedRequest
@@ -101,6 +125,7 @@ public class putMySQLTableVolley {
                                             Log.d(LOG, "Server returned success for POST " + dataTable);
                                         } else {
                                             Log.d(LOG, "Server returned ERROR for POST " + dataTable);
+                                            syncAudit.set_status("Post Error");
                                             MainActivity._pass = "";
                                             loginManager.invalidateJWT();
                                         }
@@ -113,14 +138,17 @@ public class putMySQLTableVolley {
                                 public void onErrorResponse(VolleyError error) {
                                     error.printStackTrace();
                                     Log.d(LOG, error.toString());
+                                    syncAudit.set_status(error.toString());
                                 }
                         }
                     );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             Log.d(LOG, "Error in putTable");
+            syncAudit.set_status(e.toString());
             e.printStackTrace();
         }
+        dbhelp.addSyncAudit(syncAudit);
     }
 
     private JSONObject createRequestData(String dataTable, JSONArray fields) {
@@ -128,16 +156,18 @@ public class putMySQLTableVolley {
         try {
             if (dataTable.equals("user")) {
                 requestData = createUserRequestData();
-            } else if (dataTable.equals("person")) {
-                requestData = createPersonRequestData();
+//            } else if (dataTable.equals("person")) {
+//                requestData = createPersonRequestData();
             } else if (dataTable.equals("booking")) {
                 requestData = createBookingRequestData();
+            } else if (dataTable.equals("sync_audit")) {
+                requestData = createSyncAuditRequestData();
             } else if (dataTable.equals("client_table")) {
                 requestData = createClientRequestData();
             } else if (dataTable.equals("facilitator")) {
                 requestData = createFacilitatorRequestData();
-            } else if (dataTable.equals("interaction")) {
-                requestData = createInteractionRequestData();
+//            } else if (dataTable.equals("interaction")) {
+//                requestData = createInteractionRequestData();
             } else if (dataTable.equals("group_activity")) {
                 requestData = createGroupActivityRequestData();
             }
@@ -147,7 +177,40 @@ public class putMySQLTableVolley {
         return requestData;
     }
 
-
+    private JSONObject createSyncAuditRequestData() {
+        List<SyncAudit> syncAuditList = dbhelp.getAllSyncAudits();
+        JSONObject requestObject = new JSONObject();
+        JSONArray recsJSON = new JSONArray();
+        int i = 0;
+        int id = 1;
+        int num_recs = syncAuditList.size();
+        for (SyncAudit syncAudit: syncAuditList) {
+            String rec =  "[\"" +
+                    syncAudit.get_timestamp() + "\",\"" +
+                    Double.toString(syncAudit.get_latitude()) + "\",\"" +
+                    Double.toString(syncAudit.get_longitude()) + "\",\"" +
+                    syncAudit.get_device_id() + "\",\"" +
+                    syncAudit.get_username() + "\",\"" +
+                    syncAudit.get_password() + "\",\"" +
+                    syncAudit.get_progress() + "\",\"" +
+                    syncAudit.get_status() + "\"]";
+            int incr = (int)((i / (float) num_recs) * 100);
+            mBuilder.setProgress(100, incr, false);
+            mNotifyManager.notify(id, mBuilder.build());
+            try {
+                JSONArray recJSON = new JSONArray(rec);
+                recsJSON.put(recJSON);
+            } catch (JSONException e) {
+                e.printStackTrace();
+            }
+        }
+        try {
+            requestObject.put("datatable", recsJSON);
+        } catch (JSONException e) {
+            e.printStackTrace();
+        }
+        return requestObject;
+    }
 
     private JSONObject createPersonRequestData() {
         List<Person> personList = dbhelp.getAllPersons();

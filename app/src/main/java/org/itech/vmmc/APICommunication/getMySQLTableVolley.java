@@ -11,13 +11,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.itech.vmmc.DBHelper;
 import org.itech.vmmc.MainActivity;
 import org.itech.vmmc.R;
+import org.itech.vmmc.SyncAudit;
 import org.itech.vmmc.SyncTableObjects;
 import org.itech.vmmc.VolleySingleton;
-import org.itech.vmmc.SyncTableObjects.*;
-
-import org.itech.vmmc.DBHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -32,6 +31,7 @@ public class getMySQLTableVolley {
     public SQLiteDatabase _db;
     DBHelper dbhelp;
     LoginManager loginManager;
+    private static final SyncAudit syncAudit = new SyncAudit();
 
     public static String LOG = "csl";
 
@@ -96,6 +96,7 @@ public class getMySQLTableVolley {
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
+            syncAudit.set_progress(dataTable + ":" + fields.length());
             final String url = MainActivity.INDEX_URL + "/" + dataTable;
             Log.d(LOG, "GET table request at " + url);
 
@@ -109,6 +110,7 @@ public class getMySQLTableVolley {
                                         if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
                                             Log.d(LOG, "Server returned ERROR for GET "
                                                     + dataTable + ": " + response.getString(MainActivity.TAG_MESSAGE));
+                                            syncAudit.set_status("Post Error");
                                             if (response.getString(MainActivity.TAG_MESSAGE).contains("jwt")) {
                                                 loginManager.invalidateJWT();
                                                 MainActivity._pass = "";
@@ -122,10 +124,12 @@ public class getMySQLTableVolley {
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         Log.d(LOG, "exception > received JSONObject" + response.toString());
                                         e.printStackTrace();
+                                        syncAudit.set_status(e.toString());
                                     } catch (NullPointerException e) {
                                         Log.d(LOG, "exception > GET request for: " + dataTable);
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         e.printStackTrace();
+                                        syncAudit.set_status(e.toString());
                                     }
                                 }
                             }
@@ -134,13 +138,16 @@ public class getMySQLTableVolley {
                         public void onErrorResponse(VolleyError error) {
                             Log.d(LOG, "error on GET at " + url);
                             error.printStackTrace();
+                            syncAudit.set_status(error.toString());
                         }
                     }) {
             };
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             e.printStackTrace();
+            syncAudit.set_status(e.toString());
         }
+        dbhelp.addSyncAudit(syncAudit);
     }
 
     private void insertData(JSONObject response, String dataTable, JSONArray fields)
