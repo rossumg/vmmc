@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -42,6 +44,8 @@ public class putMySQLTableVolley {
 
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
+
+    int SOCKET_TIMEOUT_MS = 60000;
 
     public putMySQLTableVolley(Context context, final DBHelper dbHelper) {
         _context = context;
@@ -100,9 +104,15 @@ public class putMySQLTableVolley {
                                         if (response.getString(MainActivity.TAG_SUCCESS).equals("1")) {
                                             Log.d(LOG, "Server returned success for POST " + dataTable);
                                         } else {
-                                            Log.d(LOG, "Server returned ERROR for POST " + dataTable);
-                                            MainActivity._pass = "";
-                                            loginManager.invalidateJWT();
+                                            Log.d(LOG, "Server returned ERROR for POST " + dataTable
+                                                    + ": " + response.getString(MainActivity.TAG_MESSAGE));
+                                            if (response.getString(MainActivity.TAG_MESSAGE).contains("jwt")) {
+                                                if (loginManager.hasValidJWT()) {
+                                                    loginManager.invalidateJWT();
+                                                    MainActivity._pass = "";
+                                                    Toast.makeText(_context, _context.getResources().getString(R.string.failed_sync_jwt), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
                                         }
                                     } catch (JSONException e) {
                                         e.printStackTrace();
@@ -113,9 +123,15 @@ public class putMySQLTableVolley {
                                 public void onErrorResponse(VolleyError error) {
                                     error.printStackTrace();
                                     Log.d(LOG, error.toString());
+                                    Log.d(LOG, "Server ERROR for POST " + dataTable);
                                 }
                         }
                     );
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             Log.d(LOG, "Error in putTable");

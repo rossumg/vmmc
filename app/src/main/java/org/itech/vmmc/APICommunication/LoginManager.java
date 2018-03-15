@@ -70,6 +70,7 @@ public class LoginManager {
                                @Override
                                public void onErrorResponse(VolleyError error) {
                                    Log.d(LOG, "Login unsuccessful: ERROR in receiving response");
+                                   invalidateJWT();
                                    error.printStackTrace();
                                }
                            }

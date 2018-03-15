@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -37,6 +39,8 @@ public class getMySQLTableVolley {
 
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
+
+    int SOCKET_TIMEOUT_MS = 30000;
 
     public getMySQLTableVolley(Context context, DBHelper dbHelper) {
         this._context = context;
@@ -110,8 +114,11 @@ public class getMySQLTableVolley {
                                             Log.d(LOG, "Server returned ERROR for GET "
                                                     + dataTable + ": " + response.getString(MainActivity.TAG_MESSAGE));
                                             if (response.getString(MainActivity.TAG_MESSAGE).contains("jwt")) {
-                                                loginManager.invalidateJWT();
-                                                MainActivity._pass = "";
+                                                if (loginManager.hasValidJWT()) {
+                                                    loginManager.invalidateJWT();
+                                                    MainActivity._pass = "";
+                                                    Toast.makeText(_context, _context.getResources().getString(R.string.failed_sync_jwt), Toast.LENGTH_LONG).show();
+                                                }
                                             }
                                         } else {
                                             insertData(response, dataTable, fields);
@@ -137,6 +144,11 @@ public class getMySQLTableVolley {
                         }
                     }) {
             };
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             e.printStackTrace();
