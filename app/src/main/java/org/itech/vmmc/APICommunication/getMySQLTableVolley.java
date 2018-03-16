@@ -6,7 +6,9 @@ import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -31,18 +33,20 @@ public class getMySQLTableVolley {
     public SQLiteDatabase _db;
     DBHelper dbhelp;
     LoginManager loginManager;
-    private static final SyncAudit syncAudit = new SyncAudit();
 
     public static String LOG = "csl";
 
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
+    int SOCKET_TIMEOUT_MS = 30000;
+    int MAX_RETRY = 3;
+
     public getMySQLTableVolley(Context context, DBHelper dbHelper) {
         this._context = context;
         this.dbhelp = dbHelper;
         this._db = dbHelper.getWritableDatabase();
-        loginManager = new LoginManager(_context);
+        loginManager = new LoginManager(_context, dbHelper);
 
         mNotifyManager =
                 (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
@@ -70,33 +74,38 @@ public class getMySQLTableVolley {
     //gets all tables in regular database sync
     public void getSyncTables() {
         SyncTableObjects  syncTableObjects = new SyncTableObjects();
-        getTable(syncTableObjects.personTableInfo);
-        getTable(syncTableObjects.userTableInfo);
-        getTable(syncTableObjects.userTypeTableInfo);
-        getTable(syncTableObjects.userToAclTableInfo);
-        getTable(syncTableObjects.aclTableInfo);
-        getTable(syncTableObjects.clientTableInfo);
-        getTable(syncTableObjects.facilitatorTableInfo);
-        getTable(syncTableObjects.locationTableInfo);
-        getTable(syncTableObjects.addressTableInfo);
-        getTable(syncTableObjects.regionTableInfo);
-        getTable(syncTableObjects.bookingTableInfo);
-        getTable(syncTableObjects.interactionTableInfo);
-        getTable(syncTableObjects.facilitatorTypeTableInfo);
-        getTable(syncTableObjects.procedureTypeTableInfo);
-        getTable(syncTableObjects.followupTableInfo);
-        getTable(syncTableObjects.interactionTypeTableInfo);
-        getTable(syncTableObjects.statusTypeTableInfo);
-        getTable(syncTableObjects.institutionTableInfo);
-        getTable(syncTableObjects.groupActivityTableInfo);
-        getTable(syncTableObjects.groupTypeTableInfo);
+        getTable(syncTableObjects.personTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.userTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.userTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.userToAclTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.aclTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.clientTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.locationTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.addressTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.regionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.bookingTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.interactionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.facilitatorTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.procedureTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.followupTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.interactionTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.statusTypeTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.institutionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.groupTypeTableInfo, MAX_RETRY);
     }
 
-    private void getTable(JSONObject tableInfo) {
+    private void getTable(final JSONObject tableInfo, final int numRetry) {
+        if (numRetry <= 0) {
+            return;
+        }
+        final SyncAudit syncAudit = new SyncAudit();
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
-            syncAudit.set_progress(dataTable + ":" + fields.length());
+            syncAudit.set_progress(dataTable + ":");
+            syncAudit.set_status("");
             final String url = MainActivity.INDEX_URL + "/" + dataTable;
             Log.d(LOG, "GET table request at " + url);
 
@@ -112,12 +121,17 @@ public class getMySQLTableVolley {
                                                     + dataTable + ": " + response.getString(MainActivity.TAG_MESSAGE));
                                             syncAudit.set_status("Post Error");
                                             if (response.getString(MainActivity.TAG_MESSAGE).contains("jwt")) {
-                                                loginManager.invalidateJWT();
-                                                MainActivity._pass = "";
+                                                if (loginManager.hasValidJWT()) {
+                                                    loginManager.invalidateJWT();
+                                                    MainActivity._pass = "";
+                                                    Toast.makeText(_context, _context.getResources().getString(R.string.failed_sync_jwt), Toast.LENGTH_LONG).show();
+                                                }
                                             }
                                         } else {
                                             insertData(response, dataTable, fields);
+                                            syncAudit.set_progress(dataTable + ":" + response.get("number_records"));
                                         }
+                                        dbhelp.addSyncAudit(syncAudit);
 
                                     } catch (JSONException e) {
                                         Log.d(LOG, "exception > GET request for: " + dataTable);
@@ -125,11 +139,14 @@ public class getMySQLTableVolley {
                                         Log.d(LOG, "exception > received JSONObject" + response.toString());
                                         e.printStackTrace();
                                         syncAudit.set_status(e.toString());
+                                        getTable(tableInfo, numRetry - 1);
                                     } catch (NullPointerException e) {
                                         Log.d(LOG, "exception > GET request for: " + dataTable);
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         e.printStackTrace();
                                         syncAudit.set_status(e.toString());
+                                        dbhelp.addSyncAudit(syncAudit);
+                                        getTable(tableInfo, numRetry - 1);
                                     }
                                 }
                             }
@@ -139,15 +156,23 @@ public class getMySQLTableVolley {
                             Log.d(LOG, "error on GET at " + url);
                             error.printStackTrace();
                             syncAudit.set_status(error.toString());
+                            dbhelp.addSyncAudit(syncAudit);
+
+                            getTable(tableInfo, numRetry - 1);
                         }
                     }) {
             };
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             e.printStackTrace();
             syncAudit.set_status(e.toString());
+            dbhelp.addSyncAudit(syncAudit);
         }
-        dbhelp.addSyncAudit(syncAudit);
     }
 
     private void insertData(JSONObject response, String dataTable, JSONArray fields)

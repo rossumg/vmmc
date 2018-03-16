@@ -175,6 +175,7 @@
     <string name="Karas">//Karas</string>
     <string name="auditTitle">Audit</string>
     <string name="authentication_failure">Authentication Failed</string>
+    <string name="failed_sync_jwt">Sync Failed. Token is invalid, try sync again.</string>
 
 
 </resources>

@@ -5,7 +5,9 @@ import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
+import android.widget.Toast;
 
+import com.android.volley.DefaultRetryPolicy;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
@@ -40,16 +42,18 @@ public class putMySQLTableVolley {
     DBHelper dbhelp;
     LoginManager loginManager;
     private static String LOG = "csl";
-    private static final SyncAudit syncAudit = new SyncAudit();
 
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
+
+    int SOCKET_TIMEOUT_MS = 60000;
+    int MAX_RETRY = 3;
 
     public putMySQLTableVolley(Context context, final DBHelper dbHelper) {
         _context = context;
         this.dbhelp = dbHelper;
         this._db = dbhelp.getReadableDatabase();
-        loginManager = new LoginManager(_context);
+        loginManager = new LoginManager(_context, dbHelper);
 
         mNotifyManager = (NotificationManager) this._context.getSystemService(this._context.NOTIFICATION_SERVICE);
         mBuilder = new NotificationCompat.Builder(this._context);
@@ -61,7 +65,6 @@ public class putMySQLTableVolley {
         mBuilder.setContentTitle("Data Upload")
                 .setContentText("Upload in progress")
                 .setSmallIcon(R.drawable.upload);
-        LoginManager loginManager = new LoginManager(_context);
         //check for json web token and login if doesn't exist
         if (!loginManager.hasValidJWT()) {
             loginManager.logIn(new NetworkResponseCallback() {
@@ -79,7 +82,6 @@ public class putMySQLTableVolley {
         mBuilder.setContentTitle("Data Upload")
                 .setContentText("Upload in progress")
                 .setSmallIcon(R.drawable.upload);
-        LoginManager loginManager = new LoginManager(_context);
         //check for json web token and login if doesn't exist
         if (!loginManager.hasValidJWT()) {
             loginManager.logIn(new NetworkResponseCallback() {
@@ -96,27 +98,34 @@ public class putMySQLTableVolley {
     //put all tables in regular database sync
     private void putSyncTables() {
         SyncTableObjects syncTableObjects = new SyncTableObjects();
-        putTable(syncTableObjects.userTableInfo);
-        putTable(syncTableObjects.bookingTableInfo);
-        putTable(syncTableObjects.clientTableInfo);
-        putTable(syncTableObjects.facilitatorTableInfo);
-        putTable(syncTableObjects.groupActivityTableInfo);
+        putTable(syncTableObjects.userTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.bookingTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.clientTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
+        putTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
     }
 
     private void putOnlySyncAuditTable() {
         SyncTableObjects syncTableObjects = new SyncTableObjects();
-        putTable(syncTableObjects.syncAuditTableInfo);
+        putTable(syncTableObjects.syncAuditTableInfo, MAX_RETRY);
     }
 
-    private void putTable(JSONObject tableInfo) {
+
+    private void putTable(final JSONObject tableInfo, final int numRetry) {
+        if (numRetry <= 0) {
+            return;
+        }
+        final SyncAudit syncAudit = new SyncAudit();
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
-            syncAudit.set_progress(dataTable + ":" + fields.length());
             final String url = MainActivity.INDEX_URL + "/" + dataTable;
+            JSONObject requestData = createRequestData(dataTable, fields);
+            syncAudit.set_progress(dataTable + ":" + requestData.getJSONArray("datatable").length());
+            syncAudit.set_status("");
 
             AuthenticatedRequest request = new AuthenticatedRequest
-                    (Request.Method.POST, url, createRequestData(dataTable, fields),
+                    (Request.Method.POST, url, requestData,
                             new Response.Listener<JSONObject>() {
                                 @Override
                                 public void onResponse(JSONObject response) {
@@ -124,13 +133,23 @@ public class putMySQLTableVolley {
                                         if (response.getString(MainActivity.TAG_SUCCESS).equals("1")) {
                                             Log.d(LOG, "Server returned success for POST " + dataTable);
                                         } else {
-                                            Log.d(LOG, "Server returned ERROR for POST " + dataTable);
+                                            Log.d(LOG, "Server returned ERROR for POST " + dataTable
+                                                    + ": " + response.getString(MainActivity.TAG_MESSAGE));
                                             syncAudit.set_status("Post Error");
-                                            MainActivity._pass = "";
-                                            loginManager.invalidateJWT();
+                                            if (response.getString(MainActivity.TAG_MESSAGE).contains("jwt")) {
+                                                if (loginManager.hasValidJWT()) {
+                                                    loginManager.invalidateJWT();
+                                                    MainActivity._pass = "";
+                                                    Toast.makeText(_context, _context.getResources().getString(R.string.failed_sync_jwt), Toast.LENGTH_LONG).show();
+                                                }
+                                            }
                                         }
+                                        dbhelp.addSyncAudit(syncAudit);
                                     } catch (JSONException e) {
                                         e.printStackTrace();
+                                        syncAudit.set_status(e.toString());
+                                        dbhelp.addSyncAudit(syncAudit);
+                                        putTable(tableInfo, numRetry - 1);
                                     }
                                 }
                         }, new Response.ErrorListener() {
@@ -138,17 +157,25 @@ public class putMySQLTableVolley {
                                 public void onErrorResponse(VolleyError error) {
                                     error.printStackTrace();
                                     Log.d(LOG, error.toString());
+                                    Log.d(LOG, "Server ERROR for POST " + dataTable);
                                     syncAudit.set_status(error.toString());
+                                    dbhelp.addSyncAudit(syncAudit);
+                                    putTable(tableInfo, numRetry - 1);
                                 }
                         }
                     );
+            request.setRetryPolicy(new DefaultRetryPolicy(
+                    SOCKET_TIMEOUT_MS,
+                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+            );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             Log.d(LOG, "Error in putTable");
             syncAudit.set_status(e.toString());
+            dbhelp.addSyncAudit(syncAudit);
             e.printStackTrace();
         }
-        dbhelp.addSyncAudit(syncAudit);
     }
 
     private JSONObject createRequestData(String dataTable, JSONArray fields) {
