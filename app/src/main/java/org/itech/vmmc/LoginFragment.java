@@ -170,17 +170,17 @@ public class LoginFragment extends Fragment {
         mEmailView.addTextChangedListener(new TextWatcher() {
                                               @Override
                                               public void beforeTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                                  Log.d(LOG, "before:" + charSequence.toString());
+//                                                  Log.d(LOG, "before:" + charSequence.toString());
                                               }
 
                                               @Override
                                               public void onTextChanged(CharSequence charSequence, int i, int i1, int i2) {
-                                                  Log.d(LOG, "on:" + charSequence.toString());
+//                                                  Log.d(LOG, "on:" + charSequence.toString());
                                               }
 
                                               @Override
                                               public void afterTextChanged(Editable editable) {
-                                                  Log.d(LOG, "after:" + editable.toString());
+//                                                  Log.d(LOG, "after:" + editable.toString());
                                               }
 
                                           });

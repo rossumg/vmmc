@@ -9,6 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.text.format.DateFormat;
 import android.util.Log;
 import android.widget.Toast;
+
 import org.itech.vmmc.APICommunication.getMySQLTableVolley;
 import org.itech.vmmc.APICommunication.putMySQLTableVolley;
 
@@ -18,7 +19,12 @@ import java.io.FileOutputStream;
 import java.io.OutputStream;
 import java.sql.Timestamp;
 import java.text.SimpleDateFormat;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Arrays;
+import java.util.Calendar;
+import java.util.LinkedHashSet;
+import java.util.List;
+import java.util.Set;
 
 import static java.lang.Float.parseFloat;
 import static java.lang.Integer.parseInt;
@@ -434,7 +440,9 @@ public class DBHelper extends SQLiteOpenHelper{
         tablePutter.putAllTables();
 
         getMySQLTableVolley tableGetter = new getMySQLTableVolley(this._context, this);
-        //tableGetter.getAllTables();
+        tableGetter.getAllTables();
+
+        new SyncAuditThread(tablePutter).execute();
 
         Log.d(LOG, "DBHelper after sync: _username: " + MainActivity._username );
 
@@ -450,34 +458,6 @@ public class DBHelper extends SQLiteOpenHelper{
         }
 
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
-    }
-
-    public List<SyncAudit> getAllSyncLocation() {
-
-        List<SyncAudit> syncAuditList = new ArrayList<SyncAudit>();
-        // Select All Query
-        String selectQuery = "SELECT  * FROM " + TABLE_SYNC_AUDIT;
-        SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery(selectQuery, null);
-        // looping through all rows and adding to list
-        if (cursor.moveToFirst()) {
-            do {
-                SyncAudit syncAudit = new SyncAudit();
-                syncAudit.set_timestamp(cursor.getString(1));
-                syncAudit.set_longitude(parseFloat(cursor.getString(2)));
-                syncAudit.set_latitude(parseFloat(cursor.getString(3)));
-                syncAudit.set_device_id(cursor.getString(4));
-                syncAudit.set_username(cursor.getString(5));
-                syncAudit.set_password(cursor.getString(6));
-                syncAudit.set_progress(cursor.getString(7));
-                syncAudit.set_status(cursor.getString(8));
-                syncAuditList.add(syncAudit);
-            } while (cursor.moveToNext());
-        }
-        cursor.close();
-        // db.close();
-
-        return syncAuditList;
     }
 
     public boolean addSyncAudit(SyncAudit syncAudit){
@@ -505,6 +485,36 @@ public class DBHelper extends SQLiteOpenHelper{
         }
         return true;
     }
+
+    public boolean addSyncAudit(String _progress, String _status){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        SyncAudit syncAudit = new SyncAudit();
+        syncAudit.set_progress(_progress);
+        syncAudit.set_status(_status);
+        ContentValues values = new ContentValues();
+        Calendar calendar = Calendar.getInstance();
+        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
+
+        values.put(SYNC_AUDIT_TIMESTAMP, oTimestamp.toString());
+        values.put(SYNC_AUDIT_LONGITUDE, syncAudit.get_longitude());
+        values.put(SYNC_AUDIT_LATITUDE, syncAudit.get_latitude());
+        values.put(SYNC_AUDIT_DEVICE_ID, MainActivity.deviceId);
+        values.put(SYNC_AUDIT_USERNAME, MainActivity._username);
+        values.put(SYNC_AUDIT_PASSWORD, MainActivity._password);
+        values.put(SYNC_AUDIT_PROGRESS, syncAudit.get_progress());
+        values.put(SYNC_AUDIT_STATUS, syncAudit.get_status());
+
+        try {
+            db.insert(TABLE_SYNC_AUDIT, null, values);
+        } catch (Exception ex) {
+            // db.close();
+            Log.d(LOG, "addSyncAudit catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
 
 
     public User getUser(String username, String password, String phone){

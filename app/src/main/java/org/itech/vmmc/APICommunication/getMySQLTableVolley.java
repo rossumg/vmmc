@@ -13,13 +13,12 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 
+import org.itech.vmmc.DBHelper;
 import org.itech.vmmc.MainActivity;
 import org.itech.vmmc.R;
+import org.itech.vmmc.SyncAudit;
 import org.itech.vmmc.SyncTableObjects;
 import org.itech.vmmc.VolleySingleton;
-import org.itech.vmmc.SyncTableObjects.*;
-
-import org.itech.vmmc.DBHelper;
 import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -47,7 +46,7 @@ public class getMySQLTableVolley {
         this._context = context;
         this.dbhelp = dbHelper;
         this._db = dbHelper.getWritableDatabase();
-        loginManager = new LoginManager(_context);
+        loginManager = new LoginManager(_context, dbHelper);
 
         mNotifyManager =
                 (NotificationManager) _context.getSystemService(_context.NOTIFICATION_SERVICE);
@@ -101,9 +100,12 @@ public class getMySQLTableVolley {
         if (numRetry <= 0) {
             return;
         }
+        final SyncAudit syncAudit = new SyncAudit();
         try {
             final String dataTable = tableInfo.getString("dataTable");
             final JSONArray fields = tableInfo.getJSONArray("fields");
+            syncAudit.set_progress(dataTable + ":");
+            syncAudit.set_status("");
             final String url = MainActivity.INDEX_URL + "/" + dataTable;
             Log.d(LOG, "GET table request at " + url);
 
@@ -117,6 +119,7 @@ public class getMySQLTableVolley {
                                         if (response.getString(MainActivity.TAG_SUCCESS).equals("0")) {
                                             Log.d(LOG, "Server returned ERROR for GET "
                                                     + dataTable + ": " + response.getString(MainActivity.TAG_MESSAGE));
+                                            syncAudit.set_status("Post Error");
                                             if (response.getString(MainActivity.TAG_MESSAGE).contains("jwt")) {
                                                 if (loginManager.hasValidJWT()) {
                                                     loginManager.invalidateJWT();
@@ -126,18 +129,23 @@ public class getMySQLTableVolley {
                                             }
                                         } else {
                                             insertData(response, dataTable, fields);
+                                            syncAudit.set_progress(dataTable + ":" + response.get("number_records"));
                                         }
+                                        dbhelp.addSyncAudit(syncAudit);
 
                                     } catch (JSONException e) {
                                         Log.d(LOG, "exception > GET request for: " + dataTable);
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         Log.d(LOG, "exception > received JSONObject" + response.toString());
                                         e.printStackTrace();
+                                        syncAudit.set_status(e.toString());
                                         getTable(tableInfo, numRetry - 1);
                                     } catch (NullPointerException e) {
                                         Log.d(LOG, "exception > GET request for: " + dataTable);
                                         Log.d(LOG, "exception > Fields: " + fields.toString());
                                         e.printStackTrace();
+                                        syncAudit.set_status(e.toString());
+                                        dbhelp.addSyncAudit(syncAudit);
                                         getTable(tableInfo, numRetry - 1);
                                     }
                                 }
@@ -147,6 +155,9 @@ public class getMySQLTableVolley {
                         public void onErrorResponse(VolleyError error) {
                             Log.d(LOG, "error on GET at " + url);
                             error.printStackTrace();
+                            syncAudit.set_status(error.toString());
+                            dbhelp.addSyncAudit(syncAudit);
+
                             getTable(tableInfo, numRetry - 1);
                         }
                     }) {
@@ -159,6 +170,8 @@ public class getMySQLTableVolley {
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {
             e.printStackTrace();
+            syncAudit.set_status(e.toString());
+            dbhelp.addSyncAudit(syncAudit);
         }
     }
 

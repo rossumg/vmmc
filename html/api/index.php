@@ -1,6 +1,4 @@
 <?php
-exit();
-
 $method  = $_SERVER['REQUEST_METHOD'];
 $request = trim($_SERVER['PATH_INFO'], '/');
 $request_data   = file_get_contents('php://input');

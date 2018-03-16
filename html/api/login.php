@@ -3,7 +3,7 @@
 $method  = $_SERVER['REQUEST_METHOD'];
 $request = trim($_SERVER['PATH_INFO'], '/');
 $username   = $_SERVER['PHP_AUTH_USER'];
-$password   = $_SERVER['PHP_AUTH_PW'];
+$userPassword   = $_SERVER['PHP_AUTH_PW'];
 
 file_put_contents('php_login_debug.log', 'login start >'.PHP_EOL, FILE_APPEND | LOCK_EX); 
 file_put_contents('php_login_debug.log', "\tmethod: " . $method . PHP_EOL, FILE_APPEND | LOCK_EX); 
@@ -63,9 +63,11 @@ if ($row) {
   //if we encrypted the password, we would unencrypt it here, but in our case we just
   //compare the two passwords
   //if ($_POST['password'] === $row['password']) {
-  if ($password === $row['password']) {
+  if ($userPassword === $row['password']) {
     $login_ok = true;
+    file_put_contents('php_login_debug.log', 'login correct password >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
   } else {
+	$login_ok = false;
     file_put_contents('php_login_debug.log', 'login bad password >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
     var_dump("username=", $username, "END");
     //var_dump("req_data=", $password, "END");
