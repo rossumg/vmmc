@@ -211,12 +211,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             //Log.d(LOG, "EBF _booking != null " + _booking.get_first_name());
             _location = dbHelp.getLocation(String.valueOf(_booking.get_location_id()));
 
-            Log.d(LOG, "EBF after getBooking: "
-                    + _booking.get_fac_first_name() + ", "
-                    + _booking.get_fac_last_name() + ", "
-                    + _booking.get_fac_national_id() + ", "
-                    + _booking.get_fac_phone() + ", "
-            );
+
             Log.d(LOG, "EBF ActualDate: " + actualDate);
 
         } else {
@@ -231,13 +226,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _booking.set_national_id(client.get_national_id());
             _booking.set_phone(client.get_phone());
             _booking.set_projected_date(projectedDate);
-
-            if (MainActivity.gFacilitator != null) {
-                _booking.set_fac_first_name(MainActivity.gFacilitator.get_first_name());
-                _booking.set_fac_last_name(MainActivity.gFacilitator.get_last_name());
-                _booking.set_fac_national_id("");
-                _booking.set_fac_phone(MainActivity.gFacilitator.get_phone());
-            }
 
             _booking.set_consent(consent);
             _booking.set_procedure_type_id(procedure_type_id);
@@ -293,15 +281,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             _phone = (TextView) _view.findViewById(R.id.phone_number);
             _phone.setText(_booking.get_phone());
 //            _phone.setInputType(InputType.TYPE_NULL);
-            _facilitator = (TextView) _view.findViewById(R.id.facilitator);
-
-            if(_booking.get_fac_first_name() == null &&
-                    _booking.get_fac_last_name() == null &&
-                    _booking.get_fac_national_id() == null &&
-                    _booking.get_fac_phone() == null) {
-            } else {
-                _facilitator.setText(_booking.get_fac_first_name() + " " + _booking.get_fac_last_name() + ", " + _booking.get_fac_national_id() + ", " + _booking.get_fac_phone());
-            }
 
             _projected_date = (EditText) _view.findViewById(R.id.projected_date);
             _projected_date.setText(_booking.get_projected_date());
@@ -444,7 +423,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                     _phone.requestFocus();
                     return;
                 };
-                String sFacilitator = _facilitator.getText().toString();
 
                 String sProjectedDate = _projected_date.getText().toString();
                 if(DBHelper.isDate(sProjectedDate) && sProjectedDate.length() == 10) {
@@ -480,7 +458,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 Spinner fSpinner = (Spinner) _view.findViewById(R.id.followup);
                 Followup _followup = dbHelp.getFollowup( fSpinner.getSelectedItem().toString());
                 String sFollowupDate = _followup_date.getText().toString();
-                if((DBHelper.isDate(sFollowupDate) && sFollowupDate.length() == 10) || sFollowupDate.equals("")) {
+                if((DBHelper.isDate(sFollowupDate) && sFollowupDate.length() == 10) || sFollowupDate.equals("") || sFollowupDate.equals("null")) {
 //                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sProjectedDate.length());
                 }else{
 //                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sProjectedDate.length());
@@ -505,10 +483,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 //                        _contact.getText() + ", " +
                         _alt_contact.getText() + " <");
 
-                DisplayParts displayParts = new DisplayParts(sFacilitator);
-                Log.d(LOG, "UpdateBooking button3: " +
-                        displayParts.get_first_name() + ", " +displayParts.get_last_name() + ", " + displayParts.get_national_id() + ", " + displayParts.get_phone());
-
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
                 if(sLastName.matches("") ) complete = false;
@@ -525,10 +499,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         lookupBooking.set_last_name(sLastName);
                         lookupBooking.set_national_id(sNationalId);
                         lookupBooking.set_phone(sPhoneNumber);
-                        lookupBooking.set_fac_first_name(displayParts.get_first_name());
-                        lookupBooking.set_fac_last_name(displayParts.get_last_name());
-                        lookupBooking.set_fac_national_id(displayParts.get_national_id());
-                        lookupBooking.set_fac_phone(displayParts.get_phone());
+
                         lookupBooking.set_location_id(_location.get_id());
                         lookupBooking.set_latitude(fLatitude);
                         lookupBooking.set_longitude(fLongitude);
@@ -551,10 +522,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                         booking.set_last_name(sLastName);
                         booking.set_national_id(sNationalId);
                         booking.set_phone(sPhoneNumber);
-                        booking.set_fac_first_name(displayParts.get_first_name());
-                        booking.set_fac_last_name(displayParts.get_last_name());
-                        booking.set_fac_national_id(displayParts.get_national_id());
-                        booking.set_fac_phone(displayParts.get_phone());
+
                         booking.set_location_id(_location.get_id());
                         booking.set_latitude(fLatitude);
                         booking.set_longitude(fLongitude);
@@ -616,33 +584,33 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         super.onResume();
         mListener = null;
         Log.d(LOG, "Resume: ");
-        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
-        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
-        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
-        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
-        _projected_date = (TextView) _view.findViewById(R.id.projected_date); _projected_date.setText("");
-        _actual_date = (TextView) _view.findViewById(R.id.actual_date); _actual_date.setText("");
-        _followup_date = (TextView) _view.findViewById(R.id.followup_date); _followup_date.setText("");
+//        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
+//        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
+//        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
+//        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
+//        _projected_date = (TextView) _view.findViewById(R.id.projected_date); _projected_date.setText("");
+//        _actual_date = (TextView) _view.findViewById(R.id.actual_date); _actual_date.setText("");
+//        _followup_date = (TextView) _view.findViewById(R.id.followup_date); _followup_date.setText("");
 //        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
 //        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
-        if(_booking != null) {
-            _first_name = (TextView) _view.findViewById(R.id.first_name);
-            _first_name.setText(_booking.get_first_name());
-            _last_name = (TextView) _view.findViewById(R.id.last_name);
-            _last_name.setText(_booking.get_last_name());
-            _national_id = (TextView) _view.findViewById(R.id.national_id);
-            _national_id.setText(_booking.get_national_id());
-            _phone = (TextView) _view.findViewById(R.id.phone_number);
-            _phone.setText(_booking.get_phone());
-            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
-            _projected_date.setText(_booking.get_projected_date());
-            _actual_date = (TextView) _view.findViewById(R.id.actual_date);
-            _actual_date.setText(_booking.get_actual_date());
-            _followup_date = (TextView) _view.findViewById(R.id.followup_date);
-            _followup_date.setText(_booking.get_followup_date());
-
-        }
+//        if(_booking != null) {
+//            _first_name = (TextView) _view.findViewById(R.id.first_name);
+//            _first_name.setText(_booking.get_first_name());
+//            _last_name = (TextView) _view.findViewById(R.id.last_name);
+//            _last_name.setText(_booking.get_last_name());
+//            _national_id = (TextView) _view.findViewById(R.id.national_id);
+//            _national_id.setText(_booking.get_national_id());
+//            _phone = (TextView) _view.findViewById(R.id.phone_number);
+//            _phone.setText(_booking.get_phone());
+//            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
+//            _projected_date.setText(_booking.get_projected_date());
+//            _actual_date = (TextView) _view.findViewById(R.id.actual_date);
+//            _actual_date.setText(_booking.get_actual_date());
+//            _followup_date = (TextView) _view.findViewById(R.id.followup_date);
+//            _followup_date.setText(_booking.get_followup_date());
+//
+//        }
     }
 
     /**

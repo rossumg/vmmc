@@ -253,6 +253,30 @@
        android:paddingTop="12dp"
        android:maxLines="1" />
 
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginLeft="10dp"
+        android:textSize="@dimen/font_size_small"
+        android:text="@string/facilitator_short"
+        android:id="@+id/textViewFacilitator"
+        android:paddingTop="12dp"
+        android:layout_below="@+id/textViewGroupActivity" />
+
+    <org.itech.vmmc.ClearableAutoCompleteTextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="@dimen/font_size_small"
+        android:id="@+id/facilitator"
+        android:layout_marginLeft="200dp"
+        android:layout_marginRight="50dp"
+        android:layout_alignParentEnd="true"
+        android:layout_alignParentStart="true"
+        android:layout_toEndOf="@+id/textViewFacilitator"
+        android:layout_below="@+id/textViewGroupActivity"
+        android:paddingTop="12dp"
+        android:maxLines="1" />
+
    <TextView
        android:layout_width="wrap_content"
        android:layout_height="wrap_content"
@@ -261,7 +285,7 @@
        android:text="@string/address"
        android:id="@+id/textViewAddress"
        android:paddingTop="12dp"
-       android:layout_below="@+id/textViewGroupActivity" />
+       android:layout_below="@+id/textViewFacilitator" />
 
    <Spinner
        android:layout_width="wrap_content"
@@ -274,7 +298,7 @@
        android:layout_alignParentStart="true"
        android:layout_toEndOf="@+id/textViewAddress"
        android:paddingTop="12dp"
-       android:layout_below="@+id/textViewGroupActivity" />
+       android:layout_below="@+id/textViewFacilitator" />
 
 
    <TextView

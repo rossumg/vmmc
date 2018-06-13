@@ -22,7 +22,6 @@ class putMySQLSyncAuditTable extends AsyncTask<String, String, String> {
     public SQLiteDatabase _db;
     DBHelper dbhelp;
     int i = 0;
-    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLSyncAuditTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -94,7 +93,6 @@ class putMySQLSyncAuditTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLSyncAuditTable exception > " + e.toString());
-            syncAudit.set_status("putMySQLSyncAuditTable exception > " + e.toString());
         }
         Log.d(LOG, "putMySQLSyncAuditTable.doInBackground end");
         return Integer.toString(i);
@@ -103,7 +101,5 @@ class putMySQLSyncAuditTable extends AsyncTask<String, String, String> {
     protected void onPostExecute(String result) {
         Log.d(LOG, "putMySQLSyncAuditTable:onPostExecute: " + result);
 
-        syncAudit.set_progress("putMySQLSyncAuditTable:" + result);
-        dbhelp.addSyncAudit(syncAudit);
     }
 }

@@ -74,7 +74,7 @@ public class getMySQLTableVolley {
     //gets all tables in regular database sync
     public void getSyncTables() {
         SyncTableObjects  syncTableObjects = new SyncTableObjects();
-        getTable(syncTableObjects.personTableInfo, MAX_RETRY);
+        // getTable(syncTableObjects.personTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userTypeTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userToAclTableInfo, MAX_RETRY);
@@ -85,7 +85,7 @@ public class getMySQLTableVolley {
         getTable(syncTableObjects.addressTableInfo, MAX_RETRY);
         getTable(syncTableObjects.regionTableInfo, MAX_RETRY);
         getTable(syncTableObjects.bookingTableInfo, MAX_RETRY);
-        getTable(syncTableObjects.interactionTableInfo, MAX_RETRY);
+        // getTable(syncTableObjects.interactionTableInfo, MAX_RETRY);
         getTable(syncTableObjects.facilitatorTypeTableInfo, MAX_RETRY);
         getTable(syncTableObjects.procedureTypeTableInfo, MAX_RETRY);
         getTable(syncTableObjects.followupTableInfo, MAX_RETRY);

@@ -2,8 +2,11 @@ package org.itech.vmmc;
 
 import android.app.AlertDialog;
 import android.app.Fragment;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
+import android.content.IntentFilter;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
 import android.location.Location;
@@ -21,6 +24,9 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.UUID;
+
+import static java.lang.Boolean.FALSE;
+import static java.lang.Boolean.TRUE;
 
 
 public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
@@ -48,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "1.16";
+    public static String _version = "2.01";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -56,8 +62,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static final String DEV_URL = "http://10.0.2.2:4567/";
     public static final String GET_TABLE_URL = BASE_URL + COUNTRY + "/" + "getTable.php";
 
-    public static final String LOGIN_URL = DEV_URL + "api/login.php";
-    public static final String INDEX_URL = DEV_URL + "api/index.php";
+    public static final String LOGIN_URL = BASE_URL + COUNTRY + "/api/login.php";
+    public static final String INDEX_URL = BASE_URL + COUNTRY + "/api/index.php";
 
     public static final String TAG_SUCCESS = "success";
     public static final String TAG_MESSAGE = "message";
@@ -92,6 +98,13 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
+
+        IntentFilter filter = new IntentFilter(Intent.ACTION_SCREEN_ON);
+        filter.addAction(Intent.ACTION_SCREEN_OFF);
+        BroadcastReceiver mReceiver = new ScreenReceiver();
+        registerReceiver(mReceiver, filter);
+        ScreenReceiver.wasScreenOn = TRUE;
+
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
@@ -139,14 +152,30 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     /* Request updates at startup */
     @Override
     protected void onResume() {
+        if (!ScreenReceiver.wasScreenOn) {
+            // THIS IS WHEN ONRESUME() IS CALLED DUE TO A SCREEN STATE CHANGE
+            System.out.println("SCREEN TURNED ON");
+            Log.d(LOG, "mainActivity:onResume: ON " );
+            ScreenReceiver.wasScreenOn = TRUE;
+        } else {
+            // THIS IS WHEN ONRESUME() IS CALLED WHEN THE SCREEN STATE HAS NOT CHANGED
+        }
         super.onResume();
-        Log.d(LOG, "mainActivity:onResume: pop " );
+        Log.d(LOG, "mainActivity:onResume: ON " );
         //locationManager.requestLocationUpdates(provider, 400, 1, this);
     }
 
     /* Remove the locationlistener updates when Activity is paused */
     @Override
     protected void onPause() {
+        if (ScreenReceiver.wasScreenOn) {
+            // THIS IS THE CASE WHEN ONPAUSE() IS CALLED BY THE SYSTEM DUE TO A SCREEN STATE CHANGE
+            System.out.println("SCREEN TURNED OFF");
+            Log.d(LOG, "mainActivity:onPause: OFF " );
+            ScreenReceiver.wasScreenOn = FALSE;
+        } else {
+            // THIS IS WHEN ONPAUSE() IS CALLED WHEN THE SCREEN STATE HAS NOT CHANGED
+        }
         super.onPause();
         //locationManager.removeUpdates(this);
     }

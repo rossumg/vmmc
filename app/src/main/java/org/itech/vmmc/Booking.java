@@ -13,35 +13,29 @@ public class Booking {
     String _last_name;
     String _national_id;
     String _phone;
-    String _fac_first_name;
-    String _fac_last_name;
-    String _fac_national_id;
-    String _fac_phone;
-    int    _location_id;
+
+    private int    _location_id;
     float _latitude;
     float _longitude;
-    String _projected_date;
-    String _actual_date;
-    String _consent;
-    int    _procedure_type_id;
-    int    _followup_id;
-    String _followup_date;
-    String _alt_contact;
+    private String _projected_date;
+    private String _actual_date;
+    private String _consent;
+    private int    _procedure_type_id;
+    private int    _followup_id;
+    private String _followup_date;
+    private String _alt_contact;
 
     public Booking() {
     }
 
-    public Booking(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _location_id, float _latitude, float _longitude, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _followup_date, String _alt_contact) {
+    public Booking(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _location_id, float _latitude, float _longitude, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _followup_date, String _alt_contact) {
 
         this._timestamp = _timestamp;
         this._first_name = _first_name;
         this._last_name = _last_name;
         this._national_id = _national_id;
         this._phone = _phone;
-        this._fac_first_name = _fac_first_name;
-        this._fac_last_name = _fac_last_name;
-        this._fac_national_id = _fac_national_id;
-        this._fac_phone = _fac_phone;
+
         this._location_id = _location_id;
         this._latitude = _latitude;
         this._longitude = _longitude;
@@ -54,7 +48,7 @@ public class Booking {
         this._alt_contact = _alt_contact;
     }
 
-    public Booking(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _location_id, float _latitude, float _longitude, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _followup_date, String _alt_contact) {
+    public Booking(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _location_id, float _latitude, float _longitude, String _projected_date, String _actual_date, String _consent, int _procedure_type_id, int _followup_id, String _followup_date, String _alt_contact) {
 
         this._id = _id;
         this._timestamp = _timestamp;
@@ -62,10 +56,7 @@ public class Booking {
         this._last_name = _last_name;
         this._national_id = _national_id;
         this._phone = _phone;
-        this._fac_first_name = _fac_first_name;
-        this._fac_last_name = _fac_last_name;
-        this._fac_national_id = _fac_national_id;
-        this._fac_phone = _fac_phone;
+
         this._location_id = _location_id;
         this._latitude = _latitude;
         this._longitude = _longitude;
@@ -126,37 +117,6 @@ public class Booking {
         this._phone = _phone;
     }
 
-    public String get_fac_first_name() {
-        return _fac_first_name;
-    }
-
-    public void set_fac_first_name(String _fac_first_name) {
-        this._fac_first_name = _fac_first_name;
-    }
-
-    public String get_fac_last_name() {
-        return _fac_last_name;
-    }
-
-    public void set_fac_last_name(String _fac_last_name) {
-        this._fac_last_name = _fac_last_name;
-    }
-
-    public String get_fac_national_id() {
-        return _fac_national_id;
-    }
-
-    public void set_fac_national_id(String _fac_national_id) {
-        this._fac_national_id = _fac_national_id;
-    }
-
-    public String get_fac_phone() {
-        return _fac_phone;
-    }
-
-    public void set_fac_phone(String _fac_phone) {
-        this._fac_phone = _fac_phone;
-    }
 
     public int get_location_id() {
         return _location_id;

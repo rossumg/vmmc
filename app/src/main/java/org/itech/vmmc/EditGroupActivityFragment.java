@@ -15,9 +15,9 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.DatePicker;
 import android.widget.EditText;
+import android.widget.NumberPicker;
 import android.widget.Spinner;
 import android.widget.TextView;
-import android.widget.NumberPicker;
 import android.widget.Toast;
 
 import java.text.SimpleDateFormat;
@@ -40,6 +40,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static String TAG = "EditGroupActivityTag";
     public static String LOG = "gnr";
+    public Bundle _bundle = new Bundle();
     public Context _context;
 
     private static final String ARG_EDIT_GROUPACTIVITY_PARAM = "EXTRA_EDIT_GROUPACTIVITY_PARAM";
@@ -56,6 +57,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
     private static GroupActivity _groupActivity;
     private static GroupActivityType _groupActivityType;
     private  TextView _name;
+
     private  TextView _timestamp;
     private static VMMCLocation _location;
     private static Institution _institution;
@@ -108,7 +110,11 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        Log.d(LOG, "editGroupActivityFragment onCreate ");
         super.onCreate(savedInstanceState);
+        if (savedInstanceState != null) {
+            Log.d(LOG, "editGroupActivityFragment onCreate: " + savedInstanceState.getInt("testInt"));
+        }
         if (getArguments() != null) {
             _editGroupActivityRecordParam = getArguments().getString("ARG_EDIT_GROUPACTIVITY_RECORD_PARAM");
             Log.d(LOG, "editGroupActivityFragment onCreate editGroupActivityParam: ");
@@ -179,6 +185,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
+        Log.d(LOG, "editGroupActivityFragment onCreateView ");
         _view = inflater.inflate(R.layout.fragment_edit_group_activity, container, false);
 
         getActivity().setTitle(getResources().getString(R.string.editGroupActivityTitle));
@@ -425,11 +432,41 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
          _groupActivity = null;
     }
 
+//    @Override
+//    public void onSaveInstanceState(Bundle savedInstanceState) {
+//        super.onSaveInstanceState(savedInstanceState);
+//        savedInstanceState.putInt("testInt", 99);
+//
+//        Log.d(LOG, "EditGroupActivityFragment:onSaveInstanceState: OFF ");
+//    }
+
+//    @Override
+//    public void onRestoreInstanceState(Bundle savedInstanceState) {
+//        super.onRestoreInstanceState(savedInstanceState);
+//        Log.d(LOG, "EditGroupActivityFragment:onRestoreInstanceState: ON ");
+//    }
+
+    @Override
+    public void onPause() {
+        super.onPause();
+
+        Log.d(LOG, "EditGroupActivityFragment:onPause: OFF ");
+        _name = (EditText) _view.findViewById(R.id.name);
+        _bundle.putCharSequence("_name", _name.getText());
+    }
+
     @Override
     public void onResume() {
         super.onResume();
         mListener = null;
-        Log.d(LOG, "Resume: ");
+        Log.d(LOG, "EditGroupActivityFragment:onResume: ON ");
+
+//        if(_bundle.getCharSequence("_name","") != ""){
+//            ((EditText)_view.findViewById(R.id.name)).setText(_bundle.getCharSequence("_name", ""));
+//        } else if(_groupActivity != null) {
+//            ((EditText)_view.findViewById(R.id.name)).setText(_groupActivity.get_name());
+//        }
+
 //        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
 //        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
 //        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
@@ -442,9 +479,9 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 //        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
 //        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
-        if(_groupActivity != null) {
-            _name = (TextView) _view.findViewById(R.id.name);
-            _name.setText(_groupActivity.get_name());
+//        if(_groupActivity != null) {
+//            _name = (TextView) _view.findViewById(R.id.name);
+//            _name.setText(_groupActivity.get_name());
 //            _last_name = (TextView) _view.findViewById(R.id.last_name);
 //            _last_name.setText(_groupActivity.get_last_name());
 //            _national_id = (TextView) _view.findViewById(R.id.national_id);
@@ -459,7 +496,7 @@ public class EditGroupActivityFragment extends Fragment implements AdapterView.O
 //            _dob.setText(_person.get_dob());
 //            _gender = (TextView) _view.findViewById(R.id.gender);
 //            _gender.setText(_person.get_gender());
-        }
+//        }
     }
 
     /**

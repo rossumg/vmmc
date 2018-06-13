@@ -314,9 +314,14 @@ public class AddEditGroupActivityFragment extends Fragment implements AdapterVie
         void onFragmentInteraction(int position);
     }
 
+    public void onPause() {
+        super.onPause();
+        Log.d(LOG, "Group Activity fragment:onPause: OFF ");
+    }
+
     public void onResume() {
         super.onResume();
-        Log.d(LOG, "Group Activity fragment:onResume: pop " );
+        Log.d(LOG, "Group Activity fragment:onResume: ON " );
 
         getView().setFocusableInTouchMode(true);
         getView().requestFocus();

@@ -342,6 +342,10 @@ public class putMySQLTableVolley {
                             client.get_institution_id()   + "\",\"" +
                             client.get_group_activity_name()   + "\",\"" +
                             client.get_group_activity_date()   + "\",\"" +
+                            client.get_fac_first_name() + "\",\"" +
+                            client.get_fac_last_name() + "\",\"" +
+                            client.get_fac_national_id() + "\",\"" +
+                            client.get_fac_phone() + "\",\"" +
                             client.get_address_id()   + "\",\"" +
                             client.get_dob()   + "\",\"" +
                             client.get_gender() + "\"]";
@@ -378,10 +382,6 @@ public class putMySQLTableVolley {
                             booking.get_last_name() + "\",\"" +
                             booking.get_national_id() + "\",\"" +
                             booking.get_phone() + "\",\"" +
-                            booking.get_fac_first_name() + "\",\"" +
-                            booking.get_fac_last_name() + "\",\"" +
-                            booking.get_fac_national_id() + "\",\"" +
-                            booking.get_fac_phone() + "\",\"" +
                             booking.get_location_id() + "\",\"" +
                             booking.get_latitude() + "\",\"" +
                             booking.get_longitude() + "\",\"" +

@@ -13,21 +13,27 @@ public class Client {
     String _last_name;
     String _national_id;
     String _phone;
-    int _status_id;
-    int _loc_id;
-    float _latitude;
-    float _longitude;
-    int _institution_id;
-    String _group_activity_name;
-    String _group_activity_date;
-    int _address_id;
-    String _dob;
-    String _gender;
+    private int _status_id;
+    private int _loc_id;
+    private float _latitude;
+    private float _longitude;
+    private int _institution_id;
+    private String _group_activity_name;
+    private String _group_activity_date;
+
+    private String _fac_first_name;
+    private String _fac_last_name;
+    private String _fac_national_id;
+    private String _fac_phone;
+
+    private int _address_id;
+    private String _dob;
+    private String _gender;
 
     public Client() {
     }
 
-    public Client(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, int _address_id, String _dob, String _gender) {
+    public Client(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _address_id, String _dob, String _gender) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -41,12 +47,16 @@ public class Client {
         this._institution_id = _institution_id;
         this._group_activity_name = _group_activity_name;
         this._group_activity_date = _group_activity_date;
+        this._fac_first_name = _fac_first_name;
+        this._fac_last_name = _fac_last_name;
+        this._fac_national_id = _fac_national_id;
+        this._fac_phone = _fac_phone;
         this._address_id = _address_id;
         this._dob = _dob;
         this._gender = _gender;
     }
 
-    public Client(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, int _address_id, String _dob, String _gender) {
+    public Client(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _address_id, String _dob, String _gender) {
 
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -60,6 +70,10 @@ public class Client {
         this._institution_id = _institution_id;
         this._group_activity_name = _group_activity_name;
         this._group_activity_date = _group_activity_date;
+        this._fac_first_name = _fac_first_name;
+        this._fac_last_name = _fac_last_name;
+        this._fac_national_id = _fac_national_id;
+        this._fac_phone = _fac_phone;
         this._address_id = _address_id;
         this._dob = _dob;
         this._gender = _gender;
@@ -168,6 +182,39 @@ public class Client {
     public void set_group_activity_date(String _group_activity_date) {
         this._group_activity_date = _group_activity_date;
     }
+
+    public String get_fac_first_name() {
+        return _fac_first_name;
+    }
+
+    public void set_fac_first_name(String _fac_first_name) {
+        this._fac_first_name = _fac_first_name;
+    }
+
+    public String get_fac_last_name() {
+        return _fac_last_name;
+    }
+
+    public void set_fac_last_name(String _fac_last_name) {
+        this._fac_last_name = _fac_last_name;
+    }
+
+    public String get_fac_national_id() {
+        return _fac_national_id;
+    }
+
+    public void set_fac_national_id(String _fac_national_id) {
+        this._fac_national_id = _fac_national_id;
+    }
+
+    public String get_fac_phone() {
+        return _fac_phone;
+    }
+
+    public void set_fac_phone(String _fac_phone) {
+        this._fac_phone = _fac_phone;
+    }
+
 
     public int get_address_id() {
         return _address_id;

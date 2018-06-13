@@ -63,11 +63,6 @@ public class DatabaseNames {
     public static final String BOOKING_NATIONAL_ID = "national_id";
     public static final String BOOKING_PHONE       = "phone";
 
-    public static final String BOOKING_FAC_FIRST_NAME  = "fac_first_name";
-    public static final String BOOKING_FAC_LAST_NAME   = "fac_last_name";
-    public static final String BOOKING_FAC_NATIONAL_ID = "fac_national_id";
-    public static final String BOOKING_FAC_PHONE       = "fac_phone";
-
     public static final String BOOKING_LOCATION_ID     = "location_id";
     public static final String BOOKING_LATITUDE        = "latitude";
     public static final String BOOKING_LONGITUDE       = "longitude";
@@ -130,6 +125,12 @@ public class DatabaseNames {
     public static final String CLIENT_INSTITUTION_ID    = "institution_id";
     public static final String CLIENT_GROUP_ACTIVITY_NAME    = "group_activity_name";
     public static final String CLIENT_GROUP_ACTIVITY_DATE    = "group_activity_date";
+
+    public static final String CLIENT_FAC_FIRST_NAME  = "fac_first_name";
+    public static final String CLIENT_FAC_LAST_NAME   = "fac_last_name";
+    public static final String CLIENT_FAC_NATIONAL_ID = "fac_national_id";
+    public static final String CLIENT_FAC_PHONE       = "fac_phone";
+
     public static final String CLIENT_ADDRESS_ID    = "address_id";
     public static final String CLIENT_DOB    = "dob";
     public static final String CLIENT_GENDER    = "gender";

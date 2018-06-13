@@ -84,6 +84,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //    private static TextView _actual_date;
     private static TextView _latitude;
     private static TextView _longitude;
+    private static TextView _facilitator;
 
 
 //    private EditText et_projected_date;
@@ -221,6 +222,14 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
             _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
+
+            if (MainActivity.gFacilitator != null) {
+                _client.set_fac_first_name(MainActivity.gFacilitator.get_first_name());
+                _client.set_fac_last_name(MainActivity.gFacilitator.get_last_name());
+                _client.set_fac_national_id("");
+                _client.set_fac_phone(MainActivity.gFacilitator.get_phone());
+            }
+
             _address = dbHelp.getAddress(String.valueOf(_client.get_address_id()));
 
         }
@@ -273,6 +282,15 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             } else {
                 _longitude.setText(String.valueOf(_client.get_longitude()));
             }
+        }
+        _facilitator = (TextView) _view.findViewById(R.id.facilitator);
+
+        if(_client.get_fac_first_name() == null &&
+                _client.get_fac_last_name() == null &&
+                _client.get_fac_national_id() == null &&
+                _client.get_fac_phone() == null) {
+        } else {
+            _facilitator.setText(_client.get_fac_first_name() + " " + _client.get_fac_last_name() + ", " + _client.get_fac_national_id() + ", " + _client.get_fac_phone());
         }
 
         loadStatusDropdown(_view );
@@ -450,6 +468,8 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                     _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
                 }
 
+                String sFacilitator = _facilitator.getText().toString();
+
                 Spinner aSpinner = (Spinner) _view.findViewById(R.id.address);
 //              String sAddressText  = aSpinner.getSelectedItem().toString();
                 Address _address = dbHelp.getAddress( aSpinner.getSelectedItem().toString());
@@ -475,6 +495,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 //                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
 //                        _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + "ga can be null" + ", " + _groupActivity.get_activity_date() + " <");
 
+                DisplayParts displayParts = new DisplayParts(sFacilitator);
                 boolean complete = true;
                 if(sFirstName.matches("") ) complete = false;
                 if(sLastName.matches("") ) complete = false;
@@ -498,6 +519,12 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         lookupClient.set_institution_id(_institution.get_id());
                         lookupClient.set_group_activity_name(_groupActivity.get_name());
                         lookupClient.set_group_activity_date(_groupActivity.get_activity_date());
+
+                        lookupClient.set_fac_first_name(displayParts.get_first_name());
+                        lookupClient.set_fac_last_name(displayParts.get_last_name());
+                        lookupClient.set_fac_national_id(displayParts.get_national_id());
+                        lookupClient.set_fac_phone(displayParts.get_phone());
+
                         lookupClient.set_address_id(_address.get_id());
                         lookupClient.set_dob(sDOB);
                         lookupClient.set_gender(sGender);
@@ -518,6 +545,12 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         client.set_institution_id(_institution.get_id());
                         client.set_group_activity_name(_groupActivity.get_name());
                         client.set_group_activity_date(_groupActivity.get_activity_date());
+
+                        client.set_fac_first_name(displayParts.get_first_name());
+                        client.set_fac_last_name(displayParts.get_last_name());
+                        client.set_fac_national_id(displayParts.get_national_id());
+                        client.set_fac_phone(displayParts.get_phone());
+
                         client.set_address_id(_address.get_id());
                         client.set_dob(sDOB);
                         client.set_gender(sGender);
@@ -570,21 +603,21 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         super.onResume();
         mListener = null;
         Log.d(LOG, "Resume: ");
-        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
-        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
-        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
-        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
-
-        if(_client != null) {
-            _first_name = (TextView) _view.findViewById(R.id.first_name);
-            _first_name.setText(_client.get_first_name());
-            _last_name = (TextView) _view.findViewById(R.id.last_name);
-            _last_name.setText(_client.get_last_name());
-            _national_id = (TextView) _view.findViewById(R.id.national_id);
-            _national_id.setText(_client.get_national_id());
-            _phone = (TextView) _view.findViewById(R.id.phone_number);
-            _phone.setText(_client.get_phone());
-        }
+//        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
+//        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
+//        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
+//        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
+//
+//        if(_client != null) {
+//            _first_name = (TextView) _view.findViewById(R.id.first_name);
+//            _first_name.setText(_client.get_first_name());
+//            _last_name = (TextView) _view.findViewById(R.id.last_name);
+//            _last_name.setText(_client.get_last_name());
+//            _national_id = (TextView) _view.findViewById(R.id.national_id);
+//            _national_id.setText(_client.get_national_id());
+//            _phone = (TextView) _view.findViewById(R.id.phone_number);
+//            _phone.setText(_client.get_phone());
+//        }
     }
 
     /**

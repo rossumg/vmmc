@@ -22,7 +22,6 @@ class putMySQLGroupActivityTable extends AsyncTask<String, String, String> {
     public SQLiteDatabase _db;
     DBHelper dbhelp;
     int i = 0;
-    SyncAudit syncAudit = new SyncAudit();
 
     putMySQLGroupActivityTable(DBHelper dbhelp){
         this.dbhelp = dbhelp;
@@ -64,7 +63,7 @@ class putMySQLGroupActivityTable extends AsyncTask<String, String, String> {
             i = 0;
             String[] recs = new String[groupActivityList.size()];
             for (GroupActivity groupActivity: groupActivityList) {
-                Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_institution_id() + ", " + groupActivity.get_males() + ", " + groupActivity.get_females() + groupActivity.get_messages() );
+//                Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_institution_id() + ", " + groupActivity.get_males() + ", " + groupActivity.get_females() + groupActivity.get_messages() );
                 recs[i] =
                                 groupActivity.get_name() + "," +
                                 groupActivity.get_timestamp() + "," +
@@ -98,7 +97,6 @@ class putMySQLGroupActivityTable extends AsyncTask<String, String, String> {
         } catch (Exception e) {
             e.printStackTrace();
             Log.d(LOG, "putMySQLGroupActiviyTable exception > " + e.toString());
-            syncAudit.set_status("putMySQLGroupActiviyTable exception:" + e.toString());
         }
         Log.d(LOG, "putMySQLGroupActiviyTable.doInBackground end");
         return Integer.toString(i);
@@ -106,8 +104,6 @@ class putMySQLGroupActivityTable extends AsyncTask<String, String, String> {
 
     protected void onPostExecute(String result) {
         Log.d(LOG, "putMySQLGroupActiviyTable:onPostExecute: " + result);
-        syncAudit.set_progress("putMySQLGroupActiviyTable:" + result);
-        dbhelp.addSyncAudit(syncAudit);
         //Toast.makeText(this._context, "Downloaded " + result + " persons", Toast.LENGTH_LONG).show();
         //Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }

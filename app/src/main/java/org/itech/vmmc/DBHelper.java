@@ -98,10 +98,6 @@ public class DBHelper extends SQLiteOpenHelper{
                     "last_name varchar, " +
                     "national_id varchar, " +
                     "phone varchar, " +
-                    "fac_first_name varchar, " +
-                    "fac_last_name varchar, " +
-                    "fac_national_id varchar, " +
-                    "fac_phone varchar, " +
                     "location_id int, " +
                     "latitude real default 0.0, " +
                     "longitude real default 0.0, " +
@@ -197,6 +193,10 @@ public class DBHelper extends SQLiteOpenHelper{
                     "institution_id int, " +
                     "group_activity_name varchar, " +
                     "group_activity_date varchar, " +
+                    "fac_first_name varchar, " +
+                    "fac_last_name varchar, " +
+                    "fac_national_id varchar, " +
+                    "fac_phone varchar, " +
                     "address_id int, " +
                     "dob date, " +
                     "gender varchar, " +
@@ -788,10 +788,7 @@ public class DBHelper extends SQLiteOpenHelper{
                             Booking.get_last_name() + "," +
                             Booking.get_national_id() + "," +
                             Booking.get_phone() + "," +
-                            Booking.get_fac_first_name() + "," +
-                            Booking.get_fac_last_name() + "," +
-                            Booking.get_fac_national_id() + "," +
-                            Booking.get_fac_phone() + "," +
+
                             Booking.get_location_id() + "," +
                             Booking.get_projected_date() + "," +
                             Booking.get_actual_date();
@@ -3273,7 +3270,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3308,9 +3305,15 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(10)),
                     cursor.getString(11),
                     cursor.getString(12),
-                    parseInt(cursor.getString(13)),
+
+                    cursor.getString(13),
                     cursor.getString(14),
-                    cursor.getString(15)
+                    cursor.getString(15),
+                    cursor.getString(16),
+
+                    parseInt(cursor.getString(17)),
+                    cursor.getString(18),
+                    cursor.getString(19)
             );
             cursor.close();
             // db.close();
@@ -3328,7 +3331,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + national_id + ", " + phone_number );
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3373,9 +3376,15 @@ public class DBHelper extends SQLiteOpenHelper{
                     parseInt(cursor.getString(10)),
                     cursor.getString(11),
                     cursor.getString(12),
-                    parseInt(cursor.getString(13)),
+
+                    cursor.getString(13),
                     cursor.getString(14),
-                    cursor.getString(15)
+                    cursor.getString(15),
+                    cursor.getString(16),
+
+                    parseInt(cursor.getString(17)),
+                    cursor.getString(18),
+                    cursor.getString(19)
             );
             cursor.close();
             // db.close();
@@ -4281,7 +4290,7 @@ public class DBHelper extends SQLiteOpenHelper{
 //        String sProjectedDate = df.format(VMMC_DATE_TIME_FORMAT, projected_date).toString();
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String whereClause = "1=1 and trim(" +
@@ -4315,20 +4324,17 @@ public class DBHelper extends SQLiteOpenHelper{
                     cursor.getString(3),
                     cursor.getString(4),
                     cursor.getString(5),
-                    cursor.getString(6),
-                    cursor.getString(7),
-                    cursor.getString(8),
+
+                    parseInt(cursor.getString(6)),
+                    parseFloat(cursor.getString(7)),
+                    parseFloat(cursor.getString(8)),
                     cursor.getString(9),
-                    parseInt(cursor.getString(10)),
-                    parseFloat(cursor.getString(11)),
-                    parseFloat(cursor.getString(12)),
-                    cursor.getString(13),
+                    cursor.getString(10),
+                    cursor.getString(11),
+                    parseInt(cursor.getString(12)),
+                    parseInt(cursor.getString(13)),
                     cursor.getString(14),
-                    cursor.getString(15),
-                    parseInt(cursor.getString(16)),
-                    parseInt(cursor.getString(17)),
-                    cursor.getString(18),
-                    cursor.getString(19)
+                    cursor.getString(15)
 //                    parseFloat(cursor.getString(9)),
 //                    parseInt(cursor.getString(10))
             );
@@ -4444,10 +4450,7 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(BOOKING_LAST_NAME, booking.get_last_name());
         values.put(BOOKING_NATIONAL_ID, booking.get_national_id());
         values.put(BOOKING_PHONE,  booking.get_phone());
-        values.put(BOOKING_FAC_FIRST_NAME, booking.get_fac_first_name());
-        values.put(BOOKING_FAC_LAST_NAME, booking.get_fac_last_name());
-        values.put(BOOKING_FAC_NATIONAL_ID, booking.get_fac_national_id());
-        values.put(BOOKING_FAC_PHONE, booking.get_fac_phone());
+
         values.put(BOOKING_LOCATION_ID, booking.get_location_id());
 
         values.put(BOOKING_LATITUDE, booking.get_latitude());
@@ -4485,7 +4488,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "updateBooking timestamp: " + booking.get_timestamp());
 
         String[] tableColumns = new String[]{
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String whereClause = "1=1 and trim(" +
@@ -4523,10 +4526,7 @@ public class DBHelper extends SQLiteOpenHelper{
             values.put(BOOKING_LAST_NAME, booking.get_last_name());
             values.put(BOOKING_NATIONAL_ID, booking.get_national_id());
             values.put(BOOKING_PHONE,  booking.get_phone());
-            values.put(BOOKING_FAC_FIRST_NAME, booking.get_fac_first_name());
-            values.put(BOOKING_FAC_LAST_NAME, booking.get_fac_last_name());
-            values.put(BOOKING_FAC_NATIONAL_ID, booking.get_fac_national_id());
-            values.put(BOOKING_FAC_PHONE, booking.get_fac_phone());
+
             values.put(BOOKING_LOCATION_ID, booking.get_location_id());
 
             values.put(BOOKING_LATITUDE, booking.get_latitude());
@@ -4552,10 +4552,7 @@ public class DBHelper extends SQLiteOpenHelper{
                     values.get(BOOKING_LAST_NAME) + " " +
                     values.get(BOOKING_NATIONAL_ID) + " " +
                     values.get(BOOKING_PHONE) + " " +
-                    values.get(BOOKING_FAC_FIRST_NAME) + " " +
-                    values.get(BOOKING_FAC_LAST_NAME) + " " +
-                    values.get(BOOKING_FAC_NATIONAL_ID) + " " +
-                    values.get(BOOKING_FAC_PHONE) + " " +
+
                     values.get(BOOKING_LOCATION_ID) + " " +
                     values.get(BOOKING_LATITUDE) + " " +
                     values.get(BOOKING_LONGITUDE) + " " +
@@ -4854,10 +4851,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_last_name(cursor.getString(3));
                 booking.set_national_id(cursor.getString(4));
                 booking.set_phone(cursor.getString(5));
-                booking.set_fac_first_name(cursor.getString(6));
-                booking.set_fac_last_name(cursor.getString(7));
-                booking.set_fac_national_id(cursor.getString(8));
-                booking.set_fac_phone(cursor.getString(9));
+
                 booking.set_location_id(parseInt(cursor.getString(10)));
                 booking.set_latitude(parseFloat(cursor.getString(11)));
                 booking.set_longitude(parseFloat(cursor.getString(12)));
@@ -4888,7 +4882,7 @@ public class DBHelper extends SQLiteOpenHelper{
         IndexParts indexParts = new IndexParts(index);
 
         String[] tableColumns = new String[] {
-                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_FAC_FIRST_NAME, BOOKING_FAC_LAST_NAME, BOOKING_FAC_NATIONAL_ID, BOOKING_FAC_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
+                BOOKING_ID, BOOKING_TIMESTAMP, BOOKING_FIRST_NAME, BOOKING_LAST_NAME, BOOKING_NATIONAL_ID, BOOKING_PHONE, BOOKING_LOCATION_ID, BOOKING_LATITUDE, BOOKING_LONGITUDE, BOOKING_PROJECTED_DATE, BOOKING_ACTUAL_DATE, BOOKING_CONSENT, BOOKING_PROCEDURE_TYPE_ID, BOOKING_FOLLOWUP_ID, BOOKING_FOLLOWUP_DATE, BOOKING_ALT_CONTACT
         };
 
         String selectQuery =
@@ -4924,10 +4918,7 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_last_name(cursor.getString(3));
                 booking.set_national_id(cursor.getString(4));
                 booking.set_phone(cursor.getString(5));
-                booking.set_fac_first_name(cursor.getString(6));
-                booking.set_fac_last_name(cursor.getString(7));
-                booking.set_fac_national_id(cursor.getString(8));
-                booking.set_fac_phone(cursor.getString(9));
+
                 booking.set_location_id(parseInt(cursor.getString(10)));
                 booking.set_latitude(parseFloat(cursor.getString(11)));
                 booking.set_longitude(parseFloat(cursor.getString(12)));

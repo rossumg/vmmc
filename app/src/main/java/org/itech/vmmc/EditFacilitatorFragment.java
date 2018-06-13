@@ -42,6 +42,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
     // TODO: Rename parameter arguments, choose names that match
     // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
     public static String TAG = "EditFacilitatorTag";
+    public Bundle _bundle = new Bundle();
     public static String LOG = "gnr";
     public Context _context;
 
@@ -459,15 +460,36 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
     }
 
     @Override
+    public void onPause() {
+        super.onPause();
+        _bundle.putCharSequence("_first_name",((EditText)_view.findViewById(R.id.first_name)).getText());
+        _bundle.putCharSequence("_last_name",((EditText)_view.findViewById(R.id.last_name)).getText());
+        _bundle.putCharSequence("_phone",((EditText)_view.findViewById(R.id.phone_number)).getText());
+        _bundle.putCharSequence("_note",((EditText)_view.findViewById(R.id.note)).getText());
+    }
+
+    @Override
     public void onResume() {
         super.onResume();
         mListener = null;
         Log.d(LOG, "Resume: ");
-        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
-        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
-        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
-        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
-        _note = (TextView) _view.findViewById(R.id.note); _note.setText("");
+
+//        if(_bundle.getCharSequence("_first_name","") != ""){
+//            ((EditText)_view.findViewById(R.id.first_name)).setText(_bundle.getCharSequence("_first_name", ""));
+//        } else if(_facilitator != null) {
+//            ((EditText)_view.findViewById(R.id.first_name)).setText(_facilitator.get_first_name());
+//        }
+//        if(_bundle.getCharSequence("_last_name","") != ""){
+//            ((EditText)_view.findViewById(R.id.last_name)).setText(_bundle.getCharSequence("_last_name", ""));
+//        } else if(_facilitator != null) {
+//            ((EditText)_view.findViewById(R.id.last_name)).setText(_facilitator.get_last_name());
+//        }
+
+//        _first_name = (TextView) _view.findViewById(R.id.first_name); _first_name.setText("");
+//        _last_name = (TextView) _view.findViewById(R.id.last_name); _last_name.setText("");
+//        _national_id = (TextView) _view.findViewById(R.id.national_id); _national_id.setText("");
+//        _phone = (TextView) _view.findViewById(R.id.phone_number); _phone.setText("");
+//        _note = (TextView) _view.findViewById(R.id.note); _note.setText("");
 //        _status_id = (TextView) _view.findViewById(R.id.status); _status_id.setText("");
 //        _location_id= (TextView) _view.findViewById(R.id.vmmclocation); _location_id.setText("");
 //        _institution_id = (TextView) _view.findViewById(R.id.institution); _institution_id.setText("");
@@ -475,24 +497,24 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //        _dob = (TextView) _view.findViewById(R.id.dob); _dob.setText("");
 //        _gender = (TextView) _view.findViewById(R.id.gender); _gender.setText("");
 
-        if(_facilitator != null) {
-            _first_name = (TextView) _view.findViewById(R.id.first_name);
-            _first_name.setText(_facilitator.get_first_name());
-            _last_name = (TextView) _view.findViewById(R.id.last_name);
-            _last_name.setText(_facilitator.get_last_name());
-            _national_id = (TextView) _view.findViewById(R.id.national_id);
-            _national_id.setText(_facilitator.get_national_id());
-            _phone = (TextView) _view.findViewById(R.id.phone_number);
-            _phone.setText(_facilitator.get_phone());
-            _note = (TextView) _view.findViewById(R.id.note);
-            _note.setText(_facilitator.get_note());
+//        if(_facilitator != null) {
+//            _first_name = (TextView) _view.findViewById(R.id.first_name);
+//            _first_name.setText(_facilitator.get_first_name());
+//            _last_name = (TextView) _view.findViewById(R.id.last_name);
+//            _last_name.setText(_facilitator.get_last_name());
+//            _national_id = (TextView) _view.findViewById(R.id.national_id);
+//            _national_id.setText(_facilitator.get_national_id());
+//            _phone = (TextView) _view.findViewById(R.id.phone_number);
+//            _phone.setText(_facilitator.get_phone());
+//            _note = (TextView) _view.findViewById(R.id.note);
+//            _note.setText(_facilitator.get_note());
 //            _projected_date = (TextView) _view.findViewById(R.id.projected_date);
 //            _projected_date.setText(_facilitator.get_projected_date());
 //            _dob = (TextView) _view.findViewById(R.id.dob);
 //            _dob.setText(_person.get_dob());
 //            _gender = (TextView) _view.findViewById(R.id.gender);
 //            _gender.setText(_person.get_gender());
-        }
+//        }
     }
 
     /**
