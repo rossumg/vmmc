@@ -5,9 +5,15 @@ $request_data   = file_get_contents('php://input');
 $requestHeaders = apache_request_headers();
 $auth = trim($requestHeaders['Authorization']);
 
+<<<<<<< HEAD
 file_put_contents('php_index_debug.log', 'index start >'.PHP_EOL, FILE_APPEND | LOCK_EX);
 file_put_contents('php_index_debug.log', "\tmethod: " . $method . PHP_EOL, FILE_APPEND | LOCK_EX);
 file_put_contents('php_index_debug.log', "\trequest: " . $request . PHP_EOL, FILE_APPEND | LOCK_EX);
+=======
+file_put_contents('php_index_debug.log', 'index start >'.PHP_EOL, FILE_APPEND | LOCK_EX); 
+file_put_contents('php_index_debug.log', "\tmethod: " . $method . PHP_EOL, FILE_APPEND | LOCK_EX); 
+file_put_contents('php_index_debug.log', "\trequest: " . $request . PHP_EOL, FILE_APPEND | LOCK_EX); 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 file_put_contents('php_index_debug.log', "\trequest data: " . $request_data . PHP_EOL, FILE_APPEND | LOCK_EX);
 file_put_contents('php_index_debug.log', "\tauth header: " . $auth . PHP_EOL, FILE_APPEND | LOCK_EX);
 
@@ -38,6 +44,7 @@ if ($jwt_check_sig == $jwt_recv_sig) {
   file_put_contents('php_index_debug.log', 'jwt verified'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
 
   if ($method == "GET") {
+<<<<<<< HEAD
 
     file_put_contents('php_index_debug.log', 'GET method request received >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
@@ -136,11 +143,112 @@ if ($jwt_check_sig == $jwt_recv_sig) {
         $response = getQuestionDropdownOption();
         break;
 
+=======
+    
+    file_put_contents('php_index_debug.log', 'GET method request received >' . PHP_EOL, FILE_APPEND | LOCK_EX);
+    ob_start();
+    
+    switch ($request) {
+      
+      case 'person':
+        $response = getPerson();
+        break;
+      
+      case 'booking':
+        $response = getBooking();
+        break;
+      
+      case 'interaction':
+        $response = getInteraction();
+        break;
+      
+      case 'region':
+        $response = getRegion();
+        break;
+      
+      case 'user_to_acl':
+        $response = getUserToAcl();
+        break;
+      
+      case 'user':
+        $response = getUser();
+        break;
+      
+      case 'user_type':
+        $response = getUserType();
+        break;
+      
+      case 'acl':
+        $response = getAcl();
+        break;
+      
+      case 'group_type':
+        $response = getGroupType();
+        break;
+      
+      case 'group_activity':
+        $response = getGroupActivity();
+        break;
+      
+      case 'location':
+        $response = getLocation();
+        break;
+      
+      case 'address':
+        $response = getAddress();
+        break;
+      
+      case 'client_table':
+        $response = getClient();
+        break;
+      
+      case 'facilitator':
+        $response = getFacilitator();
+        break;
+      
+      case 'facilitator_type':
+        $response = getFacilitatorType();
+        break;
+      
+      case 'procedure_type':
+        $response = getProcedureType();
+        break;
+      
+      case 'followup':
+        $response = getFollowup();
+        break;
+      
+      case 'status_type':
+        $response = getStatusType();
+        break;
+      
+      case 'institution':
+        $response = getInstitution();
+        break;
+      
+      case 'interaction_type':
+        $response = getInteractionType();
+        break;
+      
+      case 'assessments_questions':
+        $response = getAssessmentsQuestions();
+        break;
+      
+      case 'assessments':
+        $response = getAssessments();
+        break;
+      
+      case 'question_dropdown_option':
+        $response = getQuestionDropdownOption();
+        break;
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
       default:
         file_put_contents('php_index_debug.log', 'default GET > resource "' . $request . '" not found' . PHP_EOL, FILE_APPEND | LOCK_EX);
         $response["success"] = 0;
         $response["message"] = "Invalid resource.";
         die(json_encode($response));
+<<<<<<< HEAD
 
     } //$request
 
@@ -150,10 +258,22 @@ if ($jwt_check_sig == $jwt_recv_sig) {
     file_put_contents('php_index_debug.log', 'POST method request received >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
 
+=======
+        
+    } //$request
+    
+  } //end $method == "GET"
+  else if ($method == "POST") {
+    
+    file_put_contents('php_index_debug.log', 'POST method request received >' . PHP_EOL, FILE_APPEND | LOCK_EX);
+    ob_start();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     switch ($request) {
       case 'sync_audit':
         $response = putSyncAudit();
         break;
+<<<<<<< HEAD
 
       case 'person':
         $response = putPerson();
@@ -195,12 +315,56 @@ if ($jwt_check_sig == $jwt_recv_sig) {
         $response = putGeoLocations();
         break;
 
+=======
+		
+      case 'person':
+        $response = putPerson();
+        break;
+      
+      case 'booking':
+        $response = putBooking();
+        break;
+      
+      case 'client_table':
+        $response = putClient();
+        break;
+      
+      case 'facilitator':
+        $response = putFacilitator();
+        break;
+      
+      case 'interaction':
+        $response = putInteraction();
+        break;
+      
+      case 'user':
+        $response = putUser();
+        break;
+      
+      case 'group_activity':
+        $response = putGroupActivity();
+        break;
+      
+      case 'person_to_assessments':
+        $response = putPersonToAssessments();
+        break;
+      
+      case 'assessments_answers':
+        $response = putAssessmentsAnswers();
+        break;
+      
+      case 'geolocation':
+        $response = putGeoLocations();
+        break;
+        
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
       default:
         file_put_contents('php_index_debug.log', 'default PUT > resource "' . $request . '" not found' . PHP_EOL, FILE_APPEND | LOCK_EX);
         $response["success"] = 0;
         $response["message"] = "Invalid resource.";
         die(json_encode($response));
     } //$request
+<<<<<<< HEAD
 
   } //end $method == "POST"
 
@@ -210,6 +374,17 @@ if ($jwt_check_sig == $jwt_recv_sig) {
 
   else if ($method == "DELETE") {
 
+=======
+    
+  } //end $method == "POST"
+
+  else if ($method == "PUT") {
+    
+  } //end $method == "PUT"
+
+  else if ($method == "DELETE") {
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   } //end $method == "DELETE"
 //signature is incorrect. reject request
 } else {
@@ -221,12 +396,21 @@ if ($jwt_check_sig == $jwt_recv_sig) {
 
 function putClient()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putClient()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -234,12 +418,21 @@ function putClient()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -248,7 +441,11 @@ function putClient()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $timestamp           = $rec[0];
     $first_name          = $rec[1];
     $last_name           = $rec[2];
@@ -264,48 +461,82 @@ function putClient()
     $address_id          = $rec[12];
     $dob                 = $rec[13];
     $gender              = $rec[14];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putClient()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($first_name, $last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender);
 
+=======
+    
+    $row = selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putClient() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $first_name, $last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     if (!$row) {
       insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender);
 
+=======
+    
+    if (!$row) {
+      insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender);
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
       updateClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putCliet() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function putFacilitator()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putFacilitator()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -313,12 +544,21 @@ function putFacilitator()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -327,7 +567,11 @@ function putFacilitator()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $timestamp           = $rec[0];
     $first_name          = $rec[1];
     $last_name           = $rec[2];
@@ -342,51 +586,86 @@ function putFacilitator()
     $address_id          = $rec[11];
     $dob                 = $rec[12];
     $gender              = $rec[13];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putFacilitator()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($first_name, $last_name, $timestamp, $address_id, $dob, $gender);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender);
 
+=======
+    
+    $row = selectFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putFacilitator() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $first_name, $last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     if (!$row) {
       insertFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender);
 
+=======
+    
+    if (!$row) {
+      insertFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender);
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
       updateFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putFacilitator() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function selectFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectFacilitator1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 timestamp,
@@ -411,20 +690,35 @@ and last_name = :last_name
 -- and national_id = :national_id
 and phone = :phone
 -- and format(longitude,5) = format(:longitude,5)
+<<<<<<< HEAD
 -- and format(latitude,5) = format(:latitude,5)
   ";
 
+=======
+-- and format(latitude,5) = format(:latitude,5) 
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectFacilitator2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
 
     $stmt = $db->prepare($query);
 
+=======
+  
+  try {
+    
+    
+    $stmt = $db->prepare($query);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -436,16 +730,27 @@ and phone = :phone
     // $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
     // $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     // $stmt->bindParam(':is_deleted', $is_deleted, PDO::PARAM_STR, strlen($is_deleted));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectFacilitator3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -454,28 +759,44 @@ and phone = :phone
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectFacilitator3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function insertFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertFacilitator0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $status_id);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $insert = "
 insert into facilitator
@@ -483,12 +804,25 @@ insert into facilitator
 values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator_type_id, :note, :location_id, :latitude, :longitude, :institution_id, :address_id, :dob, :gender )
   ";
 
+=======
+  
+  $insert = "
+insert into facilitator 
+(timestamp, first_name, last_name, national_id, phone, facilitator_type_id, note, location_id, latitude, longitude, institution_id, address_id, dob, gender)
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator_type_id, :note, :location_id, :latitude, :longitude, :institution_id, :address_id, :dob, :gender )
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertFacilitator1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -506,13 +840,21 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator
     $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
     $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertFacilitator2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -528,13 +870,21 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :facilitator
 function updateFacilitator($timestamp, $first_name, $last_name, $national_id, $phone, $facilitator_type_id, $note, $location_id, $latitude, $longitude, $institution_id, $address_id, $dob, $gender)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateFacilitator0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $dob);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $update = "
 update facilitator set
 timestamp=:timestamp,
@@ -557,16 +907,27 @@ and first_name=:wfirst_name
 and last_name=:wlast_name
 and phone=:wphone
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateFacilitator1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -585,15 +946,25 @@ and phone=:wphone
     $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
     $stmt->bindParam(':wphone', $phone, PDO::PARAM_STR, strlen($phone));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateFacilitator2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -608,15 +979,25 @@ and phone=:wphone
 
 function selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectClient1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 timestamp,
@@ -642,20 +1023,35 @@ and last_name = :last_name
 -- and national_id = :national_id
 and phone = :phone
 -- and format(longitude,5) = format(:longitude,5)
+<<<<<<< HEAD
 -- and format(latitude,5) = format(:latitude,5)
   ";
 
+=======
+-- and format(latitude,5) = format(:latitude,5) 
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectClient2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
 
     $stmt = $db->prepare($query);
 
+=======
+  
+  try {
+    
+    
+    $stmt = $db->prepare($query);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -667,16 +1063,27 @@ and phone = :phone
     // $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
     // $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     // $stmt->bindParam(':is_deleted', $is_deleted, PDO::PARAM_STR, strlen($is_deleted));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectClient3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -685,28 +1092,44 @@ and phone = :phone
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectClient3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertClient0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $status_id);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $insert = "
 insert into client
@@ -714,12 +1137,25 @@ insert into client
 values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, :loc_id, :latitude, :longitude, :institution_id, :group_activity_name, :group_activity_date, :address_id, :dob, :gender )
   ";
 
+=======
+  
+  $insert = "
+insert into client 
+(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date, address_id, dob, gender)
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, :loc_id, :latitude, :longitude, :institution_id, :group_activity_name, :group_activity_date, :address_id, :dob, :gender )
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertClient1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -738,13 +1174,21 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, 
     $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
     $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertClient2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -760,13 +1204,21 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, 
 function updateClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $address_id, $dob, $gender)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateClient0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $dob, $group_activity_name, $group_activity_date);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $update = "
 update client set
 timestamp=:timestamp,
@@ -790,16 +1242,27 @@ and first_name=:wfirst_name
 and last_name=:wlast_name
 and phone=:wphone
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateClient1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -819,15 +1282,25 @@ and phone=:wphone
     $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
     $stmt->bindParam(':wphone', $phone, PDO::PARAM_STR, strlen($phone));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateClient2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -843,12 +1316,17 @@ and phone=:wphone
 function insertPerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertPerson0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $insert = "
 insert into person
@@ -856,12 +1334,25 @@ insert into person
 values ( :timestamp, :first_name, :last_name, :national_id, :address_id, :phone, :dob, :gender, :latitude, :longitude, :is_deleted )
   ";
 
+=======
+  
+  $insert = "
+insert into person 
+(timestamp, first_name, last_name, national_id, address_id, phone, dob, gender, latitude, longitude, is_deleted)
+values ( :timestamp, :first_name, :last_name, :national_id, :address_id, :phone, :dob, :gender, :latitude, :longitude, :is_deleted )
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertPerson1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -875,15 +1366,25 @@ values ( :timestamp, :first_name, :last_name, :national_id, :address_id, :phone,
     $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     $stmt->bindParam(':is_deleted', $is_deleted, PDO::PARAM_STR, strlen($is_deleted));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertPerson2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -898,14 +1399,21 @@ values ( :timestamp, :first_name, :last_name, :national_id, :address_id, :phone,
 
 function insertBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $alt_contact)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertBooking0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $projected_date, '<');
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $insert = "
 insert into booking
@@ -913,12 +1421,25 @@ insert into booking
 values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :location_id, :latitude, :longitude, :projected_date, :actual_date, :consent, :procedure_type_id, :followup_id, :followup_date, :alt_contact )
   ";
 
+=======
+  
+  $insert = "
+insert into booking 
+(timestamp, first_name, last_name, national_id, phone, fac_first_name, fac_last_name, fac_national_id, fac_phone, location_id, latitude, longitude, projected_date, actual_date, consent, procedure_type_id, followup_id, followup_date, alt_contact )
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :location_id, :latitude, :longitude, :projected_date, :actual_date, :consent, :procedure_type_id, :followup_id, :followup_date, :alt_contact )
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertBooking1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -935,21 +1456,35 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_n
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     $stmt->bindParam(':projected_date', $projected_date, PDO::PARAM_STR, strlen($projected_date));
     $stmt->bindParam(':actual_date', $actual_date, PDO::PARAM_STR, strlen($actual_date));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':consent', $consent, PDO::PARAM_STR, strlen($consent));
     $stmt->bindParam(':procedure_type_id', $procedure_type_id, PDO::PARAM_STR, strlen($procedure_type_id));
     $stmt->bindParam(':followup_id', $followup_id, PDO::PARAM_STR, strlen($followup_id));
     $stmt->bindParam(':followup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
     $stmt->bindParam(':alt_contact', $alt_contact, PDO::PARAM_STR, strlen($alt_contact));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertBooking2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -965,13 +1500,21 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :fac_first_n
 function updatePerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updatePerson0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $dob);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $update = "
 update person set
 timestamp=:timestamp,
@@ -991,16 +1534,27 @@ and first_name=:wfirst_name
 and last_name=:wlast_name
 and phone=:wphone
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updatePerson1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -1016,15 +1570,25 @@ and phone=:wphone
     $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
     $stmt->bindParam(':wphone', $phone, PDO::PARAM_STR, strlen($phone));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updatePerson2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1039,15 +1603,25 @@ and phone=:wphone
 
 function updateBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateBooking0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contract);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $update = "
 update booking set
 timestamp=:timestamp,
@@ -1076,18 +1650,31 @@ and last_name=:wlast_name
 and phone=:wphone
 and projected_date=:wprojected_date
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateBooking1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+    $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
     $stmt->bindParam(':national_id', $national_id, PDO::PARAM_STR, strlen($national_id));
@@ -1101,27 +1688,45 @@ and projected_date=:wprojected_date
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     $stmt->bindParam(':projected_date', $projected_date, PDO::PARAM_STR, strlen($projected_date));
     $stmt->bindParam(':actual_date', $actual_date, PDO::PARAM_STR, strlen($actual_date));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':consent', $consent, PDO::PARAM_STR, strlen($consent));
     $stmt->bindParam(':procedure_type_id', $procedure_type_id, PDO::PARAM_STR, strlen($procedure_type_id));
     $stmt->bindParam(':followup_id', $followup_id, PDO::PARAM_STR, strlen($followup_id));
     $stmt->bindParam(':followup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
     $stmt->bindParam(':alt_contact', $alt_contact, PDO::PARAM_STR, strlen($alt_contact));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
     $stmt->bindParam(':wphone', $phone, PDO::PARAM_STR, strlen($phone));
     $stmt->bindParam(':wprojected_date', $projected_date, PDO::PARAM_STR, strlen($projected_date));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateBooking2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1136,12 +1741,21 @@ and projected_date=:wprojected_date
 
 function putPerson()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putPerson0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -1149,12 +1763,21 @@ function putPerson()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -1163,7 +1786,11 @@ function putPerson()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $timestamp   = $rec[0];
     $first_name  = $rec[1];
     $last_name   = $rec[2];
@@ -1175,21 +1802,35 @@ function putPerson()
     $latitude    = $rec[8];
     $longitude   = $rec[9];
     $is_deleted  = $rec[10];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putPerson() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($first_name, $last_name, $dob);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectPerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
 
+=======
+    
+    $row = selectPerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putPerson() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $first_name, $last_name, $dob);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     if (!$row) {
       insertPerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
     } //!$row
@@ -1197,25 +1838,42 @@ function putPerson()
       updatePerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putPerson() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function putBooking()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putBooking0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -1223,12 +1881,21 @@ function putBooking()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -1237,7 +1904,11 @@ function putBooking()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $timestamp         = $rec[0];
     $first_name        = $rec[1];
     $last_name         = $rec[2];
@@ -1257,21 +1928,35 @@ function putBooking()
     $followup_id       = $rec[16];
     $followup_date     = $rec[17];
     $alt_contact       = $rec[18];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putBooking1() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
 
+=======
+    
+    $row = selectBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putBooking() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $first_name, $last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     if (!$row) {
       insertBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
     } //!$row
@@ -1279,13 +1964,21 @@ function putBooking()
       updateBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putBooking() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
@@ -1303,7 +1996,11 @@ function putGeoLocations(){
     //var_dump('$_POST num ', $_POST['num_recs'], "END");
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+<<<<<<< HEAD
 
+=======
+     
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     for($i = 0; $i < $_POST['num_recs']; $i++){
 
         $recsKey = 'recs'.$i;
@@ -1314,25 +2011,43 @@ function putGeoLocations(){
         $created_at =    $rec[3];
         $username =      $rec[4];
         $password =      $rec[5];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putGeoLocations() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($longitude, $latitude, $device_id, $created_at, $username, $password);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = getGeoLocations($longitude, $latitude, $device_id, $created_at, $username, $password);
 
+=======
+    
+    $row = getGeoLocations($longitude, $latitude, $device_id, $created_at, $username, $password);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     if (!$row) {
       insertGeoLocations($longitude, $latitude, $device_id, $created_at, $username, $password);
     } //!$row
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putGeoLocations() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
@@ -1340,13 +2055,21 @@ function putGeoLocations(){
 function selectPerson($timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectPerson1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $is_deleted, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 timestamp,
@@ -1371,21 +2094,37 @@ and phone = :phone
 -- and dob =:dob
 -- and gender =:gender
 -- and format(longitude,5) = format(:longitude,5)
+<<<<<<< HEAD
 -- and format(latitude,5) = format(:latitude,5)
 -- and is_deleted = :is_deleted
   ";
 
+=======
+-- and format(latitude,5) = format(:latitude,5) 
+-- and is_deleted = :is_deleted
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectPerson2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
 
     $stmt = $db->prepare($query);
 
+=======
+  
+  try {
+    
+    
+    $stmt = $db->prepare($query);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -1397,16 +2136,27 @@ and phone = :phone
     // $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
     // $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     // $stmt->bindParam(':is_deleted', $is_deleted, PDO::PARAM_STR, strlen($is_deleted));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectPerson3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1415,30 +2165,50 @@ and phone = :phone
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectPerson3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function selectBooking($timestamp, $first_name, $last_name, $national_id, $phone, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $location_id, $latitude, $longitude, $projected_date, $actual_date, $consent, $procedure_type_id, $followup_id, $followup_date, $alt_contact)
 {
   global $db;
+<<<<<<< HEAD
 
 
+=======
+  
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectBooking1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $timestamp, $first_name, $last_name, $national_id, $address_id, $phone, $dob, $gender, $latitude, $longitude, $followup_date, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 timestamp,
@@ -1469,20 +2239,35 @@ and last_name = :last_name
 and phone = :phone
 and projected_date = :projected_date
 -- and format(longitude,5) = format(:longitude,5)
+<<<<<<< HEAD
 -- and format(latitude,5) = format(:latitude,5)
   ";
 
+=======
+-- and format(latitude,5) = format(:latitude,5) 
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectBooking2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
 
     $stmt = $db->prepare($query);
 
+=======
+  
+  try {
+    
+    
+    $stmt = $db->prepare($query);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':first_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':last_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -1495,16 +2280,27 @@ and projected_date = :projected_date
     // $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
     // $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     // $stmt->bindParam(':is_deleted', $is_deleted, PDO::PARAM_STR, strlen($is_deleted));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectBooking3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1513,28 +2309,47 @@ and projected_date = :projected_date
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectBooking3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function getGeoLocations($longitude, $latitude, $device_id, $created_at, $username, $password)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGeoLocations1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 longitude,
@@ -1545,22 +2360,37 @@ username,
 password
 from geolocations
 where format(longitude,5) = format(:longitude,5)
+<<<<<<< HEAD
 and format(latitude,5) = format(:latitude,5)
+=======
+and format(latitude,5) = format(:latitude,5) 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 and device_id = :device_id
 and created_at = :created_at
 and username = :username
 and password = :password
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGeoLocations2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   // var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
 
+=======
+  
+  try {
+    
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt = $db->prepare($query);
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
@@ -1568,6 +2398,7 @@ and password = :password
     $stmt->bindParam(':created_at', $created_at, PDO::PARAM_STR, strlen($created_at));
     $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
     $stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
+<<<<<<< HEAD
 
     //file_put_contents('php_index_debug.log', 'getGeoLocations3a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
     //var_dump("queryString=", $stmt->queryString, "END");
@@ -1576,6 +2407,16 @@ and password = :password
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    //file_put_contents('php_index_debug.log', 'getGeoLocations3a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    //var_dump("queryString=", $stmt->queryString, "END");
+    //$toss = ob_get_clean(); file_put_contents('php_index_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1584,41 +2425,68 @@ and password = :password
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGeoLocations3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function insertGeoLocations($longitude, $latitude, $device_id, $created_at, $username, $password)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertGeoLocations0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($longitude, $latitude, $device_id, $created_at, $username, $password);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $insert = "
 insert into geolocations
 (longitude, latitude, device_id, created_at, username, password)
 values ( :longitude, :latitude, :device_id, :created_at, :username, :password )
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertGeoLocations1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
@@ -1628,13 +2496,21 @@ values ( :longitude, :latitude, :device_id, :created_at, :username, :password )
     $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
     $stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertGeoLocations2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1645,20 +2521,34 @@ values ( :longitude, :latitude, :device_id, :created_at, :username, :password )
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
     // continue?
   }
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 }
 
 function getAssessmentsAnswers($person, $facility, $date_created, $assessment_id, $question)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessmentsAnswers1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($person, $facility, $date_created, $assessment_id, $question);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 person,
@@ -1666,27 +2556,47 @@ facility,
 date_created,
 assessment_id,
 question,
+<<<<<<< HEAD
 `option`
 from assess
 where person = :person
 and facility = :facility
+=======
+`option`          
+from assess
+where person = :person
+and facility = :facility 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 and date_created = :date_created
 and assessment_id = :assessment_id
 and question = :question
   ";
+<<<<<<< HEAD
 
   try {
 
+=======
+  
+  try {
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt = $db->prepare($query);
     $stmt->bindParam(':person', $person, PDO::PARAM_INT);
     $stmt->bindParam(':facility', $facility, PDO::PARAM_INT);
     $stmt->bindParam(':date_created', $date_created, PDO::PARAM_STR, 10);
     $stmt->bindParam(':assessment_id', $assessment_id, PDO::PARAM_INT);
     $stmt->bindParam(':question', $question, PDO::PARAM_INT);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1695,7 +2605,11 @@ and question = :question
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     return null;
   }
   return $row;
@@ -1703,27 +2617,45 @@ and question = :question
 
 function insertAssessmentsAnswers($person, $facility, $date_created, $assessment_id, $question, $answer)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertAssessmentsAnswers0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($person, $facility, $date_created, $assessment_id, $question, $answer);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $insert = "
 insert into assess
 (person, facility, date_created, assessment_id, question, `option`, active)
 values ( :person, :facility, :date_created, :assessment_id, :question, :answer, 'Y' )
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertAssessmentsAnswers1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':person', $person, PDO::PARAM_INT);
@@ -1733,13 +2665,21 @@ values ( :person, :facility, :date_created, :assessment_id, :question, :answer, 
     $stmt->bindParam(':question', $question, PDO::PARAM_INT);
     $stmt->bindParam(':answer', $answer, PDO::PARAM_STR, strlen($answer));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertAssessmentsAnswers2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1754,17 +2694,29 @@ values ( :person, :facility, :date_created, :assessment_id, :question, :answer, 
 
 function updateAssessmentsAnswers($person, $facility, $date_created, $assessment_id, $question, $answer)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateAssessmentsAnswers0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($answer);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $update = "
 update assess set
+=======
+  
+  $update = "
+update assess set 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 `option` = :answer
 where 1=1
 and person = :person
@@ -1773,13 +2725,21 @@ and date_created = :date_created
 and assessment_id = :assessment_id
 and question = :question
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateAssessmentsAnswers1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($update);
     $stmt->bindParam(':answer', $answer, PDO::PARAM_STR, strlen($answer));
@@ -1789,13 +2749,21 @@ and question = :question
     $stmt->bindParam(':assessment_id', $assessment_id, PDO::PARAM_INT);
     $stmt->bindParam(':question', $question, PDO::PARAM_INT);
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateAssessmentsAnswers2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -1820,7 +2788,11 @@ function putAssessmentsAnswers() {
    //var_dump('$_POST num ', $_POST['num_recs'], "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+<<<<<<< HEAD
 
+=======
+   
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
    for($i = 0; $i < $_POST['num_recs']; $i++){
 
       $recsKey = 'recs'.$i;
@@ -1832,21 +2804,35 @@ function putAssessmentsAnswers() {
       $assessment_id = $rec[4];
       $question =      $rec[5];
       $answer =        $rec[6];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putAssessmentsAnswers recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($person, $facility, $date_created, $assessment_id, $question, $answer);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = getAssessmentsAnswers($person, $facility, $date_created, $assessment_id, $question);
 
+=======
+    
+    $row = getAssessmentsAnswers($person, $facility, $date_created, $assessment_id, $question);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putAssessmentsAnswers returned >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump('row: ', $row);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     if (!$row) {
       insertAssessmentsAnswers($person, $facility, $date_created, $assessment_id, $question, $answer);
     } //!$row
@@ -1860,28 +2846,47 @@ function putAssessmentsAnswers() {
       file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
     }
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putAssessmentsAnswers DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function getPerson()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getPerson()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 p.id,
 p.timestamp,
@@ -1896,22 +2901,35 @@ p.latitude,
 p.longitude,
 p.is_deleted
 from person p
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getPerson()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -1919,34 +2937,64 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getPerson() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getPerson()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getPerson()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                = array();
       $post["id"]          = $row["id"];
@@ -1963,23 +3011,38 @@ where 1=1
       $post["is_deleted"]  = $row["is_deleted"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getFacilitator()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitator()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 f.id,
 f.timestamp,
@@ -1997,22 +3060,35 @@ f.address_id,
 f.dob,
 f.gender
 from facilitator f
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitator()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2020,34 +3096,64 @@ where 1=1
     $response["success"] = "0";
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = "0";
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getFacilitator() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitator()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitator()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                = array();
       $post["id"]          = $row["id"];
@@ -2056,7 +3162,11 @@ where 1=1
       $post["last_name"]   = $row["last_name"];
       $post["national_id"] = $row["national_id"];
       $post["phone"]       = $row["phone"];
+<<<<<<< HEAD
 
+=======
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
       $post["facilitator_type_id"] = $row["facilitator_type_id"];
       $post["note"]                = $row["note"];
       $post["location_id"]         = $row["location_id"];
@@ -2068,23 +3178,38 @@ where 1=1
       $post["gender"]              = $row["gender"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getBooking()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getBooking()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 b.id,
 b.timestamp,
@@ -2107,22 +3232,35 @@ b.followup_id,
 b.followup_date,
 b.alt_contact
 from booking b
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getBooking()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2130,34 +3268,64 @@ where 1=1
     $response["success"] = "0";
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = "0";
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getBooking() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getBooking()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getBooking()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                      = array();
       $post["id"]                = $row["id"];
@@ -2182,43 +3350,71 @@ where 1=1
       $post["alt_contact"]       = $row["alt_contact"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getRegion()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getRegion()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 r.id,
 r.name
 from region r
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getRegion()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2226,77 +3422,135 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getRegion() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getRegion()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getRegion()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getAcl()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAcl()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 a.id,
 a.acl
 from acl a
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAcl()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2304,77 +3558,135 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getAcl() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAcl()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAcl()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post        = array();
       $post["id"]  = $row["id"];
       $post["acl"] = $row["acl"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getUserType()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserType()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 ut.id,
 ut.name
 from user_type ut
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserType()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2382,57 +3694,102 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getUserType() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserType()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserType()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getUserToAcl()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserToAcl()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 uta.id,
 uta.acl_id,
@@ -2440,22 +3797,35 @@ uta.user_id,
 uta.created_by,
 uta.timestamp_created
 from user_to_acl uta
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserToAcl()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2463,34 +3833,64 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getUserToAcl() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserToAcl()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUserToAcl()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                      = array();
       $post["id"]                = $row["id"];
@@ -2500,23 +3900,38 @@ where 1=1
       $post["timestamp_created"] = $row["timestamp_created"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getUser()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUser()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     select
       u.id,
       u.timestamp,
@@ -2537,21 +3952,33 @@ function getUser()
       u.timestamp_created,
       u.timestamp_last_login
     from user u
+<<<<<<< HEAD
     where 1=1
   ";
 
+=======
+    where 1=1 
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUser()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
+=======
+  
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2559,38 +3986,72 @@ function getUser()
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getUser() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUser()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getUser()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
     foreach ($rows as $row) {
       $post       = array();
       $post["id"] = $row["id"];
 
+=======
+    
+    foreach ($rows as $row) {
+      $post       = array();
+      $post["id"] = $row["id"];
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
       $post["username"]             = $row["username"];
       $post["timestamp"]            = $row["timestamp"];
       $post["password"]             = $row["password"];
@@ -2608,47 +4069,78 @@ function getUser()
       $post["timestamp_updated"]    = $row["timestamp_updated"];
       $post["timestamp_created"]    = $row["timestamp_created"];
       $post["timestamp_last_login"] = $row["timestamp_last_login"];
+<<<<<<< HEAD
 
       array_push($response["posts"], $post);
     } //$rows as $row
 
+=======
+      
+      array_push($response["posts"], $post);
+    } //$rows as $row
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getLocation()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getLocation()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 l.id,
 l.name,
 l.region_id
 from location l
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getLocation()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2656,34 +4148,64 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getLocation() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getLocation()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getLocation()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post              = array();
       $post["id"]        = $row["id"];
@@ -2691,44 +4213,72 @@ where 1=1
       $post["region_id"] = $row["region_id"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getAddress()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAddress()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 a.id,
 a.name,
 a.region_id
 from address a
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAddress()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -2736,34 +4286,64 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getAddress() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAddress()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAddress()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post              = array();
       $post["id"]        = $row["id"];
@@ -2771,23 +4351,38 @@ where 1=1
       $post["region_id"] = $row["region_id"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getClient()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getClient()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 c.id,
 c.timestamp,
@@ -2806,56 +4401,97 @@ c.address_id,
 c.dob,
 c.gender
 from client c
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getClient()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
+=======
+    // For testing, you could use a die and message. 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     //die("Failed to run query: " . $ex->getMessage());
     //or just use this use this one to product JSON data:
     $response["success"] = 0;
     $response["message"] = "Database Error.";
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getClient() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getClient()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getClient()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                        = array();
       $post["id"]                  = $row["id"];
@@ -2876,19 +4512,32 @@ where 1=1
       $post["gender"]              = $row["gender"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function putUser()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putUser()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -2896,12 +4545,21 @@ function putUser()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -2910,7 +4568,11 @@ function putUser()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $timestamp            = $rec[0];
     $username             = $rec[1];
     $password             = $rec[2];
@@ -2928,48 +4590,82 @@ function putUser()
     $timestamp_updated    = $rec[14];
     $timestamp_created    = $rec[15];
     $timestamp_last_login = $rec[16];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putUser()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($name, $activity_date);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login);
 
+=======
+    
+    $row = selectUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putUser()2 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     if (!$row) {
       insertUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login);
 
+=======
+    
+    if (!$row) {
+      insertUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login);
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
       updateUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putUser() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function putGroupActivity()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putGroupActivity()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -2977,12 +4673,21 @@ function putGroupActivity()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -2991,7 +4696,11 @@ function putGroupActivity()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $name           = $rec[0];
     $timestamp      = $rec[1];
     $location_id    = $rec[2];
@@ -3003,52 +4712,88 @@ function putGroupActivity()
     $messages       = $rec[8];
     $latitude       = $rec[9];
     $longitude      = $rec[10];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putGroupActivity()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($name, $activity_date);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude);
 
+=======
+    
+    $row = selectGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putGroupActivity()2 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     if (!$row) {
       insertGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude);
 
+=======
+    
+    if (!$row) {
+      insertGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude);
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
       updateGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putGroupActivity() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function getGroupActivity()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupActivity()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 ga.id,
 ga.name,
@@ -3063,22 +4808,35 @@ ga.messages,
 ga.latitude,
 ga.longitude
 from group_activity ga
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupActivity()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3086,34 +4844,64 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getGroupActivity() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupActivity()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupActivity()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                   = array();
       $post["id"]             = $row["id"];
@@ -3130,43 +4918,71 @@ where 1=1
       $post["longitude"]      = $row["longitude"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getFacilitatorType()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitatorType()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 f.id,
 f.name
 from facilitator_type f
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitatorType()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3174,77 +4990,135 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getFacilitatorType() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitatorType()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFacilitatorType()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getProcedureType()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getProcedureType()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 p.id,
 p.name
 from procedure_type p
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getProcedureType()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3252,77 +5126,135 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getProcedureType() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getProcedureType()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getProcedureType()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getFollowup()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFollowup()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 f.id,
 f.name
 from followup f
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFollowup()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3330,55 +5262,96 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getFollowup() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFollowup()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getFollowup()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getStatusType()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getStatusType()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
 select
@@ -3388,19 +5361,37 @@ from status_type st
 where 1=1
    ";
 
+=======
+  
+  $query = " 
+select
+st.id,
+st.name
+from status_type st 
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getStatusType()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3408,77 +5399,135 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getStatusType() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getStatusType()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getStatusType()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getGroupType()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupType()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 gt.id,
 gt.name
 from group_type gt
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupType()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3486,78 +5535,136 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getGroupType() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupType()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getGroupType()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getInstitution()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInstitution()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 i.id,
 i.name,
 i.region_id
 from institution i
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInstitution()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3565,34 +5672,64 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getInstitution() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInstitution()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInstitution()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post              = array();
       $post["id"]        = $row["id"];
@@ -3600,43 +5737,71 @@ where 1=1
       $post["region_id"] = $row["region_id"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getInteractionType()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteractionType()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 i.id,
 i.name
 from interaction_type i
+<<<<<<< HEAD
 where 1=1
    ";
 
+=======
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteractionType()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3644,57 +5809,102 @@ where 1=1
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getInteractionType() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteractionType()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteractionType()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post         = array();
       $post["id"]   = $row["id"];
       $post["name"] = $row["name"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getAssessmentsQuestions()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessmentsQuestions()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 aq.id,
 aq.assessment_id,
@@ -3704,20 +5914,31 @@ aq.itemtype,
 aq.status
 from assessments_questions aq
    ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessmentsQuestions()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3725,35 +5946,65 @@ from assessments_questions aq
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getAssessmentsQuestions() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     var_dump("ex=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessmentsQuestions()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessmentsQuestions()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                             = array();
       $post["assessments_questions_id"] = $row["id"];
@@ -3764,21 +6015,32 @@ from assessments_questions aq
       $post["status"]                   = $row["status"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function getAssessments()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessments()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
 select
@@ -3789,19 +6051,38 @@ from assessments a
 join lookup_assessment_types lat on a.assessment_type_id = lat.id
    ";
 
+=======
+  
+  $query = " 
+select 
+  a.id, 
+  lat.assessment_type, 
+  status 
+from assessments a
+join lookup_assessment_types lat on a.assessment_type_id = lat.id
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessments()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
     //die("Failed to run query: " . $ex->getMessage());
 
@@ -3809,34 +6090,64 @@ join lookup_assessment_types lat on a.assessment_type_id = lat.id
     $response["success"] = 0;
     $response["message"] = "Database Error.";
 
+=======
+    // For testing, you could use a die and message. 
+    //die("Failed to run query: " . $ex->getMessage());
+    
+    //or just use this use this one to product JSON data:
+    $response["success"] = 0;
+    $response["message"] = "Database Error.";
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getAssessments() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessments()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getAssessments()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                    = array();
       $post["assessment_id"]   = $row["id"];
@@ -3844,19 +6155,32 @@ join lookup_assessment_types lat on a.assessment_type_id = lat.id
       $post["status"]          = $row["status"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function putInteraction()
 {
+<<<<<<< HEAD
 
   global $db, $request_data;
 
   $post = array();
   //$post = $_POST['recs'];
 
+=======
+  
+  global $db, $request_data;
+  
+  $post = array();
+  //$post = $_POST['recs'];
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putInteraction()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
 //  var_dump("post['datatable']: ", $_POST['datatable'], "END");
@@ -3864,12 +6188,21 @@ function putInteraction()
 //  var_dump('$_POST num ', $_POST['num_recs'], "END");
 //  $toss = ob_get_clean();
 //  file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
 
   $req_data = json_decode($request_data, true);
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  
+  
+  $req_data = json_decode($request_data, true);
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -3878,7 +6211,11 @@ function putInteraction()
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $timestamp          = $rec[0];
     $fac_first_name     = $rec[1];
     $fac_last_name      = $rec[2];
@@ -3892,52 +6229,88 @@ function putInteraction()
     $followup_date      = $rec[10];
     $type_id            = $rec[11];
     $note               = $rec[12];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putInteraction()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $row = selectInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note);
 
+=======
+    
+    $row = selectInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putInteraction()2 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump($timestamp, '==', $row[timestamp], $fac_first_name, $fac_last_name, $person_first_name, $person_last_name);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     if (!$row) {
       insertInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note);
 
+=======
+    
+    if (!$row) {
+      insertInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note);
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
       updateInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'putInteraction() DONE >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $response["success"] = 1;
   die(json_encode($response));
 }
 
 function getInteraction()
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteraction()0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("_POST=", $_POST, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query = "
+=======
+  
+  $query = " 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 select
 i.id,
 i.timestamp,
@@ -3949,6 +6322,7 @@ i.person_first_name,
 i.person_last_name,
 i.person_national_id,
 i.person_phone,
+<<<<<<< HEAD
 i.interaction_date,
 i.followup_date,
 i.type_id,
@@ -3957,53 +6331,98 @@ from interaction i
 where 1=1
    ";
 
+=======
+i.interaction_date, 
+i.followup_date, 
+i.type_id, 
+i.note
+from interaction i
+where 1=1 
+   ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteraction()1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $query_params = array();
 
+=======
+  
+  $query_params = array();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt   = $db->prepare($query);
     $result = $stmt->execute($query_params);
   }
   catch (PDOException $ex) {
+<<<<<<< HEAD
     // For testing, you could use a die and message.
+=======
+    // For testing, you could use a die and message. 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     //die("Failed to run query: " . $ex->getMessage());
     //or just use this use this one to product JSON data:
     $response["success"] = 0;
     $response["message"] = "Database Error.";
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'getInteraction() exception >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("response=", $response, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     die(json_encode($response));
   }
 
+=======
+    
+    die(json_encode($response));
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteraction()2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("result=", $result, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $rows = $stmt->fetchAll();
 
+=======
+  
+  $rows = $stmt->fetchAll();
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'getInteraction()2a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   //var_dump("rows=", $rows, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   if ($rows) {
     $response["success"]        = 1;
     $response["number_records"] = count($rows);
     $response["posts"]          = array();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($rows as $row) {
       $post                       = array();
       $post["id"]                 = $row["id"];
@@ -4022,22 +6441,36 @@ where 1=1
       $post["note"]               = $row["note"];
       array_push($response["posts"], $post);
     } //$rows as $row
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     die(json_encode($response));
   } //$rows
 }
 
 function selectInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectInteraction1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 id,
@@ -4050,12 +6483,21 @@ person_first_name,
 person_last_name,
 person_national_id,
 person_phone,
+<<<<<<< HEAD
 interaction_date,
 followup_date,
 type_id,
 note
 from interaction
 where 1=1
+=======
+interaction_date, 
+followup_date, 
+type_id, 
+note
+from interaction
+where 1=1 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 -- and timestamp <= :timestamp
 and fac_first_name = :fac_first_name
 and fac_last_name = :fac_last_name
@@ -4069,18 +6511,31 @@ and interaction_date = :interaction_date
 -- and followup_date = :followup_date
 -- and type_id = :type_id
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectInteraction2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
 
     $stmt = $db->prepare($query);
 
+=======
+  
+  try {
+    
+    
+    $stmt = $db->prepare($query);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':fac_first_name', $fac_first_name, PDO::PARAM_STR, strlen($fac_first_name));
     $stmt->bindParam(':fac_last_name', $fac_last_name, PDO::PARAM_STR, strlen($fac_last_name));
@@ -4092,16 +6547,27 @@ and interaction_date = :interaction_date
     $stmt->bindParam(':person_phone', $person_phone, PDO::PARAM_STR, strlen($person_phone));
     $stmt->bindParam(':interaction_date', $interaction_date, PDO::PARAM_STR, strlen($interaction_date));
     // $stmt->bindParam(':followup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectInteraction3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4110,40 +6576,67 @@ and interaction_date = :interaction_date
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectInteraction3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function insertInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertInteraction0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $status_id);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $insert = "
 insert into interaction ( timestamp, fac_first_name, fac_last_name, fac_national_id, fac_phone, person_first_name, person_last_name, person_national_id, person_phone, interaction_date, followup_date, type_id, note)
 values ( :timestamp, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :person_first_name, :person_last_name, :person_national_id, :person_phone, :interaction_date, :followup_date, :type_id, :note)
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertInteraction1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -4160,13 +6653,21 @@ values ( :timestamp, :fac_first_name, :fac_last_name, :fac_national_id, :fac_pho
     $stmt->bindParam(':type_id', $type_id, PDO::PARAM_STR, strlen($type_id));
     $stmt->bindParam(':note', $note, PDO::PARAM_STR, strlen($note));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertInteraction2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4182,19 +6683,33 @@ values ( :timestamp, :fac_first_name, :fac_last_name, :fac_national_id, :fac_pho
 
 function updateInteraction($timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $person_first_name, $person_last_name, $person_national_id, $person_phone, $interaction_date, $followup_date, $type_id, $note)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateInteraction0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($first_name, $last_name, $dob);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   $update = "
 update interaction set
 timestamp=:timestamp,
 fac_first_name=:fac_first_name,
+=======
+  
+  $update = "
+update interaction set
+timestamp=:timestamp,
+fac_first_name=:fac_first_name, 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 fac_last_name=:fac_last_name,
 fac_national_id=:fac_national_id,
 fac_phone=:fac_phone,
@@ -4202,9 +6717,15 @@ person_first_name=:person_first_name,
 person_last_name=:person_last_name,
 person_national_id=:person_national_id,
 person_phone=:person_phone,
+<<<<<<< HEAD
 interaction_date=:interaction_date,
 followup_date=:followup_date,
 type_id=:type_id,
+=======
+interaction_date=:interaction_date, 
+followup_date=:followup_date, 
+type_id=:type_id, 
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
 note=:note
 where 1=1
 and timestamp<:wtimestamp
@@ -4217,32 +6738,54 @@ and person_phone=:wperson_phone
 and interaction_date=:winteraction_date
 -- and followup_date=:wfollowup_date
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateInteraction1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+    $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':fac_first_name', $fac_first_name, PDO::PARAM_STR, strlen($fac_first_name));
     $stmt->bindParam(':fac_last_name', $fac_last_name, PDO::PARAM_STR, strlen($fac_last_name));
     $stmt->bindParam(':fac_national_id', $fac_national_id, PDO::PARAM_STR, strlen($fac_national_id));
     $stmt->bindParam(':fac_phone', $fac_phone, PDO::PARAM_STR, strlen($fac_phone));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':person_first_name', $person_first_name, PDO::PARAM_STR, strlen($person_first_name));
     $stmt->bindParam(':person_last_name', $person_last_name, PDO::PARAM_STR, strlen($person_last_name));
     $stmt->bindParam(':person_national_id', $person_national_id, PDO::PARAM_STR, strlen($person_national_id));
     $stmt->bindParam(':person_phone', $person_phone, PDO::PARAM_STR, strlen($person_phone));
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':interaction_date', $interaction_date, PDO::PARAM_STR, strlen($interaction_date));
     $stmt->bindParam(':followup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
     $stmt->bindParam(':type_id', $type_id, PDO::PARAM_STR, strlen($type_id));
     $stmt->bindParam(':note', $note, PDO::PARAM_STR, strlen($note));
+<<<<<<< HEAD
 
     $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
 
@@ -4259,12 +6802,34 @@ and interaction_date=:winteraction_date
 
     $result = $stmt->execute();
 
+=======
+    
+    $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+    
+    $stmt->bindParam(':wfac_first_name', $fac_first_name, PDO::PARAM_STR, strlen($fac_first_name));
+    $stmt->bindParam(':wfac_last_name', $fac_last_name, PDO::PARAM_STR, strlen($fac_last_name));
+    $stmt->bindParam(':wfac_phone', $fac_phone, PDO::PARAM_STR, strlen($fac_phone));
+    
+    $stmt->bindParam(':wperson_first_name', $person_first_name, PDO::PARAM_STR, strlen($person_first_name));
+    $stmt->bindParam(':wperson_last_name', $person_last_name, PDO::PARAM_STR, strlen($person_last_name));
+    $stmt->bindParam(':wperson_phone', $person_phone, PDO::PARAM_STR, strlen($person_phone));
+    
+    $stmt->bindParam(':winteraction_date', $interaction_date, PDO::PARAM_STR, strlen($interaction_date));
+    // $stmt->bindParam(':wfollowup_date', $followup_date, PDO::PARAM_STR, strlen($followup_date));
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateInteraction2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4279,15 +6844,25 @@ and interaction_date=:winteraction_date
 
 function selectGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectGroupActivity1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 id,
@@ -4303,16 +6878,25 @@ messages,
 latitude,
 longitude
 from group_activity
+<<<<<<< HEAD
 where 1=1
 and name = :name
 and activity_date = :activity_date
   ";
 
+=======
+where 1=1 
+and name = :name
+and activity_date = :activity_date
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectGroupActivity2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($query);
@@ -4321,15 +6905,32 @@ and activity_date = :activity_date
     $stmt->bindParam(':name', $name, PDO::PARAM_STR, strlen($name));
     $stmt->bindParam(':activity_date', $activity_date, PDO::PARAM_STR, strlen($activity_date));
 
+=======
+  
+  try {
+    $stmt = $db->prepare($query);
+    
+    // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+    $stmt->bindParam(':name', $name, PDO::PARAM_STR, strlen($name));
+    $stmt->bindParam(':activity_date', $activity_date, PDO::PARAM_STR, strlen($activity_date));
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectGroupActivity3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4338,41 +6939,70 @@ and activity_date = :activity_date
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectGroupActivity3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function insertGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertGroupActivity0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($name, $activity_date);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $insert = "
 insert into group_activity (name, timestamp, location_id, activity_date, group_type_id, institution_id, males, females, messages, latitude, longitude)
 values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :institution_id, :males, :females, :messages, :latitude, :longitude)
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertGroupActivity1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':name', $name, PDO::PARAM_STR, strlen($name));
@@ -4387,13 +7017,21 @@ values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :instit
     $stmt->bindParam(':latitude', $latitude, PDO::PARAM_STR, strlen($latitude));
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertGroupActivity2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4410,13 +7048,21 @@ values (:name, :timestamp, :location_id, :activity_date, :group_type_id, :instit
 function updateGroupActivity($id, $name, $timestamp, $location_id, $activity_date, $group_type_id, $institution_id, $males, $females, $messages, $latitude, $longitude)
 {
   global $db;
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateGroupActivity0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($name, $activity_date);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $update = "
 update group_activity set
 name=:name,
@@ -4434,16 +7080,27 @@ where 1=1
 and name=:wname
 and activity_date=:wactivity_date
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateGroupActivity1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':name', $name, PDO::PARAM_STR, strlen($name));
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':location_id', $location_id, PDO::PARAM_STR, strlen($location_id));
@@ -4457,15 +7114,25 @@ and activity_date=:wactivity_date
     $stmt->bindParam(':longitude', $longitude, PDO::PARAM_STR, strlen($longitude));
     $stmt->bindParam(':wname', $name, PDO::PARAM_STR, strlen($name));
     $stmt->bindParam(':wactivity_date', $activity_date, PDO::PARAM_STR, strlen($activity_date));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateGroupActivity2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4480,15 +7147,25 @@ and activity_date=:wactivity_date
 
 function selectUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectUser1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("params=", $timestamp, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $name, $activity_date, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $query = "
 select
 id,
@@ -4510,16 +7187,25 @@ timestamp_updated,
 timestamp_created,
 timestamp_last_login
 from user
+<<<<<<< HEAD
 where 1=1
 and username = :username
 and phone = :phone
   ";
 
+=======
+where 1=1 
+and username = :username
+and phone = :phone
+  ";
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectUser2>' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("query=", $query, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
 
@@ -4530,15 +7216,34 @@ and phone = :phone
     $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
     $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
 
+=======
+  
+  try {
+    
+    
+    $stmt = $db->prepare($query);
+    
+    // $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
+    $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
+    $stmt->bindParam(':phone', $phone, PDO::PARAM_STR, strlen($phone));
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'selectUser3a >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("queryString=", $stmt->queryString, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     $result = $stmt->execute();
     $row    = $stmt->fetch();
 
+=======
+    
+    $result = $stmt->execute();
+    $row    = $stmt->fetch();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4547,41 +7252,70 @@ and phone = :phone
     var_dump("exception=", $ex, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
     return null;
   }
 
+=======
+    
+    return null;
+  }
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'selectUser3b >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("row=", $row, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   return $row;
 }
 
 function insertUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertUser0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($name, $activity_date);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $insert = "
 insert into user (timestamp, username, password, email, first_name, last_name, national_id, phone, region_id, user_type_id, location_id, modified_by, created_by, is_blocked, timestamp_updated, timestamp_created, timestamp_last_login)
 values (:timestamp, :username, :password, :email, :first_name, :last_name, :national_id, :phone, :region_id, :user_type_id, :location_id, :modified_by, :created_by, :is_blocked, :timestamp_updated, :timestamp_created, :timestamp_last_login)
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'insertUser1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("insert=", $insert, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   try {
     $stmt = $db->prepare($insert);
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -4602,13 +7336,21 @@ values (:timestamp, :username, :password, :email, :first_name, :last_name, :nati
     $stmt->bindParam(':timestamp_created', $timestamp_created, PDO::PARAM_STR, strlen($timestamp_created));
     $stmt->bindParam(':timestamp_last_login', $timestamp_last_login, PDO::PARAM_STR, strlen($timestamp_last_login));
     $result = $stmt->execute();
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'insertUser2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("insert result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4624,15 +7366,25 @@ values (:timestamp, :username, :password, :email, :first_name, :last_name, :nati
 
 function updateUser($id, $timestamp, $username, $password, $email, $first_name, $last_name, $national_id, $phone, $region_id, $user_type_id, $location_id, $modified_by, $created_by, $is_blocked, $timestamp_updated, $timestamp_created, $timestamp_last_login)
 {
+<<<<<<< HEAD
 
   global $db;
 
+=======
+  
+  global $db;
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateUser0 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump($name, $activity_date);
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   $update = "
 update user set
 timestamp=:timestamp,
@@ -4656,16 +7408,27 @@ where 1=1
 and username=:wusername
 and phone=:wphone
   ";
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   file_put_contents('php_index_debug.log', 'updateUser1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
   ob_start();
   var_dump("update=", $update, "END");
   $toss = ob_get_clean();
   file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
   try {
     $stmt = $db->prepare($update);
 
+=======
+  
+  try {
+    $stmt = $db->prepare($update);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':username', $username, PDO::PARAM_STR, strlen($username));
     $stmt->bindParam(':password', $password, PDO::PARAM_STR, strlen($password));
@@ -4685,15 +7448,25 @@ and phone=:wphone
     $stmt->bindParam(':timestamp_last_login', $timestamp_last_login, PDO::PARAM_STR, strlen($timestamp_last_login));
     $stmt->bindParam(':wusername', $username, PDO::PARAM_STR, strlen($username));
     $stmt->bindParam(':wphone', $phone, PDO::PARAM_STR, strlen($phone));
+<<<<<<< HEAD
 
     $result = $stmt->execute();
 
+=======
+    
+    $result = $stmt->execute();
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'updateUser2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
     var_dump("update result=", $result, "END");
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
   }
   catch (PDOException $ex) {
     //die
@@ -4717,9 +7490,15 @@ function putSyncAudit(){
   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
   $req_data = json_decode($request_data, true);
+<<<<<<< HEAD
   $rec = array();
   foreach($req_data['datatable'] as $recs) {
     $i = 0;
+=======
+  $rec = array();  
+  foreach($req_data['datatable'] as $recs) {
+    $i = 0;    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     foreach ($recs as $value) {
       $rec[$i] = $value;
       $i = $i + 1;
@@ -4728,7 +7507,11 @@ function putSyncAudit(){
     var_dump($rec);
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
+<<<<<<< HEAD
 
+=======
+  
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
         $timestamp = $rec[0];
         $latitude =  $rec[1];
         $longitude = $rec[2];
@@ -4737,7 +7520,11 @@ function putSyncAudit(){
 	$password =  $rec[5];
 	$progress =  $rec[6];
         $status =    $rec[7];
+<<<<<<< HEAD
 
+=======
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     file_put_contents('php_index_debug.log', 'putSyncAudit()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX); ob_start();
     var_dump($first_name, $last_name);
     $toss = ob_get_clean(); file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
@@ -4795,16 +7582,28 @@ and device = :device_id
 
    try {
 
+<<<<<<< HEAD
 
+=======
+	   
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
       $stmt = $db->prepare($query);
 
       $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
       $stmt->bindParam(':device_id', $device_id, PDO::PARAM_STR, strlen($device_id));
+<<<<<<< HEAD
 
       file_put_contents('php_debug.log', 'selectSyncAudit3a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
       var_dump("queryString=", $stmt->queryString, "END");
       $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+         
+      file_put_contents('php_debug.log', 'selectSyncAudit3a >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+      var_dump("queryString=", $stmt->queryString, "END");
+      $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+      
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
       $result = $stmt->execute();
       $row = $stmt->fetch();
 
@@ -4816,16 +7615,25 @@ and device = :device_id
 
       return null;
    }
+<<<<<<< HEAD
 
    file_put_contents('php_debug.log', 'selectSyncAudit3b >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
    var_dump("row=", $row, "END");
    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+   
+   file_put_contents('php_debug.log', 'selectSyncAudit3b >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+   var_dump("row=", $row, "END");
+   $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+   
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
    return $row;
 }
 
 function insertSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status ){
     global $db;
+<<<<<<< HEAD
 
     file_put_contents('php_debug.log', 'insertSyncAudit0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
     var_dump( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status );
@@ -4839,6 +7647,21 @@ values ( :timestamp, :latitude, :longitude, :device_id, :username, :password, :p
     var_dump("insert=", $insert, "END");
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+    
+    file_put_contents('php_debug.log', 'insertSyncAudit0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status );
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+    $insert = "
+insert into sync_audit ( timestamp, latitude, longitude, device_id, username, password, progress, status )
+values ( :timestamp, :latitude, :longitude, :device_id, :username, :password, :progress, :status ) ";
+    
+    file_put_contents('php_debug.log', 'insertSyncAudit1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("insert=", $insert, "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     try {
         $stmt = $db->prepare($insert);
         $stmt->bindParam(':timestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
@@ -4850,11 +7673,19 @@ values ( :timestamp, :latitude, :longitude, :device_id, :username, :password, :p
         $stmt->bindParam(':progress', $progress, PDO::PARAM_STR, strlen($progress));
         $stmt->bindParam(':status', $status, PDO::PARAM_STR, strlen($status));
         $result = $stmt->execute();
+<<<<<<< HEAD
 
         file_put_contents('php_debug.log', 'insertSyncAudit2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump("insert result=", $result, "END");
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+    
+        file_put_contents('php_debug.log', 'insertSyncAudit2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("insert result=", $result, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     }
     catch (PDOException $ex) {
         //die
@@ -4868,11 +7699,19 @@ values ( :timestamp, :latitude, :longitude, :device_id, :username, :password, :p
 
 function updateSyncAudit( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status ){
     global $db;
+<<<<<<< HEAD
 
     file_put_contents('php_debug.log', 'updateSyncAudit0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
     var_dump( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status);
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+    
+    file_put_contents('php_debug.log', 'updateSyncAudit0 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump( $timestamp, $latitude, $longitude, $device_id, $username, $password, $progress, $status);
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     $update = "
 update sync_audit set
 timestamp=:timestamp,
@@ -4887,11 +7726,19 @@ where 1=1
 and timestamp<:wtimestamp
 and device_id=:wdevice_id
 	";
+<<<<<<< HEAD
 
     file_put_contents('php_debug.log', 'updateSyncAudit1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
     var_dump("update=", $update, "END");
     $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+    
+    file_put_contents('php_debug.log', 'updateSyncAudit1 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+    var_dump("update=", $update, "END");
+    $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     try {
         $stmt = $db->prepare($update);
 
@@ -4907,11 +7754,19 @@ and device_id=:wdevice_id
         $stmt->bindParam(':wdevice_id', $device_id, PDO::PARAM_STR, strlen($device_id));
 
         $result = $stmt->execute();
+<<<<<<< HEAD
 
         file_put_contents('php_debug.log', 'updateSyncAudit2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
         var_dump("update result=", $result, "END");
         $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
 
+=======
+    
+        file_put_contents('php_debug.log', 'updateSyncAudit2 >'.PHP_EOL, FILE_APPEND | LOCK_EX);    ob_start();
+        var_dump("update result=", $result, "END");
+        $toss = ob_get_clean(); file_put_contents('php_debug.log', $toss .PHP_EOL, FILE_APPEND | LOCK_EX);
+    
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
     }
     catch (PDOException $ex) {
         //die
@@ -4924,4 +7779,8 @@ and device_id=:wdevice_id
 
 
 
+<<<<<<< HEAD
 ?>
+=======
+?>
+>>>>>>> 67970f4a895bc4de902e2cbf341c2b596be0a298
