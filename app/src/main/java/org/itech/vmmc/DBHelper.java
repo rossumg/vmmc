@@ -3449,9 +3449,14 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_group_activity_name(cursor1.getString(11));
                 client.set_group_activity_date(cursor1.getString(12));
 
-                client.set_address_id(parseInt(cursor1.getString(13)));
-                client.set_dob(cursor1.getString(14));
-                client.set_gender(cursor1.getString(15));
+                client.set_fac_first_name(cursor1.getString(13));
+                client.set_fac_last_name(cursor1.getString(14));
+                client.set_fac_national_id(cursor1.getString(15));
+                client.set_fac_phone(cursor1.getString(16));
+
+                client.set_address_id(parseInt(cursor1.getString(17)));
+                client.set_dob(cursor1.getString(18));
+                client.set_gender(cursor1.getString(19));
 
                 // Adding person to list
                 clientList.add(client);
@@ -4865,18 +4870,18 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_national_id(cursor.getString(4));
                 booking.set_phone(cursor.getString(5));
 
-                booking.set_location_id(parseInt(cursor.getString(10)));
-                booking.set_latitude(parseFloat(cursor.getString(11)));
-                booking.set_longitude(parseFloat(cursor.getString(12)));
-                booking.set_projected_date(cursor.getString(13));
-                booking.set_actual_date(cursor.getString(14));
+                booking.set_location_id(parseInt(cursor.getString(6)));
+                booking.set_latitude(parseFloat(cursor.getString(7)));
+                booking.set_longitude(parseFloat(cursor.getString(8)));
+                booking.set_projected_date(cursor.getString(9));
+                booking.set_actual_date(cursor.getString(10));
 
-                booking.set_consent(cursor.getString(15));
-                booking.set_procedure_type_id(parseInt(cursor.getString(16)));
-                booking.set_followup_id(parseInt(cursor.getString(17)));
-                booking.set_followup_date(cursor.getString(18));
+                booking.set_consent(cursor.getString(11));
+                booking.set_procedure_type_id(parseInt(cursor.getString(12)));
+                booking.set_followup_id(parseInt(cursor.getString(13)));
+                booking.set_followup_date(cursor.getString(14));
 
-                booking.set_alt_contact(cursor.getString(19));
+                booking.set_alt_contact(cursor.getString(15));
 
                 // Adding booking to list
                 _List.add(booking);

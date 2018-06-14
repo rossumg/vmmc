@@ -459,13 +459,14 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 Log.d(LOG, "_groupActivityEditText.getText().toString(): " + _groupActivityEditText.getText().toString() + "<");
 
                 GroupActivity _groupActivity = new GroupActivity();
+                String parts[] = _groupActivityEditText.getText().toString().split(", ", 2);
 
-                if(_groupActivityEditText.getText().toString().equals("")) {
+                if(_groupActivityEditText.getText().toString().equals("") || parts.length != 2 ) {
+                    _groupActivityEditText.setText("");
                     _groupActivity.set_name("");
                     _groupActivity.set_activity_date("");
                     MainActivity.gGroupActivity = null;
                 } else {
-                    String parts[] = _groupActivityEditText.getText().toString().split(", ", 2);
                     _groupActivity = dbHelp.getGroupActivity(parts[0], parts[1]);
                 }
 
