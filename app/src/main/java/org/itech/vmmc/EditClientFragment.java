@@ -293,6 +293,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _facilitator.setText(_client.get_fac_first_name() + " " + _client.get_fac_last_name() + ", " + _client.get_fac_national_id() + ", " + _client.get_fac_phone());
         }
 
+        loadFacilitatorAutoComplete(_view );
         loadStatusDropdown(_view );
         loadLocationDropdown(_view );
         loadInstitutionDropdown(_view );
@@ -655,6 +656,38 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
                 String text = dropdown.getText().toString();
                 Log.d(LOG, "name selected: " + text);
+            }
+        });
+    }
+
+
+    public void loadFacilitatorAutoComplete(View view) {
+
+        List<String> facilitatorIDs = dbHelp.getAllFacilitatorIDs();
+        // convert to array
+        String[] stringArrayFacilitatorID = new String[ facilitatorIDs.size() ];
+        facilitatorIDs.toArray(stringArrayFacilitatorID);
+
+        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.facilitator);
+        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayFacilitatorID);
+        dropdown.setThreshold(1);
+        dropdown.setAdapter(dataAdapter);
+
+        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
+                String facilitatorText = dropdown.getText().toString();
+                String parts[] = {};
+                parts = facilitatorText.split(", ");
+
+                String fac_name = parts[0].trim();
+                String fac_national_id =  parts[1].trim();
+                String fac_phone_number = parts[2].trim();
+//                String projected_date = parts[3].trim();
+                Log.d(LOG, "booking facilitator selected: " + fac_name + "." + fac_national_id + "." + fac_phone_number + "." );
+
+//                booking = dbHelp.getBooking(national_id, phone_number, projected_date);
+//                Log.d(LOG, "booking_id selected: " + booking.get_id());
+
             }
         });
     }

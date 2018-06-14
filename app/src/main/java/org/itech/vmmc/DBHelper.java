@@ -3045,6 +3045,12 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
         values.put(CLIENT_GROUP_ACTIVITY_NAME,  client.get_group_activity_name());
         values.put(CLIENT_GROUP_ACTIVITY_DATE,  client.get_group_activity_date());
+
+        values.put(CLIENT_FAC_FIRST_NAME,  client.get_fac_first_name());
+        values.put(CLIENT_FAC_LAST_NAME,  client.get_fac_last_name());
+        values.put(CLIENT_FAC_NATIONAL_ID,  client.get_fac_national_id());
+        values.put(CLIENT_FAC_PHONE,  client.get_fac_phone());
+
         values.put(CLIENT_ADDRESS_ID,  client.get_address_id());
         values.put(CLIENT_DOB,  client.get_dob());
         values.put(CLIENT_GENDER,  client.get_gender());
@@ -3080,12 +3086,18 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_INSTITUTION_ID,  client.get_institution_id());
         values.put(CLIENT_GROUP_ACTIVITY_NAME,  client.get_group_activity_name());
         values.put(CLIENT_GROUP_ACTIVITY_DATE,  client.get_group_activity_date());
+
+        values.put(CLIENT_FAC_FIRST_NAME,  client.get_fac_first_name());
+        values.put(CLIENT_FAC_LAST_NAME,  client.get_fac_last_name());
+        values.put(CLIENT_FAC_NATIONAL_ID,  client.get_fac_national_id());
+        values.put(CLIENT_FAC_PHONE,  client.get_fac_phone());
+
         values.put(CLIENT_ADDRESS_ID,  client.get_address_id());
         values.put(CLIENT_DOB,  client.get_dob());
         values.put(CLIENT_GENDER,  client.get_gender());
 
         String[] tableColumns = new String[]{
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
         };
 
 //        String whereClause = "1=1 and trim(" +
@@ -3575,9 +3587,15 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_institution_id(parseInt(cursor.getString(10)));
                 client.set_group_activity_name(cursor.getString(11));
                 client.set_group_activity_date(cursor.getString(12));
-                client.set_address_id(parseInt(cursor.getString(13)));
-                client.set_dob(cursor.getString(14));
-                client.set_gender(cursor.getString(15));
+
+                client.set_fac_first_name(cursor.getString(13));
+                client.set_fac_last_name(cursor.getString(14));
+                client.set_fac_national_id(cursor.getString(15));
+                client.set_fac_phone(cursor.getString(16));
+
+                client.set_address_id(parseInt(cursor.getString(17)));
+                client.set_dob(cursor.getString(18));
+                client.set_gender(cursor.getString(19));
 
                 // Adding person to list
                 clientList.add(client);
@@ -4312,11 +4330,6 @@ public class DBHelper extends SQLiteOpenHelper{
 
 
         if (cursor.moveToFirst()) {
-            Log.d(LOG, "getBooking **************** "
-                    + cursor.getString(18) + " "
-                    + cursor.getString(19) + " "
-            );
-
             booking = new Booking(
                     parseInt(cursor.getString(0)),
                     cursor.getString(1),
@@ -4919,17 +4932,17 @@ public class DBHelper extends SQLiteOpenHelper{
                 booking.set_national_id(cursor.getString(4));
                 booking.set_phone(cursor.getString(5));
 
-                booking.set_location_id(parseInt(cursor.getString(10)));
-                booking.set_latitude(parseFloat(cursor.getString(11)));
-                booking.set_longitude(parseFloat(cursor.getString(12)));
-                booking.set_projected_date(cursor.getString(13));
-                booking.set_actual_date(cursor.getString(14));
+                booking.set_location_id(parseInt(cursor.getString(6)));
+                booking.set_latitude(parseFloat(cursor.getString(7)));
+                booking.set_longitude(parseFloat(cursor.getString(8)));
+                booking.set_projected_date(cursor.getString(9));
+                booking.set_actual_date(cursor.getString(10));
 
-                booking.set_consent(cursor.getString(15));
-                booking.set_procedure_type_id(parseInt(cursor.getString(16)));
-                booking.set_followup_id(parseInt(cursor.getString(17)));
+                booking.set_consent(cursor.getString(11));
+                booking.set_procedure_type_id(parseInt(cursor.getString(12)));
+                booking.set_followup_id(parseInt(cursor.getString(13)));
 
-                booking.set_alt_contact(cursor.getString(18));
+                booking.set_alt_contact(cursor.getString(14));
 
                 // Adding booking to list
                 _List.add(booking);

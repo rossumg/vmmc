@@ -311,7 +311,6 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
             }
         }
 
-        loadFacilitatorAutoComplete(_view );
         loadStatusDropdown(_view );
         loadLocationDropdown(_view );
         loadProcedureTypeDropdown(_view );
@@ -408,7 +407,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 _followup_date= (TextView) _view.findViewById(R.id.followup_date);
 
                 Log.d(LOG, "UpdateBooking button: " +
-                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitator.getText() + " <");
+                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + " <");
 
                 String sFirstName = _first_name.getText().toString();
                 String sLastName = _last_name.getText().toString();
@@ -629,37 +628,8 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
     }
 
-    private Booking booking;
-    public void loadFacilitatorAutoComplete(View view) {
+    // private Booking booking;
 
-        List<String> facilitatorIDs = dbHelp.getAllFacilitatorIDs();
-        // convert to array
-        String[] stringArrayFacilitatorID = new String[ facilitatorIDs.size() ];
-        facilitatorIDs.toArray(stringArrayFacilitatorID);
-
-        final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.facilitator);
-        ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayFacilitatorID);
-        dropdown.setThreshold(1);
-        dropdown.setAdapter(dataAdapter);
-
-        dropdown.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            public void onItemClick(AdapterView<?> parent, View view, int index, long position) {
-                String facilitatorText = dropdown.getText().toString();
-                String parts[] = {};
-                parts = facilitatorText.split(", ");
-
-                String fac_name = parts[0].trim();
-                String fac_national_id =  parts[1].trim();
-                String fac_phone_number = parts[2].trim();
-//                String projected_date = parts[3].trim();
-                Log.d(LOG, "booking facilitator selected: " + fac_name + "." + fac_national_id + "." + fac_phone_number + "." );
-
-//                booking = dbHelp.getBooking(national_id, phone_number, projected_date);
-//                Log.d(LOG, "booking_id selected: " + booking.get_id());
-
-            }
-        });
-    }
 
     public void loadStatusDropdown(View view ) {
         Log.d(LOG, "loadStatusDropdown: " );
