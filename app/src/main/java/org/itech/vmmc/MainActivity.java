@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "2.01";
+    public static String _version = "3.00";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -257,7 +257,8 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
                 fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
                 getSupportFragmentManager().beginTransaction().remove(getSupportFragmentManager().findFragmentByTag("DisplayFragment"));
                 if (fragment == null) {
-                    fragment = DisplayFragment.newInstance("displaySyncAudit", "");
+                    //fragment = DisplayFragment.newInstance("displaySyncAudit", "");
+                    fragment = DisplayFragment.newInstance("displaySyncReady", "");
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
                 } else {
                     getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).commit();

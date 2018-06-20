@@ -2680,6 +2680,44 @@ public class DBHelper extends SQLiteOpenHelper{
         return _List;
     }
 
+    public boolean getSyncReady() {
+        boolean syncReady = true;
+        List<String> tableList = new ArrayList<String>();
+
+        tableList.add("user");
+        tableList.add("user_type");
+        tableList.add("user_to_acl");
+        tableList.add("client_table");
+        tableList.add("facilitator");
+        tableList.add("location");
+        tableList.add("address");
+        tableList.add("region");
+        tableList.add("booking");
+        tableList.add("facilitator_type");
+        tableList.add("procedure_type");
+        tableList.add("followup");
+        tableList.add("interaction_type");
+        tableList.add("status_type");
+        tableList.add("institution");
+        tableList.add("group_activity");
+        tableList.add("group_type");
+
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        for (int i = 0; i < tableList.size(); i++) {
+            String selectQuery = "SELECT  * FROM " + TABLE_SYNC_AUDIT +
+                    " where timestamp = (select max(timestamp) from " + TABLE_SYNC_AUDIT + " where progress like '" + tableList.get(i) +
+                    "%' ) and status = '' ";
+            Log.d(LOG, "getSyncReady:selectQuery: " + selectQuery);
+            Cursor cursor = db.rawQuery(selectQuery, null);
+            if (!cursor.moveToFirst()) {
+                syncReady = false;
+            }
+            cursor.close();
+        }
+        return syncReady;
+    }
+
     public List<SyncAudit> getAllSyncAudits() {
 
         List<SyncAudit> _List = new ArrayList<SyncAudit>();

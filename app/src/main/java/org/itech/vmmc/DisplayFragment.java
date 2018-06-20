@@ -275,6 +275,18 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
             mAdapter = new ArrayAdapter<String>(getActivity(),
                     android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
 
+        } else if (displayType == "displaySyncReady") {
+            boolean syncReady = dbHelp.getSyncReady();
+
+            String[] _stringArray = new String[1];
+            if (syncReady)
+                _stringArray[0] = "System is Ready";
+            else
+                _stringArray[0] = "System is not Ready";
+
+            mAdapter = new ArrayAdapter<String>(getActivity(),
+                    android.R.layout.simple_list_item_1, android.R.id.text1, _stringArray);
+
         } else if (displayType == "displaySyncAudit") {
             sync_audits = dbHelp.getAllSyncAudits();
             String[] _stringArray = new String[sync_audits.size()];
