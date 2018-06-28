@@ -268,6 +268,11 @@ function putClient()
     $address_id          = $rec[16];
     $dob                 = $rec[17];
     $gender              = $rec[18];
+    $origination         = $rec[19];
+    $created_by          = $rec[20];
+    $modified_by         = $rec[21];
+    $created             = $rec[22];
+    $modified            = $rec[23];
 
     file_put_contents('php_index_debug.log', 'putClient()1 recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
@@ -275,7 +280,7 @@ function putClient()
     $toss = ob_get_clean();
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
 
-    $row = selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender);
+    $row = selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender, $origination, $created_by, $modified_by, $created, $modified);
 
     file_put_contents('php_index_debug.log', 'putClient() recs >' . PHP_EOL, FILE_APPEND | LOCK_EX);
     ob_start();
@@ -284,11 +289,11 @@ function putClient()
     file_put_contents('php_index_debug.log', $toss . PHP_EOL, FILE_APPEND | LOCK_EX);
 
     if (!$row) {
-      insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender);
+      insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender, $origination, $created_by, $modified_by, $created, $modified);
 
     } //!$row
     elseif ($row[timestamp] < $timestamp) {
-      updateClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender);
+      updateClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender, $origination, $created_by, $modified_by, $created, $modified);
     } //$row[timestamp] < $timestamp
   } //$i = 0; $i < $_POST['num_recs']; $i++
 
@@ -610,7 +615,7 @@ and phone=:wphone
   }
 }
 
-function selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender)
+function selectClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender, $origination, $created_by, $modified_by, $created, $modified)
 {
 
   global $db;
@@ -641,7 +646,12 @@ fac_national_id,
 fac_phone,
 address_id,
 dob,
-gender
+gender,
+origination,
+created_by, 
+modified_by, 
+created, 
+modified
 from client
 where 1=1
 -- and timestamp <= :timestamp
@@ -706,7 +716,7 @@ and phone = :phone
   return $row;
 }
 
-function insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender)
+function insertClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender, $origination, $created_by, $modified_by, $created, $modified)
 {
   global $db;
 
@@ -718,8 +728,8 @@ function insertClient($timestamp, $first_name, $last_name, $national_id, $phone,
 
   $insert = "
 insert into client
-(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date, fac_first_name, fac_last_name, fac_national_id, fac_phone, address_id, dob, gender)
-values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, :loc_id, :latitude, :longitude, :institution_id, :group_activity_name, :group_activity_date, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :address_id, :dob, :gender )
+(timestamp, first_name, last_name, national_id, phone, status_id, loc_id, latitude, longitude, institution_id, group_activity_name, group_activity_date, fac_first_name, fac_last_name, fac_national_id, fac_phone, address_id, dob, gender, origination, created_by, modified_by, created, modified)
+values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, :loc_id, :latitude, :longitude, :institution_id, :group_activity_name, :group_activity_date, :fac_first_name, :fac_last_name, :fac_national_id, :fac_phone, :address_id, :dob, :gender, :origination, :created_by, :modified_by, :created, :modified )
   ";
 
   file_put_contents('php_index_debug.log', 'insertClient1 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
@@ -749,6 +759,13 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, 
     $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
     $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
     $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
+    $stmt->bindParam(':origination', $origination, PDO::PARAM_STR, strlen($origination));
+
+    $stmt->bindParam(':created_by', $created_by, PDO::PARAM_STR, strlen($created_by));
+    $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_STR, strlen($modified_by));
+    $stmt->bindParam(':created', $created, PDO::PARAM_STR, strlen($created));
+    $stmt->bindParam(':modified', $modified, PDO::PARAM_STR, strlen($modified));
+
     $result = $stmt->execute();
 
     file_put_contents('php_index_debug.log', 'insertClient2 >' . PHP_EOL, FILE_APPEND | LOCK_EX);
@@ -769,7 +786,7 @@ values ( :timestamp, :first_name, :last_name, :national_id, :phone, :status_id, 
   }
 }
 
-function updateClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender)
+function updateClient($timestamp, $first_name, $last_name, $national_id, $phone, $status_id, $loc_id, $latitude, $longitude, $institution_id, $group_activity_name, $group_activity_date, $fac_first_name, $fac_last_name, $fac_national_id, $fac_phone, $address_id, $dob, $gender, $origination, $created_by, $modified_by, $created, $modified)
 {
   global $db;
 
@@ -799,7 +816,12 @@ fac_national_id=:fac_national_id,
 fac_phone=:fac_phone,
 address_id=:address_id,
 dob=:dob,
-gender=:gender
+gender=:gender,
+origination=:origination,
+created_by=:created_by,
+modified_by=:modified_by,
+created=:created, 
+modified=:modified
 where 1=1
 and timestamp<:wtimestamp
 and first_name=:wfirst_name
@@ -835,6 +857,13 @@ and phone=:wphone
     $stmt->bindParam(':address_id', $address_id, PDO::PARAM_STR, strlen($address_id));
     $stmt->bindParam(':dob', $dob, PDO::PARAM_STR, strlen($dob));
     $stmt->bindParam(':gender', $gender, PDO::PARAM_STR, strlen($gender));
+    $stmt->bindParam(':origination', $origination, PDO::PARAM_STR, strlen($origination));
+
+    $stmt->bindParam(':created_by', $created_by, PDO::PARAM_STR, strlen($created_by));
+    $stmt->bindParam(':modified_by', $modified_by, PDO::PARAM_STR, strlen($modified_by));
+    $stmt->bindParam(':created', $created, PDO::PARAM_STR, strlen($created));
+    $stmt->bindParam(':modified', $modified, PDO::PARAM_STR, strlen($modified));
+
     $stmt->bindParam(':wtimestamp', $timestamp, PDO::PARAM_STR, strlen($timestamp));
     $stmt->bindParam(':wfirst_name', $first_name, PDO::PARAM_STR, strlen($first_name));
     $stmt->bindParam(':wlast_name', $last_name, PDO::PARAM_STR, strlen($last_name));
@@ -2800,7 +2829,12 @@ ifnull(c.fac_national_id, 'not available') as fac_national_id,
 c.fac_phone,
 c.address_id,
 c.dob,
-c.gender
+c.gender,
+c.origination,
+c.created_by,
+c.modified_by,
+c.created,
+c.modified
 from client c
 where 1=1
    ";
@@ -2874,6 +2908,13 @@ where 1=1
       $post["address_id"]          = $row["address_id"];
       $post["dob"]                 = $row["dob"];
       $post["gender"]              = $row["gender"];
+      $post["origination"]         = $row["origination"];
+
+      $post["created_by"]         = $row["created_by"];
+      $post["modified_by"]         = $row["modified_by"];
+      $post["created"]         = $row["created"];
+      $post["modified"]         = $row["modified"];
+
       array_push($response["posts"], $post);
     } //$rows as $row
 

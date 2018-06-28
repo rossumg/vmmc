@@ -130,7 +130,12 @@ public class SyncTableObjects {
                     + CLIENT_FAC_PHONE + "','"
                     + CLIENT_ADDRESS_ID + "','"
                     + CLIENT_DOB + "','"
-                    + CLIENT_GENDER
+                    + CLIENT_GENDER + "','"
+                    + CLIENT_ORIGINATION + "','"
+                    + CLIENT_CREATED_BY + "','"
+                    + CLIENT_MODIFIED_BY + "','"
+                    + CLIENT_CREATED + "','"
+                    + CLIENT_MODIFIED
                     + "']");
 
             JSONArray facilitatorTableFields = new JSONArray("['"

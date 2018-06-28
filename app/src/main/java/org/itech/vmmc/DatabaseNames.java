@@ -134,6 +134,12 @@ public class DatabaseNames {
     public static final String CLIENT_ADDRESS_ID    = "address_id";
     public static final String CLIENT_DOB    = "dob";
     public static final String CLIENT_GENDER    = "gender";
+    public static final String CLIENT_ORIGINATION    = "origination";
+
+    public static final String CLIENT_CREATED_BY    = "created_by";
+    public static final String CLIENT_MODIFIED_BY    = "modified_by";
+    public static final String CLIENT_CREATED    = "created";
+    public static final String CLIENT_MODIFIED    = "modified";
 
     // facilitator table column names
     public static final String FACILITATOR_ID          = "id";

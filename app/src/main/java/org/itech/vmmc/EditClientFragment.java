@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.app.DatePickerDialog;
 import android.app.Fragment;
 import android.content.Context;
+import android.graphics.Color;
 import android.os.Bundle;
 import android.telephony.PhoneNumberUtils;
 import android.util.Log;
@@ -234,10 +235,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         }
 
+
+
 //        Log.d(LOG, "ECF _client.GroupActivityName: " + _client.get_group_activity_name());
 //        Log.d(LOG, "ECF _client.GroupActivityDate: " + _client.get_group_activity_date());
 //        Log.d(LOG, "ECF groupActivity.GroupActivityName: " + _groupActivity.get_name());
 //        Log.d(LOG, "ECF groupActivity.GroupActivityDate: " + _groupActivity.get_activity_date());
+
 
     }
 
@@ -490,6 +494,9 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 };
 
                 String sGender = _client.get_gender();
+
+                String sOrigination =  MainActivity.gClientOrigination.toString();
+
                 _latitude = (TextView) _view.findViewById(R.id.latitude); Float fLatitude = Float.valueOf(_latitude.getText().toString());
                 _longitude = (TextView) _view.findViewById(R.id.longitude); Float fLongitude = Float.valueOf(_longitude.getText().toString());
 
@@ -530,8 +537,13 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         lookupClient.set_address_id(_address.get_id());
                         lookupClient.set_dob(sDOB);
                         lookupClient.set_gender(sGender);
+                        lookupClient.set_origination(sOrigination);
+
+
+
                         Log.d(LOG, "UpdateClient update: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
+
                         if(dbHelp.updateClient(lookupClient))
                             Toast.makeText(getActivity(), "Client Updated", Toast.LENGTH_LONG).show();
                     } else {
@@ -556,8 +568,14 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                         client.set_address_id(_address.get_id());
                         client.set_dob(sDOB);
                         client.set_gender(sGender);
+                        client.set_origination(sOrigination);
+
                         Log.d(LOG, "UpdateClient add: " +
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _status.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
+
+                        Log.d(LOG, "UpdateClient add:user: " + MainActivity.USER_OBJ.get_username() + ":" + MainActivity.USER_OBJ.get_phone() + ":" + MainActivity.USER_OBJ.get_id());
+                        Log.d(LOG, "UpdateClient add:gClientOrigination: " +  MainActivity.gClientOrigination);
+
                         if(dbHelp.addClient(client))
                             Toast.makeText(getActivity(), "Client Saved", Toast.LENGTH_LONG).show();
                     }
@@ -566,7 +584,39 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
                 }
             }
         });
+
+        switch (MainActivity.gClientOrigination) {
+            case GroupActivity:
+                Log.d(LOG, "EditClient:user: " + MainActivity.USER_OBJ.get_username());
+                Log.d(LOG, "EditClient:gClientOrigination: " +  MainActivity.gClientOrigination);
+                disableEditText((EditText) _view.findViewById(R.id.facilitator));
+                break;
+            case CommunityRecruiter:
+                Log.d(LOG, "EditClient:user: " + MainActivity.USER_OBJ.get_username());
+                Log.d(LOG, "EditClient:gClientOrigination: " +  MainActivity.gClientOrigination);
+                disableEditText((EditText) _view.findViewById(R.id.group_activity));
+                break;
+            case DirectBooking:
+                Log.d(LOG, "EditClient:user: " + MainActivity.USER_OBJ.get_username());
+                Log.d(LOG, "EditClient:gClientOrigination: " +  MainActivity.gClientOrigination);
+                disableEditText((EditText) _view.findViewById(R.id.facilitator));
+                disableEditText((EditText) _view.findViewById(R.id.group_activity));
+                break;
+            default:
+
+                break;
+        }
+
         return _view;
+    }
+
+    private void disableEditText(EditText editText) {
+        editText.setText("");
+        editText.setFocusable(false);
+        editText.setEnabled(false);
+        editText.setCursorVisible(false);
+        editText.setKeyListener(null);
+        editText.setBackgroundColor(Color.LTGRAY);
     }
 
     @Override

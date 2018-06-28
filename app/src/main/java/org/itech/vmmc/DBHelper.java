@@ -200,7 +200,12 @@ public class DBHelper extends SQLiteOpenHelper{
                     "address_id int, " +
                     "dob date, " +
                     "gender varchar, " +
-                    "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
+                    "origination varchar, " +
+                    "created_by int default 0, " +
+                    "modified_by int default 0, " +
+                    "created varchar, " +
+                    "modified varchar, " +
+            "constraint name_constraint unique (first_name, last_name, national_id, phone) );";
             db.execSQL(CREATE_CLIENT_TABLE);
 
             //try { db.execSQL("delete from facilitator;"); } catch(Exception ex) {Log.d(LOG, "DBHelper.onCreate nothing to delete" + ex.toString());}
@@ -1476,7 +1481,7 @@ public class DBHelper extends SQLiteOpenHelper{
         List<String> clientID = new ArrayList<String>();
 
         String[] tableColumns = new String[]{
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER, CLIENT_ORIGINATION, CLIENT_CREATED_BY, CLIENT_MODIFIED_BY, CLIENT_CREATED, CLIENT_MODIFIED
         };
 
         String selectQuery =
@@ -3065,13 +3070,17 @@ public class DBHelper extends SQLiteOpenHelper{
 
     public boolean addClient(Client client) {
         SQLiteDatabase db = this.getWritableDatabase();
-
         ContentValues values = new ContentValues();
-        //values.put(PERSON_ID, person.get_id());
         Calendar calendar = Calendar.getInstance();
-        Timestamp oTimestamp = new java.sql.Timestamp(calendar.getTime().getTime());
-        values.put(CLIENT_TIMESTAMP, oTimestamp.toString());
+        Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
+        DateFormat df = new android.text.format.DateFormat();
+        client.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        client.set_modified(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        client.set_modified_by(MainActivity.USER_OBJ.get_id());
+        client.set_created(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        client.set_created_by(MainActivity.USER_OBJ.get_id());
 
+        values.put(CLIENT_TIMESTAMP, oTimestamp.toString());
         values.put(CLIENT_FIRST_NAME, client.get_first_name());
         values.put(CLIENT_LAST_NAME, client.get_last_name());
         values.put(CLIENT_NATIONAL_ID, client.get_national_id());
@@ -3092,6 +3101,12 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_ADDRESS_ID,  client.get_address_id());
         values.put(CLIENT_DOB,  client.get_dob());
         values.put(CLIENT_GENDER,  client.get_gender());
+        values.put(CLIENT_ORIGINATION,  client.get_origination());
+
+        values.put(CLIENT_CREATED_BY,  client.get_created_by());
+        values.put(CLIENT_MODIFIED_BY,  client.get_modified_by());
+        values.put(CLIENT_CREATED,  client.get_created());
+        values.put(CLIENT_MODIFIED,  client.get_modified());
 
         try {
             db.insert(TABLE_CLIENT, null, values);
@@ -3111,6 +3126,8 @@ public class DBHelper extends SQLiteOpenHelper{
         Timestamp oTimestamp = new Timestamp(calendar.getTime().getTime());
         DateFormat df = new android.text.format.DateFormat();
         client.set_timestamp(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        client.set_modified(DateFormat.format(VMMC_DATE_TIME_FORMAT, oTimestamp).toString());
+        client.set_modified_by(MainActivity.USER_OBJ.get_id());
 
         values.put(CLIENT_TIMESTAMP, client.get_timestamp());
         values.put(CLIENT_FIRST_NAME, client.get_first_name());
@@ -3133,9 +3150,15 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(CLIENT_ADDRESS_ID,  client.get_address_id());
         values.put(CLIENT_DOB,  client.get_dob());
         values.put(CLIENT_GENDER,  client.get_gender());
+        values.put(CLIENT_ORIGINATION,  client.get_origination());
+
+        values.put(CLIENT_CREATED_BY,  client.get_created_by());
+        values.put(CLIENT_MODIFIED_BY,  client.get_modified_by());
+        values.put(CLIENT_CREATED,  client.get_created());
+        values.put(CLIENT_MODIFIED,  client.get_modified());
 
         String[] tableColumns = new String[]{
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER, CLIENT_ORIGINATION, CLIENT_CREATED_BY, CLIENT_MODIFIED_BY, CLIENT_CREATED, CLIENT_MODIFIED
         };
 
 //        String whereClause = "1=1 and trim(" +
@@ -3320,7 +3343,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + first_name + ", " + last_name + ", " + national_id + ", " + phone);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER, CLIENT_ORIGINATION, CLIENT_CREATED_BY, CLIENT_MODIFIED_BY, CLIENT_CREATED, CLIENT_MODIFIED
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3363,7 +3386,13 @@ public class DBHelper extends SQLiteOpenHelper{
 
                     parseInt(cursor.getString(17)),
                     cursor.getString(18),
-                    cursor.getString(19)
+                    cursor.getString(19),
+                    cursor.getString(20),
+
+                    parseInt(cursor.getString(21)),
+                    parseInt(cursor.getString(22)),
+                    cursor.getString(23),
+                    cursor.getString(24)
             );
             cursor.close();
             // db.close();
@@ -3381,7 +3410,7 @@ public class DBHelper extends SQLiteOpenHelper{
         Log.d(LOG, "getClient: " + national_id + ", " + phone_number );
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER, CLIENT_ORIGINATION, CLIENT_CREATED_BY, CLIENT_MODIFIED_BY, CLIENT_CREATED, CLIENT_MODIFIED
         };
 
         String whereClause = "1=1 and trim(" +
@@ -3434,7 +3463,12 @@ public class DBHelper extends SQLiteOpenHelper{
 
                     parseInt(cursor.getString(17)),
                     cursor.getString(18),
-                    cursor.getString(19)
+                    cursor.getString(19),
+                    cursor.getString(20),
+                    parseInt(cursor.getString(21)),
+                    parseInt(cursor.getString(22)),
+                    cursor.getString(23),
+                    cursor.getString(24)
             );
             cursor.close();
             // db.close();
@@ -3495,6 +3529,12 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_address_id(parseInt(cursor1.getString(17)));
                 client.set_dob(cursor1.getString(18));
                 client.set_gender(cursor1.getString(19));
+                client.set_origination(cursor1.getString(20));
+
+                client.set_created_by(parseInt(cursor1.getString(21)));
+                client.set_modified_by(parseInt(cursor1.getString(22)));
+                client.set_created(cursor1.getString(23));
+                client.set_modified(cursor1.getString(24));
 
                 // Adding person to list
                 clientList.add(client);
@@ -3586,7 +3626,7 @@ public class DBHelper extends SQLiteOpenHelper{
         IndexParts indexParts = new IndexParts(index);
 
         String[] tableColumns = new String[] {
-                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER
+                CLIENT_ID, CLIENT_TIMESTAMP, CLIENT_FIRST_NAME, CLIENT_LAST_NAME, CLIENT_NATIONAL_ID, CLIENT_PHONE, CLIENT_STATUS_ID, CLIENT_LOC_ID, CLIENT_LATITUDE, CLIENT_LONGITUDE, CLIENT_INSTITUTION_ID, CLIENT_GROUP_ACTIVITY_NAME, CLIENT_GROUP_ACTIVITY_DATE, CLIENT_FAC_FIRST_NAME, CLIENT_FAC_LAST_NAME, CLIENT_FAC_NATIONAL_ID, CLIENT_FAC_PHONE, CLIENT_ADDRESS_ID, CLIENT_DOB, CLIENT_GENDER, CLIENT_ORIGINATION, CLIENT_CREATED_BY, CLIENT_MODIFIED_BY, CLIENT_CREATED, CLIENT_MODIFIED
         };
 
         String selectQuery =
@@ -3639,6 +3679,12 @@ public class DBHelper extends SQLiteOpenHelper{
                 client.set_address_id(parseInt(cursor.getString(17)));
                 client.set_dob(cursor.getString(18));
                 client.set_gender(cursor.getString(19));
+                client.set_origination(cursor.getString(20));
+
+                client.set_created_by(parseInt(cursor.getString(21)));
+                client.set_modified_by(parseInt(cursor.getString(22)));
+                client.set_created(cursor.getString(23));
+                client.set_modified(cursor.getString(24));
 
                 // Adding person to list
                 clientList.add(client);

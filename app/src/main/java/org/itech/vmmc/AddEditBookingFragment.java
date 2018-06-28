@@ -315,6 +315,7 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
                 }
 //                if (complete && !paramProjectedDate.toString().equals("") || !paramName.toString().equals("") && !paramProjectedDate.toString().equals("") ) {
                 if (paramName.toString().equals("") || client == null) {
+                    MainActivity.gClientOrigination = MainActivity.ClientOrigination.DirectBooking;
                     Toast.makeText(getActivity(), "Must enter valid client", Toast.LENGTH_LONG).show();
                     Fragment fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
                     if (fragment == null) {

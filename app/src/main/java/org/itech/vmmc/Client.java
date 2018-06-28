@@ -29,11 +29,16 @@ public class Client {
     private int _address_id;
     private String _dob;
     private String _gender;
+    private String _origination;
+    private int _created_by;
+    private int _modified_by;
+    private String _created;
+    private String _modified;
 
     public Client() {
     }
 
-    public Client(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _address_id, String _dob, String _gender) {
+    public Client(int _id, String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _address_id, String _dob, String _gender, String _origination, int _created_by, int _modified_by, String _created, String _modified) {
         this._id = _id;
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -54,9 +59,14 @@ public class Client {
         this._address_id = _address_id;
         this._dob = _dob;
         this._gender = _gender;
+        this._origination = _origination;
+        this._created_by =_created_by;
+        this._modified_by =_modified_by;
+        this._created =_created;
+        this._modified =_modified;
     }
 
-    public Client(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _address_id, String _dob, String _gender) {
+    public Client(String _timestamp, String _first_name, String _last_name, String _national_id, String _phone, int _status_id, int _loc_id, float _latitude, float _longitude, int _institution_id, String _group_activity_name, String _group_activity_date, String _fac_first_name, String _fac_last_name, String _fac_national_id, String _fac_phone, int _address_id, String _dob, String _gender, String _origination, int _created_by, int _modified_by, String _created, String _modified) {
 
         this._timestamp = _timestamp;
         this._first_name = _first_name;
@@ -77,6 +87,11 @@ public class Client {
         this._address_id = _address_id;
         this._dob = _dob;
         this._gender = _gender;
+        this._origination = _origination;
+        this._created_by =_created_by;
+        this._modified_by =_modified_by;
+        this._created =_created;
+        this._modified =_modified;
     }
 
     public int get_id() {
@@ -236,7 +251,50 @@ public class Client {
         return _gender;
     }
 
+
+
+    public String get_created() {
+        return _created;
+    }
+
+    public int get_created_by() {
+        return _created_by;
+    }
+
+    public void set_created_by(int _created_by) {
+        this._created_by = _created_by;
+    }
+
+    public int get_modified_by() {
+        return _modified_by;
+    }
+
+    public void set_modified_by(int _modified_by) {
+        this._modified_by = _modified_by;
+    }
+
+    public void set_created(String _created) {
+        this._created = _created;
+
+    }
+
+    public String get_modified() {
+        return _modified;
+    }
+
+    public void set_modified(String _modified) {
+        this._modified = _modified;
+    }
+
     public void set_gender(String _gender) {
         this._gender = _gender;
+    }
+
+    public String get_origination() {
+        return _origination;
+    }
+
+    public void set_origination(String _origination) {
+        this._origination = _origination;
     }
 }

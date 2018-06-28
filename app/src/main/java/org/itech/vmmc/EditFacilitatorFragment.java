@@ -296,6 +296,7 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
 //                        _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() +  ", " +
                       " <");
 
+                MainActivity.gClientOrigination = MainActivity.ClientOrigination.CommunityRecruiter;
                 Fragment fragment = getFragmentManager().findFragmentByTag(AddEditClientFragment.TAG);
                 if (fragment == null) {
                     fragment = AddEditClientFragment.newInstance();

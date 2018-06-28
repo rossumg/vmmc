@@ -4,6 +4,7 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
+import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -73,6 +74,7 @@ public class getMySQLTableVolley {
 
     //gets all tables in regular database sync
     public void getSyncTables() {
+        SystemClock.sleep(5000);
         SyncTableObjects  syncTableObjects = new SyncTableObjects();
         // getTable(syncTableObjects.personTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userTableInfo, MAX_RETRY);

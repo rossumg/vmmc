@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "3.00";
+    public static String _version = "3.10";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -85,6 +85,10 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String deviceId = "";
     public static GroupActivity gGroupActivity = null;
     public static Facilitator gFacilitator = null;
+    public enum ClientOrigination {
+        GroupActivity, CommunityRecruiter, DirectBooking
+    }
+    public static ClientOrigination gClientOrigination = null;
 
 //    public static ArrayList<String> _CREDENTIALS = new ArrayList<String>();
 

@@ -200,6 +200,7 @@ public class putMySQLTableVolley {
             }
         } catch (Exception e) {
             Log.d(LOG, "error in createRequestData for " + dataTable);
+            e.printStackTrace();
         }
         return requestData;
     }
@@ -348,7 +349,12 @@ public class putMySQLTableVolley {
                             client.get_fac_phone() + "\",\"" +
                             client.get_address_id()   + "\",\"" +
                             client.get_dob()   + "\",\"" +
-                            client.get_gender() + "\"]";
+                            client.get_gender()   + "\",\"" +
+                            client.get_origination()   + "\",\"" +
+                            client.get_created_by()   + "\",\"" +
+                            client.get_modified_by()   + "\",\"" +
+                            client.get_created()   + "\",\"" +
+                            client.get_modified() + "\"]";
             int incr = (int)((i / (float) num_recs) * 100);
             mBuilder.setProgress(100, incr, false);
             mNotifyManager.notify(id, mBuilder.build());
