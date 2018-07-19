@@ -467,7 +467,7 @@ public class putMySQLTableVolley {
         int id = 1;
         int num_recs = groupActivityList.size();
         for (GroupActivity groupActivity: groupActivityList) {
-            Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_institution_id() + ", " + groupActivity.get_males() + ", " + groupActivity.get_females() + groupActivity.get_messages() );
+            //Log.d(LOG, "putMySQLGroupActivityTable loop: " + groupActivity.get_institution_id() + ", " + groupActivity.get_males() + ", " + groupActivity.get_females() + groupActivity.get_messages() );
             String rec = "[\"" +
                     groupActivity.get_name() + "\",\"" +
                             groupActivity.get_timestamp() + "\",\"" +
@@ -507,7 +507,7 @@ public class putMySQLTableVolley {
         int id = 1;
         int num_recs = userList.size();
         for (User user: userList) {
-            Log.d(LOG, "putMySQLUserTable loop: " + user.get_timestamp() + ":" + user.get_username()  );
+            //Log.d(LOG, "putMySQLUserTable loop: " + user.get_timestamp() + ":" + user.get_username()  );
             String rec = "[\"" +
                     user.get_timestamp() + "\",\"" +
                     user.get_username() + "\",\"" +

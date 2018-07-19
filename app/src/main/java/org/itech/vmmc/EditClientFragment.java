@@ -198,6 +198,7 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         else if (!nationalId.equals("") || !phoneNumber.equals("")) {
             _client = dbHelp.getClient(nationalId, phoneNumber);
         }
+
         if(_client == null) { // use defaults
             _client = new Client();
             _client.set_first_name(firstName);
@@ -207,11 +208,6 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _status = dbHelp.getStatus("Pending");
             _location = dbHelp.getLocation("1");
             _institution = dbHelp.getInstitution("1");
-            if(MainActivity.gGroupActivity == null) {
-                _groupActivity = null;
-            } else {
-                _groupActivity = MainActivity.gGroupActivity;
-            }
             _address = dbHelp.getAddress("1");
             _client.set_gender("M");
         } else {
@@ -223,26 +219,31 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
             _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
             _groupActivity = dbHelp.getGroupActivity(_client.get_group_activity_name(), _client.get_group_activity_date());
-
-            if (MainActivity.gFacilitator != null) {
-                _client.set_fac_first_name(MainActivity.gFacilitator.get_first_name());
-                _client.set_fac_last_name(MainActivity.gFacilitator.get_last_name());
-                _client.set_fac_national_id("");
-                _client.set_fac_phone(MainActivity.gFacilitator.get_phone());
-            }
-
             _address = dbHelp.getAddress(String.valueOf(_client.get_address_id()));
-
         }
 
+        switch (MainActivity.gClientOrigination) {
+            case GroupActivity:
+                if(MainActivity.gGroupActivity == null) {
+                    _groupActivity = null;
+                } else {
+                    _groupActivity = MainActivity.gGroupActivity;
+                }
+                break;
+            case CommunityRecruiter:
+                if (MainActivity.gFacilitator != null) {
+                    _client.set_fac_first_name(MainActivity.gFacilitator.get_first_name());
+                    _client.set_fac_last_name(MainActivity.gFacilitator.get_last_name());
+                    _client.set_fac_national_id("");
+                    _client.set_fac_phone(MainActivity.gFacilitator.get_phone());
+                }
 
-
-//        Log.d(LOG, "ECF _client.GroupActivityName: " + _client.get_group_activity_name());
-//        Log.d(LOG, "ECF _client.GroupActivityDate: " + _client.get_group_activity_date());
-//        Log.d(LOG, "ECF groupActivity.GroupActivityName: " + _groupActivity.get_name());
-//        Log.d(LOG, "ECF groupActivity.GroupActivityDate: " + _groupActivity.get_activity_date());
-
-
+                break;
+            case DirectBooking:
+                break;
+            default:
+                break;
+        }
     }
 
     @Override

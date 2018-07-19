@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "3.10";
+    public static String _version = "3.11";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 

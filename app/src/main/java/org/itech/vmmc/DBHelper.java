@@ -2639,7 +2639,7 @@ public class DBHelper extends SQLiteOpenHelper{
                         "c.first_name, \n" +
                         "c.last_name, \n" +
                         "c.national_id, \n" +
-                        "round(julianday('now')-julianday(b.projected_date)) as difference,\n" +
+                        "ifnull(round(julianday('now')-julianday(b.projected_date)),0) as difference,\n" +
                         "c.dob,\n" +
                         "l.name as location,\n" +
                         "a.name,\n" +

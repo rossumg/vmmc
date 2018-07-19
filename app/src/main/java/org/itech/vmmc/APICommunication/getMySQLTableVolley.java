@@ -93,7 +93,7 @@ public class getMySQLTableVolley {
         getTable(syncTableObjects.followupTableInfo, MAX_RETRY);
         getTable(syncTableObjects.interactionTypeTableInfo, MAX_RETRY);
         getTable(syncTableObjects.statusTypeTableInfo, MAX_RETRY);
-        getTable(syncTableObjects.institutionTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.institutionTableInfo, MAX_RETRY+2);
         getTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
         getTable(syncTableObjects.groupTypeTableInfo, MAX_RETRY);
     }
@@ -155,7 +155,7 @@ public class getMySQLTableVolley {
                             , new Response.ErrorListener() {
                         @Override
                         public void onErrorResponse(VolleyError error) {
-                            Log.d(LOG, "error on GET at " + url);
+                            Log.d(LOG, "error on GET at " + url + ":" + error.toString());
                             error.printStackTrace();
                             syncAudit.set_status(error.toString());
                             dbhelp.addSyncAudit(syncAudit);
