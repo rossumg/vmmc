@@ -13,7 +13,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputType;
@@ -29,7 +29,7 @@ import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
+public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks,
         LoginFragment.OnFragmentInteractionListener,
         ActionFragment.OnFragmentInteractionListener,
 //        AddPersonFragment.OnFragmentInteractionListener,
@@ -54,7 +54,7 @@ public class MainActivity extends ActionBarActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "3.11";
+    public static String _version = "4.11";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
