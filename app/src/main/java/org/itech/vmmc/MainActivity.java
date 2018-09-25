@@ -10,7 +10,7 @@ import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
 import android.support.v4.widget.DrawerLayout;
-import android.support.v7.app.ActionBarActivity;
+import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
 import android.telephony.TelephonyManager;
 import android.text.InputType;
@@ -23,7 +23,7 @@ import android.widget.Toast;
 import java.util.UUID;
 
 
-public class MainActivity extends ActionBarActivity implements NavigationDrawerCallbacks,
+public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks,
         LoginFragment.OnFragmentInteractionListener,
         EditFragment.OnFragmentInteractionListener,
         CreateFragment.OnFragmentInteractionListener,
