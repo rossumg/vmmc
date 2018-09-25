@@ -1,14 +1,18 @@
 package org.itech.vmmc;
 
+import android.Manifest;
 import android.app.AlertDialog;
 import android.app.Fragment;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.pm.PackageManager;
 import android.database.sqlite.SQLiteDatabase;
 import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -21,6 +25,7 @@ import android.widget.EditText;
 import android.widget.Toast;
 
 import java.util.UUID;
+import java.util.concurrent.atomic.AtomicBoolean;
 
 
 public class MainActivity extends AppCompatActivity implements NavigationDrawerCallbacks,
@@ -92,6 +97,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
 
+    private RuntimePermissionsHelper mRuntimePermissionsHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -107,17 +114,15 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         //mNavigationDrawerFragment.setUserData("Rayce Rossum", "Rayce.Rossum@gmail.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
         //mNavigationDrawerFragment.setUserData("Zimbabwe", "Rayce.Rossum");
 
-        final TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
-        final String tmDevice, tmSerial, androidId;
-        tmDevice = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
-        androidId = "" + android.provider.Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+        mRuntimePermissionsHelper = new RuntimePermissionsHelper(this);
+    }
 
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
-        deviceId = deviceUuid.toString();
-        Log.d(LOG, "mainActivity:onCreate:deviceId: " + deviceId);
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        mRuntimePermissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
+    }
 
-
+    public void permissionsGranted() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Define the criteria how to select the location provider -> use
         // default
@@ -134,6 +139,16 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             //latituteField.setText("Location not available");
             //longitudeField.setText("Location not available");
         }
+
+        final TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
+        final String tmDevice, tmSerial, androidId;
+        tmDevice = "" + tm.getDeviceId();
+        tmSerial = "" + tm.getSimSerialNumber();
+        androidId = "" + android.provider.Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
+
+        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmDevice.hashCode() << 32) | tmSerial.hashCode());
+        deviceId = deviceUuid.toString();
+        Log.d(LOG, "mainActivity:onCreate:deviceId: " + deviceId);
     }
 
     /* Request updates at startup */
@@ -142,6 +157,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         super.onResume();
         Log.d(LOG, "mainActivity:onResume: pop " );
         //locationManager.requestLocationUpdates(provider, 400, 1, this);
+
+        mRuntimePermissionsHelper.requestPermissions();
     }
 
     /* Remove the locationlistener updates when Activity is paused */
