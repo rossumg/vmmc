@@ -122,7 +122,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         mRuntimePermissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
-    public void permissionsGranted() {
+    public void onPermissionsGranted() {
         locationManager = (LocationManager) getSystemService(Context.LOCATION_SERVICE);
         // Define the criteria how to select the location provider -> use
         // default

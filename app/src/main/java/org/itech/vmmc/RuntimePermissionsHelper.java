@@ -20,7 +20,7 @@ public final class RuntimePermissionsHelper {
     public void requestPermissions() {
         if (ensurePhoneStatePermissions() && ensureLocationPermissions() && ensureStoragePermissions()) {
 
-            this.activity.permissionsGranted();
+            this.activity.onPermissionsGranted();
         }
     }
 
