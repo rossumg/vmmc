@@ -15,6 +15,7 @@ gen/
 # Gradle files
 .gradle/
 build/
+.idea/
 
 # Local configuration file (sdk path, etc)
 local.properties
@@ -71,11 +72,4 @@ $RECYCLE.BIN/
 
 # Windows shortcuts
 *.lnk
-<<<<<<< HEAD
 /trainSMART-android.iml
-/.idea/workspace.xml
-=======
-.idea/compiler.xml
-.idea/workspace.xml
-.idea/workspace.xml
->>>>>>> d4fb715fac2036da43fe1d69a048e184408d40a3

@@ -12,6 +12,7 @@ import android.location.Criteria;
 import android.location.Location;
 import android.location.LocationManager;
 import android.os.Bundle;
+import android.support.annotation.NonNull;
 import android.support.v4.widget.DrawerLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.Toolbar;
@@ -99,6 +100,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
      */
     private NavigationDrawerFragment mNavigationDrawerFragment;
     private Toolbar mToolbar;
+    private RuntimePermissionsHelper runtimePermissionsHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -122,6 +124,50 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         //mNavigationDrawerFragment.setUserData("Rayce Rossum", "Rayce.Rossum@gmail.com", BitmapFactory.decodeResource(getResources(), R.drawable.avatar));
         //mNavigationDrawerFragment.setUserData("Zimbabwe", "Rayce.Rossum");
 
+        runtimePermissionsHelper = new RuntimePermissionsHelper(this);
+    }
+
+    /* Request updates at startup */
+    @Override
+    protected void onResume() {
+        if (!ScreenReceiver.wasScreenOn) {
+            // THIS IS WHEN ONRESUME() IS CALLED DUE TO A SCREEN STATE CHANGE
+            System.out.println("SCREEN TURNED ON");
+            Log.d(LOG, "mainActivity:onResume: ON " );
+            ScreenReceiver.wasScreenOn = TRUE;
+        } else {
+            // THIS IS WHEN ONRESUME() IS CALLED WHEN THE SCREEN STATE HAS NOT CHANGED
+        }
+        super.onResume();
+        Log.d(LOG, "mainActivity:onResume: ON " );
+        runtimePermissionsHelper.requestPermissions();
+        //locationManager.requestLocationUpdates(provider, 400, 1, this);
+    }
+
+    /* Remove the locationlistener updates when Activity is paused */
+    @Override
+    protected void onPause() {
+        if (ScreenReceiver.wasScreenOn) {
+            // THIS IS THE CASE WHEN ONPAUSE() IS CALLED BY THE SYSTEM DUE TO A SCREEN STATE CHANGE
+            System.out.println("SCREEN TURNED OFF");
+            Log.d(LOG, "mainActivity:onPause: OFF " );
+            ScreenReceiver.wasScreenOn = FALSE;
+        } else {
+            // THIS IS WHEN ONPAUSE() IS CALLED WHEN THE SCREEN STATE HAS NOT CHANGED
+        }
+        super.onPause();
+        //locationManager.removeUpdates(this);
+    }
+
+    //@Override
+    public void onLocationChanged(Location location) {
+        lat = (float) (location.getLatitude());
+        lng = (float) (location.getLongitude());
+        Log.d(LOG, "mainActivity:lat: " + String.valueOf((lat)));
+        Log.d(LOG, "mainActivity:lng: " + String.valueOf((lng)));
+    }
+
+    public void onPermissionsGranted() {
         final TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         final String tmIMEI, tmSerial, androidId;
         tmIMEI = "" + tm.getDeviceId();
@@ -153,43 +199,9 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         }
     }
 
-    /* Request updates at startup */
     @Override
-    protected void onResume() {
-        if (!ScreenReceiver.wasScreenOn) {
-            // THIS IS WHEN ONRESUME() IS CALLED DUE TO A SCREEN STATE CHANGE
-            System.out.println("SCREEN TURNED ON");
-            Log.d(LOG, "mainActivity:onResume: ON " );
-            ScreenReceiver.wasScreenOn = TRUE;
-        } else {
-            // THIS IS WHEN ONRESUME() IS CALLED WHEN THE SCREEN STATE HAS NOT CHANGED
-        }
-        super.onResume();
-        Log.d(LOG, "mainActivity:onResume: ON " );
-        //locationManager.requestLocationUpdates(provider, 400, 1, this);
-    }
-
-    /* Remove the locationlistener updates when Activity is paused */
-    @Override
-    protected void onPause() {
-        if (ScreenReceiver.wasScreenOn) {
-            // THIS IS THE CASE WHEN ONPAUSE() IS CALLED BY THE SYSTEM DUE TO A SCREEN STATE CHANGE
-            System.out.println("SCREEN TURNED OFF");
-            Log.d(LOG, "mainActivity:onPause: OFF " );
-            ScreenReceiver.wasScreenOn = FALSE;
-        } else {
-            // THIS IS WHEN ONPAUSE() IS CALLED WHEN THE SCREEN STATE HAS NOT CHANGED
-        }
-        super.onPause();
-        //locationManager.removeUpdates(this);
-    }
-
-    //@Override
-    public void onLocationChanged(Location location) {
-        lat = (float) (location.getLatitude());
-        lng = (float) (location.getLongitude());
-        Log.d(LOG, "mainActivity:lat: " + String.valueOf((lat)));
-        Log.d(LOG, "mainActivity:lng: " + String.valueOf((lng)));
+    public void onRequestPermissionsResult(int requestCode, @NonNull String[] permissions, @NonNull int[] grantResults) {
+        runtimePermissionsHelper.onRequestPermissionsResult(requestCode, permissions, grantResults);
     }
 
     @Override
