@@ -23,8 +23,6 @@ import android.view.MenuItem;
 import android.widget.EditText;
 import android.widget.Toast;
 
-import java.util.UUID;
-
 import static java.lang.Boolean.FALSE;
 import static java.lang.Boolean.TRUE;
 
@@ -54,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "4.11";
+    public static String _version = "5.11";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -125,13 +123,13 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         final TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         final String tmIMEI, tmSerial, androidId;
         tmIMEI = "" + tm.getDeviceId();
-        tmSerial = "" + tm.getSimSerialNumber();
+        //tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 
-        UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmIMEI.hashCode() << 32) | tmSerial.hashCode());
+        //UUID deviceUuid = new UUID(androidId.hashCode(), ((long) tmIMEI.hashCode() << 32) | tmSerial.hashCode());
         MainActivity.deviceId = tmIMEI.toString();
 //        Log.d(LOG, "mainActivity:onCreate:deviceId: " + deviceId + ":" + tmIMEI + ":" + tmSerial + ":" + androidId);
-        Log.d(LOG, "mainActivity:onCreate:tmIMEI: " + tmIMEI );
+        //Log.d(LOG, "mainActivity:onCreate:tmIMEI: " + tmIMEI );
         Log.d(LOG, "mainActivity:onCreate:DEV_URL:" + MainActivity.DEV_URL + "api/login.php" );
 
 
@@ -140,9 +138,10 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
         // default
         Criteria criteria = new Criteria();
         provider = locationManager.getBestProvider(criteria, true);
-        Location location = locationManager.getLastKnownLocation(provider);
+        //Location location = locationManager.getLastKnownLocation(provider);
 
         // Initialize the location fields
+        /*
         if (location != null) {
             System.out.println("Provider " + provider + " has been selected.");
             onLocationChanged(location);
@@ -151,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
             //latituteField.setText("Location not available");
             //longitudeField.setText("Location not available");
         }
+        */
     }
 
     /* Request updates at startup */

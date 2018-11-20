@@ -411,10 +411,11 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
     public void loadBookingNameDropdown(View view) {
 
 //        List<String> bookingIDs = dbHelp.getAllPersonIDs();
-        List<String> clientIDs = dbHelp.getAllClientIDs();
+        //List<String> clientIDs = dbHelp.getAllClientIDs();
+        List<String> bookingIDs = dbHelp.getAllBookingIDs();
         // convert to array
-        String[] stringArrayBookingID = new String[ clientIDs.size() ];
-        clientIDs.toArray(stringArrayBookingID);
+        String[] stringArrayBookingID = new String[ bookingIDs.size() ];
+        bookingIDs.toArray(stringArrayBookingID);
 
         final ClearableAutoCompleteTextView dropdown = (ClearableAutoCompleteTextView) view.findViewById(R.id.name);
         ArrayAdapter<String> dataAdapter = new ArrayAdapter<String>(getActivity(), android.R.layout.simple_spinner_item, stringArrayBookingID);
@@ -430,7 +431,7 @@ public class AddEditBookingFragment extends Fragment implements AdapterView.OnIt
                 String name = parts[0].trim();
                 String national_id =  parts[1].trim();
                 String phone_number = parts[2].trim();
-//                String projected_date = parts[3].trim();
+                String projected_date = parts[3].trim();
                 Log.d(LOG, "booking client selected: " + name + "." + national_id + "." + phone_number + "." );
 
 //                booking = dbHelp.getBooking(national_id, phone_number, projected_date);

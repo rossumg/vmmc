@@ -277,7 +277,12 @@ public class EditUserFragment extends Fragment implements AdapterView.OnItemSele
                         if(dbHelp.addUser(user))
                             Toast.makeText(getActivity(), "User Saved", Toast.LENGTH_LONG).show();
                     }
-                    if (lookupUser != null && MainActivity._username == lookupUser.get_username()) MainActivity.USER_OBJ = lookupUser;
+                    MainActivity._username = sUsername;
+                    MainActivity._password = sPassword;
+                    if (lookupUser != null && MainActivity._username == lookupUser.get_username()) {
+                        MainActivity.USER_OBJ = lookupUser;
+
+                    }
                 } else {
                     Toast.makeText(getActivity(), "Must enter username", Toast.LENGTH_LONG).show();
                 }

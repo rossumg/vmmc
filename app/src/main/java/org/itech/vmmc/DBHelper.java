@@ -409,6 +409,7 @@ public class DBHelper extends SQLiteOpenHelper{
         SQLiteDatabase db = this.getWritableDatabase();
         onCreate(db);
 
+        this.deleteAllSyncAudit();
         SyncAudit syncAudit = new SyncAudit();
         syncAudit.set_progress("Start"); this.addSyncAudit(syncAudit);
 
@@ -464,6 +465,22 @@ public class DBHelper extends SQLiteOpenHelper{
 
         Toast.makeText(this._context, this._context.getResources().getString(R.string.sync_complete), Toast.LENGTH_LONG).show();
     }
+
+    public boolean deleteAllSyncAudit(){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+            // public int delete(String table, String whereClause, String[] whereArgs) {
+            String[] whereArgs = new String[]{ "" };
+            db.delete(TABLE_SYNC_AUDIT, "1=1", null);
+        } catch (Exception ex) {
+            // db.close();
+            Log.d(LOG, "deleteSyncAudit catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
 
     public boolean addSyncAudit(SyncAudit syncAudit){
         SQLiteDatabase db = this.getWritableDatabase();
@@ -2597,8 +2614,8 @@ public class DBHelper extends SQLiteOpenHelper{
         };
 
         String whereClause = "trim(" +
-                INSTITUTION_ID + ") like ? or trim(" +
-                INSTITUTION_NAME + ") like ? "
+                INSTITUTION_ID + ") like trim(?) or trim(" +
+                INSTITUTION_NAME + ") like trim(?) "
                 ;
 
         Log.d(LOG, "getInstitution whereClause: " + whereClause);
@@ -2712,7 +2729,7 @@ public class DBHelper extends SQLiteOpenHelper{
         for (int i = 0; i < tableList.size(); i++) {
             String selectQuery = "SELECT  * FROM " + TABLE_SYNC_AUDIT +
                     " where timestamp = (select max(timestamp) from " + TABLE_SYNC_AUDIT + " where progress like '" + tableList.get(i) +
-                    "%' ) and status = '' ";
+                    ":%' ) and status = '' ";
             Log.d(LOG, "getSyncReady:selectQuery: " + selectQuery);
             Cursor cursor = db.rawQuery(selectQuery, null);
             if (!cursor.moveToFirst()) {
@@ -3347,10 +3364,10 @@ public class DBHelper extends SQLiteOpenHelper{
         };
 
         String whereClause = "1=1 and trim(" +
-                CLIENT_FIRST_NAME + ") like ? and trim(" +
-                CLIENT_LAST_NAME + ") like ? and trim(" +
-                CLIENT_NATIONAL_ID + ") like ? and trim(" +
-                CLIENT_PHONE + ") like ? ";
+                CLIENT_FIRST_NAME + ") like trim(?) and trim(" +
+                CLIENT_LAST_NAME + ") like trim(?) and trim(" +
+                CLIENT_NATIONAL_ID + ") like trim(?) and trim(" +
+                CLIENT_PHONE + ") like trim(?) ";
 
         Log.d(LOG, "getClient whereClause: " + whereClause);
 
@@ -4539,6 +4556,28 @@ public class DBHelper extends SQLiteOpenHelper{
         return booking;
     }
 
+    public boolean deleteBooking( String first_name, String last_name, String national_id, String phone_number ){
+        SQLiteDatabase db = this.getWritableDatabase();
+
+        try {
+
+            String whereClause = "1=1 and trim(" +
+                    BOOKING_FIRST_NAME + ") like ? and trim(" +
+                    BOOKING_LAST_NAME + ") like ? and trim(" +
+//                BOOKING_NATIONAL_ID + ") like ? and trim(" +
+                    BOOKING_PHONE + ") like ? ";
+
+            String[] whereArgs = new String[]{ first_name, last_name, phone_number };
+            db.delete(TABLE_BOOKING, whereClause, whereArgs);
+        } catch (Exception ex) {
+            // db.close();
+            Log.d(LOG, "deleteBooking catch " + ex.toString());
+            return false;
+        }
+        return true;
+    }
+
+
     public boolean addBooking(Booking booking) {
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -4559,12 +4598,12 @@ public class DBHelper extends SQLiteOpenHelper{
         values.put(BOOKING_LONGITUDE, booking.get_longitude());
 
         values.put(BOOKING_PROJECTED_DATE,  booking.get_projected_date());
-        values.put(BOOKING_ACTUAL_DATE,  booking.get_projected_date());
+        values.put(BOOKING_ACTUAL_DATE,  booking.get_actual_date());
 
         values.put(BOOKING_CONSENT,  booking.get_consent());
         values.put(BOOKING_PROCEDURE_TYPE_ID,  booking.get_procedure_type_id());
         values.put(BOOKING_FOLLOWUP_ID,  booking.get_followup_id());
-        values.put(BOOKING_FOLLOWUP_DATE,  booking.get_followup_id());
+        values.put(BOOKING_FOLLOWUP_DATE,  booking.get_followup_date());
         values.put(BOOKING_ALT_CONTACT,  booking.get_alt_contact());
 
         try {

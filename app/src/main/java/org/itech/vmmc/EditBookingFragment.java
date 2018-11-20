@@ -318,13 +318,13 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         loadConsentRadio(_view);
 
         et_projected_date = (EditText) _view.findViewById(R.id.projected_date);
-        final SimpleDateFormat dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
+        final SimpleDateFormat pd_dateFormatter = new SimpleDateFormat(DBHelper.VMMC_DATE_FORMAT);
         Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_projected_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                et_projected_date.setText(dateFormatter.format(newDate.getTime()));
+                et_projected_date.setText(pd_dateFormatter.format(newDate.getTime()));
                 Log.d(LOG, "EBF: onDateSet: " + et_projected_date.getText());
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
@@ -340,13 +340,13 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         });
 
         et_actual_date = (EditText) _view.findViewById(R.id.actual_date);
-//        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat ad_dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
 //        Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_actual_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                et_actual_date.setText(dateFormatter.format(newDate.getTime()));
+                et_actual_date.setText(ad_dateFormatter.format(newDate.getTime()));
                 Log.d(LOG, "EBF: onDateSet: " + et_actual_date.getText());
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
@@ -362,13 +362,13 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
         });
 
         et_followup_date = (EditText) _view.findViewById(R.id.followup_date);
-//        final SimpleDateFormat dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
+        final SimpleDateFormat fd_dateFormatter = new SimpleDateFormat(dbHelp.VMMC_DATE_FORMAT);
 //        Calendar newCalendar = Calendar.getInstance();
         DatePickerDialog hold_followup_date_picker_dialog = new DatePickerDialog(getActivity(), new DatePickerDialog.OnDateSetListener() {
             public void onDateSet(DatePicker view, int year, int monthOfYear, int dayOfMonth) {
                 Calendar newDate = Calendar.getInstance();
                 newDate.set(year, monthOfYear, dayOfMonth);
-                et_followup_date.setText(dateFormatter.format(newDate.getTime()));
+                et_followup_date.setText(fd_dateFormatter.format(newDate.getTime()));
                 Log.d(LOG, "EBF: onDateSet: " + et_followup_date.getText());
             }
         }, newCalendar.get(Calendar.YEAR), newCalendar.get(Calendar.MONTH), newCalendar.get(Calendar.DAY_OF_MONTH));
@@ -434,7 +434,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                     return;
                 };
                 String sActualDate = _actual_date.getText().toString();
-                if((DBHelper.isDate(sActualDate) && sActualDate.length() == 10) || sActualDate.equals("")) {
+                if((DBHelper.isDate(sActualDate) && sActualDate.length() == 10) || sActualDate.equals("") || sActualDate.equals("null")) {
 //                    Log.d(LOG, "btnUpdate:isDate: " + "true:" + sProjectedDate.length());
                 }else{
 //                    Log.d(LOG, "btnUpdate:isDate: " + "false:" + sProjectedDate.length());
@@ -491,7 +491,13 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
                 if(complete) {
                     dbHelp.updateClient(_client);
 
-                    Booking lookupBooking = dbHelp.getBooking(sFirstName, sLastName, sNationalId, sPhoneNumber, sProjectedDate);
+                    Booking lookupBooking = dbHelp.getBooking(sFirstName, sLastName, sNationalId, sPhoneNumber, "%"); //find exiting booking
+                    // check for date change
+                    if (!lookupBooking.get_projected_date().equals(sProjectedDate)) {
+                        // date change
+                        dbHelp.deleteBooking(sFirstName, sLastName, sNationalId, sPhoneNumber);
+                        lookupBooking = null;
+                    }
 
                     if (lookupBooking != null) {
                         lookupBooking.set_first_name(sFirstName);
@@ -728,7 +734,9 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
         dataAdapter.setDropDownViewResource(R.layout.simple_spinner_item);
         lSpinner.setAdapter(dataAdapter);
-        _location = dbHelp.getLocation(String.valueOf(_booking.get_location_id()));
+        //Client _client = dbHelp.getClient(_booking.get_first_name(),_booking.get_last_name(),"",_booking.get_phone());
+        _location = dbHelp.getLocation(String.valueOf(_client.get_loc_id()));
+        //_location = dbHelp.getLocation(String.valueOf(_booking.get_location_id()));
         if (_location == null) {
             _location = dbHelp.getLocation("1"); // Default
         }

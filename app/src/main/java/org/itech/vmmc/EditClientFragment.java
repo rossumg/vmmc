@@ -983,11 +983,11 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
         dropdown.setThreshold(1);
         dropdown.setAdapter(dataAdapter);
 
-        if (_client == null) {
+        if (_client == null || _client.get_institution_id() == 0) {
             _institution = dbHelp.getInstitution("IUM"); // Default
         } else {
-            _client.set_institution_id(_institution.get_id());
             _institution = dbHelp.getInstitution(String.valueOf(_client.get_institution_id()));
+            _client.set_institution_id(_institution.get_id());
         }
         dropdown.setText(_institution.get_name());
 

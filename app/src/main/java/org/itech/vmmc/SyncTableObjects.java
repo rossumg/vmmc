@@ -11,6 +11,8 @@ import static org.itech.vmmc.DatabaseNames.*;
 
 public class SyncTableObjects {
 
+    public JSONObject facilitatorTestTableInfo = new JSONObject();
+
     public JSONObject personTableInfo = new JSONObject();
     public JSONObject userTableInfo = new JSONObject();
     public JSONObject userTypeTableInfo = new JSONObject();
@@ -41,6 +43,24 @@ public class SyncTableObjects {
 
     private void makeTableJSONObjects() {
         try {
+
+            JSONArray facilitatorTestTableFields = new JSONArray("['"
+                    + FACILITATOR_ID + "','"
+                    + FACILITATOR_TIMESTAMP + "','"
+                    + FACILITATOR_FIRST_NAME + "','"
+                    + FACILITATOR_LAST_NAME + "','"
+                    + FACILITATOR_NATIONAL_ID + "','"
+                    + FACILITATOR_PHONE + "','"
+                    + FACILITATOR_FACILITATOR_TYPE_ID + "','"
+                    + FACILITATOR_NOTE + "','"
+                    + FACILITATOR_LOCATION_ID + "','"
+                    + FACILITATOR_LATITUDE + "','"
+                    + FACILITATOR_LONGITUDE + "','"
+                    + FACILITATOR_INSTITUTION_ID + "','"
+                    + FACILITATOR_ADDRESS_ID + "','"
+                    + FACILITATOR_DOB + "','"
+                    + FACILITATOR_GENDER
+                    + "']");
 
             JSONArray syncAuditTableFields = new JSONArray("['"
                     + SYNC_AUDIT_ID + "','"
@@ -276,6 +296,8 @@ public class SyncTableObjects {
                     + GROUP_TYPE_NAME
                     + "']");
 
+            facilitatorTestTableInfo.put("dataTable", TABLE_FACILITATOR_TEST);
+
             personTableInfo.put("dataTable", TABLE_PERSON);
             userTableInfo.put("dataTable", TABLE_USER);
             userTypeTableInfo.put("dataTable", TABLE_USER_TYPE);
@@ -299,6 +321,8 @@ public class SyncTableObjects {
             groupActivityTableInfo.put("dataTable", TABLE_GROUP_ACTIVITY);
             groupTypeTableInfo.put("dataTable", TABLE_GROUP_TYPE);
             syncAuditTableInfo.put("dataTable", TABLE_SYNC_AUDIT);
+
+            facilitatorTestTableInfo.put("fields", facilitatorTestTableFields);
 
             personTableInfo.put("fields", personTableFields);
             userTableInfo.put("fields", userTableFields);

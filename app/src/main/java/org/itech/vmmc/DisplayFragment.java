@@ -55,6 +55,9 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
 
             displayParts = new DisplayParts(mAdapter.getItem(position).toString());
             Log.d(LOG, "DisplayFragment onItemClick1: " + displayType + " " + mAdapter.getItem(position).toString());
+            if (displayType.equals("displaySyncReady")) {
+                displayType = "displaySyncAudit";  //show table
+            }
 
             Fragment fragment;
             if (displayType == "displayBooking") {
@@ -103,12 +106,18 @@ public class DisplayFragment extends Fragment implements AbsListView.OnItemClick
                 getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditBookingFragment.TAG).addToBackStack("EditBooking").commit();
 
             }  else if (displayType == "displaySyncAudit") {
-//                String parts[] = mAdapter.getItem(position).toString().split(", ", 2);
                 Log.d(LOG, "DisplayFragment editSyncAudit: ");
-//            fragment = EditUserFragment.newInstance("editUser", parts[0] + ":" + parts[1]);
-//            getFragmentManager().beginTransaction().replace(R.id.container, fragment, EditUserFragment.TAG).addToBackStack("EditUser").commit();
+                fragment = getFragmentManager().findFragmentByTag(DisplayFragment.TAG);
+                getFragmentManager().beginTransaction().remove(getFragmentManager().findFragmentByTag("DisplayFragment"));
+                //if (fragment == null) {
+                    fragment = DisplayFragment.newInstance("displaySyncAudit", "");
+                    //fragment = DisplayFragment.newInstance("displaySyncReady", "");
+                    getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).addToBackStack(MainActivity.currentFragmentId).commit();
+                //} else {
+                  //  getFragmentManager().beginTransaction().replace(R.id.container, fragment, DisplayFragment.TAG).commit();
+                //}
+                MainActivity.currentFragmentId = "DisplayFragment";
             }
-
         }
     }
 

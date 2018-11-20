@@ -6,6 +6,8 @@ package org.itech.vmmc;
 public class DatabaseNames {
 
     // vmmc.db table names
+    public static final String TABLE_FACILITATOR_TEST = "facilitator_test";
+
     public static final String TABLE_SYNC_AUDIT  = "sync_audit";
     public static final String TABLE_PERSON      = "person";
     public static final String TABLE_USER        = "user";

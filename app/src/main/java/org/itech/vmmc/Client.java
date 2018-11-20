@@ -111,19 +111,17 @@ public class Client {
     }
 
     public String get_first_name() {
-        return _first_name;
+        return _first_name.trim();
     }
 
-    public void set_first_name(String _first_name) {
-        this._first_name = _first_name;
-    }
+    public void set_first_name(String _first_name) { this._first_name = _first_name.trim(); }
 
     public String get_last_name() {
-        return _last_name;
+        return _last_name.trim();
     }
 
     public void set_last_name(String _last_name) {
-        this._last_name = _last_name;
+        this._last_name = _last_name.trim();
     }
 
     public String get_national_id() {

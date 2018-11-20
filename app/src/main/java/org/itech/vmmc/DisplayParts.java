@@ -47,14 +47,14 @@ public class DisplayParts {
                 break;
             }
             case 2: {
-                name = parts[0];
+                name = parts[0].trim();
                 nationalId = parts[1];
                 break;
             }
             case 3: {
-                name = parts[0];
+                name = parts[0].trim();
                 nationalId = parts[1];
-                phoneNumber = parts[2];
+                phoneNumber = parts[2].trim();
                 break;
             }
             case 4: {

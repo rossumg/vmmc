@@ -97,12 +97,14 @@ public class putMySQLTableVolley {
 
     //put all tables in regular database sync
     private void putSyncTables() {
+        /*
         SyncTableObjects syncTableObjects = new SyncTableObjects();
         putTable(syncTableObjects.userTableInfo, MAX_RETRY);
         putTable(syncTableObjects.bookingTableInfo, MAX_RETRY);
         putTable(syncTableObjects.clientTableInfo, MAX_RETRY);
         putTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
         putTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
+        */
     }
 
     private void putOnlySyncAuditTable() {

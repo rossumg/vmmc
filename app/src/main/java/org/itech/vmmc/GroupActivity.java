@@ -74,11 +74,11 @@ public class GroupActivity {
     }
 
     public String get_name() {
-        return _name;
+        return _name.trim();
     }
 
     public void set_name(String _name) {
-        this._name = _name;
+        this._name = _name.trim();
     }
 
     public int get_location_id() {

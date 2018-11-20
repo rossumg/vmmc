@@ -4,7 +4,6 @@ import android.app.NotificationManager;
 import android.content.Context;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteStatement;
-import android.os.SystemClock;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.widget.Toast;
@@ -40,8 +39,9 @@ public class getMySQLTableVolley {
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
-    int SOCKET_TIMEOUT_MS = 30000;
-    int MAX_RETRY = 3;
+    int SOCKET_TIMEOUT_MS = 500;
+    int SOCKET_MAX_RETRIES = 999;
+    int MAX_RETRY = 99;
 
     public getMySQLTableVolley(Context context, DBHelper dbHelper) {
         this._context = context;
@@ -74,15 +74,20 @@ public class getMySQLTableVolley {
 
     //gets all tables in regular database sync
     public void getSyncTables() {
-        SystemClock.sleep(5000);
         SyncTableObjects  syncTableObjects = new SyncTableObjects();
+
+        getTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
+        //getTable(syncTableObjects.facilitatorTestTableInfo, MAX_RETRY);
+        getTable(syncTableObjects.institutionTableInfo, MAX_RETRY);
+
+        getTable(syncTableObjects.clientTableInfo, MAX_RETRY);
         // getTable(syncTableObjects.personTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userTypeTableInfo, MAX_RETRY);
         getTable(syncTableObjects.userToAclTableInfo, MAX_RETRY);
         getTable(syncTableObjects.aclTableInfo, MAX_RETRY);
         getTable(syncTableObjects.clientTableInfo, MAX_RETRY);
-        getTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
+
         getTable(syncTableObjects.locationTableInfo, MAX_RETRY);
         getTable(syncTableObjects.addressTableInfo, MAX_RETRY);
         getTable(syncTableObjects.regionTableInfo, MAX_RETRY);
@@ -93,9 +98,10 @@ public class getMySQLTableVolley {
         getTable(syncTableObjects.followupTableInfo, MAX_RETRY);
         getTable(syncTableObjects.interactionTypeTableInfo, MAX_RETRY);
         getTable(syncTableObjects.statusTypeTableInfo, MAX_RETRY);
-        getTable(syncTableObjects.institutionTableInfo, MAX_RETRY+2);
+
         getTable(syncTableObjects.groupActivityTableInfo, MAX_RETRY);
         getTable(syncTableObjects.groupTypeTableInfo, MAX_RETRY);
+
     }
 
     private void getTable(final JSONObject tableInfo, final int numRetry) {
@@ -130,6 +136,7 @@ public class getMySQLTableVolley {
                                                 }
                                             }
                                         } else {
+                                            Log.d(LOG, "Server returned success on " + numRetry + " for " + dataTable);
                                             insertData(response, dataTable, fields);
                                             syncAudit.set_progress(dataTable + ":" + response.get("number_records"));
                                         }
@@ -166,7 +173,8 @@ public class getMySQLTableVolley {
             };
             request.setRetryPolicy(new DefaultRetryPolicy(
                     SOCKET_TIMEOUT_MS,
-                    DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    //DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
+                    SOCKET_MAX_RETRIES,
                     DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
             );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
