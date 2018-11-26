@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "5.11";
+    public static String _version = "5.2";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 

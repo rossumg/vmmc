@@ -493,7 +493,7 @@ public class EditBookingFragment extends Fragment implements AdapterView.OnItemS
 
                     Booking lookupBooking = dbHelp.getBooking(sFirstName, sLastName, sNationalId, sPhoneNumber, "%"); //find exiting booking
                     // check for date change
-                    if (!lookupBooking.get_projected_date().equals(sProjectedDate)) {
+                    if (lookupBooking != null && sProjectedDate != null && !lookupBooking.get_projected_date().equals(sProjectedDate)) {
                         // date change
                         dbHelp.deleteBooking(sFirstName, sLastName, sNationalId, sPhoneNumber);
                         lookupBooking = null;
