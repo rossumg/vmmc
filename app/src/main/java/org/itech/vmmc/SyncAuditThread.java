@@ -20,7 +20,8 @@ public class SyncAuditThread extends AsyncTask<String, String, String> {
     protected String doInBackground(String... args) {
         try {
             //Thread.sleep(4000); // 4 secs
-            Thread.sleep(10000);
+            //Thread.sleep(10000);
+            Thread.sleep(0);
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
