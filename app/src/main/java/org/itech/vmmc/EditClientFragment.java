@@ -224,10 +224,10 @@ public class EditClientFragment extends Fragment implements AdapterView.OnItemSe
 
         switch (MainActivity.gClientOrigination) {
             case GroupActivity:
-                if(MainActivity.gGroupActivity == null) {
-                    _groupActivity = null;
-                } else {
+                if(MainActivity.gGroupActivity != null) {
                     _groupActivity = MainActivity.gGroupActivity;
+                } else {
+                    _groupActivity = null;
                 }
                 break;
             case CommunityRecruiter:

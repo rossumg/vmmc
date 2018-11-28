@@ -419,6 +419,8 @@ public class EditFacilitatorFragment extends Fragment implements AdapterView.OnI
                                 _first_name.getText() + ", " + _last_name.getText() + ", " + _national_id.getText() + ", " + _phone.getText() + ", " + _facilitatorType.get_id() +  ", "  + _location.get_id() + ", " + _institution.get_id() + " <");
                         if(dbHelp.addFacilitator(facilitator))
                             Toast.makeText(getActivity(), "Recruiter Saved", Toast.LENGTH_LONG).show();
+
+                        MainActivity.gFacilitator = facilitator;
                     }
                 } else {
                     Toast.makeText(getActivity(), "Must enter First Name, Last Name, Phone Number and Institution", Toast.LENGTH_LONG).show();

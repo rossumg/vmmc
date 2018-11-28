@@ -39,8 +39,9 @@ public class getMySQLTableVolley {
     NotificationManager mNotifyManager;
     NotificationCompat.Builder mBuilder;
 
-    int SOCKET_TIMEOUT_MS = 500;
+    int SOCKET_TIMEOUT_MS = 1000;
     int SOCKET_MAX_RETRIES = 999;
+    int SOCKET_BACKOFF_MULT = 10;
     int MAX_RETRY = 99;
 
     public getMySQLTableVolley(Context context, DBHelper dbHelper) {
@@ -78,6 +79,7 @@ public class getMySQLTableVolley {
 
         getTable(syncTableObjects.facilitatorTableInfo, MAX_RETRY);
         //getTable(syncTableObjects.facilitatorTestTableInfo, MAX_RETRY);
+
         getTable(syncTableObjects.institutionTableInfo, MAX_RETRY);
 
         getTable(syncTableObjects.clientTableInfo, MAX_RETRY);
@@ -175,7 +177,8 @@ public class getMySQLTableVolley {
                     SOCKET_TIMEOUT_MS,
                     //DefaultRetryPolicy.DEFAULT_MAX_RETRIES,
                     SOCKET_MAX_RETRIES,
-                    DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+                    //DefaultRetryPolicy.DEFAULT_BACKOFF_MULT)
+                    SOCKET_BACKOFF_MULT )
             );
             VolleySingleton.getInstance(_context).addToRequestQueue(request);
         } catch (JSONException e) {

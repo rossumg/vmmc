@@ -52,7 +52,7 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
     public static String currentFragmentId = "";
 
     public static String COUNTRY = "vmmc";
-    public static String _version = "5.2";
+    public static String _version = "5.22";
 //    public static String COUNTRY = "mobile_demo";
 //    public static String COUNTRY = "zimbabwe";
 
@@ -122,7 +122,8 @@ public class MainActivity extends AppCompatActivity implements NavigationDrawerC
 
         final TelephonyManager tm = (TelephonyManager) this.getSystemService(Context.TELEPHONY_SERVICE);
         final String tmIMEI, tmSerial, androidId;
-        tmIMEI = "" + tm.getDeviceId();
+//        tmIMEI = "" + tm.getDeviceId();
+        tmIMEI = "";
         //tmSerial = "" + tm.getSimSerialNumber();
         androidId = "" + android.provider.Settings.Secure.getString(this.getContentResolver(), android.provider.Settings.Secure.ANDROID_ID);
 

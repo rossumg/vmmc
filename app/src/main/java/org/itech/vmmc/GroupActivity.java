@@ -9,7 +9,7 @@ public class GroupActivity {
     //private variables
     int _id;
     String _timestamp;
-    String _name;
+    String _name = "";
     int _location_id;
     String _activity_date;
     int group_type_id;
