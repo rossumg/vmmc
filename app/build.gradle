@@ -6,8 +6,8 @@ android {
         applicationId "org.itech.vmmc"
         minSdkVersion 19
         targetSdkVersion 27
-        versionCode 8
-        versionName "5.22"
+        versionCode 9
+        versionName "5.23"
     }
     buildTypes {
         release {
